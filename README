@@ -1,0 +1,16 @@
+Build SWIG wrappers for ORE
+===========================
+
+(1) On the OpenXVA project, fetch branch ore_swig and re-build all ORE libraries
+    The branch has one crucial extension in OREPlus/App that will be referred to by the wrapper in (2) below.
+    For (3) and (4) this step can be skipped.
+
+(2) To build a single Python module that covers ORE including OREPlus/App, OREAnalytics, OREData, QuantExt and QuantLib:
+    Change to the OREPlus-SWIG directory and follow the steps in OREPlus-SWIG/README
+
+(3) To build a single Python module that covers OREAnalytics, OREData, QuantExt and QuantLib:
+    Change to the QuantExt-SWIG directory and follow the steps in QuantExt-SWIG/README
+
+(4) To build a single Python module that covers on QuantExt and QuantLib:
+    Change to the QuantExt-SWIG directory and follow the steps in QuantExt-SWIG/README
+
