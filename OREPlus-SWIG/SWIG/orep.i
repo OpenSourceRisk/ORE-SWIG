@@ -32,7 +32,7 @@ using ore::data::MarketImpl;
 typedef boost::shared_ptr<ore::data::MarketImpl> MarketImplPtr;
 %}
 
-%rename(OREPlusApp) OREPlusAppPtr;
+%rename(ORE) OREPlusAppPtr;
 class OREPlusAppPtr : public OREAppPtr {
 public:
   %extend {

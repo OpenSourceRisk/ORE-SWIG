@@ -10,21 +10,18 @@ print ("   params is of type", type(params))
 params.fromFile("Input/ore.xml")
 print ("   setup/asofdate = " + params.get("setup","asofDate"))
 
-print ("Building OREApp...")
+print ("Building ORE App...")
 #ore = OREApp(params)
-ore = OREPlusApp(params)
+ore = ORE(params)
 print ("   ore is of type", type(ore))
 
 print ("Running ORE process...");
-ore.run()
+# Run it all 
+#ore.run()
+# Run conventions, curve configuration, bootstraps market construction only
+ore.buildMarket()
 
-print ("Create empty market object...");
-market = MarketImpl()
-#print ("market is of type", type(market))
-asof = market.asofDate()
-print("   asof date is", asof)
-
-print ("Retrieve market object...");
+print ("Retrieve market object from ORE...");
 market = ore.getMarket()
 print ("   retrieved market is of type", type(market))
 asof = market.asofDate();
