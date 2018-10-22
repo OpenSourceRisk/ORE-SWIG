@@ -9,7 +9,7 @@ Build SWIG wrappers for ORE
     Change to the OREPlus-SWIG directory and follow the steps in OREPlus-SWIG/README
 
 (3) To build a single Python module that covers OREAnalytics, OREData, QuantExt and QuantLib:
-    Change to the QuantExt-SWIG directory and follow the steps in QuantExt-SWIG/README
+    Change to the OREAnalytics-SWIG directory and follow the steps in OREAnalytics-SWIG/README
 
 (4) To build a single Python module that covers on QuantExt and QuantLib:
     Change to the QuantExt-SWIG directory and follow the steps in QuantExt-SWIG/README
