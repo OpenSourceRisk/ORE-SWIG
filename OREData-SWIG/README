@@ -1,0 +1,33 @@
+macos
+=====
+
+0) Patches for QuantLib-SWIG
+   daycounters.i: comment out the deprecated Actual365NoLeap
+
+1) Edit /usr/local/bin/quantlib-config to find QuantLib
+   line 3: prefix=/usr/local --> prefix=/Users/roland/Development/oremaster/QuantLib
+   line 41: -I${prefix}/include --> -I${prefix}
+   line 45: -L${exec_prefix}/lib --> -L${exec_prefix}/ql/.libs
+   
+2) Patch Makefile.am, line 12 (add LDFLAGS)
+   CXXFLAGS="$(CXXFLAGS) $(CXXWARNINGFLAGS)" CC="$(CC)" CXX="$(CXX)" LDFLAGS="$(LDFLAGS)" $(PYTHON) setup.py build
+
+3) Run ./autogen.sh and configure
+   ./configure CXXFLAGS="-O2 -std=c++11 -stdlib=libc++ -mmacosx-version-min=10.9" LDFLAGS="-stdlib=libc++ -mmacosx-version-min=10.9 -L$OREMASTER/QuantExt/qle/.libs -lQuantExt -L$OREMASTER/QuantLib/ql/.libs -lQuantLib -L$OREMASTER/OREData/ored/.libs -lOREData -L$OREMASTER/OREAnalytics/orea/.libs -lOREAnalytics -L$BOOST/stage/lib -lboost_thread -lboost_system -lboost_serialization -lboost_date_time -lboost_regex -lboost_filesystem"
+   
+4) Build wrapper:
+   make -C python
+
+5) Add Boost, QuantLib, QuantExt, OREData and OREAnalytics locations to the DYLD_LIBRARY_PATH, e.g. 
+   export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:/Users/roland/Development/boost/boost_1_65_1/stage/lib:/Users/roland/Development/oremaster/QuantLib/ql/.libs:/Users/roland/Development/oremaster/QuantExt/qle/.libs:/Users/roland/Development/oremaster/OREData/ored/.libs:/Users/roland/Development/oremaster/OREAnalytics/orea/.libs
+
+6) Run tests:
+   cd Python
+   python setup.py test
+
+7) export PYTHONPATH=/Users/roland/Development/python/lib/python3.5/site-packages
+   python setup.py install --prefix=/Users/roland/Development/python
+
+8) Try examples (all work):
+   cd examples
+   python swap.py

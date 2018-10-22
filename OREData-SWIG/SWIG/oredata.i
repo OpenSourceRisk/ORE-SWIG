@@ -5,13 +5,13 @@
 */
 
 #if defined(SWIGRUBY)
-%module OREPlusc
+%module OREDatac
 #elif defined(SWIGCSHARP)
-%module(directors="1") NOREPlusc
+%module(directors="1") NOREDatac
 #elif defined(SWIGJAVA)
-%module(directors="1") OREPlus
+%module(directors="1") OREData
 #else
-%module OREPlus
+%module OREData
 #endif
 
 %include exception.i
@@ -46,7 +46,7 @@ const char* __version__;
 %pragma(java) jniclasscode=%{
   /// Load the JNI library
   static {
-    System.loadLibrary("OREPlusJNI");
+    System.loadLibrary("OREDataJNI");
   }
 %}
 #endif
@@ -58,17 +58,8 @@ const char* __version__;
 // include all quantlib .i's
 %include ql.i
 
-// for faster build: include minimal set of quantlib .i's (dates, term structures, indexes) 
-//%include qlshort.i
-
 // include all quantext .i's
 %include qle.i
 
 // include all OREData .i's
 %include ored.i
-
- // include all OREAnalytics .i's
-%include orea.i
-
-// include OREPlus .i's
-%include orep.i

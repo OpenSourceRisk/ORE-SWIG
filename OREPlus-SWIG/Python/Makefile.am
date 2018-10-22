@@ -26,7 +26,7 @@ endif
 
 OREPlus/oreplus_wrap.cpp OREPlus/OREPlus.py: ../SWIG/*.i
 	$(SWIG) -python -c++ -modern -outdir OREPlus \
-            -o OREPlus/oreplus_wrap.cpp -I../../QuantLib-SWIG/SWIG -I../../QuantExt-SWIG/SWIG -I../../OREAnalytics-SWIG/SWIG ../SWIG/oreplus.i 
+            -o OREPlus/oreplus_wrap.cpp -I../../QuantLib-SWIG/SWIG -I../../QuantExt-SWIG/SWIG -I../../OREData-SWIG/SWIG -I../../OREAnalytics-SWIG/SWIG ../SWIG/oreplus.i 
 
 dist-hook:
 	mkdir -p $(distdir)/examples

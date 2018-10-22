@@ -11,14 +11,13 @@ params.fromFile("Input/ore.xml")
 print ("   setup/asofdate = " + params.get("setup","asofDate"))
 
 print ("Building ORE App...")
-#ore = OREApp(params)
 ore = ORE(params)
 print ("   ore is of type", type(ore))
 
 print ("Running ORE process...");
 # Run it all 
-#ore.run()
-# Run conventions, curve configuration, bootstraps market construction only
+# ore.run()
+# Run bootstraps only (conventions, curve configuration, construction)
 ore.buildMarket()
 
 print ("Retrieve market object from ORE...");
@@ -30,12 +29,17 @@ print ("   retrieved market's asof date is", asof)
 ccy = "EUR"
 index = "EUR-EURIBOR-6M"
 print ("Get term structures for ccy ", ccy, "and index", index);
+
 discountCurve = market.discountCurve(ccy)
 print ("   discount curve is of type", type(discountCurve))
+
 iborIndex = market.iborIndex(index)
 print ("   ibor index is of type", type(iborIndex))
+
 forwardCurve = iborIndex.forwardingTermStructure()
 print ("   forward curve is of type", type(forwardCurve))
+
+print ("Evaluate term structures");
 date = asof + 10*Years;
 zeroRateDc = Actual365Fixed()
 discount = discountCurve.discount(date)
