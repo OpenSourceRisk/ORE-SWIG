@@ -8,27 +8,28 @@ QuantExt-SWIG/Python/QuantExt/QuantExt.py
 QuantExt-SWIG/Python/QuantExt/quantext_wrap.cpp
 QuantExt-SWIG/Python/QuantExt_Python.egg-info/
 QuantExt-SWIG/Python/dist/
-QuantExt-SWIG/Python/setup.py
+#QuantExt-SWIG/Python/setup.py
 QuantExt-SWIG/Python/.build-stamp
 QuantExt-SWIG/quantlib-config
 OREData-SWIG/Python/OREData/OREData.py
 OREData-SWIG/Python/OREData/oreanalytics_wrap.cpp
 OREData-SWIG/Python/OREData_Python.egg-info/
 OREData-SWIG/Python/dist/
-OREData-SWIG/Python/setup.py
+#OREData-SWIG/Python/setup.py
 OREData-SWIG/Python/.build-stamp
 OREAnalytics-SWIG/Python/OREAnalytics/OREAnalytics.py
 OREAnalytics-SWIG/Python/OREAnalytics/oreanalytics_wrap.cpp
 OREAnalytics-SWIG/Python/OREAnalytics_Python.egg-info/
 OREAnalytics-SWIG/Python/dist/
-OREAnalytics-SWIG/Python/setup.py
+#OREAnalytics-SWIG/Python/setup.py
 OREAnalytics-SWIG/Python/.build-stamp
 OREPlus-SWIG/Python/OREPlus/OREPlus.py
 OREPlus-SWIG/Python/OREPlus/oreplus_wrap.cpp
 OREPlus-SWIG/Python/OREPlus_Python.egg-info/
 OREPlus-SWIG/Python/dist/
-OREPlus-SWIG/Python/setup.py
+#OREPlus-SWIG/Python/setup.py
 OREPlus-SWIG/Python/.build-stamp
+OREPlus-SWIG/Python/OREPlus/OREAnalytics.py
 
 ##########################
 # General
