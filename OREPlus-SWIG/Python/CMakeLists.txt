@@ -36,7 +36,7 @@ include_directories(${ORE}/QuantLib)
 include_directories(${ORE}/QuantExt)
 include_directories(${ORE}/OREData)
 include_directories(${ORE}/OREAnalytics)
-include_directories(${ORE}/OREPlus/App/orepapp)
+include_directories(${ORE}/OREPlus/App)
 include_directories(${Boost_INCLUDE_DIRS})
 include_directories(${PYTHON_INCLUDE_PATH})
 
