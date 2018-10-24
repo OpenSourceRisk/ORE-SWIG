@@ -17,7 +17,7 @@
 
 #include <ql/errors.hpp>
 
-#include <orea/app/oreplusapp.hpp>
+#include <orepapp/orea/app/oreplusapp.hpp>
 
 using oreplus::analytics::OREPlusApp;
 typedef boost::shared_ptr<oreplus::analytics::OREPlusApp> OREPlusAppPtr;
