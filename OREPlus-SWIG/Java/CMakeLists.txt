@@ -1,0 +1,106 @@
+cmake_minimum_required(VERSION 3.8)
+
+project(OREPlusJava CXX)
+
+# workaround for ninja which requires the file to exist before the build starts
+execute_process(
+  WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
+  COMMAND ${CMAKE_COMMAND} -E make_directory lib
+)
+
+execute_process(
+  WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
+  COMMAND ${CMAKE_COMMAND} -E touch lib/OREPlusJava.jar
+)
+
+include(${ORE}/cmake/utils.cmake)
+set(ORE_JAVA_LIB_NAME "OREPlusJava") # no extensions
+get_library_name("OREPlusApp" OREPAPP_LIB_NAME)
+get_library_name("OREAnalytics" OREA_LIB_NAME)
+get_library_name("OREData" ORED_LIB_NAME)
+get_library_name("QuantExt" QLE_LIB_NAME)
+get_library_name("QuantLib" QL_LIB_NAME)
+configure_msvc_runtime()
+
+include_directories(${ORE}/QuantLib)
+include_directories(${ORE}/QuantExt)
+include_directories(${ORE}/OREData)
+include_directories(${ORE}/OREAnalytics)
+include_directories(${ORE}/OREPlus/App)
+include_directories(${PROJECT_SOURCE_DIR}/../SWIG)
+include_directories(${PROJECT_SOURCE_DIR}/../../QuantLib-SWIG/SWIG)
+include_directories(${PROJECT_SOURCE_DIR}/../../QuantExt-SWIG/SWIG)
+include_directories(${PROJECT_SOURCE_DIR}/../../OREData-SWIG/SWIG)
+include_directories(${PROJECT_SOURCE_DIR}/../../OREAnalytics-SWIG/SWIG)
+
+if(MSVC)
+	set(Boost_USE_STATIC_LIBS ON)
+else()
+	add_definitions(-DBOOST_TEST_DYN_LINK)
+endif()
+
+find_package (Boost COMPONENTS serialization date_time regex filesystem system REQUIRED)
+include_directories(${Boost_INCLUDE_DIRS})
+
+# specify library search path (update this when we build ORE with cmake)
+link_directories(${ORE}/build/QuantLib/ql)
+link_directories(${ORE}/build/QuantExt/qle)
+link_directories(${ORE}/build/OREData/ored)
+link_directories(${ORE}/build/OREAnalytics/orea)
+link_directories(${ORE}/build/OREPlus/App/orepapp)
+
+# write the library here
+#set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_LIST_DIR}/lib")
+#set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_CURRENT_LIST_DIR}/lib")
+#set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_LIST_DIR}/lib")
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}")
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}")
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}")
+
+# use C++11
+set (CMAKE_CXX_STANDARD 11)
+
+# run SWIG
+find_package(SWIG REQUIRED)
+find_package(Java REQUIRED)
+find_package(JNI REQUIRED)
+include(UseJava)
+include(UseSWIG)
+include_directories(${JNI_INCLUDE_DIRS})
+include(${SWIG_USE_FILE})
+set(CMAKE_SWIG_FLAGS "")
+
+set_source_files_properties(${PROJECT_SOURCE_DIR}/../SWIG/oreplus.i PROPERTIES CPLUSPLUS ON)
+set_source_files_properties(${PROJECT_SOURCE_DIR}/../SWIG/oreplus.i PROPERTIES SWIG_FLAGS "-includeall")
+set(CMAKE_SWIG_FLAGS -package oreplus)
+set(CMAKE_SWIG_OUTDIR "oreplus")
+
+swig_add_library(${ORE_JAVA_LIB_NAME} TYPE SHARED LANGUAGE java SOURCES ${PROJECT_SOURCE_DIR}/../SWIG/oreplus.i)
+
+swig_link_libraries(${ORE_JAVA_LIB_NAME} ${QL_LIB_NAME})
+swig_link_libraries(${ORE_JAVA_LIB_NAME} ${QLE_LIB_NAME})
+swig_link_libraries(${ORE_JAVA_LIB_NAME} ${ORED_LIB_NAME})
+swig_link_libraries(${ORE_JAVA_LIB_NAME} ${OREA_LIB_NAME})
+swig_link_libraries(${ORE_JAVA_LIB_NAME} ${OREPAPP_LIB_NAME})
+swig_link_libraries(${ORE_JAVA_LIB_NAME} ${Boost_LIBRARIES})
+
+#add_dependencies(${ORE_JAVA_LIB_NAME} ${QLE_LIB_NAME})
+#add_dependencies(${ORE_JAVA_LIB_NAME} ${ORED_LIB_NAME})
+#add_dependencies(${ORE_JAVA_LIB_NAME} ${OREA_LIB_NAME})
+
+add_custom_command(TARGET ${ORE_JAVA_LIB_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E make_directory classes
+    COMMAND "${Java_JAVAC_EXECUTABLE}" -d classes oreplus/*.java
+    COMMAND "${Java_JAR_EXECUTABLE}" -cfM ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/OREPlusJava.jar -C classes .
+)
+
+add_jar(ORERunner
+        SOURCES examples/ORERunner.java
+        INCLUDE_JARS ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/OREPlusJava.jar
+        ENTRY_POINT orerunner/ORERunner
+        MANIFEST Manifest.txt
+    	OUTPUT_DIR ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY})
+#    	OUTPUT_DIR examples)
+
+add_dependencies(ORERunner ${ORE_JAVA_LIB_NAME})
+

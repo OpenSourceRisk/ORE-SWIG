@@ -62,3 +62,11 @@ Build using CMake on Mac OS
     in the PYTHONPATH. This overwrites any __init__.py there and does not integrate with other site-packages yet.
     Moreover, this either needs updating the rpath information or setting the DYLD_LIBRARY_PATH for _OREPlus.so to find
     the dependent ORE libraries. For the time being, one can simply use (6) above.
+
+(8) Run Python example:
+    cd OREPlus-SWIG/Python/examples
+    python ore.py
+
+(8) Run Java example:
+    cd OREPlus-SWIG/Java/examples
+    java -Djava.library.path=../../../build/OREPlus-SWIG/Java -jar ../../../build/OREPlus-SWIG/Java/ORERunner.jar Input/ore.xml
