@@ -13,7 +13,7 @@ execute_process(
   COMMAND ${CMAKE_COMMAND} -E touch lib/OREPlusJava.jar
 )
 
-include(${ORE}/cmake/utils.cmake)
+include(${ORE}/cmake/commonSettings.cmake)
 set(ORE_JAVA_LIB_NAME "OREPlusJava") # no extensions
 get_library_name("OREPlusApp" OREPAPP_LIB_NAME)
 get_library_name("OREAnalytics" OREA_LIB_NAME)
@@ -32,12 +32,6 @@ include_directories(${PROJECT_SOURCE_DIR}/../../QuantLib-SWIG/SWIG)
 include_directories(${PROJECT_SOURCE_DIR}/../../QuantExt-SWIG/SWIG)
 include_directories(${PROJECT_SOURCE_DIR}/../../OREData-SWIG/SWIG)
 include_directories(${PROJECT_SOURCE_DIR}/../../OREAnalytics-SWIG/SWIG)
-
-if(MSVC)
-	set(Boost_USE_STATIC_LIBS ON)
-else()
-	add_definitions(-DBOOST_TEST_DYN_LINK)
-endif()
 
 find_package (Boost COMPONENTS serialization date_time regex filesystem system REQUIRED)
 include_directories(${Boost_INCLUDE_DIRS})

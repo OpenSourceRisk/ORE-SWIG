@@ -2,17 +2,9 @@ cmake_minimum_required(VERSION 3.8)
 
 project(OREPlus-Python)
 
-if(MSVC)
-        set(Boost_USE_STATIC_LIBS ON)
-else()
-        add_definitions(-DBOOST_TEST_DYN_LINK)
-endif()
-
-# use C++11
-set (CMAKE_CXX_STANDARD 11)
+include(${ORE}/cmake/commonSettings.cmake)
 
 # The module depends on a number of libraries in the ORE project: determine their exact names
-include(${ORE}/cmake/utils.cmake)
 get_library_name("OREPlusApp" OREPAPP_LIB_NAME)
 get_library_name("OREAnalytics" OREA_LIB_NAME)
 get_library_name("OREData" ORED_LIB_NAME)
