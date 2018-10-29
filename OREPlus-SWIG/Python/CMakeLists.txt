@@ -43,6 +43,7 @@ link_directories(${ORE}/build/OREPlus/App/orepapp)
 
 # Tell SWIG to compile in C++ mode
 set_source_files_properties(${PROJECT_SOURCE_DIR}/../SWIG/oreplus.i PROPERTIES CPLUSPLUS ON)
+set_source_files_properties(${PROJECT_SOURCE_DIR}/../SWIG/oreplus.i PROPERTIES SWIG_FLAGS "-includeall")
 
 # Tell SWIG to build a Python module, to be called "OREPlus"
 swig_add_library(OREPlus TYPE MODULE LANGUAGE python SOURCES ${PROJECT_SOURCE_DIR}/../SWIG/oreplus.i)

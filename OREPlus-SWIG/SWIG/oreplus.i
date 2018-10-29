@@ -67,7 +67,7 @@ const char* __version__;
 // include all OREData .i's
 %include ored.i
 
- // include all OREAnalytics .i's
+// include all OREAnalytics .i's
 %include orea.i
 
 // include OREPlus .i's
