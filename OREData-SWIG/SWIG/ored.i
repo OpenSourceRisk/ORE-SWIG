@@ -16,6 +16,7 @@
 #include <vector>
 
 #include <ql/errors.hpp>
+#include <ored/auto_link.hpp>
 
 #include <ored/portfolio/portfolio.hpp>
 #include <ored/marketdata/marketimpl.hpp>
