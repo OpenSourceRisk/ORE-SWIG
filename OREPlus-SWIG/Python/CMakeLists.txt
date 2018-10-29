@@ -4,6 +4,20 @@ project(OREPlus-Python)
 
 include(${ORE}/cmake/commonSettings.cmake)
 
+# Append /bigobj to compiler flags on Windows for this target
+if (MSVC)
+   # FIXME: Add the other compiler flags from QuantLib-SWIG/Python/setup.py (/GR /FD /Zm250 /EHsc)?
+   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /bigobj")
+   message(STATUS CMAKE_CXX_FLAGS "=" "${CMAKE_CXX_FLAGS}")
+
+   foreach (cfg "DEBUG" "RELEASE" "MINSIZEREL" "RELWITHDEBINFO")
+      foreach (flag "CXX" "C")
+         set (CMAKE_${flag}_FLAGS_${cfg} "${CMAKE_${flag}_FLAGS_${cfg}} /bigobj") 
+	 message(STATUS CMAKE_${flag}_FLAGS_${cfg} "=" "${CMAKE_${flag}_FLAGS_${cfg}}")
+      endforeach ()
+   endforeach ()
+endif()
+
 # The module depends on a number of libraries in the ORE project: determine their exact names
 get_library_name("OREPlusApp" OREPAPP_LIB_NAME)
 get_library_name("OREAnalytics" OREA_LIB_NAME)
