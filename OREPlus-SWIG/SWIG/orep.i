@@ -5,6 +5,7 @@
 */
 
 %{
+
 #include <boost/shared_ptr.hpp>
 #include <boost/assert.hpp>
 #include <boost/current_function.hpp>
@@ -15,9 +16,22 @@
 #include <map>
 #include <vector>
 
+#define BOOST_LIB_NAME boost_regex
+#include <boost/config/auto_link.hpp>
+#define BOOST_LIB_NAME boost_serialization
+#include <boost/config/auto_link.hpp>
+#define BOOST_LIB_NAME boost_date_time
+#include <boost/config/auto_link.hpp>
+#define BOOST_LIB_NAME boost_filesystem
+#include <boost/config/auto_link.hpp>
+#define BOOST_LIB_NAME boost_system
+
+#include <boost/config/auto_link.hpp>
 #include <ql/errors.hpp>
 
 #include <orepapp/orea/app/oreplusapp.hpp>
+#include <orepapp/auto_link.hpp>
+
 
 using oreplus::analytics::OREPlusApp;
 typedef boost::shared_ptr<oreplus::analytics::OREPlusApp> OREPlusAppPtr;
@@ -30,6 +44,7 @@ typedef boost::shared_ptr<ore::analytics::Parameters> ParametersPtr;
 
 using ore::data::MarketImpl;
 typedef boost::shared_ptr<ore::data::MarketImpl> MarketImplPtr;
+
 %}
 
 %rename(ORE) OREPlusAppPtr;
