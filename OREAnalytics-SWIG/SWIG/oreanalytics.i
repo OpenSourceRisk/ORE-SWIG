@@ -61,5 +61,8 @@ const char* __version__;
 // include all quantext .i's
 %include qle.i
 
+// include all OREData .i's
+%include ored.i
+
 // include all OREAnalytics and OREData .i's
 %include orea.i
