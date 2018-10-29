@@ -123,41 +123,25 @@ class my_build_ext(build_ext):
 
         if compiler == 'msvc':
             try:
-                # QuantLib Directories
-                QL_INSTALL_DIR = os.environ['QL_DIR']
-                self.include_dirs += [QL_INSTALL_DIR]
-                self.library_dirs += [os.path.join(QL_INSTALL_DIR, 'lib')]
-                # QuantExt Directories
-                QLEXT_INSTALL_DIR = os.environ['QLEXT_DIR']
-                self.include_dirs += [QLEXT_INSTALL_DIR]
-                self.library_dirs += [os.path.join(QLEXT_INSTALL_DIR, 'lib')]
-                # OREAnalytics Directories
-                OREANALYTICS_INSTALL_DIR = os.environ['OREANALYTICS_DIR']
-                self.include_dirs += [OREANALYTICS_INSTALL_DIR]
-                self.library_dirs += [os.path.join(OREANALYTICS_INSTALL_DIR, 'lib')]
-                # OREData Directories
-                OREDATA_INSTALL_DIR = os.environ['OREDATA_DIR']
-                self.include_dirs += [OREDATA_INSTALL_DIR]
-                self.library_dirs += [os.path.join(OREDATA_INSTALL_DIR, 'lib')]
-#                # OREPlus Directories
-#                OREPLUS_INSTALL_DIR = os.environ['OREPLUS_DIR']
-#                self.include_dirs += [OREPLUS_INSTALL_DIR]
-#                self.library_dirs += [os.path.join(OREPLUS_INSTALL_DIR, 'lib')]
-#                OREPLUSAPP_INSTALL_DIR = os.environ['OREPLUSAPP_DIR']
-#                self.include_dirs += [OREPLUSAPP_INSTALL_DIR]
-#                self.library_dirs += [os.path.join(OREPLUSAPP_INSTALL_DIR, 'lib')]
-#                OREPLUSBASE_INSTALL_DIR = os.environ['OREPLUSBASE_DIR']
-#                self.include_dirs += [OREPLUSBASE_INSTALL_DIR]
-#                self.library_dirs += [os.path.join(OREPLUSBASE_INSTALL_DIR, 'lib')]
-                # BOOST Directories
                 BOOST_DIR = os.environ['BOOST']
                 self.include_dirs += [BOOST_DIR]
                 self.library_dirs += [os.path.join(BOOST_DIR, 'lib', 'x64', 'lib', 'lib')]
 
-                # Link static Libraries
-                self.libraries += ['QuantLib-vc141-x64-mt', 'QuantExt-vc141-x64-mt', 'OREAnalytics-vc141-x64-mt', 'OREData-vc141-x64-mt','libboost_filesystem-vc141-mt-1_65_1', 'libboost_serialization-vc141-mt-1_65_1', 'libboost_regex-vc141-mt-1_65_1']
+                if 'ORE_DIR' in os.environ:
+                    # SET ORE ENVIRONMENT
+                    ORE_INSTALL_DIR = os.environ['ORE_DIR']
+                    # SET INCLUDE DIRECTORIES
+                    self.include_dirs += [os.path.join(ORE_INSTALL_DIR,'QuantLib')]
+                    self.include_dirs += [os.path.join(ORE_INSTALL_DIR,'QuantExt')]
+                    self.include_dirs += [os.path.join(ORE_INSTALL_DIR,'OREData')]
+                    self.include_dirs += [os.path.join(ORE_INSTALL_DIR,'OREAnalytics')]
+                    # SET LIBRARY DIRECTORIES
+                    self.library_dirs += [os.path.join(ORE_INSTALL_DIR,'QuantLib','lib')]
+                    self.library_dirs += [os.path.join(ORE_INSTALL_DIR,'QuantExt','lib')]
+                    self.library_dirs += [os.path.join(ORE_INSTALL_DIR,'OREData','lib')]
+                    self.library_dirs += [os.path.join(ORE_INSTALL_DIR,'OREAnalytics','lib')]
             except KeyError:
-                print('warning: unable to detect QuantExt/QuantLib/OREAnalytics/OREPlus installation')
+                print('warning: unable to detect QuantExt/QuantLib/OREAnalytics/OREData installation')
 
             if 'INCLUDE' in os.environ:
                 dirs = [dir for dir in os.environ['INCLUDE'].split(';')]
