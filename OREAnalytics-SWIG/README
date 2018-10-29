@@ -59,6 +59,7 @@ windows
 
 5) Try examples (all work):
    cd examples
+   python ore.py
    python swap.py
    python commodityforward.py
 
