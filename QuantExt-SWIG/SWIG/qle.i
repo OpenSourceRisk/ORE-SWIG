@@ -7,7 +7,9 @@
 #define qle_i
 
 %{
+#ifdef BOOST_MSVC
 #include <qle/auto_link.hpp>
+#endif
 #include <qle/instruments/commodityforward.hpp>
 #include <qle/instruments/crossccybasisswap.hpp>
 #include <qle/termstructures/pricetermstructure.hpp>
