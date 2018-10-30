@@ -17,6 +17,7 @@
 #include <vector>
 
 #ifdef BOOST_MSVC 
+#include <orepapp/auto_link.hpp>
 #define BOOST_LIB_NAME boost_regex
 #include <boost/config/auto_link.hpp>
 #define BOOST_LIB_NAME boost_serialization
@@ -32,7 +33,6 @@
 #include <ql/errors.hpp>
 
 #include <orepapp/orea/app/oreplusapp.hpp>
-#include <orepapp/auto_link.hpp>
 
 
 using oreplus::analytics::OREPlusApp;
