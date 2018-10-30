@@ -58,7 +58,7 @@ windows
 3) Add ORE path to the SYSTEM ENVIRONMENT, e.g. 
    SET ORE_DIR=C:\dev\openxva
 
-4) Run the following python scripts to install QuantExt libraries:
+4) Run the following python scripts to install ORE Plus libraries:
    cd Python
    python setup.py wrap
    python setup.py build
