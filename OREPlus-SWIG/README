@@ -1,5 +1,6 @@
-macos
-=====
+===========================================
+macos automake build using python distutils
+===========================================
 
 0) Patch QuantLib-SWIG
    daycounters.i: comment out the deprecated Actual365NoLeap
@@ -16,9 +17,13 @@ macos
 
 3) Run ./autogen.sh and configure
    ./configure CXXFLAGS="-O2 -std=c++11 -stdlib=libc++ -mmacosx-version-min=10.9" LDFLAGS="-stdlib=libc++ -mmacosx-version-min=10.9 -L$OREMASTER/QuantExt/qle/.libs -lQuantExt -L$OREMASTER/QuantLib/ql/.libs -lQuantLib -L$OREMASTER/OREData/ored/.libs -lOREData -L$OREMASTER/OREAnalytics/orea/.libs -lOREAnalytics -L$OREMASTER/OREPlus/App/orepapp/.libs -lOREPlusApp -L$BOOST/stage/lib -lboost_thread -lboost_system -lboost_serialization -lboost_date_time -lboost_regex -lboost_filesystem"
-   
-4) Build wrapper:
+
+4) Build wrapper by invoking:
    make -C python
+
+   Note: This performs essentially two steps
+   - call "swig ..." to generate wrapper code (Python/OREPlus/oreplus_wrap.cpp and Python/OREPlus/OREPlus.py)
+   - call "CC=... CXX=... CXXFLAGS=... LDFLAGS=... python setup.py build" to compile the cpp wrapper
 
 5) Add Boost, QuantLib, QuantExt, OREData and OREAnalytics locations to the DYLD_LIBRARY_PATH, e.g. 
    export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:/Users/roland/Development/boost/boost_1_65_1/stage/lib:/Users/roland/Development/oremaster/QuantLib/ql/.libs:/Users/roland/Development/oremaster/QuantExt/qle/.libs:/Users/roland/Development/oremaster/OREData/ored/.libs:/Users/roland/Development/oremaster/OREAnalytics/orea/.libs
@@ -64,4 +69,5 @@ windows
    python ore.py
    python swap.py
    python commodityforward.py
+
 

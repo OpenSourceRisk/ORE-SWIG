@@ -50,7 +50,8 @@ typedef boost::shared_ptr<ore::data::MarketImpl> MarketImplPtr;
 %}
 
 %rename(ORE) OREPlusAppPtr;
-class OREPlusAppPtr : public OREAppPtr {
+//class OREPlusAppPtr : public OREAppPtr {
+class OREPlusAppPtr {
 public:
   %extend {
     OREPlusAppPtr(const ParametersPtr& p, std::ostream& out = std::cout) {

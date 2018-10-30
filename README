@@ -14,3 +14,59 @@ Build SWIG wrappers for ORE
 (4) To build a single Python module that covers on QuantExt and QuantLib:
     Change to the QuantExt-SWIG directory and follow the steps in QuantExt-SWIG/README
 
+Build using CMake on Mac OS
+===========================
+
+(1) Ensure that the ORE libraries have been built with CMake (branch ore_swig_cmake)
+    See user guide, new section on page 16.
+
+(2) Ensure the following environment variables are set
+    # Root directory for ORE includes and libraries
+    export ORE=...		(e.g. /Users/roland/Development/oremaster)
+
+    # Explicitly used by CMake to find the Boost installation
+    export BOOST_ROOT=...	(e.g. /Users/roland/Development/boost/boost_1_65_1)
+    export BOOST_LIBRARYDIR=...	(e.g. $BOOST_ROOT/stage/lib)
+
+(3) Create sub-directory "build" in the ORESWIG project directory
+    and change to directory "build"
+
+(4) Configuration
+    # We pass all required variabes explicitly to cmake, our CMakeLists.txt does not read environment variables (though it could)
+    # Especially when there is more than one Python installation (anaconda etc), use the PYTHON_... variables to identify
+    # the desired python library and includes.
+    # Otherwise cmake should find the python installation automatically, and these variables can be omitted here.
+    cmake -D PYTHON_LIBRARY=<path/to/python/library> \
+    	  -D PYTHON_INCLUDE_DIR=<path/to/python/includes> \
+	  -D ORE=$ORE ..
+
+    For example, with Python 3.5 from the anaconda distribution on my Mac:
+    cmake -D PYTHON_LIBRARY=/Users/roland/anaconda/lib/libpython3.5m.dylib \
+    	  -D PYTHON_INCLUDE_DIR=/Users/roland/anaconda/include/python3.5m \
+	  -D ORE=$ORE ..    
+    
+(5) Build:
+    # This performs two steps
+    # - cpp wrapper and python module code generation (with a call to swig)
+    # - cpp wrapper code compilation
+    # Option -j... does not help speeding this up, because compilation follows generation
+    make 
+
+(6) Update PYTHONPATH, so that Python scripts will find the new Python modules
+    For example:
+    export PYTHONPATH=$ORESWIG/build/OREPlus-SWIG/Python:$PYTHONPATH
+
+(7) TODO: Installation
+    The CMakeLists.txt file has a section on installation (commented out so far). When using this, the module and library
+    (e.g. OREPlus.py and _OREPlus.so, together with an __init__.py) are simply copied to a site-packages directory that is
+    in the PYTHONPATH. This overwrites any __init__.py there and does not integrate with other site-packages yet.
+    Moreover, this either needs updating the rpath information or setting the DYLD_LIBRARY_PATH for _OREPlus.so to find
+    the dependent ORE libraries. For the time being, one can simply use (6) above.
+
+(8) Run Python example:
+    cd OREPlus-SWIG/Python/examples
+    python ore.py
+
+(8) Run Java example:
+    cd OREPlus-SWIG/Java/examples
+    java -Djava.library.path=../../../build/OREPlus-SWIG/Java -jar ../../../build/OREPlus-SWIG/Java/ORERunner.jar Input/ore.xml
