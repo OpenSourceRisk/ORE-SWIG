@@ -39,3 +39,35 @@ macos automake build using python distutils
    cd examples
    python swap.py
 
+
+windows
+=======
+
+1) Add Python INCLUDE and LIBRARY paths to the system environment if they do not exist, e.g. 
+   SET PYTHON_INCLUDE="C:\Users\Danilo Delgado\AppData\Local\Continuum\anaconda3\include"
+   SET PYTHON_LIB="C:\Users\Danilo Delgado\AppData\Local\Continuum\anaconda3\libs"
+   
+2) Add BOOST paths to the system environment, e.g. 
+   SET BOOST=C:\repos\boost_1_65_1
+   
+   - if INCLUDE variable has already been set in the system environment, then run:
+   SET INCLUDE=%INCLUDE%;%BOOST%
+   - if INCLUDE variable has not been set in the system environment, then run:
+   SET INCLUDE=%BOOST%
+
+3) Add ORE path to the SYSTEM ENVIRONMENT, e.g. 
+   SET ORE_DIR=C:\dev\openxva
+
+4) Run the following python scripts to install ORE Plus libraries:
+   cd Python
+   python setup.py wrap
+   python setup.py build
+   python setup.py install
+
+5) Try examples (all work):
+   cd examples
+   python ore.py
+   python swap.py
+   python commodityforward.py
+
+

@@ -18,7 +18,21 @@
 #include <ql/errors.hpp>
 
 #include <orea/app/oreapp.hpp>
-  
+
+#ifdef BOOST_MSVC
+#include <orea/auto_link.hpp>
+#define BOOST_LIB_NAME boost_regex
+#include <boost/config/auto_link.hpp>
+#define BOOST_LIB_NAME boost_serialization
+#include <boost/config/auto_link.hpp>
+#define BOOST_LIB_NAME boost_date_time
+#include <boost/config/auto_link.hpp>
+#define BOOST_LIB_NAME boost_filesystem
+#include <boost/config/auto_link.hpp>
+#define BOOST_LIB_NAME boost_system
+#include <boost/config/auto_link.hpp>
+#endif
+
 using ore::analytics::Parameters;
 typedef boost::shared_ptr<ore::analytics::Parameters> ParametersPtr;
 

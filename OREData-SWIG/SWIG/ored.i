@@ -17,6 +17,10 @@
 
 #include <ql/errors.hpp>
 
+#ifdef BOOST_MSVC
+#include <ored/auto_link.hpp>
+#endif
+
 #include <ored/portfolio/portfolio.hpp>
 #include <ored/marketdata/marketimpl.hpp>
 #include <ored/marketdata/todaysmarket.hpp>

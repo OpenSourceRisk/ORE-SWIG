@@ -129,16 +129,15 @@ class my_build_ext(build_ext):
 
         if compiler == 'msvc':
             try:
-                # QuantLib Directories
-                QL_INSTALL_DIR = os.environ['QL_DIR']
-                self.include_dirs += [QL_INSTALL_DIR]
-                self.library_dirs += [os.path.join(QL_INSTALL_DIR, 'lib')]
-                # QuantExt Directories
-                QLEXT_INSTALL_DIR = os.environ['QLEXT_DIR']
-                self.include_dirs += [QLEXT_INSTALL_DIR]
-                self.library_dirs += [os.path.join(QLEXT_INSTALL_DIR, 'lib')]
-                # Link static Libraries
-                self.libraries += ['QuantLib-vc141-x64-mt', 'QuantExt-vc141-x64-mt']
+                if 'ORE_DIR' in os.environ:
+                    # SET ORE ENVIRONMENT
+                    ORE_INSTALL_DIR = os.environ['ORE_DIR']
+                    # SET INCLUDE DIRECTORIES
+                    self.include_dirs += [os.path.join(ORE_INSTALL_DIR,'QuantLib')]
+                    self.include_dirs += [os.path.join(ORE_INSTALL_DIR,'QuantExt')]
+                    # SET LIBRARY DIRECTORIES
+                    self.library_dirs += [os.path.join(ORE_INSTALL_DIR,'QuantLib','lib')]
+                    self.library_dirs += [os.path.join(ORE_INSTALL_DIR,'QuantExt','lib')]
             except KeyError:
                 print('warning: unable to detect QuantExt or QuantLib installation')
 
