@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.8)
 
-project(OREPlus-Python)
+project(QuantExt-Python)
 
 include(${ORE}/cmake/commonSettings.cmake)
 
@@ -19,9 +19,6 @@ if (MSVC)
 endif()
 
 # The module depends on a number of libraries in the ORE project: determine their exact names
-get_library_name("OREPlusApp" OREPAPP_LIB_NAME)
-get_library_name("OREAnalytics" OREA_LIB_NAME)
-get_library_name("OREData" ORED_LIB_NAME)
 get_library_name("QuantExt" QLE_LIB_NAME)
 get_library_name("QuantLib" QL_LIB_NAME)
 configure_msvc_runtime()
@@ -37,41 +34,29 @@ include(${SWIG_USE_FILE})
 # Add to the list of include directories
 include_directories(${PROJECT_SOURCE_DIR}/../SWIG)
 include_directories(${PROJECT_SOURCE_DIR}/../../QuantLib-SWIG/SWIG)
-include_directories(${PROJECT_SOURCE_DIR}/../../QuantExt-SWIG/SWIG)
-include_directories(${PROJECT_SOURCE_DIR}/../../OREData-SWIG/SWIG)
-include_directories(${PROJECT_SOURCE_DIR}/../../OREAnalytics-SWIG/SWIG)
 include_directories(${ORE}/QuantLib)
 include_directories(${ORE}/QuantExt)
-include_directories(${ORE}/OREData)
-include_directories(${ORE}/OREAnalytics)
-include_directories(${ORE}/OREPlus/App)
 include_directories(${Boost_INCLUDE_DIRS})
 include_directories(${PYTHON_INCLUDE_PATH})
 
 # Add to the list of link directories
 link_directories(${ORE}/build/QuantLib/ql)
 link_directories(${ORE}/build/QuantExt/qle)
-link_directories(${ORE}/build/OREData/ored)
-link_directories(${ORE}/build/OREAnalytics/orea)
-link_directories(${ORE}/build/OREPlus/App/orepapp)
 
 # Tell SWIG to compile in C++ mode
-set_source_files_properties(${PROJECT_SOURCE_DIR}/../SWIG/oreplus.i PROPERTIES CPLUSPLUS ON)
-set_source_files_properties(${PROJECT_SOURCE_DIR}/../SWIG/oreplus.i PROPERTIES SWIG_FLAGS "-includeall")
-#set_source_files_properties(${PROJECT_SOURCE_DIR}/../SWIG/oreplus.i PROPERTIES SWIG_FLAGS "-modern")
-#set_source_files_properties(${PROJECT_SOURCE_DIR}/../SWIG/oreplus.i PROPERTIES SWIG_FLAGS "-py3")
+set_source_files_properties(${PROJECT_SOURCE_DIR}/../SWIG/quantext.i PROPERTIES CPLUSPLUS ON)
+set_source_files_properties(${PROJECT_SOURCE_DIR}/../SWIG/quantext.i PROPERTIES SWIG_FLAGS "-includeall")
+#set_source_files_properties(${PROJECT_SOURCE_DIR}/../SWIG/quantext.i PROPERTIES SWIG_FLAGS "-modern")
+#set_source_files_properties(${PROJECT_SOURCE_DIR}/../SWIG/quantext.i PROPERTIES SWIG_FLAGS "-py3")
 
-# Tell SWIG to build a Python module, to be called "OREPlus"
-swig_add_library(OREPlus TYPE MODULE LANGUAGE python SOURCES ${PROJECT_SOURCE_DIR}/../SWIG/oreplus.i)
+# Tell SWIG to build a Python module, to be called "QuantExt"
+swig_add_library(QuantExt TYPE MODULE LANGUAGE python SOURCES ${PROJECT_SOURCE_DIR}/../SWIG/quantext.i)
 
 # Add all libraries to link with
-swig_link_libraries(OREPlus ${PYTHON_LIBRARIES})
-swig_link_libraries(OREPlus ${Boost_LIBRARIES})
-swig_link_libraries(OREPlus ${QL_LIB_NAME})
-swig_link_libraries(OREPlus ${QLE_LIB_NAME})
-swig_link_libraries(OREPlus ${ORED_LIB_NAME})
-swig_link_libraries(OREPlus ${OREA_LIB_NAME})
-swig_link_libraries(OREPlus ${OREPAPP_LIB_NAME})
+swig_link_libraries(QuantExt ${PYTHON_LIBRARIES})
+swig_link_libraries(QuantExt ${Boost_LIBRARIES})
+swig_link_libraries(QuantExt ${QL_LIB_NAME})
+swig_link_libraries(QuantExt ${QLE_LIB_NAME})
 
 #if (APPLE) 
 #
