@@ -129,24 +129,29 @@ class my_build_ext(build_ext):
 
         if compiler == 'msvc':
             try:
-                if 'ORE_DIR' in os.environ:
-                    # SET ORE ENVIRONMENT
-                    ORE_INSTALL_DIR = os.environ['ORE_DIR']
-                    # SET INCLUDE DIRECTORIES
-                    self.include_dirs += [os.path.join(ORE_INSTALL_DIR,'QuantLib')]
-                    self.include_dirs += [os.path.join(ORE_INSTALL_DIR,'QuantExt')]
-                    # SET LIBRARY DIRECTORIES
-                    self.library_dirs += [os.path.join(ORE_INSTALL_DIR,'QuantLib','lib')]
-                    self.library_dirs += [os.path.join(ORE_INSTALL_DIR,'QuantExt','lib')]
-            except KeyError:
-                print('warning: unable to detect QuantExt or QuantLib installation')
+                BOOST_DIR = os.environ['BOOST_ROOT']
+                BOOST_LIB = os.environ['BOOST_LIBRARYDIR']
+                ORE_INSTALL_DIR = os.environ['ORE_DIR']
 
-            if 'INCLUDE' in os.environ:
-                dirs = [dir for dir in os.environ['INCLUDE'].split(';')]
-                self.include_dirs += [ d for d in dirs if d.strip() ]
-            if 'LIB' in os.environ:
-                dirs = [dir for dir in os.environ['LIB'].split(';')]
-                self.library_dirs += [ d for d in dirs if d.strip() ]
+                # ADD INCLUDE DIRECTORIES
+                self.include_dirs += [BOOST_DIR]
+                self.include_dirs += [os.path.join(ORE_INSTALL_DIR,'QuantLib')]
+                self.include_dirs += [os.path.join(ORE_INSTALL_DIR,'QuantExt')]
+
+				# ADD LIBRARY DIRECTORIES
+                self.library_dirs += [BOOST_LIB]
+                self.library_dirs += [os.path.join(ORE_INSTALL_DIR,'QuantLib','lib')]
+                self.library_dirs += [os.path.join(ORE_INSTALL_DIR,'QuantExt','lib')]
+
+            except KeyError:
+                print('warning: unable to detect BOOST/ORE installation')
+
+#            if 'INCLUDE' in os.environ:
+#                dirs = [dir for dir in os.environ['INCLUDE'].split(';')]
+#                self.include_dirs += [ d for d in dirs if d.strip() ]
+#            if 'LIB' in os.environ:
+#                dirs = [dir for dir in os.environ['LIB'].split(';')]
+#                self.library_dirs += [ d for d in dirs if d.strip() ]
             dbit = round(math.log(sys.maxsize, 2) + 1)
             if dbit == 64:
                 machinetype = '/machine:x64'
