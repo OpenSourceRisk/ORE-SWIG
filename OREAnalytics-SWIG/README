@@ -40,13 +40,9 @@ windows
    SET PYTHON_INCLUDE="C:\Users\Danilo Delgado\AppData\Local\Continuum\anaconda3\include"
    SET PYTHON_LIB="C:\Users\Danilo Delgado\AppData\Local\Continuum\anaconda3\libs"
    
-2) Add BOOST paths to the system environment, e.g. 
+2) Add BOOST and BOOST_LIB paths to the system environment, e.g. 
    SET BOOST=C:\repos\boost_1_65_1
-   
-   - if INCLUDE variable has already been set in the system environment, then run:
-   SET INCLUDE=%INCLUDE%;%BOOST%
-   - if INCLUDE variable has not been set in the system environment, then run:
-   SET INCLUDE=%BOOST%
+   SET BOOST_LIB=C:\repos\boost_1_65_1\lib\x64\lib\lib
 
 3) Add ORE path to the SYSTEM ENVIRONMENT, e.g. 
    SET ORE_DIR=C:\dev\openxva
