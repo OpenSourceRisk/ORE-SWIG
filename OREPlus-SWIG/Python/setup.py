@@ -127,36 +127,37 @@ class my_build_ext(build_ext):
         if compiler == 'msvc':
             try:
                 BOOST_DIR = os.environ['BOOST']
-                self.include_dirs += [BOOST_DIR]
-                self.library_dirs += [os.path.join(BOOST_DIR, 'lib', 'x64', 'lib', 'lib')]
+                BOOST_LIB = os.environ['BOOST_LIB']
+                ORE_INSTALL_DIR = os.environ['ORE_DIR']
 
-                if 'ORE_DIR' in os.environ:
-                    # SET ORE ENVIRONMENT
-                    ORE_INSTALL_DIR = os.environ['ORE_DIR']
-                    # SET INCLUDE DIRECTORIES
-                    self.include_dirs += [os.path.join(ORE_INSTALL_DIR,'QuantLib')]
-                    self.include_dirs += [os.path.join(ORE_INSTALL_DIR,'QuantExt')]
-                    self.include_dirs += [os.path.join(ORE_INSTALL_DIR,'OREData')]
-                    self.include_dirs += [os.path.join(ORE_INSTALL_DIR,'OREAnalytics')]
-                    self.include_dirs += [os.path.join(ORE_INSTALL_DIR,'OREPlus')]
-                    self.include_dirs += [os.path.join(ORE_INSTALL_DIR,'OREPlus','App')]
-                    self.include_dirs += [os.path.join(ORE_INSTALL_DIR,'OREPlus','Sensitivity')]
-                    # SET LIBRARY DIRECTORIES
-                    self.library_dirs += [os.path.join(ORE_INSTALL_DIR,'QuantLib','lib')]
-                    self.library_dirs += [os.path.join(ORE_INSTALL_DIR,'QuantExt','lib')]
-                    self.library_dirs += [os.path.join(ORE_INSTALL_DIR,'OREData','lib')]
-                    self.library_dirs += [os.path.join(ORE_INSTALL_DIR,'OREAnalytics','lib')]
-                    self.library_dirs += [os.path.join(ORE_INSTALL_DIR,'OREPlus','App','lib')]
-                    self.library_dirs += [os.path.join(ORE_INSTALL_DIR,'OREPlus','Sensitivity','lib')]
+                # ADD INCLUDE DIRECTORIES
+                self.include_dirs += [BOOST_DIR]
+                self.include_dirs += [os.path.join(ORE_INSTALL_DIR,'QuantLib')]
+                self.include_dirs += [os.path.join(ORE_INSTALL_DIR,'QuantExt')]
+                self.include_dirs += [os.path.join(ORE_INSTALL_DIR,'OREData')]
+                self.include_dirs += [os.path.join(ORE_INSTALL_DIR,'OREAnalytics')]
+                self.include_dirs += [os.path.join(ORE_INSTALL_DIR,'OREPlus')]
+                self.include_dirs += [os.path.join(ORE_INSTALL_DIR,'OREPlus','App')]
+                self.include_dirs += [os.path.join(ORE_INSTALL_DIR,'OREPlus','Sensitivity')]
+
+				# ADD LIBRARY DIRECTORIES
+                self.library_dirs += [BOOST_LIB]
+                self.library_dirs += [os.path.join(ORE_INSTALL_DIR,'QuantLib','lib')]
+                self.library_dirs += [os.path.join(ORE_INSTALL_DIR,'QuantExt','lib')]
+                self.library_dirs += [os.path.join(ORE_INSTALL_DIR,'OREData','lib')]
+                self.library_dirs += [os.path.join(ORE_INSTALL_DIR,'OREAnalytics','lib')]
+                self.library_dirs += [os.path.join(ORE_INSTALL_DIR,'OREPlus','App','lib')]
+                self.library_dirs += [os.path.join(ORE_INSTALL_DIR,'OREPlus','Sensitivity','lib')]
+
             except KeyError:
                 print('warning: unable to detect BOOST/ORE installation')
 
-            if 'INCLUDE' in os.environ:
-                dirs = [dir for dir in os.environ['INCLUDE'].split(';')]
-                self.include_dirs += [ d for d in dirs if d.strip() ]
-            if 'LIB' in os.environ:
-                dirs = [dir for dir in os.environ['LIB'].split(';')]
-                self.library_dirs += [ d for d in dirs if d.strip() ]
+#            if 'INCLUDE' in os.environ:
+#                dirs = [dir for dir in os.environ['INCLUDE'].split(';')]
+#                self.include_dirs += [ d for d in dirs if d.strip() ]
+#            if 'LIB' in os.environ:
+#                dirs = [dir for dir in os.environ['LIB'].split(';')]
+#                self.library_dirs += [ d for d in dirs if d.strip() ]
             dbit = round(math.log(sys.maxsize, 2) + 1)
             if dbit == 64:
                 machinetype = '/machine:x64'
