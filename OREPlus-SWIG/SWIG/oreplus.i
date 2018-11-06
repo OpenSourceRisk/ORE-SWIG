@@ -56,7 +56,7 @@ const char* __version__;
 //#endif
 
 // include all quantlib .i's
-%include ql.i
+%include ql_patched.i
 
 // for faster build: include minimal set of quantlib .i's (dates, term structures, indexes) 
 //%include qlshort.i
