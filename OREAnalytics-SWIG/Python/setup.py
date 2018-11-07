@@ -249,7 +249,7 @@ classifiers = [
 ]
 
 setup(name             = "OREAnalytics-Python",
-      version          = "@PACKAGE_VERSION@",
+      version          = "1.14",
       description      = "Python bindings for the OREAnalytics library",
       long_description = """
 OREAnalytics (http://opensourcerisk.org/) is a C++ library for financial quantitative
