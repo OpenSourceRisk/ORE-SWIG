@@ -2,15 +2,20 @@ cmake_minimum_required(VERSION 3.8)
 
 project(OREPlusJava CXX)
 
+# write the library here
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}")
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}")
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}")
+
 # workaround for ninja which requires the file to exist before the build starts
-execute_process(
-  WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
-  COMMAND ${CMAKE_COMMAND} -E make_directory lib
-)
+#execute_process(
+#  WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
+#  COMMAND ${CMAKE_COMMAND} -E make_directory lib
+#)
 
 execute_process(
-  WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
-  COMMAND ${CMAKE_COMMAND} -E touch lib/OREPlusJava.jar
+  WORKING_DIRECTORY ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}
+  COMMAND ${CMAKE_COMMAND} -E touch OREPlusJava.jar
 )
 
 include(${ORE}/cmake/commonSettings.cmake)
@@ -109,7 +114,6 @@ add_jar(ORERunner
         ENTRY_POINT orerunner/ORERunner
         MANIFEST Manifest.txt
     	OUTPUT_DIR ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY})
-#    	OUTPUT_DIR examples)
 
 add_dependencies(ORERunner ${ORE_JAVA_LIB_NAME})
 

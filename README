@@ -5,13 +5,17 @@ Build Individual SWIG wrappers for ORE
     The branch has one crucial extension in OREPlus/App that will be referred to by the wrapper in (2) below.
     For (3) and (4) this step can be skipped.
 
-(2) To build a single Python module that covers ORE including OREPlus/App, OREAnalytics, OREData, QuantExt and QuantLib:
+(2) cd ORESWIG projekt directory and pull down QuantLib-SWIG:
+    git submodule init
+    git submodule update
+
+(3) To build a single Python module that covers ORE including OREPlus/App, OREAnalytics, OREData, QuantExt and QuantLib:
     Change to the OREPlus-SWIG directory and follow the steps below or in OREPlus-SWIG/README
 
-(3) To build a single Python module that covers OREAnalytics, OREData, QuantExt and QuantLib:
+(4) To build a single Python module that covers OREAnalytics, OREData, QuantExt and QuantLib:
     Change to the OREAnalytics-SWIG directory and follow the steps below or in OREAnalytics-SWIG/README
 
-(4) To build a single Python module that covers on QuantExt and QuantLib:
+(5) To build a single Python module that covers on QuantExt and QuantLib:
     Change to the QuantExt-SWIG directory and follow the steps below or in QuantExt-SWIG/README
 
 Build using CMake on Mac OS
@@ -20,10 +24,14 @@ Build using CMake on Mac OS
 (1) Fetch ORE (branch origin/ore_swig_cmake) and build with CMake
     See user guide on that branch (Docs/UserGuide/userguide.pdf), new section on page 16.
 
-(2) Create sub-directory "build" in the ORESWIG project directory
+(2) cd ORESWIG projekt directory and pull down QuantLib-SWIG:
+    git submodule init
+    git submodule update
+
+(3) Create sub-directory "build" in the ORESWIG project directory
     and change to directory "build"
 
-(3) Configuration, specify the location of the ORE root directory, Boost root and library, Python includes and library.
+(4) Configuration, specify the location of the ORE root directory, Boost root and library, Python includes and library.
     For example:
 
     cmake -D PYTHON_LIBRARY=/Users/roland/anaconda/lib/libpython3.5m.dylib \
@@ -35,25 +43,25 @@ Build using CMake on Mac OS
     PYTHON_LIBRARY, PYTHON_INCLUDE_DIR, BOOST_ROOT and BOOST_LIBRARYDIR can also be set as environemnt variable,
     and need not be passed with the -D option in that case.
     
-(4) Build (generates Python and Java wrappers so far):
+(5) Build (generates Python and Java wrappers so far):
     make 
 
-(5) Run Python example:
+(6) Run Python example:
     - Update PYTHONPATH, so that Python scripts will find the new Python modules
       For example: export PYTHONPATH=$ORESWIG/build/OREPlus-SWIG/Python:$PYTHONPATH
     - cd OREPlus-SWIG/Python/examples
       python ore.py
 
-(6) Run Java example:
+(7) Run Java example:
     cd OREPlus-SWIG/Java/examples
     java -Djava.library.path=../../../build/OREPlus-SWIG/Java -jar ../../../build/OREPlus-SWIG/Java/ORERunner.jar Input/ore.xml
 
 Build using CMake on Windows
 ============================
 
-(1) and (2) See above
+(1) - (3) See above
     
-(3) Configuration assuming that Ninja build system is available (equivalent to make), and Python and Boost locations are
+(4) Configuration assuming that Ninja build system is available (equivalent to make), and Python and Boost locations are
     found automatically. This is the command line that works on dev104:
 
     cmake -D ORE=C:/dev/roland/ore \
@@ -61,7 +69,7 @@ Build using CMake on Windows
 	  -D MSVC_RUNTIME=static  \
 	  -G Ninja ..
 
-(4) Build:
+(5) Build:
     ninja
 
-(5) and (6) See above
+(6) and (7) See above
