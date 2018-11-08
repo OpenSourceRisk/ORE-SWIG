@@ -23,15 +23,8 @@ OREAnalytics-SWIG/Python/OREAnalytics_Python.egg-info/
 OREAnalytics-SWIG/Python/dist/
 #OREAnalytics-SWIG/Python/setup.py
 OREAnalytics-SWIG/Python/.build-stamp
-OREPlus-SWIG/Python/OREPlus/OREPlus.py
-OREPlus-SWIG/Python/OREPlus/oreplus_wrap.cpp
-OREPlus-SWIG/Python/OREPlus_Python.egg-info/
-OREPlus-SWIG/Python/dist/
 OREAnalytics-SWIG/Python/examples/Output/
 OREAnalytics-SWIG/Python/vc140.idb
-#OREPlus-SWIG/Python/setup.py
-OREPlus-SWIG/Python/.build-stamp
-OREPlus-SWIG/Python/OREPlus/OREAnalytics.py
 #
 ##########################
 # General
