@@ -10,12 +10,7 @@
 #ifdef BOOST_MSVC
 #include <qle/auto_link.hpp>
 #endif
-#include <qle/instruments/commodityforward.hpp>
-#include <qle/instruments/crossccybasisswap.hpp>
-#include <qle/termstructures/pricetermstructure.hpp>
-#include <qle/termstructures/pricecurve.hpp>
-#include <qle/termstructures/crossccybasisswaphelper.hpp>
-#include <qle/pricingengines/discountingcommodityforwardengine.hpp>
+#include <qle/quantext.hpp>
 %}
 
 //%include qle_commodityforward.i
