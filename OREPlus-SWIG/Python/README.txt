@@ -1,5 +1,5 @@
 
-The C++ wrappers for the QuantLib-Python extension module are created
+The C++ wrappers for the ORE Python extension modules are created
 by means of SWIG (Simplified Wrapper and Interface Generator)
 available from <http://www.swig.org/>; the latest version is suggested.
 Both Python 2.7 and 3.x are supported.
@@ -19,11 +19,14 @@ wrappers are:
 
 respectively.
 
-The build step requires that the QuantLib headers and library can be
-found by the compiler. On Unix-like platforms, this requires that
-`quantlib-config` is in your path. On the Windows platform, instead,
-it requires you to define a `QL_DIR` environment variable pointing to
-your QuantLib directory (e.g., `C:\Lib\QuantLib`.)
+The build step requires that the Boost, Python, QuantLib and ORE
+headers and libraries can be found by the compiler.
+On Unix-like platforms, this requires that an `ore-config` script
+(an extended version of quantlib-config) is in your path.
+On the Windows platform, instead, it requires you to define the
+`ORE_DIR`, `BOOST_ROOT`, `BOOST_LIBRARYDIR`, `PYTHON_INCLUDE` and `PYTHON_LIB`
+environment variables pointing to your ORE root directory
+(e.g. `C:\Dev\ORE`) etc.
 
 The install step might require superuser privileges.
 An alternate install location can be specified with the command:
