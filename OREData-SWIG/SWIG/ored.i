@@ -21,9 +21,7 @@
 #include <ored/auto_link.hpp>
 #endif
 
-#include <ored/portfolio/portfolio.hpp>
-#include <ored/marketdata/marketimpl.hpp>
-#include <ored/marketdata/todaysmarket.hpp>
+#include <ored/ored.hpp>
   
 using ore::data::Portfolio;
 typedef boost::shared_ptr<ore::data::Portfolio> PortfolioPtr;
@@ -140,7 +138,7 @@ class MarketImplPtr {
     }
 
     // Base correlation structures
-    Handle<BaseCorrelationTermStructure<BilinearInterpolation>>
+    Handle<QuantLib::BaseCorrelationTermStructure<QuantLib::BilinearInterpolation>>
       baseCorrelation(const std::string& name,
 		      const std::string& configuration = Market::defaultConfiguration) const {
       return boost::dynamic_pointer_cast<ore::data::MarketImpl>(*self)->baseCorrelation(name, configuration);
@@ -173,14 +171,14 @@ class MarketImplPtr {
     }
 
     // CPI Inflation Cap Floor Price Surfaces
-    Handle<CPICapFloorTermPriceSurface>
+    Handle<QuantLib::CPICapFloorTermPriceSurface>
       cpiInflationCapFloorPriceSurface(const std::string& indexName,
 				       const std::string& configuration = Market::defaultConfiguration) const {
       return boost::dynamic_pointer_cast<ore::data::MarketImpl>(*self)->cpiInflationCapFloorPriceSurface(indexName, configuration);
     }
 
     // YoY Inflation Cap Floor Price Surfaces
-    Handle<YoYCapFloorTermPriceSurface>
+    Handle<QuantLib::YoYCapFloorTermPriceSurface>
       yoyInflationCapFloorPriceSurface(const std::string& indexName,
 				       const std::string& configuration = Market::defaultConfiguration) const {
       return boost::dynamic_pointer_cast<ore::data::MarketImpl>(*self)->yoyInflationCapFloorPriceSurface(indexName, configuration);

@@ -17,7 +17,7 @@
 
 #include <ql/errors.hpp>
 
-#include <orea/app/oreapp.hpp>
+#include <orea/orea.hpp>
 
 #ifdef BOOST_MSVC
 #include <orea/auto_link.hpp>
