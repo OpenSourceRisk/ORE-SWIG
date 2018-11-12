@@ -36,16 +36,14 @@ EUR_discount_curve.linkTo(EUR_flat_forward)
 # fair forward rate
 forward_rate = (EUR_discount_curve.discount(maturity_date) \
      / GBP_discount_curve.discount(maturity_date)) * spot_fx.value()
-    
 nominal2 = nominal1 / forward_rate 
 
-instrument = FxForward(nominal1, currency1, nominal2, currency2, maturity_date, pay_currency1);
-
-
+# make FX forward
+instrument = FxForward(nominal1, currency1, nominal2, currency2, 
+                       maturity_date, pay_currency1);
 engine = DiscountingFxForwardEngine(currency1, GBP_discount_curve, 
                                     currency2, EUR_discount_curve,
                                     spot_fx)
-
 instrument.setPricingEngine(engine)
 
 print(instrument.currency1().code() + "/" + instrument.currency2().code(),
