@@ -13,29 +13,37 @@ todays_date = Date(4, October, 2018);
 Settings.instance().evaluationDate = todays_date
 
 # instrument
-nominal1 = 1000.0
-nominal2 = 1000.0
 currency1 = GBPCurrency()
 currency2 = EURCurrency()
 maturity_date = Date(4, October, 2022)
+day_counter = Actual365Fixed()
 pay_currency1 = True
- 
-instrument = FxForward(nominal1, currency1, nominal2, currency2, maturity_date, pay_currency1);
+nominal1 = 1000.0
 
-# spot fx
+# market
 spot_fx = QuoteHandle(SimpleQuote(1.1))
+GBP_interest_rate = 0.03
+EUR_interest_rate = 0.02
 
 # discount curves
-tsDayCounter = Actual365Fixed()
-GBP_flat_forward = FlatForward(todays_date, 0.03, tsDayCounter)
-EUR_flat_forward = FlatForward(todays_date, 0.02, tsDayCounter)
-GBP_discount_term_structure = RelinkableYieldTermStructureHandle()
-EUR_discount_term_structure = RelinkableYieldTermStructureHandle()
-GBP_discount_term_structure.linkTo(GBP_flat_forward)
-EUR_discount_term_structure.linkTo(EUR_flat_forward)
+GBP_flat_forward = FlatForward(todays_date, GBP_interest_rate, day_counter)
+EUR_flat_forward = FlatForward(todays_date, EUR_interest_rate, day_counter)
+GBP_discount_curve = RelinkableYieldTermStructureHandle()
+EUR_discount_curve = RelinkableYieldTermStructureHandle()
+GBP_discount_curve.linkTo(GBP_flat_forward)
+EUR_discount_curve.linkTo(EUR_flat_forward)
 
-engine = DiscountingFxForwardEngine(currency1, GBP_discount_term_structure, 
-                                    currency2, EUR_discount_term_structure,
+# fair forward rate
+forward_rate = (EUR_discount_curve.discount(maturity_date) \
+     / GBP_discount_curve.discount(maturity_date)) * spot_fx.value()
+    
+nominal2 = nominal1 / forward_rate 
+
+instrument = FxForward(nominal1, currency1, nominal2, currency2, maturity_date, pay_currency1);
+
+
+engine = DiscountingFxForwardEngine(currency1, GBP_discount_curve, 
+                                    currency2, EUR_discount_curve,
                                     spot_fx)
 
 instrument.setPricingEngine(engine)
