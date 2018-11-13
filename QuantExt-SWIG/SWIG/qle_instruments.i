@@ -20,13 +20,89 @@ using QuantExt::CommodityForward;
 using QuantExt::DiscountingCommodityForwardEngine;
 using QuantExt::FxForward;
 using QuantExt::DiscountingFxForwardEngine;
+using QuantExt::OvernightIndexedBasisSwap;
 
 typedef boost::shared_ptr<Instrument> CrossCcyBasisSwapPtr;
 typedef boost::shared_ptr<Instrument> CommodityForwardPtr;
 typedef boost::shared_ptr<PricingEngine> DiscountingCommodityForwardEnginePtr;
 typedef boost::shared_ptr<Instrument> FxForwardPtr;
 typedef boost::shared_ptr<PricingEngine> DiscountingFxForwardEnginePtr;
+typedef boost::shared_ptr<Instrument> OvernightIndexedBasisSwapPtr;
 %}
+
+%ignore OvernightIndexedBasisSwap;
+class OvernightIndexedBasisSwap {
+  public:
+    enum Type { Receiver = -1, Payer = 1 };
+};
+
+%rename(OvernightIndexedBasisSwap) OvernightIndexedBasisSwapPtr;
+class OvernightIndexedBasisSwapPtr : public SwapPtr {
+  public:
+    %extend {
+        static const OvernightIndexedBasisSwap::Type Receiver = OvernightIndexedBasisSwap::Receiver;
+        static const OvernightIndexedBasisSwap::Type Payer = OvernightIndexedBasisSwap::Payer;
+        OvernightIndexedBasisSwapPtr(OvernightIndexedBasisSwap::Type type,
+                                     QuantLib::Real nominal, 
+                                     const QuantLib::Schedule& oisSchedule,
+                                     const OvernightIndexPtr& overnightIndex,
+                                     const QuantLib::Schedule& iborSchedule,
+                                     const IborIndexPtr& iborIndex,
+                                     QuantLib::Spread oisSpread = 0.0,
+                                     QuantLib::Spread iborSpread = 0.0) {
+            boost::shared_ptr<OvernightIndex> onIndex = boost::dynamic_pointer_cast<OvernightIndex>(overnightIndex);
+            boost::shared_ptr<IborIndex> ibIndex = boost::dynamic_pointer_cast<IborIndex>(iborIndex);
+            return new OvernightIndexedBasisSwapPtr(
+                new OvernightIndexedBasisSwap(type,
+                                              nominal,
+                                              oisSchedule,
+                                              onIndex,
+                                              iborSchedule,
+                                              ibIndex,
+                                              oisSpread,
+                                              iborSpread));
+        } 
+        QuantLib::Real nominal() const { 
+            return boost::dynamic_pointer_cast<OvernightIndexedBasisSwap>(*self)->nominal(); 
+        }
+        const QuantLib::Schedule& oisSchedule() { 
+            return boost::dynamic_pointer_cast<OvernightIndexedBasisSwap>(*self)->oisSchedule(); 
+        }
+        const QuantLib::Schedule& iborSchedule() { 
+            return boost::dynamic_pointer_cast<OvernightIndexedBasisSwap>(*self)->iborSchedule(); 
+        }
+        QuantLib::Spread oisSpread() { 
+            return boost::dynamic_pointer_cast<OvernightIndexedBasisSwap>(*self)->oisSpread(); 
+        }
+        QuantLib::Spread iborSpread() { 
+            return boost::dynamic_pointer_cast<OvernightIndexedBasisSwap>(*self)->iborSpread(); 
+        }
+        const QuantLib::Leg& iborLeg() { 
+            return boost::dynamic_pointer_cast<OvernightIndexedBasisSwap>(*self)->iborLeg(); 
+        }
+        const QuantLib::Leg& overnightLeg() { 
+            return boost::dynamic_pointer_cast<OvernightIndexedBasisSwap>(*self)->overnightLeg(); 
+        }
+        QuantLib::Real iborLegBPS() const { 
+            return boost::dynamic_pointer_cast<OvernightIndexedBasisSwap>(*self)->iborLegBPS(); 
+        }
+        QuantLib::Real iborLegNPV() const { 
+            return boost::dynamic_pointer_cast<OvernightIndexedBasisSwap>(*self)->iborLegNPV(); 
+        }
+        QuantLib::Real fairIborSpread() const { 
+            return boost::dynamic_pointer_cast<OvernightIndexedBasisSwap>(*self)->fairIborSpread(); 
+        }
+        QuantLib::Real overnightLegBPS() const { 
+            return boost::dynamic_pointer_cast<OvernightIndexedBasisSwap>(*self)->overnightLegBPS(); 
+        }
+        QuantLib::Real overnightLegNPV() const { 
+            return boost::dynamic_pointer_cast<OvernightIndexedBasisSwap>(*self)->overnightLegNPV(); 
+        }
+        QuantLib::Real fairOvernightSpread() const { 
+            return boost::dynamic_pointer_cast<OvernightIndexedBasisSwap>(*self)->fairOvernightSpread(); 
+        }
+    }
+};
 
 
 %rename(FxForward) FxForwardPtr;
@@ -51,23 +127,18 @@ public:
         const QuantLib::Real& currency1Nominal() { 
             return boost::dynamic_pointer_cast<FxForward>(*self)->currency1Nominal(); 
         }
-        
         const QuantLib::Real& currency2Nominal() { 
             return boost::dynamic_pointer_cast<FxForward>(*self)->currency2Nominal(); 
         }
-        
         const QuantLib::Currency& currency1() { 
             return boost::dynamic_pointer_cast<FxForward>(*self)->currency1(); 
         }
-        
         const QuantLib::Currency& currency2() { 
             return boost::dynamic_pointer_cast<FxForward>(*self)->currency2(); 
         }
-        
         const QuantLib::Date& maturityDate() { 
             return boost::dynamic_pointer_cast<FxForward>(*self)->maturityDate(); 
         }
-        
         const bool& payCurrency1() { 
             return boost::dynamic_pointer_cast<FxForward>(*self)->payCurrency1(); 
         }
@@ -158,23 +229,18 @@ public:
         const std::string& name() const { 
             return boost::dynamic_pointer_cast<CommodityForward>(*self)->name(); 
         }
-
         const QuantLib::Currency& currency() const {
             return boost::dynamic_pointer_cast<CommodityForward>(*self)->currency();
         }
-
         QuantLib::Position::Type position() const {
             return boost::dynamic_pointer_cast<CommodityForward>(*self)->position();
         }
-
         QuantLib::Real quantity() const { 
             return boost::dynamic_pointer_cast<CommodityForward>(*self)->quantity(); 
         }
-
         const QuantLib::Date& maturityDate() const {
             return boost::dynamic_pointer_cast<CommodityForward>(*self)->maturityDate();
         }
-
         QuantLib::Real strike() const { 
             return boost::dynamic_pointer_cast<CommodityForward>(*self)->strike(); 
         }
