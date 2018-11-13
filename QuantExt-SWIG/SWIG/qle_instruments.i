@@ -21,6 +21,7 @@ using QuantExt::DiscountingCommodityForwardEngine;
 using QuantExt::FxForward;
 using QuantExt::DiscountingFxForwardEngine;
 using QuantExt::OvernightIndexedBasisSwap;
+using QuantExt::Deposit;
 
 typedef boost::shared_ptr<Instrument> CrossCcyBasisSwapPtr;
 typedef boost::shared_ptr<Instrument> CommodityForwardPtr;
@@ -28,7 +29,40 @@ typedef boost::shared_ptr<PricingEngine> DiscountingCommodityForwardEnginePtr;
 typedef boost::shared_ptr<Instrument> FxForwardPtr;
 typedef boost::shared_ptr<PricingEngine> DiscountingFxForwardEnginePtr;
 typedef boost::shared_ptr<Instrument> OvernightIndexedBasisSwapPtr;
+typedef boost::shared_ptr<Instrument> DepositPtr;
 %}
+
+%rename(Deposit) DepositPtr;
+class DepositPtr : public boost::shared_ptr<Instrument> {
+  public:
+    %extend {
+        DepositPtr(const QuantLib::Real nominal,
+                   const QuantLib::Rate rate,
+                   const QuantLib::Period& tenor, 
+                   const QuantLib::Natural fixingDays,
+                   const QuantLib::Calendar& calendar, 
+                   const QuantLib::BusinessDayConvention convention, 
+                   const bool endOfMonth,
+                   const QuantLib::DayCounter& dayCounter, 
+                   const QuantLib::Date& tradeDate, 
+                   const bool isLong = true,
+                   const QuantLib::Period forwardStart = QuantLib::Period(0, QuantLib::Days)) {
+            return new DepositPtr(
+                new Deposit(nominal,
+                            rate,
+                            tenor,
+                            fixingDays,
+                            calendar,
+                            convention,
+                            endOfMonth,
+                            dayCounter,
+                            tradeDate,
+                            isLong,
+                            forwardStart));
+        }
+    }
+};
+
 
 %ignore OvernightIndexedBasisSwap;
 class OvernightIndexedBasisSwap {
@@ -145,7 +179,6 @@ public:
     }
 };
 
-
 %rename(DiscountingFxForwardEngine) DiscountingFxForwardEnginePtr;
 class DiscountingFxForwardEnginePtr : public boost::shared_ptr<PricingEngine> {
   public:
@@ -206,6 +239,7 @@ class CrossCcyBasisSwapPtr : public boost::shared_ptr<Instrument> {
     }
   }
 };
+
 
 %rename(CommodityForward) CommodityForwardPtr;
 class CommodityForwardPtr : public boost::shared_ptr<Instrument> {
