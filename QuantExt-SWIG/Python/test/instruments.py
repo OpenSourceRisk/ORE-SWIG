@@ -41,7 +41,7 @@ class FxForwardTest(unittest.TestCase):
         self.assertEqual(self.fxForward.currency2(), self.currency2)
 
     def testConsistency(self):
-        """ Test consistence of fair price and NPV() """
+        """ Test consistency of fair price and NPV() """
         tolerance = 1.0e-10
         fair_nominal2 = self.fxForward.fairForwardRate().exchange(Money(self.currency1, self.nominal1)).value()
         fxForward = FxForward(self.nominal1, self.currency1,
@@ -84,7 +84,7 @@ class DepositTest(unittest.TestCase):
         self.assertEqual(self.deposit.maturityDate(), self.maturity_date)
 
     def testConsistency(self):
-        """ Test consistence of fair price and NPV() """
+        """ Test consistency of fair price and NPV() """
         tolerance = 1.0e-10
         fair_rate = self.deposit.fairRate()
         deposit = Deposit(self.nominal, fair_rate, self.period,
