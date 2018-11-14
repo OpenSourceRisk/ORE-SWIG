@@ -22,6 +22,7 @@ using QuantExt::FxForward;
 using QuantExt::DiscountingFxForwardEngine;
 using QuantExt::OvernightIndexedBasisSwap;
 using QuantExt::Deposit;
+using QuantExt::DepositEngine;
 
 typedef boost::shared_ptr<Instrument> CrossCcyBasisSwapPtr;
 typedef boost::shared_ptr<Instrument> CommodityForwardPtr;
@@ -30,6 +31,7 @@ typedef boost::shared_ptr<Instrument> FxForwardPtr;
 typedef boost::shared_ptr<PricingEngine> DiscountingFxForwardEnginePtr;
 typedef boost::shared_ptr<Instrument> OvernightIndexedBasisSwapPtr;
 typedef boost::shared_ptr<Instrument> DepositPtr;
+typedef boost::shared_ptr<PricingEngine> DepositEnginePtr;
 %}
 
 %rename(Deposit) DepositPtr;
@@ -59,6 +61,38 @@ class DepositPtr : public boost::shared_ptr<Instrument> {
                             tradeDate,
                             isLong,
                             forwardStart));
+        }
+        QuantLib::Date fixingDate() const { 
+            return boost::dynamic_pointer_cast<Deposit>(*self)->fixingDate(); 
+        }
+        QuantLib::Date startDate() const { 
+            return boost::dynamic_pointer_cast<Deposit>(*self)->startDate(); 
+        }
+        QuantLib::Date maturityDate() const { 
+            return boost::dynamic_pointer_cast<Deposit>(*self)->maturityDate(); 
+        }
+        QuantLib::Real fairRate() const { 
+            return boost::dynamic_pointer_cast<Deposit>(*self)->fairRate(); 
+        }
+        const QuantLib::Leg& leg() const { 
+            return boost::dynamic_pointer_cast<Deposit>(*self)->leg(); 
+        }
+    }
+};
+
+%rename(DepositEngine) DepositEnginePtr;
+class DepositEnginePtr : public boost::shared_ptr<PricingEngine> {
+  public:
+    %extend {
+        DepositEnginePtr(const QuantLib::Handle<QuantLib::YieldTermStructure>& discountCurve = QuantLib::Handle<QuantLib::YieldTermStructure>(),
+                         boost::optional<bool> includeSettlementDateFlows = boost::none,
+                         QuantLib::Date& settlementDate = QuantLib::Date(),
+                         QuantLib::Date& npvDate = QuantLib::Date()) {
+            return new DepositEnginePtr(
+                new DepositEngine(discountCurve,
+                                  includeSettlementDateFlows,
+                                  settlementDate,
+                                  npvDate));
         }
     }
 };
@@ -233,7 +267,6 @@ class CrossCcyBasisSwapPtr : public boost::shared_ptr<Instrument> {
                                       recIbor, 
                                       recSpread));
     }
-
     Real payNominal() {
       return boost::dynamic_pointer_cast<CrossCcyBasisSwap>(*self)->payNominal();
     }
@@ -259,7 +292,6 @@ public:
                                      maturityDate, 
                                      strike));
         }
-
         const std::string& name() const { 
             return boost::dynamic_pointer_cast<CommodityForward>(*self)->name(); 
         }
