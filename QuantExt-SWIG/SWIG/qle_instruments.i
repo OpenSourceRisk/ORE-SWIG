@@ -22,7 +22,6 @@ using QuantExt::FxForward;
 using QuantExt::DiscountingFxForwardEngine;
 using QuantExt::Payment;
 using QuantExt::PaymentDiscountingEngine;
-using QuantLib::SimpleCashFlow;
 using QuantExt::OvernightIndexedBasisSwap;
 using QuantExt::Deposit;
 using QuantExt::DepositEngine;
