@@ -6,6 +6,7 @@ import sys
 import unittest
 
 from instruments import FxForwardTest
+from instruments import DepositTest
 
 
 def test():
@@ -16,6 +17,7 @@ def test():
 
     """ Add test suites below """
     suite.addTest(unittest.makeSuite(FxForwardTest, 'test'))
+    suite.addTest(unittest.makeSuite(DepositTest, 'test'))
 
     result = unittest.TextTestRunner(verbosity=2).run(suite)
 
