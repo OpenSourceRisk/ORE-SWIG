@@ -191,23 +191,25 @@ public:
                               maturityDate, 
                               payCurrency1));
         }
-
-        const QuantLib::Real& currency1Nominal() { 
+        const QuantLib::ExchangeRate& fairForwardRate() { 
+            return boost::dynamic_pointer_cast<FxForward>(*self)->fairForwardRate(); 
+        }
+        QuantLib::Real currency1Nominal() const { 
             return boost::dynamic_pointer_cast<FxForward>(*self)->currency1Nominal(); 
         }
-        const QuantLib::Real& currency2Nominal() { 
+        QuantLib::Real currency2Nominal() const { 
             return boost::dynamic_pointer_cast<FxForward>(*self)->currency2Nominal(); 
         }
-        const QuantLib::Currency& currency1() { 
+        QuantLib::Currency currency1() const { 
             return boost::dynamic_pointer_cast<FxForward>(*self)->currency1(); 
         }
-        const QuantLib::Currency& currency2() { 
+        QuantLib::Currency currency2() const { 
             return boost::dynamic_pointer_cast<FxForward>(*self)->currency2(); 
         }
-        const QuantLib::Date& maturityDate() { 
+        QuantLib::Date maturityDate() const { 
             return boost::dynamic_pointer_cast<FxForward>(*self)->maturityDate(); 
         }
-        const bool& payCurrency1() { 
+        bool payCurrency1() const { 
             return boost::dynamic_pointer_cast<FxForward>(*self)->payCurrency1(); 
         }
     }
