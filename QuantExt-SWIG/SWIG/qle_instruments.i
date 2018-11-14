@@ -20,13 +20,76 @@ using QuantExt::CommodityForward;
 using QuantExt::DiscountingCommodityForwardEngine;
 using QuantExt::FxForward;
 using QuantExt::DiscountingFxForwardEngine;
+using QuantExt::Payment;
+using QuantExt::PaymentDiscountingEngine;
+using QuantLib::SimpleCashFlow;
 
 typedef boost::shared_ptr<Instrument> CrossCcyBasisSwapPtr;
 typedef boost::shared_ptr<Instrument> CommodityForwardPtr;
+typedef boost::shared_ptr<Instrument> PaymentPtr;
 typedef boost::shared_ptr<PricingEngine> DiscountingCommodityForwardEnginePtr;
 typedef boost::shared_ptr<Instrument> FxForwardPtr;
 typedef boost::shared_ptr<PricingEngine> DiscountingFxForwardEnginePtr;
+typedef boost::shared_ptr<PricingEngine> PaymentDiscountingEnginePtr;
+typedef boost::shared_ptr<CashFlow> SimpleCashFlowPtr;
 %}
+
+
+
+
+
+%rename(Payment) PaymentPtr;
+class PaymentPtr : public boost::shared_ptr<Instrument> {
+public:
+    %extend{
+        PaymentPtr(const QuantLib::Real amount, 
+                   const QuantLib::Currency& currency, 
+                   const QuantLib::Date& date) {
+            return new PaymentPtr(
+                new Payment(amount, currency, date));
+        }
+        
+        const QuantLib::Currency& currency() {
+            return boost::dynamic_pointer_cast<Payment>(*self)->currency();
+        }
+                
+        SimpleCashFlowPtr cashFlow()  {
+            return boost::dynamic_pointer_cast<Payment>(*self)->cashFlow();
+        }
+        
+    }
+};
+
+
+%rename(PaymentDiscountingEngine) PaymentDiscountingEnginePtr;
+class PaymentDiscountingEnginePtr : public boost::shared_ptr<PricingEngine> {
+public:
+    %extend{
+        PaymentDiscountingEnginePtr(const QuantLib::Handle<QuantLib::YieldTermStructure>& discountCurve,
+                                    const QuantLib::Handle<QuantLib::Quote>& spotFX = QuantLib::Handle<QuantLib::Quote>(),
+                                    boost::optional<bool> includeSettlementDateFlows = boost::none,
+                                    const QuantLib::Date& settlementDate = QuantLib::Date(), 
+                                    const QuantLib::Date& npvDate = QuantLib::Date()) {
+            return new PaymentDiscountingEnginePtr(
+                new PaymentDiscountingEngine(discountCurve, spotFX, includeSettlementDateFlows,settlementDate,npvDate));
+        }
+        
+        const QuantLib::Handle<QuantLib::YieldTermStructure>& discountCurve() {
+            return boost::dynamic_pointer_cast<PaymentDiscountingEngine>(*self)->discountCurve(); 
+        }
+        
+        const QuantLib::Handle<QuantLib::Quote>& spotFX() {
+            return boost::dynamic_pointer_cast<PaymentDiscountingEngine>(*self)->spotFX(); 
+        }
+    }
+    
+    
+    
+};
+
+
+
+
 
 
 %rename(FxForward) FxForwardPtr;
@@ -73,6 +136,12 @@ public:
         }
     }
 };
+
+
+
+
+
+
 
 
 %rename(DiscountingFxForwardEngine) DiscountingFxForwardEnginePtr;
