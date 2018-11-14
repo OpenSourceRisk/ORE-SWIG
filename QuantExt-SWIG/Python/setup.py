@@ -1,4 +1,7 @@
-# -*- coding: iso-8859-1 -*-
+"""
+ Copyright (C) 2018 Quaternion Risk Management Ltd
+ All rights reserved.
+"""
 
 import os, sys, math, codecs
 from distutils.cmd import Command
