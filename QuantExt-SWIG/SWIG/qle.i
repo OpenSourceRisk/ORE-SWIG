@@ -21,5 +21,7 @@
 %include qle_ccyswap.i
 %include qle_crossccyfixfloatswap.i
 %include qle_oiccbasisswap.i
+%include qle_equityforward.i
+%include qle_tenorbasisswap.i
 
 #endif
