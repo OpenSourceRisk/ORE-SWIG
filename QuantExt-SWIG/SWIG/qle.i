@@ -18,8 +18,8 @@
 %include qle_instruments.i
 %include qle_ratehelpers.i
 %include qle_currencies.i
-%include qle_fxforward.i
 %include qle_ccyswap.i
 %include qle_crossccyfixfloatswap.i
+%include qle_oiccbasisswap.i
 
 #endif
