@@ -47,7 +47,15 @@ typedef boost::shared_ptr<ore::analytics::Parameters> ParametersPtr;
 using ore::data::MarketImpl;
 typedef boost::shared_ptr<ore::data::MarketImpl> MarketImplPtr;
 
+using ore::data::EngineFactory;
+typedef boost::shared_ptr<ore::data::EngineFactory> EngineFactoryPtr;
+
+using ore::data::Portfolio;
+typedef boost::shared_ptr<ore::data::Portfolio> PortfolioPtr;
+
 %}
+
+%include ored.i
 
 %rename(ORE) OREPlusAppPtr;
 //class OREPlusAppPtr : public OREAppPtr {
@@ -77,9 +85,21 @@ public:
     void buildSimulationMarket(const std::string& simulationXML = "") {
       boost::dynamic_pointer_cast<oreplus::analytics::OREPlusApp>(*self)->buildSimulationMarket(simulationXML);     
     }
-    boost::shared_ptr<ore::data::EngineFactory> buildEngineFactoryFromXMLString(const boost::shared_ptr<Market>& market,
+    boost::shared_ptr<ore::data::EngineFactory> buildEngineFactoryFromXMLString(const MarketImplPtr& marketImpl,
 										const std::string& pricingEngineXML) {
-      return boost::dynamic_pointer_cast<oreplus::analytics::OREPlusApp>(*self)->buildEngineFactoryFromXMLString(market, pricingEngineXML);
+      boost::shared_ptr<ore::data::Market> marketBase = boost::dynamic_pointer_cast<ore::data::Market>(marketImpl);
+      return boost::dynamic_pointer_cast<oreplus::analytics::OREPlusApp>(*self)->buildEngineFactoryFromXMLString(marketBase, pricingEngineXML);
     }
+    PortfolioPtr buildPortfolioFromXMLString(const boost::shared_ptr<ore::data::EngineFactory>& engineFact,
+										const std::string& portfolioXML) {
+      return boost::dynamic_pointer_cast<oreplus::analytics::OREPlusApp>(*self)->buildPortfolioFromXMLString(engineFact, portfolioXML);
+    }
+    PortfolioPtr buildPortfolioFromXMLStrings(const MarketImplPtr& marketImpl,
+										const std::string& portfolioXML,
+                                        const std::string& pricingEngineXML) {
+      boost::shared_ptr<ore::data::Market> marketBase = boost::dynamic_pointer_cast<ore::data::Market>(marketImpl);
+      return boost::dynamic_pointer_cast<oreplus::analytics::OREPlusApp>(*self)->buildPortfolioFromXMLStrings(marketBase, portfolioXML, pricingEngineXML);
+    }
+    
   }
 };
