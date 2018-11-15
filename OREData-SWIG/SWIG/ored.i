@@ -4,6 +4,9 @@
  All rights reserved.
 */
 
+#ifndef ored_i
+#define ored_i
+
 %{
 #include <boost/shared_ptr.hpp>
 #include <boost/assert.hpp>
@@ -22,6 +25,13 @@
 #endif
 
 #include <ored/ored.hpp>
+
+%}
+
+%include ored_conventions.i
+
+%{
+
   
 using ore::data::Portfolio;
 typedef boost::shared_ptr<ore::data::Portfolio> PortfolioPtr;
@@ -52,11 +62,15 @@ using ore::data::Envelope;
 using ore::data::YieldCurveType;
 using ore::data::TodaysMarketParameters;
 using ore::data::Loader; 
-using ore::data::CurveConfigurations; 
+using ore::data::CurveConfigurations;
+
+using namespace std;
 
 %}
 
-%template(TradeVector) std::vector<boost::shared_ptr<ore::data::Trade>>;
+%template(TradeVector) std::vector<boost::shared_ptr<Trade>>;
+//typedef std::vector<boost::shared_ptr<ore::data::Trade>> TradeVector;
+//%template(LegVector) std::vector<std::vector<boost::shared_ptr<QuantLib::CashFlow>>>;
 %template(StringStringMap) std::map<std::string, std::string>;
 
 // Market class passed around as pointer, no construction
@@ -306,14 +320,14 @@ class Trade {
 public:
     const std::string& id();
     const std::string& tradeType();
-    const boost::shared_ptr<InstrumentWrapper>& instrument();
+    const InstrumentWrapperPtr& instrument();
     std::vector<std::vector<boost::shared_ptr<QuantLib::CashFlow>>> legs();
     const Envelope& envelope() const;
     const QuantLib::Date& maturity();
     Real notional();
 };
+%template(Trade) boost::shared_ptr<Trade>;
 
-%template(Trade) boost::shared_ptr<ore::data::Trade>;
 
 // Portfolio
 %rename(Portfolio) PortfolioPtr;
@@ -365,3 +379,5 @@ public:
 /*     std::string get(const Size column) const; */
 /*     void close(); */
 /* }; */
+
+#endif
