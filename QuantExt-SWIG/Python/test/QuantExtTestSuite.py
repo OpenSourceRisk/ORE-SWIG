@@ -8,6 +8,7 @@ import unittest
 from instruments import FxForwardTest
 from instruments import DepositTest
 from instruments import TenorBasisSwapTest
+from instruments import SubPeriodsSwapTest
 
 
 def test():
@@ -20,6 +21,7 @@ def test():
     suite.addTest(unittest.makeSuite(FxForwardTest, 'test'))
     suite.addTest(unittest.makeSuite(DepositTest, 'test'))
     suite.addTest(unittest.makeSuite(TenorBasisSwapTest, 'test'))
+    suite.addTest(unittest.makeSuite(SubPeriodsSwapTest, 'test'))
 
     result = unittest.TextTestRunner(verbosity=2).run(suite)
 

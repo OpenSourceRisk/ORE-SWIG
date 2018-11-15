@@ -6,6 +6,69 @@
 from QuantExt import *
 import unittest
 
+class SubPeriodsSwapTest(unittest.TestCase):
+    def setUp(self):
+        """ Set-up SubPeriodsSwap. """
+        self.todays_date = Date(4, October, 2018)
+        Settings.instance().evaluationDate = self.todays_date
+        self.settlement_date = Date(6, October, 2018)
+        self.is_payer = True
+        self.fixed_rate = 0.02
+        self.sub_periods_type = SubPeriodsCoupon.Compounding
+        self.calendar = TARGET()
+        self.swap_tenor = Period(10, Years)
+        self.maturity_date = self.calendar.advance(self.settlement_date, self.swap_tenor)
+        self.float_pay_tenor = Period(6, Months)
+        self.fixed_tenor = Period(6, Months)
+        self.day_counter = Actual365Fixed()
+        self.nominal = 1000000.0
+        self.bdc = ModifiedFollowing
+        self.date_generation = DateGeneration.Forward
+        self.ois_term_structure = RelinkableYieldTermStructureHandle()
+        self.float_term_structure = RelinkableYieldTermStructureHandle()
+        self.float_index = Euribor3M(self.float_term_structure)
+        self.schedule = Schedule(self.settlement_date, self.maturity_date,
+                                       self.float_pay_tenor, self.calendar,
+                                       self.bdc, self.bdc, self.date_generation, False)
+        self.sub_periods_swap = SubPeriodsSwap(self.settlement_date, self.nominal, self.swap_tenor,
+                                               self.is_payer, self.fixed_tenor, self.fixed_rate,
+                                               self.calendar, self.day_counter, self.bdc, 
+                                               self.float_pay_tenor, self.float_index, 
+                                               self.day_counter, self.date_generation, self.sub_periods_type)
+        self.float_flat_forward = FlatForward(self.todays_date, 0.03, self.day_counter)
+        self.ois_flat_forward = FlatForward(self.todays_date, 0.01, self.day_counter)
+        self.float_term_structure.linkTo(self.float_flat_forward)
+        self.ois_term_structure.linkTo(self.ois_flat_forward)
+        self.engine = DiscountingSwapEngine(self.ois_term_structure)
+        self.sub_periods_swap.setPricingEngine(self.engine)
+  
+    def testSimpleInspectors(self):
+        """ Test SubPeriodsSwap simple inspectors. """
+        self.assertEqual(self.sub_periods_swap.nominal(), self.nominal)
+        self.assertEqual(self.sub_periods_swap.isPayer(), self.is_payer)
+        self.assertEqual(self.sub_periods_swap.fixedRate(), self.fixed_rate)
+        self.assertEqual(self.sub_periods_swap.type(), self.sub_periods_type)
+        self.assertEqual(self.sub_periods_swap.floatPayTenor(), self.float_pay_tenor)
+    
+    def testSchedules(self):
+        """ Test SubPeriodsSwap schedules. """
+        for i, d in enumerate(self.schedule):
+            self.assertEqual(self.sub_periods_swap.fixedSchedule()[i], d)
+
+    def testConsistency(self):
+        """ Test consistency of fair price and NPV() """
+        # lower tolerance, since fair rate is approximated using PV01 for this class
+        tolerance = 1.0e-8
+        fair_rate = self.sub_periods_swap.fairRate()
+        sub_periods_swap = SubPeriodsSwap(self.settlement_date, self.nominal, self.swap_tenor,
+                                          self.is_payer, self.fixed_tenor, fair_rate,
+                                          self.calendar, self.day_counter, self.bdc, 
+                                          self.float_pay_tenor, self.float_index, 
+                                          self.day_counter, self.date_generation, self.sub_periods_type)
+        sub_periods_swap.setPricingEngine(self.engine)
+        self.assertFalse(abs(sub_periods_swap.NPV()) > tolerance)
+
+
 class TenorBasisSwapTest(unittest.TestCase):
     def setUp(self):
         """ Set-up TenorBasisSwap and engine. """
