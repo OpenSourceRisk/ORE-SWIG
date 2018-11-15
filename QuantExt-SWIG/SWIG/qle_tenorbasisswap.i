@@ -159,9 +159,6 @@ class TenorBasisSwapPtr : public boost::shared_ptr<Instrument> {
         const QuantLib::Schedule& longSchedule() const { 
             return boost::dynamic_pointer_cast<TenorBasisSwap>(*self)->longSchedule(); 
         }
-        const IborIndexPtr& longIndex() const { 
-            return boost::dynamic_pointer_cast<TenorBasisSwap>(*self)->longIndex(); 
-        }
         QuantLib::Spread longSpread() const { 
             return boost::dynamic_pointer_cast<TenorBasisSwap>(*self)->longSpread(); 
         }
@@ -170,9 +167,6 @@ class TenorBasisSwapPtr : public boost::shared_ptr<Instrument> {
         }
         const QuantLib::Schedule& shortSchedule() const { 
             return boost::dynamic_pointer_cast<TenorBasisSwap>(*self)->shortSchedule(); 
-        }
-        const IborIndexPtr& shortIndex() const { 
-            return boost::dynamic_pointer_cast<TenorBasisSwap>(*self)->shortIndex(); 
         }
         QuantLib::Spread shortSpread() const { 
             return boost::dynamic_pointer_cast<TenorBasisSwap>(*self)->shortSpread(); 
