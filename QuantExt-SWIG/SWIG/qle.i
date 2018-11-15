@@ -17,5 +17,6 @@
 %include qle_termstructures.i
 %include qle_instruments.i
 %include qle_ratehelpers.i
+%include qle_tenorbasisswap.i
 
 #endif
