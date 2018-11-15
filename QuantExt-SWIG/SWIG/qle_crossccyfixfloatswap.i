@@ -11,23 +11,23 @@
 %include indexes.i
 
 %{
-using QuantExt::CrossCcyBasisSwap;
-typedef boost::shared_ptr<Instrument> CrossCcyBasisSwapPtr;
+using QuantExt::CrossCcyFixFloatSwap;
+typedef boost::shared_ptr<Instrument> CrossCcyFixFloatSwapPtr;
 %}
 
-%ignore CrossCcyBasisSwap;
-class CrossCcyBasisSwap {
+%ignore CrossCcyFixFloatSwap;
+class CrossCcyFixFloatSwap {
   public:
     enum Type { Receiver = -1, Payer = 1 };
 };
 
-%rename(CrossCcySwap) CrossCcyBasisSwapPtr;
-class CrossCcyBasisSwapPtr : public boost::shared_ptr<Instrument> {
+%rename(CrossCcyFixFloatSwap) CrossCcyFixFloatSwapPtr;
+class CrossCcyFixFloatSwapPtr : public boost::shared_ptr<Instrument> {
 public:
     %extend {
-	    static const CrossCcyBasisSwap::Type Receiver = CrossCcyBasisSwap::Receiver;
-        static const CrossCcyBasisSwap::Type Payer = CrossCcyBasisSwap::Payer;
-		CrossCcyBasisSwapPtr(Type type, 
+	    static const CrossCcyFixFloatSwap::Type Receiver = CrossCcyFixFloatSwap::Receiver;
+        static const CrossCcyFixFloatSwap::Type Payer = CrossCcyFixFloatSwap::Payer;
+		CrossCcyFixFloatSwapPtr(CrossCcyFixFloatSwap::Type type, 
 							QuantLib::Real fixedNominal,
 							const QuantLib::Currency& fixedCurrency,
 							const QuantLib::Schedule& fixedSchedule,
@@ -39,13 +39,14 @@ public:
 							QuantLib::Real floatNominal,
 							const QuantLib::Currency& floatCurrency,
 							const QuantLib::Schedule& floatSchedule,
-							const boost::shared_ptr<QuantLib::IborIndex>& floatIndex,
+							const IborIndexPtr& floatIndex,
 							QuantLib::Spread floatSpread,
 							QuantLib::BusinessDayConvention floatPaymentBdc,
 							QuantLib::Natural floatPaymentLag,
 							const QuantLib::Calendar& floatPaymentCalendar) {
-            return new CrossCcyBasisSwapPtr(
-                new CrossCcyBasisSwap(type,
+			boost::shared_ptr<IborIndex> flIndex = boost::dynamic_pointer_cast<IborIndex>(floatIndex);			
+            return new CrossCcyFixFloatSwapPtr(
+                new CrossCcyFixFloatSwap(type,
 									  fixedNominal,
 									  fixedCurrency,
 									  fixedSchedule,
@@ -57,7 +58,7 @@ public:
 									  floatNominal,
 									  floatCurrency,
 									  floatSchedule,
-									  floatIndex,
+									  flIndex,
 									  floatSpread,
 									  floatPaymentBdc,
 									  floatPaymentLag,
