@@ -236,18 +236,19 @@ class DepositTest(unittest.TestCase):
 
 class EquityForwardTest(unittest.TestCase):
     def setUp(self):
-        """ Set-up Equity Forward and engine. """
-        self.todays_date=Date(1, November, 2018)
-        Settings.instance().evaluationDate=self.todays_date
-        self.name="UNILEVER"
-        self.currency=GBPCurrency()
-        self.position=Position.Long
-        self.quantity=100
-        self.maturityDate=Date(1,November,2019)
-        self.strike=60
-        self.equityForward=EquityForward(self.name,self.currency,self.position,self.quantity,self.maturityDate,self.strike)
+        """ Set-up EquityForward and engine. """
+        self.todays_date = Date(1, November, 2018)
+        Settings.instance().evaluationDate = self.todays_date
+        self.name = "UNILEVER"
+        self.currency = GBPCurrency()
+        self.position = Position.Long
+        self.quantity = 100
+        self.maturityDate = Date(1,November,2019)
+        self.strike = 60
+        self.equityForward=EquityForward(self.name, self.currency, self.position,
+                                         self.quantity, self.maturityDate, self.strike)
         self.tsDayCounter = Actual365Fixed()
-        self.interest_rate=0.03
+        self.interest_rate = 0.03
         self.flatForward = FlatForward(self.todays_date, self.interest_rate, self.tsDayCounter)
         self.equityInterestRateCurve = RelinkableYieldTermStructureHandle()
         self.equityInterestRateCurve.linkTo(self.flatForward)
@@ -255,21 +256,23 @@ class EquityForwardTest(unittest.TestCase):
         self.dividendYieldCurve.linkTo(self.flatForward)
         self.discountCurve = RelinkableYieldTermStructureHandle()
         self.discountCurve.linkTo(self.flatForward)
-        self.equitySpotPrice=60.0
-        self.equitySpot=QuoteHandle(SimpleQuote(self.equitySpotPrice))
+        self.equitySpotPrice = 60.0
+        self.equitySpot = QuoteHandle(SimpleQuote(self.equitySpotPrice))
         self.includeSettlementDateFlows=True
-        self.settlementDate=self.maturityDate
-        self.npvDate=self.todays_date
-        self.engine = DiscountingEquityForwardEngine(self.equityInterestRateCurve,self.dividendYieldCurve,self.equitySpot,self.discountCurve,self.includeSettlementDateFlows,self.settlementDate,self.npvDate)
+        self.settlementDate = self.maturityDate
+        self.npvDate = self.todays_date
+        self.engine = DiscountingEquityForwardEngine(self.equityInterestRateCurve, self.dividendYieldCurve,
+                                                     self.equitySpot, self.discountCurve, self.includeSettlementDateFlows,
+                                                     self.settlementDate, self.npvDate)
         self.equityForward.setPricingEngine(self.engine)
         
   
     def testSimpleInspectors(self):
-        """ Test FxForward simple inspectors. """
-        self.assertEqual(self.strike,self.equityForward.strike())
-        self.assertEqual(self.settlementDate,self.equityForward.maturityDate())
-        self.assertEqual(self.quantity,self.equityForward.quantity())
-        self.assertEqual(self.currency.name(),self.equityForward.currency().name())
+        """ Test EquityForward simple inspectors. """
+        self.assertEqual(self.strike, self.equityForward.strike())
+        self.assertEqual(self.settlementDate, self.equityForward.maturityDate())
+        self.assertEqual(self.quantity, self.equityForward.quantity())
+        self.assertEqual(self.currency.name(), self.equityForward.currency().name())
 
 
     def testConsistency(self):
