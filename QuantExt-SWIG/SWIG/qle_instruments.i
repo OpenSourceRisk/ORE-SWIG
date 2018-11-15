@@ -252,11 +252,11 @@ public:
                 new Payment(amount, currency, date));
         }
         
-        const QuantLib::Currency& currency() {
+        QuantLib::Currency currency() const {
             return boost::dynamic_pointer_cast<Payment>(*self)->currency();
         }
                 
-        SimpleCashFlowPtr cashFlow()  {
+        SimpleCashFlowPtr cashFlow() const {
             return boost::dynamic_pointer_cast<Payment>(*self)->cashFlow();
         }
         

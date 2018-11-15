@@ -1,6 +1,7 @@
 ##########################
 # SWIG generated code
 ##########################
+*.idb
 QuantLib-SWIG/Python/QuantLib/QuantLib.py
 QuantLib-SWIG/Python/QuantLib/quantlib_wrap.cpp
 QuantLib-SWIG/Python/QuantLib_Python.egg-info/
@@ -32,6 +33,7 @@ OREAnalytics-SWIG/Python/vc140.idb
 #OREPlus-SWIG/Python/setup.py
 OREPlus-SWIG/Python/.build-stamp
 OREPlus-SWIG/Python/OREPlus/OREAnalytics.py
+OREPlus-SWIG/Python/examples/Output/*
 #
 ##########################
 # General
