@@ -10,8 +10,23 @@ import xml.etree.ElementTree as ET
 def buildFullConventionFromXML(xmlElement):
     constructorMap = {
         'Zero' : ZeroRateConvention,
-        'Deposit' : DepositConvention
+        'Deposit' : DepositConvention,
+        'CDS' : CdsConvention,
+        'Future' : FutureConvention,
+        'FRA' : FraConvention,
+        'SwapIndex' : SwapIndexConvention,
+        'Swap' : IRSwapConvention,
+        'OIS' : OisConvention,
+        'AverageOIS' : AverageOisConvention,
+        'TenorBasisSwap' : TenorBasisSwapConvention,
+        'TenorBasisTwoSwap' : TenorBasisTwoSwapConvention,
+        'FX' : FXConvention,
+        'CrossCurrencyBasis' : CrossCcyBasisSwapConvention,
+        'InflationSwap' : InflationSwapConvention
     }
+    if (xmlElement.tag not in constructorMap):
+        print("WARNING - " + xmlElement.tag + " not recognised")
+        return None
     convObj = constructorMap[xmlElement.tag]()
     convObj.fromXMLString(ET.tostring(xmlElement, encoding="unicode"))
     return convObj
@@ -39,14 +54,11 @@ print("oisConv type() is ", convType)
 ## - We can still add these to the Conventions container
 ### - But, if we then attempt to retrieve these back from the conventions container, they will be of base "Convention" type.
 for item in convXml:
-    if(item.tag == "Zero"):
-        print("---ZERO CONV---")
-    elif(item.tag == "Deposit"):
-        print("---DEPOSIT CONV---")
-    else:
-        continue
         
     convObj = buildFullConventionFromXML(item)
+    if convObj is None:
+        print("skipping " + item.tag + ", " + item.find("Id").text)
+        continue
     conv_id = convObj.id()
     print(convObj.id())
     print(type(convObj))

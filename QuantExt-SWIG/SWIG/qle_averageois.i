@@ -16,11 +16,12 @@
 
 %{
 using QuantExt::AverageOIS;
+using QuantExt::AverageONIndexedCouponPricer;
 
 typedef boost::shared_ptr<Swap> AverageOISPtr;
 %}
 
-ignore(AverageOIS)
+%ignore AverageOIS;
 class AverageOIS {
   public:
     enum Type { Receiver = -1, Payer = 1 };
@@ -28,6 +29,7 @@ class AverageOIS {
 
 %rename(AverageOIS) AverageOISPtr;
 class AverageOISPtr : public SwapPtr {
+public:
     %extend{
         static const AverageOIS::Type Receiver = AverageOIS::Receiver;
         static const AverageOIS::Type Payer = AverageOIS::Payer;

@@ -36,7 +36,7 @@ public:
                 new EquityForward(name,currency,longShort,quantity,maturityDate,strike));
         }
         
-        const bool& isExpired() {
+        bool isExpired() const {
             return boost::dynamic_pointer_cast<EquityForward>(*self)->isExpired();
         }
         
