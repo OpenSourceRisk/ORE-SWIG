@@ -97,7 +97,7 @@ class SubPeriodsCouponPricerPtr : public FloatingRateCouponPricerPtr {
 };
 
 %rename(TenorBasisSwap) TenorBasisSwapPtr;
-class TenorBasisSwapPtr : public boost::shared_ptr<Instrument> {
+class TenorBasisSwapPtr : public SwapPtr {
   public:
     %extend {
         TenorBasisSwapPtr(const QuantLib::Date& effectiveDate,
@@ -207,7 +207,7 @@ class TenorBasisSwapPtr : public boost::shared_ptr<Instrument> {
 };
 
 %rename(SubPeriodsSwap) SubPeriodsSwapPtr;
-class SubPeriodsSwapPtr : public boost::shared_ptr<Instrument> {
+class SubPeriodsSwapPtr : public SwapPtr {
   public:
     %extend {
         SubPeriodsSwapPtr(const QuantLib::Date& effectiveDate,
