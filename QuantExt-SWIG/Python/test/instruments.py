@@ -327,6 +327,41 @@ class EquityForwardTest(unittest.TestCase):
         tolerance= 1.0e-10
         self.assertFalse(abs(self.equityForward.NPV()) > tolerance)
         
+        
+class PaymentTest(unittest.TestCase):
+    def setUp(self):
+        """ Test consistency of fair price and NPV() """
+        self.todays_date = Date(1, November, 2018)
+        Settings.instance().evaluationDate=self.todays_date
+        self.currency = GBPCurrency()
+        self.settlementDate = Date(1, November, 2019)
+        self.day_counter = Actual365Fixed()
+        self.nominal=100.0
+        self.spotFX = QuoteHandle(SimpleQuote(1.0))
+        self.GBP_interest_rate = 0.00
+        self.GBP_flat_forward = FlatForward(self.todays_date, self.GBP_interest_rate, self.day_counter)
+        self.GBP_discount_curve = RelinkableYieldTermStructureHandle()
+        self.GBP_discount_curve.linkTo(self.GBP_flat_forward)
+        self.payment=Payment(self.nominal,self.currency,self.settlementDate)
+        self.includeSettlementDateFlows=True
+        self.npvDate=self.todays_date
+        self.discountCurve=self.GBP_discount_curve
+        self.engine = PaymentDiscountingEngine(self.discountCurve, self.spotFX, self.includeSettlementDateFlows,self.settlementDate,self.npvDate)
+        self.payment.setPricingEngine(self.engine)
+        
+  
+    def testSimpleInspectors(self):
+        """ Test FxForward simple inspectors. """
+        self.assertEqual(self.settlementDate,self.payment.cashFlow().date())
+        self.assertEqual(self.currency.name(),self.payment.currency().name())
+        
+
+    def testConsistency(self):
+        """ Test consistency of fair price and NPV() """
+        tolerance= 1.0e-10
+        self.assertFalse(abs(self.payment.NPV()-self.nominal)>tolerance)
+        
+        
 
 if __name__ == '__main__':
     unittest.main()

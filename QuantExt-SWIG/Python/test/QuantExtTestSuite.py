@@ -11,6 +11,7 @@ from instruments import EquityForwardTest
 from instruments import TenorBasisSwapTest
 from instruments import SubPeriodsSwapTest
 from instruments import CommodityForwardTest
+from instruments import PaymentTest
 
 
 def test():
@@ -22,10 +23,11 @@ def test():
     """ Add test suites below """
     suite.addTest(unittest.makeSuite(FxForwardTest, 'test'))
     suite.addTest(unittest.makeSuite(DepositTest, 'test'))
-    suite.addTest(unittest.makeSuite(EquityForwardTest, 'test'))
+    suite.addTest(unittest.makeSuite(EquityForwardTest, 'test'))D
     suite.addTest(unittest.makeSuite(TenorBasisSwapTest, 'test'))
     suite.addTest(unittest.makeSuite(SubPeriodsSwapTest, 'test'))
     suite.addTest(unittest.makeSuite(CommodityForwardTest, 'test'))
+    suite.addTest(unittest.makeSuite(PaymentTest, 'test'))r
 
     result = unittest.TextTestRunner(verbosity=2).run(suite)
 
