@@ -6,6 +6,53 @@
 from QuantExt import *
 import unittest
 
+class CommodityForwardTest(unittest.TestCase):
+    def setUp(self):
+        """ Set-up CommodityForward and engine """
+        self.todays_date = Date(4, October, 2018);
+        Settings.instance().evaluationDate = self.todays_date
+        self.name = "Natural Gas"
+        self.calendar = TARGET()
+        self.currency = GBPCurrency()
+        self.strike = 100.0
+        self.quantity = 1.0
+        self.position = Position.Long
+        self.maturity_date = Date(4, October, 2022)
+        self.day_counter = Actual365Fixed()
+        self.commodity_forward = CommodityForward(self.name, self.currency, 
+                                                  self.position, self.quantity, 
+                                                  self.maturity_date, self.strike)
+        self.dates = [ Date(20,12,2018), Date(20, 3,2019), Date(19, 6,2019),
+                       Date(18, 9,2019), Date(18,12,2019), Date(19, 3,2020),
+                       Date(18, 6,2020), Date(17, 9,2020), Date(17,12,2020) ]
+        self.quotes = [ QuoteHandle(SimpleQuote(100.0)), QuoteHandle(SimpleQuote(100.25)),
+                        QuoteHandle(SimpleQuote(100.75)), QuoteHandle(SimpleQuote(101.0)),
+                        QuoteHandle(SimpleQuote(101.25)), QuoteHandle(SimpleQuote(101.50)),
+                        QuoteHandle(SimpleQuote(101.75)), QuoteHandle(SimpleQuote(102.0)),
+                        QuoteHandle(SimpleQuote(102.25)) ]
+        self.price_curve = PriceCurve(self.dates, self.quotes, self.day_counter)
+        self.price_curve.enableExtrapolation();
+        self.price_term_structure = RelinkablePriceTermStructureHandle(self.price_curve)
+        self.flat_forward = FlatForward(self.todays_date, 0.03, self.day_counter);
+        self.discount_term_structure = RelinkableYieldTermStructureHandle(self.flat_forward)
+        self.engine = DiscountingCommodityForwardEngine(self.price_term_structure, self.discount_term_structure)
+        self.commodity_forward.setPricingEngine(self.engine)
+  
+    def testSimpleInspectors(self):
+        """ Test CommodityForward simple inspectors. """
+        self.assertEqual(self.commodity_forward.name(), self.name)
+        self.assertEqual(self.commodity_forward.currency(), self.currency)
+        self.assertEqual(self.commodity_forward.position(), self.position)
+        self.assertEqual(self.commodity_forward.quantity(), self.quantity)
+        self.assertEqual(self.commodity_forward.maturityDate(), self.maturity_date)
+        self.assertEqual(self.commodity_forward.strike(), self.strike)
+        
+
+    def testNPV(self):
+        """ Test NPV() """
+        self.assertIsNotNone(self.commodity_forward.NPV())
+        
+
 class SubPeriodsSwapTest(unittest.TestCase):
     def setUp(self):
         """ Set-up SubPeriodsSwap. """

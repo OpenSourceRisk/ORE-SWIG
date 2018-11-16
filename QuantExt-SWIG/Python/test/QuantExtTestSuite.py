@@ -10,6 +10,7 @@ from instruments import DepositTest
 from instruments import EquityForwardTest
 from instruments import TenorBasisSwapTest
 from instruments import SubPeriodsSwapTest
+from instruments import CommodityForwardTest
 
 
 def test():
@@ -24,6 +25,7 @@ def test():
     suite.addTest(unittest.makeSuite(EquityForwardTest, 'test'))
     suite.addTest(unittest.makeSuite(TenorBasisSwapTest, 'test'))
     suite.addTest(unittest.makeSuite(SubPeriodsSwapTest, 'test'))
+    suite.addTest(unittest.makeSuite(CommodityForwardTest, 'test'))
 
     result = unittest.TextTestRunner(verbosity=2).run(suite)
 
