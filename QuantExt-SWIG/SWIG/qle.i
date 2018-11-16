@@ -19,7 +19,9 @@
 %include qle_currencies.i
 %include qle_ccyswap.i
 %include qle_crossccyfixfloatswap.i
+%include qle_oiccbasisswap.i
 %include qle_equityforward.i
+%include qle_averageois.i
 %include qle_tenorbasisswap.i
 %include qle_cashflows.i
 %include qle_indexes.i
