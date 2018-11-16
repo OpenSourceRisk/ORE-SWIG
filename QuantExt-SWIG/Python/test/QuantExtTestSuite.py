@@ -27,7 +27,7 @@ def test():
     suite.addTest(unittest.makeSuite(TenorBasisSwapTest, 'test'))
     suite.addTest(unittest.makeSuite(SubPeriodsSwapTest, 'test'))
     suite.addTest(unittest.makeSuite(CommodityForwardTest, 'test'))
-    suite.addTest(unittest.makeSuite(PaymentTest, 'test'))r
+    suite.addTest(unittest.makeSuite(PaymentTest, 'test'))
 
     result = unittest.TextTestRunner(verbosity=2).run(suite)
 
