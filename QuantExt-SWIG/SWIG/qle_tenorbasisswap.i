@@ -18,10 +18,12 @@
 using QuantExt::TenorBasisSwap;
 using QuantExt::SubPeriodsCoupon;
 using QuantExt::SubPeriodsCouponPricer;
+using QuantExt::SubPeriodsSwap;
 
 typedef boost::shared_ptr<Instrument> TenorBasisSwapPtr;
 typedef boost::shared_ptr<CashFlow> SubPeriodsCouponPtr;
 typedef boost::shared_ptr<CashFlow> SubPeriodsCouponPricerPtr;
+typedef boost::shared_ptr<Instrument> SubPeriodsSwapPtr;
 %}
 
 %ignore SubPeriodsCoupon;
@@ -95,7 +97,7 @@ class SubPeriodsCouponPricerPtr : public boost::shared_ptr<FloatingRateCouponPri
 };
 
 %rename(TenorBasisSwap) TenorBasisSwapPtr;
-class TenorBasisSwapPtr : public boost::shared_ptr<Instrument> {
+class TenorBasisSwapPtr : public SwapPtr {
   public:
     %extend {
         TenorBasisSwapPtr(const QuantLib::Date& effectiveDate,
@@ -206,6 +208,86 @@ class TenorBasisSwapPtr : public boost::shared_ptr<Instrument> {
         }
         QuantLib::Rate fairShortLegSpread() const { 
             return boost::dynamic_pointer_cast<TenorBasisSwap>(*self)->fairShortLegSpread(); 
+        }
+    }
+};
+
+%rename(SubPeriodsSwap) SubPeriodsSwapPtr;
+class SubPeriodsSwapPtr : public SwapPtr {
+  public:
+    %extend {
+        SubPeriodsSwapPtr(const QuantLib::Date& effectiveDate,
+                          QuantLib::Real nominal,
+                          const QuantLib::Period& swapTenor,
+                          bool isPayer,
+                          const QuantLib::Period& fixedTenor,
+                          QuantLib::Rate fixedRate,
+                          const QuantLib::Calendar& fixedCalendar,
+                          const QuantLib::DayCounter& fixedDayCount,
+                          QuantLib::BusinessDayConvention fixedConvention,
+                          const QuantLib::Period& floatPayTenor,
+                          const IborIndexPtr& iborIndex,
+                          const QuantLib::DayCounter& floatingDayCount,
+                          QuantLib::DateGeneration::Rule rule = QuantLib::DateGeneration::Backward,
+                          SubPeriodsCoupon::Type type = SubPeriodsCoupon::Compounding) {
+            boost::shared_ptr<IborIndex> floatIndex = boost::dynamic_pointer_cast<IborIndex>(iborIndex);
+            return new SubPeriodsSwapPtr(
+                new SubPeriodsSwap(effectiveDate,
+                                   nominal,
+                                   swapTenor,
+                                   isPayer,
+                                   fixedTenor,
+                                   fixedRate,
+                                   fixedCalendar,
+                                   fixedDayCount,
+                                   fixedConvention,
+                                   floatPayTenor,
+                                   floatIndex,
+                                   floatingDayCount,
+                                   rule,
+                                   type));
+        }
+        QuantLib::Real nominal() const { 
+            return boost::dynamic_pointer_cast<SubPeriodsSwap>(*self)->nominal(); 
+        }
+        bool isPayer() const { 
+            return boost::dynamic_pointer_cast<SubPeriodsSwap>(*self)->isPayer(); 
+        }
+        const QuantLib::Schedule& fixedSchedule() const { 
+            return boost::dynamic_pointer_cast<SubPeriodsSwap>(*self)->fixedSchedule(); 
+        }
+        QuantLib::Rate fixedRate() const { 
+            return boost::dynamic_pointer_cast<SubPeriodsSwap>(*self)->fixedRate(); 
+        }
+        const QuantLib::Leg& fixedLeg() const { 
+            return boost::dynamic_pointer_cast<SubPeriodsSwap>(*self)->fixedLeg(); 
+        }
+        const QuantLib::Schedule& floatSchedule() const { 
+            return boost::dynamic_pointer_cast<SubPeriodsSwap>(*self)->floatSchedule(); 
+        }
+        SubPeriodsCoupon::Type type() const { 
+            return boost::dynamic_pointer_cast<SubPeriodsSwap>(*self)->type(); 
+        }
+        const QuantLib::Period& floatPayTenor() const { 
+            return boost::dynamic_pointer_cast<SubPeriodsSwap>(*self)->floatPayTenor(); 
+        }
+        const QuantLib::Leg& floatLeg() const { 
+            return boost::dynamic_pointer_cast<SubPeriodsSwap>(*self)->floatLeg(); 
+        }
+        QuantLib::Real fairRate() const { 
+            return boost::dynamic_pointer_cast<SubPeriodsSwap>(*self)->fairRate(); 
+        }
+        QuantLib::Real fixedLegBPS() const { 
+            return boost::dynamic_pointer_cast<SubPeriodsSwap>(*self)->fixedLegBPS(); 
+        }
+        QuantLib::Real fixedLegNPV() const { 
+            return boost::dynamic_pointer_cast<SubPeriodsSwap>(*self)->fixedLegNPV(); 
+        }
+        QuantLib::Real floatLegBPS() const { 
+            return boost::dynamic_pointer_cast<SubPeriodsSwap>(*self)->floatLegBPS(); 
+        }
+        QuantLib::Real floatLegNPV() const { 
+            return boost::dynamic_pointer_cast<SubPeriodsSwap>(*self)->floatLegNPV(); 
         }
     }
 };
