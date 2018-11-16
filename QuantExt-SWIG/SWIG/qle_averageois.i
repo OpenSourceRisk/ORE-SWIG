@@ -16,11 +16,35 @@
 
 %{
 using QuantExt::AverageOIS;
-
+using QuantExt::AverageONIndexedCouponPricer;
+typedef boost::shared_ptr<FloatingRateCouponPricer> AverageONIndexedCouponPricerPtr;
 typedef boost::shared_ptr<Swap> AverageOISPtr;
+//typedef boost::shared_ptr<FloatingRateCouponPricer> FloatingRateCouponPricerPtr;
+
 %}
 
-ignore(AverageOIS)
+%ignore AverageONIndexedCouponPricer;
+class AverageONIndexedCouponPricer {
+    public:
+        enum Approximation { Takada, None } ;
+};
+
+%rename(AverageONIndexedCouponPricer) AverageONIndexedCouponPricerPtr;
+class AverageONIndexedCouponPricerPtr : boost::shared_ptr<FloatingRateCouponPricer> {
+    public:
+        %extend{
+            static const AverageONIndexedCouponPricer::Approximation Takada = AverageONIndexedCouponPricer::Takada;
+            static const AverageONIndexedCouponPricer::Approximation None = AverageONIndexedCouponPricer::None;
+            AverageONIndexedCouponPricerPtr(AverageONIndexedCouponPricer::Approximation approxType = Takada) {
+                return new AverageONIndexedCouponPricerPtr(
+                    new AverageONIndexedCouponPricer(approxType));
+            }
+        }
+};
+
+
+
+%ignore AverageOIS;
 class AverageOIS {
   public:
     enum Type { Receiver = -1, Payer = 1 };
@@ -28,6 +52,7 @@ class AverageOIS {
 
 %rename(AverageOIS) AverageOISPtr;
 class AverageOISPtr : public SwapPtr {
+  public:
     %extend{
         static const AverageOIS::Type Receiver = AverageOIS::Receiver;
         static const AverageOIS::Type Payer = AverageOIS::Payer;
@@ -136,6 +161,9 @@ class AverageOISPtr : public SwapPtr {
         
     }
 };
+
+
+
 
 
 #endif
