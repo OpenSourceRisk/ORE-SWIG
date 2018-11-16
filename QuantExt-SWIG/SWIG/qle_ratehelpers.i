@@ -13,9 +13,11 @@
 %{
 using QuantExt::CrossCcyBasisSwapHelper;
 using QuantExt::TenorBasisSwapHelper;
+using QuantExt::SubPeriodsSwapHelper;
 
 typedef boost::shared_ptr<RateHelper> CrossCcyBasisSwapHelperPtr;
 typedef boost::shared_ptr<RateHelper> TenorBasisSwapHelperPtr;
+typedef boost::shared_ptr<RateHelper> SubPeriodsSwapHelperPtr;
 %}
 
 %rename(CrossCcyBasisSwapHelper) CrossCcyBasisSwapHelperPtr;
@@ -85,6 +87,42 @@ class TenorBasisSwapHelperPtr : public boost::shared_ptr<RateHelper> {
     }
     TenorBasisSwapPtr swap() {
         return boost::dynamic_pointer_cast<TenorBasisSwapHelper>(*self)->swap();
+    }
+  }
+};
+
+%rename(SubPeriodsSwapHelper) SubPeriodsSwapHelperPtr;
+class SubPeriodsSwapHelperPtr : public boost::shared_ptr<RateHelper> {
+  public:
+    %extend {
+    SubPeriodsSwapHelperPtr(QuantLib::Handle<QuantLib::Quote> spread,
+                            const QuantLib::Period& swapTenor,
+                            const QuantLib::Period& fixedTenor,
+                            const QuantLib::Calendar& fixedCalendar,
+                            const QuantLib::DayCounter& fixedDayCount,
+                            QuantLib::BusinessDayConvention fixedConvention,
+                            const QuantLib::Period& floatPayTenor,
+                            const IborIndexPtr& iborIndex,
+                            const QuantLib::DayCounter& floatDayCount,
+                            const QuantLib::Handle<QuantLib::YieldTermStructure>& discountingCurve = 
+                                QuantLib::Handle<QuantLib::YieldTermStructure>(),
+                            SubPeriodsCoupon::Type type = SubPeriodsCoupon::Compounding) {
+        boost::shared_ptr<IborIndex> floatIndex = boost::dynamic_pointer_cast<IborIndex>(iborIndex);
+        return new SubPeriodsSwapHelperPtr(
+            new SubPeriodsSwapHelper(spread,
+                                     swapTenor,
+                                     fixedTenor,
+                                     fixedCalendar,
+                                     fixedDayCount,
+                                     fixedConvention,
+                                     floatPayTenor,
+                                     floatIndex,
+                                     floatDayCount,
+                                     discountingCurve,
+                                     type));
+    }
+    SubPeriodsSwapPtr swap() {
+        return boost::dynamic_pointer_cast<SubPeriodsSwapHelper>(*self)->swap();
     }
   }
 };
