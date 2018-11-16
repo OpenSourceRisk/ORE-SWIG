@@ -7,6 +7,7 @@
 #define qle_ratehelpers_i
 
 %include ratehelpers.i
+%include swap.i
 %include qle_instruments.i
 %include qle_tenorbasisswap.i
 
@@ -14,10 +15,16 @@
 using QuantExt::CrossCcyBasisSwapHelper;
 using QuantExt::TenorBasisSwapHelper;
 using QuantExt::SubPeriodsSwapHelper;
+using QuantExt::OICCBSHelper;
+using QuantExt::OIBSHelper;
+using QuantExt::BasisTwoSwapHelper;
 
 typedef boost::shared_ptr<RateHelper> CrossCcyBasisSwapHelperPtr;
 typedef boost::shared_ptr<RateHelper> TenorBasisSwapHelperPtr;
 typedef boost::shared_ptr<RateHelper> SubPeriodsSwapHelperPtr;
+typedef boost::shared_ptr<RateHelper> OICCBSHelperPtr;
+typedef boost::shared_ptr<RateHelper> OIBSHelperPtr;
+typedef boost::shared_ptr<RateHelper> BasisTwoSwapHelperPtr;
 %}
 
 %rename(CrossCcyBasisSwapHelper) CrossCcyBasisSwapHelperPtr;
@@ -126,5 +133,77 @@ class SubPeriodsSwapHelperPtr : public boost::shared_ptr<RateHelper> {
     }
   }
 };
+
+%rename(OIBSHelper) OIBSHelperPtr;
+class OIBSHelperPtr : public boost::shared_ptr<RateHelper> {
+  public:
+    %extend {
+    OIBSHelperPtr(QuantLib::Natural settlementDays,
+                  const QuantLib::Period& tenor, 
+                  const QuantLib::Handle<QuantLib::Quote>& oisSpread, 
+                  const OvernightIndexPtr& overnightIndex,
+                  const IborIndexPtr& iborIndex,
+                  const QuantLib::Handle<QuantLib::YieldTermStructure>& discount 
+                        = QuantLib::Handle<QuantLib::YieldTermStructure>()) {
+        boost::shared_ptr<OvernightIndex> overnightFloat = boost::dynamic_pointer_cast<OvernightIndex>(overnightIndex);
+        boost::shared_ptr<IborIndex> iborFloat = boost::dynamic_pointer_cast<IborIndex>(iborIndex);
+        return new OIBSHelperPtr(
+            new OIBSHelper(settlementDays,
+                           tenor,
+                           oisSpread,
+                           overnightFloat,
+                           iborFloat,
+                           discount));
+    }
+    OvernightIndexedBasisSwapPtr swap() {
+        return boost::dynamic_pointer_cast<OIBSHelper>(*self)->swap();
+    }
+  }
+};
+
+%rename(BasisTwoSwapHelper) BasisTwoSwapHelperPtr;
+class BasisTwoSwapHelperPtr : public boost::shared_ptr<RateHelper> {
+  public:
+    %extend {
+    BasisTwoSwapHelperPtr(const QuantLib::Handle<QuantLib::Quote>& spread, 
+                          const QuantLib::Period& swapTenor, 
+                          const QuantLib::Calendar& calendar,
+                          QuantLib::Frequency longFixedFrequency, 
+                          QuantLib::BusinessDayConvention longFixedConvention,
+                          const QuantLib::DayCounter& longFixedDayCount, 
+                          const IborIndexPtr& longIndex,
+                          QuantLib::Frequency shortFixedFrequency, 
+                          QuantLib::BusinessDayConvention shortFixedConvention,
+                          const QuantLib::DayCounter& shortFixedDayCount, 
+                          const IborIndexPtr& shortIndex,
+                          bool longMinusShort = true,
+                          const QuantLib::Handle<QuantLib::YieldTermStructure>& discountingCurve 
+                                = QuantLib::Handle<QuantLib::YieldTermStructure>()) {
+        boost::shared_ptr<IborIndex> longFloat = boost::dynamic_pointer_cast<IborIndex>(longIndex);
+        boost::shared_ptr<IborIndex> shortFloat = boost::dynamic_pointer_cast<IborIndex>(shortIndex);
+        return new BasisTwoSwapHelperPtr(
+            new BasisTwoSwapHelper(spread,
+                                   swapTenor,
+                                   calendar,
+                                   longFixedFrequency,
+                                   longFixedConvention,
+                                   longFixedDayCount,
+                                   longFloat,
+                                   shortFixedFrequency,
+                                   shortFixedConvention,
+                                   shortFixedDayCount,
+                                   shortFloat,
+                                   longMinusShort,
+                                   discountingCurve));
+    }
+    VanillaSwapPtr longSwap() {
+        return boost::dynamic_pointer_cast<BasisTwoSwapHelper>(*self)->longSwap();
+    }
+    VanillaSwapPtr shortSwap() {
+        return boost::dynamic_pointer_cast<BasisTwoSwapHelper>(*self)->shortSwap();
+    }
+  }
+};
+
 
 #endif
