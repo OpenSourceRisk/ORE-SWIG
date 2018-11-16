@@ -13,7 +13,6 @@
 #include <qle/quantext.hpp>
 %}
 
-//%include qle_commodityforward.i
 %include qle_termstructures.i
 %include qle_instruments.i
 %include qle_ratehelpers.i
@@ -22,5 +21,7 @@
 %include qle_crossccyfixfloatswap.i
 %include qle_equityforward.i
 %include qle_tenorbasisswap.i
+%include qle_cashflows.i
+%include qle_indexes.i
 
 #endif
