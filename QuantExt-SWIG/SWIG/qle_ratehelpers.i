@@ -10,6 +10,7 @@
 %include swap.i
 %include qle_instruments.i
 %include qle_tenorbasisswap.i
+%include qle_oiccbasisswap.i
 
 %{
 using QuantExt::CrossCcyBasisSwapHelper;
@@ -227,7 +228,7 @@ class OICCBSHelperPtr : public boost::shared_ptr<RateHelper> {
                              payFloat,
                              payTenor,
                              recFloat,
-                             recTenor
+                             recTenor,
                              spreadQuote,
                              fixedDiscountCurve,
                              spreadQuoteOnPayLeg,
@@ -238,7 +239,5 @@ class OICCBSHelperPtr : public boost::shared_ptr<RateHelper> {
     }
   }
 };
-
-
 
 #endif
