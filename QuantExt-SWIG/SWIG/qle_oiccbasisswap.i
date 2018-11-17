@@ -3,8 +3,8 @@
  All rights reserved.
 */
 
-#ifndef qle_oiccbasisswap.i
-#define qle_oiccbasisswap.i
+#ifndef qle_oiccbasisswap_i
+#define qle_oiccbasisswap_i
 
 %include instruments.i
 %include scheduler.i
@@ -12,12 +12,15 @@
 
 %{
 using QuantExt::OvernightIndexedCrossCcyBasisSwap;
+using QuantExt::OvernightIndexedCrossCcyBasisSwapEngine;
+
 typedef boost::shared_ptr<Instrument> OvernightIndexedCrossCcyBasisSwapPtr;
+typedef boost::shared_ptr<PricingEngine> OvernightIndexedCrossCcyBasisSwapEnginePtr;
 %}
 
 %rename(OvernightIndexedCrossCcyBasisSwap) OvernightIndexedCrossCcyBasisSwapPtr;
 class OvernightIndexedCrossCcyBasisSwapPtr : public boost::shared_ptr<Instrument> {
-public:
+    public:
     %extend {
 		OvernightIndexedCrossCcyBasisSwapPtr(QuantLib::Real payNominal,
 											  QuantLib::Currency payCurrency,
@@ -102,10 +105,6 @@ public:
 	}
 };
 
-%{
-using QuantExt::OvernightIndexedCrossCcyBasisSwapEngine;
-typedef boost::shared_ptr<PricingEngine> OvernightIndexedCrossCcyBasisSwapEnginePtr;
-%}
 
 %rename(OvernightIndexedCrossCcyBasisSwapEngine) OvernightIndexedCrossCcyBasisSwapEnginePtr;
 class OvernightIndexedCrossCcyBasisSwapEnginePtr : public boost::shared_ptr<PricingEngine> {
