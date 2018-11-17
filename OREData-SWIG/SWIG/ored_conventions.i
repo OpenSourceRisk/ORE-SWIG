@@ -108,7 +108,7 @@ class Convention {
     static const Convention::Type FRA = Convention::Type::FRA;
     static const Convention::Type OIS = Convention::Type::OIS;
     static const Convention::Type Swap = Convention::Type::Swap;
-    static const Convention::Type AverageOIS = Convention::Type::AverageOIS;
+    static const Convention::Type AverageOis = Convention::Type::AverageOIS;
     static const Convention::Type TenorBasisSwap = Convention::Type::TenorBasisSwap;
     static const Convention::Type TenorBasisTwoSwap = Convention::Type::TenorBasisTwoSwap;
     static const Convention::Type BMABasisSwap = Convention::Type::BMABasisSwap;
@@ -170,6 +170,10 @@ public:
     bool tenorBased() const {
         return boost::dynamic_pointer_cast<ore::data::ZeroRateConvention>(*self)->tenorBased();
     }
+    
+    static const ZeroRateConventionPtr getFullView(boost::shared_ptr<Convention> baseInput) const {
+        return boost::dynamic_pointer_cast<ore::data::ZeroRateConvention>(baseInput);
+    }
   }
 };
 
@@ -212,6 +216,10 @@ public:
     bool indexBased() {
         return boost::dynamic_pointer_cast<ore::data::DepositConvention>(*self)->indexBased();
     }
+   
+    static const DepositConventionPtr getFullView(boost::shared_ptr<Convention> baseInput) const {
+        return boost::dynamic_pointer_cast<ore::data::DepositConvention>(baseInput);
+    }
   }
 };
 
@@ -228,6 +236,10 @@ public:
     const IborIndexPtr index() const {
         return boost::dynamic_pointer_cast<ore::data::FutureConvention>(*self)->index();
     }
+    
+    static const FutureConventionPtr getFullView(boost::shared_ptr<Convention> baseInput) const {
+        return boost::dynamic_pointer_cast<ore::data::FutureConvention>(baseInput);
+    }
   }
 };
 
@@ -243,6 +255,9 @@ public:
     }
     const IborIndexPtr index() const {
         return boost::dynamic_pointer_cast<ore::data::FraConvention>(*self)->index();
+    }
+    static const FraConventionPtr getFullView(boost::shared_ptr<Convention> baseInput) const {
+        return boost::dynamic_pointer_cast<ore::data::FraConvention>(baseInput);
     }
   }
 };
@@ -293,6 +308,9 @@ public:
     DateGeneration::Rule rule() const {
         return boost::dynamic_pointer_cast<ore::data::OisConvention>(*self)->rule();
     }
+    static const OisConventionPtr getFullView(boost::shared_ptr<Convention> baseInput) const {
+        return boost::dynamic_pointer_cast<ore::data::OisConvention>(baseInput);
+    }
   }
 };
 
@@ -308,6 +326,9 @@ public:
     }
     const std::string& conventions() const {
         return boost::dynamic_pointer_cast<ore::data::SwapIndexConvention>(*self)->conventions();
+    }
+    static const SwapIndexConventionPtr getFullView(boost::shared_ptr<Convention> baseInput) const {
+        return boost::dynamic_pointer_cast<ore::data::SwapIndexConvention>(baseInput);
     }
   }
 };
@@ -353,6 +374,9 @@ public:
     }
     SubPeriodsCoupon::Type subPeriodsCouponType() const {
         return boost::dynamic_pointer_cast<ore::data::IRSwapConvention>(*self)->subPeriodsCouponType();
+    }
+    static const IRSwapConventionPtr getFullView(boost::shared_ptr<Convention> baseInput) const {
+        return boost::dynamic_pointer_cast<ore::data::IRSwapConvention>(baseInput);
     }
   }
 };
@@ -403,6 +427,9 @@ public:
     Natural rateCutoff() const {
         return boost::dynamic_pointer_cast<ore::data::AverageOisConvention>(*self)->rateCutoff();
     }
+    static const AverageOisConventionPtr getFullView(boost::shared_ptr<Convention> baseInput) const {
+        return boost::dynamic_pointer_cast<ore::data::AverageOisConvention>(baseInput);
+    }
   }
 };
 
@@ -444,6 +471,9 @@ public:
     }
     SubPeriodsCoupon::Type subPeriodsCouponType() const {
         return boost::dynamic_pointer_cast<ore::data::TenorBasisSwapConvention>(*self)->subPeriodsCouponType();
+    }
+    static const TenorBasisSwapConventionPtr getFullView(boost::shared_ptr<Convention> baseInput) const {
+        return boost::dynamic_pointer_cast<ore::data::TenorBasisSwapConvention>(baseInput);
     }
   }
 };
@@ -496,6 +526,9 @@ public:
     bool longMinusShort() const {
         return boost::dynamic_pointer_cast<ore::data::TenorBasisTwoSwapConvention>(*self)->longMinusShort();
     }
+    static const TenorBasisTwoSwapConventionPtr getFullView(boost::shared_ptr<Convention> baseInput) const {
+        return boost::dynamic_pointer_cast<ore::data::TenorBasisTwoSwapConvention>(baseInput);
+    }
   }
 };
 
@@ -531,6 +564,9 @@ public:
     }
     bool spotRelative() const {
         return boost::dynamic_pointer_cast<ore::data::FXConvention>(*self)->spotRelative();
+    }
+    static const FXConventionPtr getFullView(boost::shared_ptr<Convention> baseInput) const {
+        return boost::dynamic_pointer_cast<ore::data::FXConvention>(baseInput);
     }
   }
 };
@@ -575,6 +611,9 @@ public:
     bool eom() const {
         return boost::dynamic_pointer_cast<ore::data::CrossCcyBasisSwapConvention>(*self)->eom();
     }
+    static const CrossCcyBasisSwapConventionPtr getFullView(boost::shared_ptr<Convention> baseInput) const {
+        return boost::dynamic_pointer_cast<ore::data::CrossCcyBasisSwapConvention>(baseInput);
+    }
   }
 };
 
@@ -618,6 +657,9 @@ public:
     }
     bool paysAtDefaultTime() const {
         return boost::dynamic_pointer_cast<ore::data::CdsConvention>(*self)->paysAtDefaultTime();
+    }
+    static const CdsConventionPtr getFullView(boost::shared_ptr<Convention> baseInput) const {
+        return boost::dynamic_pointer_cast<ore::data::CdsConvention>(baseInput);
     }
   }
 };
@@ -668,6 +710,9 @@ public:
     }
     BusinessDayConvention infConvention() const {
         return boost::dynamic_pointer_cast<ore::data::InflationSwapConvention>(*self)->infConvention();
+    }
+    static const InflationSwapConventionPtr getFullView(boost::shared_ptr<Convention> baseInput) const {
+        return boost::dynamic_pointer_cast<ore::data::InflationSwapConvention>(baseInput);
     }
   }
 };
@@ -720,6 +765,9 @@ public:
     }
     bool eom() const {
         return boost::dynamic_pointer_cast<ore::data::SecuritySpreadConvention>(*self)->eom();
+    }
+    static const SecuritySpreadConventionPtr getFullView(boost::shared_ptr<Convention> baseInput) const {
+        return boost::dynamic_pointer_cast<ore::data::SecuritySpreadConvention>(baseInput);
     }
   }
 };

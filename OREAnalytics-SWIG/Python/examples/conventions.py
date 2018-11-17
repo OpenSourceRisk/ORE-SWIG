@@ -2,7 +2,7 @@
 # Copyright (C) 2018 Quaternion Risk Manaement Ltd
 # All rights reserved.
 
-from OREPlus import *
+from OREAnalytics import *
 import xml.etree.ElementTree as ET
 
 # This will retrive a convention of name "id" from Conventions class "container"
