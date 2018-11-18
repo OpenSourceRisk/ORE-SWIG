@@ -6,6 +6,90 @@
 from QuantExt import *
 import unittest
 
+class CrossCurrencyFixFloatSwapTest(unittest.TestCase):
+    def setUp(self):
+        """ Set-up CrossCurrencyFixFloatSwap and engine """
+        self.todayDate = Date(11, November, 2018)
+        self.nominal1 = 10000000
+        self.nominal2 = 12000000
+        self.currency1 = USDCurrency()
+        self.currency2 = EURCurrency()
+        self.settlementDate = Date(13, November, 2018)
+        self.calendar = TARGET()
+        self.tsDayCounter = Actual365Fixed()
+        self.busDayConvention = Following
+        self.forwardStart = self.calendar.advance(self.settlementDate, 1, Years)
+        self.forwardEnd = self.calendar.advance(self.forwardStart, 5, Years)
+        self.payLag = 1
+        self.tenor = Period(6, Months)
+        self.bdc = ModifiedFollowing
+        self.schedule = Schedule(self.forwardStart, self.forwardEnd, self.tenor, self.calendar,
+                                 self.bdc, self.bdc, DateGeneration.Forward, False)
+        self.flatForwardUSD = FlatForward(self.todayDate, 0.005, self.tsDayCounter)
+        self.discountTermStructureUSD = RelinkableYieldTermStructureHandle(self.flatForwardUSD)
+        self.flatForwardEUR = FlatForward(self.todayDate, 0.03, self.tsDayCounter);
+        self.discountTermStructureEUR = RelinkableYieldTermStructureHandle(self.flatForwardEUR)
+        self.floatSpread = 0.0
+        self.index = USDLibor(Period(3, Months), self.discountTermStructureUSD)
+        self.couponRate = 0.03
+        self.type = CrossCcyFixFloatSwap.Payer
+        self.fxQuote = QuoteHandle(SimpleQuote(1/0.8))
+        self.swap = CrossCcyFixFloatSwap(self.type, self.nominal2, self.currency2,
+                                         self.schedule, self.couponRate, self.tsDayCounter,
+                                         self.busDayConvention, self.payLag, self.calendar,
+                                         self.nominal1, self.currency1, self.schedule,
+                                         self.index, self.floatSpread, self.busDayConvention,
+                                         self.payLag, self.calendar)
+        self.engine = CrossCcySwapEngine(self.currency1, self.discountTermStructureEUR, self.currency2,
+                                         self.discountTermStructureUSD, self.fxQuote, False,
+                                         self.settlementDate, self.todayDate)
+        self.swap.setPricingEngine(self.engine)
+        
+    def testSimpleInspectors(self):
+        """ Test CrossCurrencyFixFloatSwap simple inspectors. """
+        self.assertEqual(self.swap.type(), self.type)
+        self.assertEqual(self.swap.fixedNominal(), self.nominal2)
+        self.assertEqual(self.swap.fixedCurrency(), self.currency2)
+        self.assertEqual(self.swap.fixedRate(), self.couponRate)
+        self.assertEqual(self.swap.fixedDayCount(), self.tsDayCounter)
+        self.assertEqual(self.swap.fixedPaymentBdc(), self.busDayConvention)
+        self.assertEqual(self.swap.fixedPaymentLag(), self.payLag)
+        self.assertEqual(self.swap.fixedPaymentCalendar(), self.calendar)
+        self.assertEqual(self.swap.floatNominal(), self.nominal1)
+        self.assertEqual(self.swap.floatCurrency(), self.currency1)
+        self.assertEqual(self.swap.floatSpread(), self.floatSpread)
+        self.assertEqual(self.swap.floatPaymentBdc(), self.busDayConvention)
+        self.assertEqual(self.swap.floatPaymentLag(), self.payLag)
+        self.assertEqual(self.swap.floatPaymentCalendar(), self.calendar)
+        
+    def testSchedules(self):
+        """ Test CrossCurrencyFixFloatSwap schedules. """
+        for i, d in enumerate(self.schedule):
+            self.assertEqual(self.swap.fixedSchedule()[i], d)
+            self.assertEqual(self.swap.floatSchedule()[i], d)
+            
+    def testConsistency(self):
+        """ Test consistency of fair price and NPV() """
+        tolerance = 1.0e-8
+        fair_fixed_rate = self.swap.fairFixedRate()
+        swap = CrossCcyFixFloatSwap(self.type, self.nominal2, self.currency2,
+                                    self.schedule, fair_fixed_rate, self.tsDayCounter,
+                                    self.busDayConvention, self.payLag, self.calendar,
+                                    self.nominal1, self.currency1, self.schedule,
+                                    self.index, self.floatSpread, self.busDayConvention,
+                                    self.payLag, self.calendar)
+        swap.setPricingEngine(self.engine)
+        self.assertFalse(abs(swap.NPV()) > tolerance)
+        fair_spread = self.swap.fairSpread()
+        swap = CrossCcyFixFloatSwap(self.type, self.nominal2, self.currency2,
+                                    self.schedule, self.couponRate, self.tsDayCounter,
+                                    self.busDayConvention, self.payLag, self.calendar,
+                                    self.nominal1, self.currency1, self.schedule,
+                                    self.index, fair_spread, self.busDayConvention,
+                                    self.payLag, self.calendar)
+        swap.setPricingEngine(self.engine)
+        self.assertFalse(abs(swap.NPV()) > tolerance)
+
 class CommodityForwardTest(unittest.TestCase):
     def setUp(self):
         """ Set-up CommodityForward and engine """

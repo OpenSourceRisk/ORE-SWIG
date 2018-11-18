@@ -9,6 +9,8 @@
 %include instruments.i
 %include scheduler.i
 %include indexes.i
+%include swap.i
+%include qle_ccyswap.i
 
 %{
 using QuantExt::CrossCcyFixFloatSwap;
@@ -22,7 +24,7 @@ class CrossCcyFixFloatSwap {
 };
 
 %rename(CrossCcyFixFloatSwap) CrossCcyFixFloatSwapPtr;
-class CrossCcyFixFloatSwapPtr : public boost::shared_ptr<Instrument> {
+class CrossCcyFixFloatSwapPtr : public CrossCcySwapPtr {
   public:
     %extend {
         static const CrossCcyFixFloatSwap::Type Receiver = CrossCcyFixFloatSwap::Receiver;
