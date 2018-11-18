@@ -6,8 +6,8 @@
 #ifndef qle_crossccyfixfloatswaphelper.i
 #define qle_crossccyfixfloatswaphelper.i
 
-%include ratehelpers.i
-%include qle_instruments.i
+%include ratehelpers_i
+%include qle_instruments_i
 
 %{
 using QuantExt::CrossCcyFixFloatSwapHelper;

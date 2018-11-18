@@ -48,8 +48,12 @@ class AverageOISPtr : public SwapPtr {
                       QuantLib::Spread onSpread = 0.0,
                       QuantLib::Real onGearing = 1.0,
                       const QuantLib::DayCounter& onDayCounter = QuantLib::DayCounter(),
-                      const AverageONIndexedCouponPricerPtr& onCouponPricer = boost::shared_ptr<AverageONIndexedCouponPricer>()) {
-             boost::shared_ptr<OvernightIndex> floatIndex = boost::dynamic_pointer_cast<OvernightIndex>(overnightIndex);
+                      const AverageONIndexedCouponPricerPtr& onCouponPricer 
+                        = boost::shared_ptr<AverageONIndexedCouponPricer>()) {
+             boost::shared_ptr<OvernightIndex> floatIndex 
+                = boost::dynamic_pointer_cast<OvernightIndex>(overnightIndex);
+             boost::shared_ptr<AverageONIndexedCouponPricer> ONCouponPricer 
+                = boost::dynamic_pointer_cast<AverageONIndexedCouponPricer>(onCouponPricer);
              return new AverageOISPtr(
                  new AverageOIS(type,
                                 nominal,
@@ -58,14 +62,15 @@ class AverageOISPtr : public SwapPtr {
                                 fixedDayCounter,
                                 fixedPaymentAdjustment,
                                 fixedPaymentCalendar,
-                                onSchedule,floatIndex,
+                                onSchedule,
+                                floatIndex,
                                 onPaymentAdjustment,
                                 onPaymentCalendar,
                                 rateCutoff,
                                 onSpread,
                                 onGearing,
                                 onDayCounter,
-                                onCouponPricer)); 
+                                ONCouponPricer)); 
         }
         AverageOIS::Type type() { 
             return boost::dynamic_pointer_cast<AverageOIS>(*self)->type(); 
@@ -130,24 +135,27 @@ class AverageOISPtr : public SwapPtr {
     }
 };
 
-%ignore AverageONIndexedCouponPricer
+%ignore AverageONIndexedCouponPricer;
 class AverageONIndexedCouponPricer {
   public:
     enum Approximation { Takada, None };
 };
 
 %rename(AverageONIndexedCouponPricer) AverageONIndexedCouponPricerPtr;
-class AverageONIndexedCouponPricerPtr : public FloatingRateCouponPricerPtr {
+class AverageONIndexedCouponPricerPtr : public boost::shared_ptr<FloatingRateCouponPricer> {
   public:
     %extend{
-        static const AverageONIndexedCouponPricer::Approximation Takada = AverageONIndexedCouponPricer::Takada;
-        static const AverageONIndexedCouponPricer::Approximation None = AverageONIndexedCouponPricer::None;
-        AverageONIndexedCouponPricerPtr(AverageONIndexedCouponPricer::Approximation approxType = Takada) {
+        static const AverageONIndexedCouponPricer::Approximation Takada 
+            = AverageONIndexedCouponPricer::Takada;
+        static const AverageONIndexedCouponPricer::Approximation None 
+            = AverageONIndexedCouponPricer::None;
+        AverageONIndexedCouponPricerPtr(AverageONIndexedCouponPricer::Approximation approxType 
+            = AverageONIndexedCouponPricer::Takada) {
              return new AverageONIndexedCouponPricerPtr(
                  new AverageONIndexedCouponPricer(approxType));
         }
         void initialize(const QuantLib::FloatingRateCoupon& coupon) { 
-            return boost::dynamic_pointer_cast<AverageONIndexedCouponPricer>(*self)->initialize(); 
+            return boost::dynamic_pointer_cast<AverageONIndexedCouponPricer>(*self)->initialize(coupon); 
         }
         QuantLib::Rate swapletRate() const { 
             return boost::dynamic_pointer_cast<AverageONIndexedCouponPricer>(*self)->swapletRate(); 
