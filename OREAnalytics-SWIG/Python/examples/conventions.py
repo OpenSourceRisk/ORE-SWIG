@@ -2,7 +2,7 @@
 # Copyright (C) 2018 Quaternion Risk Manaement Ltd
 # All rights reserved.
 
-from OREPlus import *
+from OREAnalytics import *
 import xml.etree.ElementTree as ET
 
 # This will retrive a convention of name "id" from Conventions class "container"
@@ -77,7 +77,8 @@ convType = convObj.type()
 print("convObj type() is ", convType)
 idx = convObj.index()
 print(idx)
-
+print("idx is of type ", type(idx))
+print("index name is ", convObj.indexName())
 
 
 # B - Another Idea - Loop through the XML and build each convention individually
@@ -113,3 +114,14 @@ for item in convXml:
     if (convFullView.type() == Convention.Deposit):
         print(convFullView.id() + " index = " + convFullView.index())
 """
+
+# C - example of index parsing from string
+flatForwardUSD = FlatForward(Date(11, 9, 2018), 0.005, convObj.fixedDayCounter())
+termStructureUSD = RelinkableYieldTermStructureHandle()
+termStructureUSD.linkTo(flatForwardUSD)
+parsed_idx = parseIborIndex(convObj.indexName(), termStructureUSD)
+print(type(parsed_idx))
+ts = parsed_idx.forwardingTermStructure()
+print(type(ts))
+d2 = Date(11,9,2028)
+print("discount 10y = ", ts.discount(d2))
