@@ -21,7 +21,7 @@ typedef boost::shared_ptr<Instrument> AverageOISPtr;
 typedef boost::shared_ptr<FloatingRateCouponPricer> AverageONIndexedCouponPricerPtr;
 %}
 
-%ignore AverageOIS
+%ignore AverageOIS;
 class AverageOIS {
   public:
     enum Type { Receiver = -1, Payer = 1 };
