@@ -6,6 +6,69 @@
 from QuantExt import *
 import unittest
 
+class AverageOISTest(unittest.TestCase):
+    def setUp(self):
+        """ Set-up AverageOIS and engine """
+        self.todays_date = Date(4, October, 2018)
+        Settings.instance().evaluationDate = self.todays_date
+        self.settlement_date = Date(6, October, 2018)
+        self.swap_tenor = Period(10, Years)
+        self.pay_tenor = Period(6, Months)
+        self.calendar = UnitedStates()
+        self.maturity_date = self.calendar.advance(self.settlement_date, self.swap_tenor)
+        self.type = AverageOIS.Payer
+        self.bdc = ModifiedFollowing
+        self.day_counter = Actual365Fixed()
+        self.nominal = 10000000
+        self.schedule = Schedule(self.settlement_date, self.maturity_date,
+                                 self.pay_tenor, self.calendar,
+                                 self.bdc, self.bdc, DateGeneration.Forward, False)
+        self.fixed_rate = 0.03
+        self.flat_forward = FlatForward(self.todays_date, 0.02, self.day_counter)
+        self.term_structure = RelinkableYieldTermStructureHandle(self.flat_forward)
+        self.index = FedFunds(self.term_structure)
+        self.rate_cut_off = 0
+        self.on_spread = 0.0
+        self.on_gearing = 1.0
+        self.coupon_pricer = AverageONIndexedCouponPricer(AverageONIndexedCouponPricer.Takada)
+        self.swap = AverageOIS(self.type, self.nominal, self.schedule, self.fixed_rate,
+                               self.day_counter, self.bdc, self.calendar, self.schedule,
+                               self.index, self.bdc, self.calendar, self.rate_cut_off, 
+                               self.on_spread, self.on_gearing, self.day_counter, self.coupon_pricer)
+        self.engine = DiscountingSwapEngine(self.term_structure)
+        self.swap.setPricingEngine(self.engine)
+        
+    def testSimpleInspectors(self):
+        """ Test AverageOIS simple inspectors. """
+        self.assertEqual(self.swap.type(), self.type)
+        self.assertEqual(self.swap.nominal(), self.nominal)
+        self.assertEqual(self.swap.fixedRate(), self.fixed_rate)
+        self.assertEqual(self.swap.fixedDayCounter(), self.day_counter)
+        self.assertEqual(self.swap.rateCutoff(), self.rate_cut_off)
+        self.assertEqual(self.swap.onSpread(), self.on_spread)
+        self.assertEqual(self.swap.onGearing(), self.on_gearing)
+        self.assertEqual(self.swap.onDayCounter(), self.day_counter)
+        self.assertEqual(self.swap.overnightIndex().name(), self.index.name())
+        self.assertEqual(self.swap.overnightIndex().businessDayConvention(), self.index.businessDayConvention())
+            
+    def testConsistency(self):
+        """ Test consistency of fair price and NPV() """
+        tolerance = 1.0e-8
+        fair_fixed_rate = self.swap.fairRate()
+        swap = AverageOIS(self.type, self.nominal, self.schedule, fair_fixed_rate,
+                          self.day_counter, self.bdc, self.calendar, self.schedule,
+                          self.index, self.bdc, self.calendar, self.rate_cut_off, 
+                          self.on_spread, self.on_gearing, self.day_counter, self.coupon_pricer)
+        swap.setPricingEngine(self.engine)
+        self.assertFalse(abs(swap.NPV()) > tolerance)
+        fair_spread = self.swap.fairSpread()
+        swap = AverageOIS(self.type, self.nominal, self.schedule, self.fixed_rate,
+                          self.day_counter, self.bdc, self.calendar, self.schedule,
+                          self.index, self.bdc, self.calendar, self.rate_cut_off, 
+                          fair_spread, self.on_gearing, self.day_counter, self.coupon_pricer)
+        swap.setPricingEngine(self.engine)
+        self.assertFalse(abs(swap.NPV()) > tolerance)
+
 class CrossCurrencyFixFloatSwapTest(unittest.TestCase):
     def setUp(self):
         """ Set-up CrossCurrencyFixFloatSwap and engine """
@@ -90,6 +153,7 @@ class CrossCurrencyFixFloatSwapTest(unittest.TestCase):
         swap.setPricingEngine(self.engine)
         self.assertFalse(abs(swap.NPV()) > tolerance)
 
+        
 class CommodityForwardTest(unittest.TestCase):
     def setUp(self):
         """ Set-up CommodityForward and engine """
@@ -158,8 +222,8 @@ class SubPeriodsSwapTest(unittest.TestCase):
         self.float_term_structure = RelinkableYieldTermStructureHandle()
         self.float_index = Euribor3M(self.float_term_structure)
         self.schedule = Schedule(self.settlement_date, self.maturity_date,
-                                       self.float_pay_tenor, self.calendar,
-                                       self.bdc, self.bdc, self.date_generation, False)
+                                 self.float_pay_tenor, self.calendar,
+                                 self.bdc, self.bdc, self.date_generation, False)
         self.sub_periods_swap = SubPeriodsSwap(self.settlement_date, self.nominal, self.swap_tenor,
                                                self.is_payer, self.fixed_tenor, self.fixed_rate,
                                                self.calendar, self.day_counter, self.bdc, 
@@ -439,5 +503,16 @@ class PaymentTest(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    unittest.main()
+    print('testing QuantExt ' + QuantExt.__version__)
+    suite = unittest.TestSuite()
+    suite.addTest(unittest.makeSuite(CrossCurrencyFixFloatSwapTest, 'test'))
+    suite.addTest(unittest.makeSuite(CommodityForwardTest, 'test'))
+    suite.addTest(unittest.makeSuite(SubPeriodsSwapTest, 'test'))
+    suite.addTest(unittest.makeSuite(TenorBasisSwapTest, 'test'))
+    suite.addTest(unittest.makeSuite(FxForwardTest, 'test'))
+    suite.addTest(unittest.makeSuite(DepositTest, 'test'))
+    suite.addTest(unittest.makeSuite(EquityForwardTest, 'test'))
+    suite.addTest(unittest.makeSuite(PaymentTest, 'test'))
+    suite.addTest(unittest.makeSuite(AverageOISTest, 'test'))
+    unittest.TextTestRunner(verbosity=2).run(suite)
 
