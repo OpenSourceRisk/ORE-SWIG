@@ -10,6 +10,7 @@
 %include swap.i
 %include qle_instruments.i
 %include qle_tenorbasisswap.i
+%include qle_oiccbasisswap.i
 
 %{
 using QuantExt::CrossCcyBasisSwapHelper;
@@ -205,5 +206,38 @@ class BasisTwoSwapHelperPtr : public boost::shared_ptr<RateHelper> {
   }
 };
 
+%rename(OICCBSHelper) OICCBSHelperPtr;
+class OICCBSHelperPtr : public boost::shared_ptr<RateHelper> {
+  public:
+    %extend {
+    OICCBSHelperPtr(QuantLib::Natural settlementDays,
+                    const QuantLib::Period& term,
+                    const OvernightIndexPtr& payIndex,
+                    const QuantLib::Period& payTenor,
+                    const OvernightIndexPtr& recIndex, 
+                    const QuantLib::Period& recTenor,
+                    const QuantLib::Handle<QuantLib::Quote>& spreadQuote, 
+                    const QuantLib::Handle<QuantLib::YieldTermStructure>& fixedDiscountCurve,
+                    bool spreadQuoteOnPayLeg, 
+                    bool fixedDiscountOnPayLeg) {
+        boost::shared_ptr<OvernightIndex> payFloat = boost::dynamic_pointer_cast<OvernightIndex>(payIndex);
+        boost::shared_ptr<OvernightIndex> recFloat = boost::dynamic_pointer_cast<OvernightIndex>(recIndex);
+        return new OICCBSHelperPtr(
+            new OICCBSHelper(settlementDays,
+                             term,
+                             payFloat,
+                             payTenor,
+                             recFloat,
+                             recTenor,
+                             spreadQuote,
+                             fixedDiscountCurve,
+                             spreadQuoteOnPayLeg,
+                             fixedDiscountOnPayLeg));
+    }
+    OvernightIndexedCrossCcyBasisSwapPtr swap() {
+        return boost::dynamic_pointer_cast<OICCBSHelper>(*self)->swap();
+    }
+  }
+};
 
 #endif

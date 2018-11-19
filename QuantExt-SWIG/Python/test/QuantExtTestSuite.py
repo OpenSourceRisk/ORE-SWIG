@@ -12,7 +12,7 @@ from instruments import TenorBasisSwapTest
 from instruments import SubPeriodsSwapTest
 from instruments import CommodityForwardTest
 from instruments import PaymentTest
-
+from instruments import CrossCurrencyFixFloatSwapTest
 
 def test():
     import QuantExt
@@ -28,6 +28,7 @@ def test():
     suite.addTest(unittest.makeSuite(SubPeriodsSwapTest, 'test'))
     suite.addTest(unittest.makeSuite(CommodityForwardTest, 'test'))
     suite.addTest(unittest.makeSuite(PaymentTest, 'test'))
+    suite.addTest(unittest.makeSuite(CrossCurrencyFixFloatSwapTest, 'test'))
 
     result = unittest.TextTestRunner(verbosity=2).run(suite)
 

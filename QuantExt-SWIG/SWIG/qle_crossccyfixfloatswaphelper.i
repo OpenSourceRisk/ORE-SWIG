@@ -3,8 +3,8 @@
  All rights reserved.
 */
 
-#ifndef qle_crossccyfixfloatswaphelper.i
-#define qle_crossccyfixfloatswaphelper.i
+#ifndef qle_crossccyfixfloatswaphelper_i
+#define qle_crossccyfixfloatswaphelper_i
 
 %include ratehelpers.i
 %include qle_instruments.i

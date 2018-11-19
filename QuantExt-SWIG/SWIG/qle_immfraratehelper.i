@@ -3,8 +3,8 @@
  All rights reserved.
 */
 
-#ifndef qle_immfraratehelper.i
-#define qle_immfraratehelper.i
+#ifndef qle_immfraratehelper_i
+#define qle_immfraratehelper_i
 
 %include ratehelpers.i
 %include qle_instruments.i
