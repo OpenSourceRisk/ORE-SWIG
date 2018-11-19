@@ -54,6 +54,12 @@ for trn in tradesVec:
     print(" inst type is ", type(pgInst))
     trnPv = pgInst.NPV()
     print(" instWrap pv = ", str(trnPv))
+    qlInst = pgInst.qlInstrument()
+    print(" qlInst is of type ", type(qlInst))
+    qlPv = qlInst.NPV()
+    print(" qlInst pv = ", str(qlPv))
+    isExp = qlInst.isExpired()
+    print(" is expired? = ", isExp)
     #legPg = trn.legs()
     #print(" legsVec is of type ", type(legPg))
 
