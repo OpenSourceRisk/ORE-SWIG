@@ -29,6 +29,7 @@
 %}
 
 %include ored_conventions.i
+%include ored_parsers.i
 
 %{
 

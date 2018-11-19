@@ -85,7 +85,7 @@ class SubPeriodsCouponPtr : public FloatingRateCouponPtr {
 };
 
 %rename(SubPeriodsCouponPricer) SubPeriodsCouponPricerPtr;
-class SubPeriodsCouponPricerPtr : public FloatingRateCouponPricerPtr {
+class SubPeriodsCouponPricerPtr : public boost::shared_ptr<FloatingRateCouponPricer> {
   private:
     SubPeriodsCouponPricerPtr();
   public:
@@ -161,6 +161,9 @@ class TenorBasisSwapPtr : public SwapPtr {
         const QuantLib::Schedule& longSchedule() const { 
             return boost::dynamic_pointer_cast<TenorBasisSwap>(*self)->longSchedule(); 
         }
+        const IborIndexPtr longIndex() const { 
+            return boost::dynamic_pointer_cast<TenorBasisSwap>(*self)->longIndex(); 
+        }
         QuantLib::Spread longSpread() const { 
             return boost::dynamic_pointer_cast<TenorBasisSwap>(*self)->longSpread(); 
         }
@@ -169,6 +172,9 @@ class TenorBasisSwapPtr : public SwapPtr {
         }
         const QuantLib::Schedule& shortSchedule() const { 
             return boost::dynamic_pointer_cast<TenorBasisSwap>(*self)->shortSchedule(); 
+        }
+        const IborIndexPtr shortIndex() const { 
+            return boost::dynamic_pointer_cast<TenorBasisSwap>(*self)->shortIndex(); 
         }
         QuantLib::Spread shortSpread() const { 
             return boost::dynamic_pointer_cast<TenorBasisSwap>(*self)->shortSpread(); 

@@ -6,6 +6,90 @@
 from QuantExt import *
 import unittest
 
+class CrossCurrencyFixFloatSwapTest(unittest.TestCase):
+    def setUp(self):
+        """ Set-up CrossCurrencyFixFloatSwap and engine """
+        self.todayDate = Date(11, November, 2018)
+        self.nominal1 = 10000000
+        self.nominal2 = 12000000
+        self.currency1 = USDCurrency()
+        self.currency2 = EURCurrency()
+        self.settlementDate = Date(13, November, 2018)
+        self.calendar = TARGET()
+        self.tsDayCounter = Actual365Fixed()
+        self.busDayConvention = Following
+        self.forwardStart = self.calendar.advance(self.settlementDate, 1, Years)
+        self.forwardEnd = self.calendar.advance(self.forwardStart, 5, Years)
+        self.payLag = 1
+        self.tenor = Period(6, Months)
+        self.bdc = ModifiedFollowing
+        self.schedule = Schedule(self.forwardStart, self.forwardEnd, self.tenor, self.calendar,
+                                 self.bdc, self.bdc, DateGeneration.Forward, False)
+        self.flatForwardUSD = FlatForward(self.todayDate, 0.005, self.tsDayCounter)
+        self.discountTermStructureUSD = RelinkableYieldTermStructureHandle(self.flatForwardUSD)
+        self.flatForwardEUR = FlatForward(self.todayDate, 0.03, self.tsDayCounter);
+        self.discountTermStructureEUR = RelinkableYieldTermStructureHandle(self.flatForwardEUR)
+        self.floatSpread = 0.0
+        self.index = USDLibor(Period(3, Months), self.discountTermStructureUSD)
+        self.couponRate = 0.03
+        self.type = CrossCcyFixFloatSwap.Payer
+        self.fxQuote = QuoteHandle(SimpleQuote(1/0.8))
+        self.swap = CrossCcyFixFloatSwap(self.type, self.nominal2, self.currency2,
+                                         self.schedule, self.couponRate, self.tsDayCounter,
+                                         self.busDayConvention, self.payLag, self.calendar,
+                                         self.nominal1, self.currency1, self.schedule,
+                                         self.index, self.floatSpread, self.busDayConvention,
+                                         self.payLag, self.calendar)
+        self.engine = CrossCcySwapEngine(self.currency1, self.discountTermStructureEUR, self.currency2,
+                                         self.discountTermStructureUSD, self.fxQuote, False,
+                                         self.settlementDate, self.todayDate)
+        self.swap.setPricingEngine(self.engine)
+        
+    def testSimpleInspectors(self):
+        """ Test CrossCurrencyFixFloatSwap simple inspectors. """
+        self.assertEqual(self.swap.type(), self.type)
+        self.assertEqual(self.swap.fixedNominal(), self.nominal2)
+        self.assertEqual(self.swap.fixedCurrency(), self.currency2)
+        self.assertEqual(self.swap.fixedRate(), self.couponRate)
+        self.assertEqual(self.swap.fixedDayCount(), self.tsDayCounter)
+        self.assertEqual(self.swap.fixedPaymentBdc(), self.busDayConvention)
+        self.assertEqual(self.swap.fixedPaymentLag(), self.payLag)
+        self.assertEqual(self.swap.fixedPaymentCalendar(), self.calendar)
+        self.assertEqual(self.swap.floatNominal(), self.nominal1)
+        self.assertEqual(self.swap.floatCurrency(), self.currency1)
+        self.assertEqual(self.swap.floatSpread(), self.floatSpread)
+        self.assertEqual(self.swap.floatPaymentBdc(), self.busDayConvention)
+        self.assertEqual(self.swap.floatPaymentLag(), self.payLag)
+        self.assertEqual(self.swap.floatPaymentCalendar(), self.calendar)
+        
+    def testSchedules(self):
+        """ Test CrossCurrencyFixFloatSwap schedules. """
+        for i, d in enumerate(self.schedule):
+            self.assertEqual(self.swap.fixedSchedule()[i], d)
+            self.assertEqual(self.swap.floatSchedule()[i], d)
+            
+    def testConsistency(self):
+        """ Test consistency of fair price and NPV() """
+        tolerance = 1.0e-8
+        fair_fixed_rate = self.swap.fairFixedRate()
+        swap = CrossCcyFixFloatSwap(self.type, self.nominal2, self.currency2,
+                                    self.schedule, fair_fixed_rate, self.tsDayCounter,
+                                    self.busDayConvention, self.payLag, self.calendar,
+                                    self.nominal1, self.currency1, self.schedule,
+                                    self.index, self.floatSpread, self.busDayConvention,
+                                    self.payLag, self.calendar)
+        swap.setPricingEngine(self.engine)
+        self.assertFalse(abs(swap.NPV()) > tolerance)
+        fair_spread = self.swap.fairSpread()
+        swap = CrossCcyFixFloatSwap(self.type, self.nominal2, self.currency2,
+                                    self.schedule, self.couponRate, self.tsDayCounter,
+                                    self.busDayConvention, self.payLag, self.calendar,
+                                    self.nominal1, self.currency1, self.schedule,
+                                    self.index, fair_spread, self.busDayConvention,
+                                    self.payLag, self.calendar)
+        swap.setPricingEngine(self.engine)
+        self.assertFalse(abs(swap.NPV()) > tolerance)
+
 class CommodityForwardTest(unittest.TestCase):
     def setUp(self):
         """ Set-up CommodityForward and engine """
@@ -47,7 +131,6 @@ class CommodityForwardTest(unittest.TestCase):
         self.assertEqual(self.commodity_forward.maturityDate(), self.maturity_date)
         self.assertEqual(self.commodity_forward.strike(), self.strike)
         
-
     def testNPV(self):
         """ Test NPV() """
         self.assertIsNotNone(self.commodity_forward.NPV())
@@ -290,37 +373,31 @@ class EquityForwardTest(unittest.TestCase):
         self.currency = GBPCurrency()
         self.position = Position.Long
         self.quantity = 100
-        self.maturityDate = Date(1,November,2019)
+        self.maturityDate = Date(1, November, 2019)
         self.strike = 60
-        self.equityForward=EquityForward(self.name, self.currency, self.position,
-                                         self.quantity, self.maturityDate, self.strike)
+        self.equityForward = EquityForward(self.name, self.currency, self.position,
+                                           self.quantity, self.maturityDate, self.strike)
         self.tsDayCounter = Actual365Fixed()
         self.interest_rate = 0.03
         self.flatForward = FlatForward(self.todays_date, self.interest_rate, self.tsDayCounter)
         self.equityInterestRateCurve = RelinkableYieldTermStructureHandle()
         self.equityInterestRateCurve.linkTo(self.flatForward)
-        self.dividendYieldCurve = RelinkableYieldTermStructureHandle()
-        self.dividendYieldCurve.linkTo(self.flatForward)
-        self.discountCurve = RelinkableYieldTermStructureHandle()
-        self.discountCurve.linkTo(self.flatForward)
+        self.dividendYieldCurve = RelinkableYieldTermStructureHandle(self.flatForward)
+        self.discountCurve = RelinkableYieldTermStructureHandle(self.flatForward)
         self.equitySpotPrice = 60.0
         self.equitySpot = QuoteHandle(SimpleQuote(self.equitySpotPrice))
-        self.includeSettlementDateFlows=True
-        self.settlementDate = self.maturityDate
-        self.npvDate = self.todays_date
+        self.includeSettlementDateFlows = True
         self.engine = DiscountingEquityForwardEngine(self.equityInterestRateCurve, self.dividendYieldCurve,
                                                      self.equitySpot, self.discountCurve, self.includeSettlementDateFlows,
-                                                     self.settlementDate, self.npvDate)
+                                                     self.maturityDate, self.todays_date)
         self.equityForward.setPricingEngine(self.engine)
         
-  
     def testSimpleInspectors(self):
         """ Test EquityForward simple inspectors. """
         self.assertEqual(self.strike, self.equityForward.strike())
-        self.assertEqual(self.settlementDate, self.equityForward.maturityDate())
+        self.assertEqual(self.maturityDate, self.equityForward.maturityDate())
         self.assertEqual(self.quantity, self.equityForward.quantity())
-        self.assertEqual(self.currency.name(), self.equityForward.currency().name())
-
+        self.assertEqual(self.currency, self.equityForward.currency())
 
     def testConsistency(self):
         """ Test consistency of fair price and NPV() """
@@ -336,32 +413,30 @@ class PaymentTest(unittest.TestCase):
         self.currency = GBPCurrency()
         self.settlementDate = Date(1, November, 2019)
         self.day_counter = Actual365Fixed()
-        self.nominal=100.0
-        self.spotFX = QuoteHandle(SimpleQuote(1.0))
-        self.GBP_interest_rate = 0.00
-        self.GBP_flat_forward = FlatForward(self.todays_date, self.GBP_interest_rate, self.day_counter)
-        self.GBP_discount_curve = RelinkableYieldTermStructureHandle()
-        self.GBP_discount_curve.linkTo(self.GBP_flat_forward)
-        self.payment=Payment(self.nominal,self.currency,self.settlementDate)
-        self.includeSettlementDateFlows=True
-        self.npvDate=self.todays_date
-        self.discountCurve=self.GBP_discount_curve
-        self.engine = PaymentDiscountingEngine(self.discountCurve, self.spotFX, self.includeSettlementDateFlows,self.settlementDate,self.npvDate)
+        self.nominal = 100.0
+        self.spotFX = QuoteHandle(SimpleQuote(1))
+        self.rate = 0.0
+        self.flat_forward = FlatForward(self.todays_date, self.rate, self.day_counter)
+        self.discount_curve = RelinkableYieldTermStructureHandle(self.flat_forward)
+        self.payment = Payment(self.nominal, self.currency, self.settlementDate)
+        self.includeSettlementDateFlows = True
+        self.engine = PaymentDiscountingEngine(self.discount_curve, 
+                                               self.spotFX, 
+                                               self.includeSettlementDateFlows,
+                                               self.settlementDate,
+                                               self.todays_date)
         self.payment.setPricingEngine(self.engine)
         
-  
     def testSimpleInspectors(self):
-        """ Test FxForward simple inspectors. """
-        self.assertEqual(self.settlementDate,self.payment.cashFlow().date())
-        self.assertEqual(self.currency.name(),self.payment.currency().name())
-        
+        """ Test Payment simple inspectors. """
+        self.assertEqual(self.nominal, self.payment.cashFlow().amount())
+        self.assertEqual(self.currency, self.payment.currency())
 
     def testConsistency(self):
         """ Test consistency of fair price and NPV() """
         tolerance= 1.0e-10
-        self.assertFalse(abs(self.payment.NPV()-self.nominal)>tolerance)
-        
-        
+        self.assertFalse(abs(self.payment.NPV() - self.nominal) > tolerance)
+
 
 if __name__ == '__main__':
     unittest.main()

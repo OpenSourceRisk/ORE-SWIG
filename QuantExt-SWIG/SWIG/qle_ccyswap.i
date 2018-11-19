@@ -3,8 +3,8 @@
  All rights reserved.
 */
 
-#ifndef qle_ccyswap.i
-#define qle_ccyswap.i
+#ifndef qle_ccyswap_i
+#define qle_ccyswap_i
 
 %include qle_currencies.i
 %include instruments.i
