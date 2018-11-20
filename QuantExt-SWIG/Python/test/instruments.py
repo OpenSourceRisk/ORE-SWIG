@@ -500,8 +500,7 @@ class PaymentTest(unittest.TestCase):
         """ Test consistency of fair price and NPV() """
         tolerance= 1.0e-10
         self.assertFalse(abs(self.payment.NPV() - self.nominal) > tolerance)
-
-
+        
 if __name__ == '__main__':
     print('testing QuantExt ' + QuantExt.__version__)
     suite = unittest.TestSuite()

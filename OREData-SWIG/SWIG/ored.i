@@ -312,6 +312,9 @@ public:
     Real NPV() const {
       return boost::dynamic_pointer_cast<ore::data::InstrumentWrapper>(*self)->NPV();
     }
+    boost::shared_ptr<QuantLib::Instrument> qlInstrument() const {
+        return boost::dynamic_pointer_cast<ore::data::InstrumentWrapper>(*self)->qlInstrument();
+    }
   }
 };
 
