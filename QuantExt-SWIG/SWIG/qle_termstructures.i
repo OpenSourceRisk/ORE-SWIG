@@ -6,27 +6,22 @@
 #ifndef qle_termstructures_i
 #define qle_termstructures_i
 
-%include termstructures.i
-
 %include common.i
-%include date.i
-%include daycounters.i
 %include types.i
+%include interestrate.i
+%include date.i
+%include calendars.i
+%include daycounters.i
 %include currencies.i
 %include observer.i
 %include marketelements.i
 %include interpolation.i
-%include indexes.i
-%include optimizers.i
-%include options.i
-%include volatilities.i
 
 %{
 using QuantExt::PriceTermStructure;
 using QuantExt::InterpolatedPriceCurve;
 using QuantExt::FxBlackVannaVolgaVolatilitySurface;
 
-typedef boost::shared_ptr<PriceTermStructure> PriceCurvePtr;
 typedef boost::shared_ptr<BlackVolTermStructure> FxBlackVannaVolgaVolatilitySurfacePtr;
 %}
 
@@ -43,55 +38,69 @@ IsObservable(boost::shared_ptr<PriceTermStructure>);
 %template(PriceTermStructureHandle) Handle<PriceTermStructure>;
 IsObservable(Handle<PriceTermStructure>);
 
-%template(RelinkablePriceTermStructureHandle)
-RelinkableHandle<PriceTermStructure>;
+%template(RelinkablePriceTermStructureHandle) RelinkableHandle<PriceTermStructure>;
 
-// This is an InterpolatedPriceCurve with Linear interpolation
-// FIXME: See termstructures.i and generalize
-%rename(PriceCurve) PriceCurvePtr;
-class PriceCurvePtr : public boost::shared_ptr<PriceTermStructure> {
+%define export_Interpolated_Price_Curve(Name, Interpolator)
+
+%{
+typedef boost::shared_ptr<PriceTermStructure> Name##Ptr;
+%}
+
+%warnfilter(509) Name##Ptr;
+
+%rename(Name) Name##Ptr;
+class Name##Ptr : public boost::shared_ptr<PriceTermStructure> {
   public:
     %extend {
-        PriceCurvePtr(const std::vector<QuantLib::Time>& times,
-                      const std::vector<QuantLib::Real>& prices, 
-                      const QuantLib::DayCounter& dc) {
-            return new PriceCurvePtr(
-                new InterpolatedPriceCurve<Linear>(times, 
-                                                   prices, 
-                                                   dc));
+        Name##Ptr(const std::vector<QuantLib::Time>& times,
+                  const std::vector<QuantLib::Real>& prices, 
+                  const QuantLib::DayCounter& dc) {
+            return new Name##Ptr(
+                new InterpolatedPriceCurve<Interpolator>(times, 
+                                                         prices, 
+                                                         dc));
         }
-        PriceCurvePtr(const std::vector<QuantLib::Time>& times,
-                      const std::vector<QuantLib::Handle<QuantLib::Quote>>& quotes,
-                      const QuantLib::DayCounter& dc) {
-            return new PriceCurvePtr(
-                new InterpolatedPriceCurve<Linear>(times, 
-                                                   quotes, 
-                                                   dc));
+        Name##Ptr(const std::vector<QuantLib::Time>& times,
+                  const std::vector<QuantLib::Handle<QuantLib::Quote>>& quotes,
+                  const QuantLib::DayCounter& dc) {
+            return new Name##Ptr(
+                new InterpolatedPriceCurve<Interpolator>(times, 
+                                                         quotes, 
+                                                         dc));
         }
-        PriceCurvePtr(const std::vector<QuantLib::Date>& dates,
-                      const std::vector<QuantLib::Real>& prices,
-                      const QuantLib::DayCounter& dc) {
-            return new PriceCurvePtr(
-                new InterpolatedPriceCurve<Linear>(dates, 
-                                                   prices, 
-                                                   dc));
+        Name##Ptr(const std::vector<QuantLib::Date>& dates,
+                  const std::vector<QuantLib::Real>& prices,
+                  const QuantLib::DayCounter& dc) {
+            return new Name##Ptr(
+                new InterpolatedPriceCurve<Interpolator>(dates, 
+                                                         prices, 
+                                                         dc));
         }
-        PriceCurvePtr(const std::vector<QuantLib::Date>& dates,
-                      const std::vector<QuantLib::Handle<QuantLib::Quote> >& quotes,
-                      const QuantLib::DayCounter& dc) {
-            return new PriceCurvePtr(
-                new InterpolatedPriceCurve<Linear>(dates, 
-                                                   quotes, 
-                                                   dc));
+        Name##Ptr(const std::vector<QuantLib::Date>& dates,
+                  const std::vector<QuantLib::Handle<QuantLib::Quote>>& quotes,
+                  const QuantLib::DayCounter& dc) {
+            return new Name##Ptr(
+                new InterpolatedPriceCurve<Interpolator>(dates, 
+                                                         quotes, 
+                                                         dc));
         }
         const std::vector<QuantLib::Time>& times() const {
-            return boost::dynamic_pointer_cast<InterpolatedPriceCurve<Linear> >(*self)->times();
+            return boost::dynamic_pointer_cast<InterpolatedPriceCurve<Interpolator>>(*self)->times();
         }
         const std::vector<QuantLib::Real>& prices() const {
-            return  boost::dynamic_pointer_cast<InterpolatedPriceCurve<Linear> >(*self)->prices();
+            return  boost::dynamic_pointer_cast<InterpolatedPriceCurve<Interpolator>>(*self)->prices();
         }
     }
 };
+
+%enddef
+
+export_Interpolated_Price_Curve(LinearInterpolatedPriceCurve, Linear);
+export_Interpolated_Price_Curve(BackwardFlatInterpolatedPriceCurve, BackwardFlat);
+export_Interpolated_Price_Curve(LogLinearInterpolatedPriceCurve, LogLinear);
+export_Interpolated_Price_Curve(CubicInterpolatedPriceCurve, Cubic);
+export_Interpolated_Price_Curve(SplineCubicInterpolatedPriceCurve, SplineCubic);
+export_Interpolated_Price_Curve(MonotonicCubicInterpolatedPriceCurve, MonotonicCubic);
 
 %rename(FxBlackVannaVolgaVolatilitySurface) FxBlackVannaVolgaVolatilitySurfacePtr;
 class FxBlackVannaVolgaVolatilitySurfacePtr : public boost::shared_ptr<BlackVolTermStructure> {
