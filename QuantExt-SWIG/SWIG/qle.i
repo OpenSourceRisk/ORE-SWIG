@@ -25,6 +25,7 @@
 %include qle_averageois.i
 %include qle_tenorbasisswap.i
 %include qle_oiccbasisswap.i
+%include qle_creditdefaultswap.i
 %include qle_averageoisratehelper.i
 
 #endif

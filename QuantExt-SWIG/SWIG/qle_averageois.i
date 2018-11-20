@@ -90,6 +90,9 @@ class AverageOISPtr : public SwapPtr {
         const QuantLib::DayCounter& fixedDayCounter() {  
             return boost::dynamic_pointer_cast<AverageOIS>(*self)->fixedDayCounter(); 
         } 
+        const OvernightIndexPtr overnightIndex() {  
+            return boost::dynamic_pointer_cast<AverageOIS>(*self)->overnightIndex(); 
+        } 
         QuantLib::Natural rateCutoff() {  
             return boost::dynamic_pointer_cast<AverageOIS>(*self)->rateCutoff(); 
         } 
