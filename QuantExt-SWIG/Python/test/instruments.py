@@ -178,7 +178,7 @@ class CommodityForwardTest(unittest.TestCase):
                         QuoteHandle(SimpleQuote(101.25)), QuoteHandle(SimpleQuote(101.50)),
                         QuoteHandle(SimpleQuote(101.75)), QuoteHandle(SimpleQuote(102.0)),
                         QuoteHandle(SimpleQuote(102.25)) ]
-        self.price_curve = PriceCurve(self.dates, self.quotes, self.day_counter)
+        self.price_curve = LinearInterpolatedPriceCurve(self.dates, self.quotes, self.day_counter)
         self.price_curve.enableExtrapolation();
         self.price_term_structure = RelinkablePriceTermStructureHandle(self.price_curve)
         self.flat_forward = FlatForward(self.todays_date, 0.03, self.day_counter);
