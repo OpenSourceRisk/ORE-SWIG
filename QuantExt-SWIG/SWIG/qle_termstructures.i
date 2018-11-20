@@ -21,8 +21,12 @@
 using QuantExt::PriceTermStructure;
 using QuantExt::InterpolatedPriceCurve;
 using QuantExt::FxBlackVannaVolgaVolatilitySurface;
+using QuantExt::BlackVarianceSurfaceMoneynessSpot;
+using QuantExt::BlackVarianceSurfaceMoneynessForward;
 
 typedef boost::shared_ptr<BlackVolTermStructure> FxBlackVannaVolgaVolatilitySurfacePtr;
+typedef boost::shared_ptr<BlackVolTermStructure> BlackVarianceSurfaceMoneynessSpotPtr;
+typedef boost::shared_ptr<BlackVolTermStructure> BlackVarianceSurfaceMoneynessForwardPtr;
 %}
 
 %ignore PriceTermStructure;
@@ -127,6 +131,57 @@ class FxBlackVannaVolgaVolatilitySurfacePtr : public boost::shared_ptr<BlackVolT
                                                        fx,
                                                        dom,
                                                        fore));
+        }
+    }
+};
+
+
+%rename(BlackVarianceSurfaceMoneynessSpot) BlackVarianceSurfaceMoneynessSpotPtr;
+class BlackVarianceSurfaceMoneynessSpotPtr : public boost::shared_ptr<BlackVolTermStructure> {
+  public:
+    %extend {
+        BlackVarianceSurfaceMoneynessSpotPtr(const QuantLib::Calendar& cal, 
+                                             const QuantLib::Handle<QuantLib::Quote>& spot, 
+                                             const std::vector<QuantLib::Time>& times,
+                                             const std::vector<QuantLib::Real>& moneyness,
+                                             const std::vector<std::vector<QuantLib::Handle<QuantLib::Quote>>>& blackVolMatrix,
+                                             const QuantLib::DayCounter& dayCounter, 
+                                             bool stickyStrike) {
+            return new BlackVarianceSurfaceMoneynessSpotPtr(
+                new BlackVarianceSurfaceMoneynessSpot(cal,
+                                                      spot,
+                                                      times,
+                                                      moneyness,
+                                                      blackVolMatrix,
+                                                      dayCounter,
+                                                      stickyStrike));
+        }
+    }
+};
+
+%rename(BlackVarianceSurfaceMoneynessForward) BlackVarianceSurfaceMoneynessForwardPtr;
+class BlackVarianceSurfaceMoneynessForwardPtr : public boost::shared_ptr<BlackVolTermStructure> {
+  public:
+    %extend {
+        BlackVarianceSurfaceMoneynessForwardPtr(const QuantLib::Calendar& cal, 
+                                                const QuantLib::Handle<QuantLib::Quote>& spot, 
+                                                const std::vector<QuantLib::Time>& times,
+                                                const std::vector<QuantLib::Real>& moneyness,
+                                                const std::vector<std::vector<QuantLib::Handle<QuantLib::Quote>>>& blackVolMatrix,
+                                                const QuantLib::DayCounter& dayCounter, 
+                                                const QuantLib::Handle<QuantLib::YieldTermStructure>& forTS,
+                                                const QuantLib::Handle<QuantLib::YieldTermStructure>& domTS, 
+                                                bool stickyStrike = false) {
+            return new BlackVarianceSurfaceMoneynessForwardPtr(
+                new BlackVarianceSurfaceMoneynessForward(cal,
+                                                      spot,
+                                                      times,
+                                                      moneyness,
+                                                      blackVolMatrix,
+                                                      dayCounter,
+                                                      forTS,
+                                                      domTS,
+                                                      stickyStrike));
         }
     }
 };
