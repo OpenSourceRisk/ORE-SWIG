@@ -13,7 +13,7 @@ from instruments import SubPeriodsSwapTest
 from instruments import CommodityForwardTest
 from instruments import PaymentTest
 from instruments import CrossCurrencyFixFloatSwapTest
-from instruments import AverageOISRateHelpersTest
+from ratehelpers import AverageOISRateHelpersTest
 
 def test():
     import QuantExt
