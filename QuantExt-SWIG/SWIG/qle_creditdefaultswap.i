@@ -16,9 +16,11 @@
 %{
 //using QuantExt::CreditDefaultSwap;
 //using QuantExt::MidPointCdsEngine;
+using QuantExt::CdsOption;
 
 typedef boost::shared_ptr<Instrument> QLECreditDefaultSwapPtr;
 typedef boost::shared_ptr<PricingEngine> QLEMidPointCdsEnginePtr;
+typedef boost::shared_ptr<Instrument> CdsOptionPtr;
 %}
 
 %rename(QLECreditDefaultSwap) QLECreditDefaultSwapPtr;
@@ -156,6 +158,48 @@ class QLEMidPointCdsEnginePtr : public boost::shared_ptr<PricingEngine> {
                 new QuantExt::MidPointCdsEngine(probability, 
                                                 recoveryRate,
                                                 discountCurve));
+        }
+    }
+};
+
+%rename(CdsOption) CdsOptionPtr;
+class CdsOptionPtr : public boost::shared_ptr<Instrument> {
+  public:
+    %extend {
+        CdsOptionPtr(const QLECreditDefaultSwapPtr& swap, 
+                     const boost::shared_ptr<QuantLib::Exercise>& exercise,
+                     bool knocksOut = true) {
+            boost::shared_ptr<QuantExt::CreditDefaultSwap> cds = boost::dynamic_pointer_cast<QuantExt::CreditDefaultSwap>(swap);
+            return new CdsOptionPtr(
+                new QuantExt::CdsOption(cds,
+                                        exercise,
+                                        knocksOut));
+        }
+        const QLECreditDefaultSwapPtr underlyingSwap() const {
+            return boost::dynamic_pointer_cast<QuantExt::CdsOption>(*self)->underlyingSwap();
+        }
+        QuantLib::Rate atmRate() const {
+            return boost::dynamic_pointer_cast<QuantExt::CdsOption>(*self)->atmRate();
+        }
+        QuantLib::Real riskyAnnuity() const {
+            return boost::dynamic_pointer_cast<QuantExt::CdsOption>(*self)->riskyAnnuity();
+        }
+        QuantLib::Volatility impliedVolatility(QuantLib::Real price, 
+                                               const QuantLib::Handle<QuantLib::YieldTermStructure>& termStructure,
+                                               const QuantLib::Handle<QuantLib::DefaultProbabilityTermStructure>& probability, 
+                                               QuantLib::Real recoveryRate,
+                                               QuantLib::Real accuracy = 1.e-4, 
+                                               QuantLib::Size maxEvaluations = 100, 
+                                               QuantLib::Volatility minVol = 1.0e-7,
+                                               QuantLib::Volatility maxVol = 4.0) const {
+            return boost::dynamic_pointer_cast<QuantExt::CdsOption>(*self)->impliedVolatility(price,
+                                                                                              termStructure,
+                                                                                              probability,
+                                                                                              recoveryRate,
+                                                                                              accuracy,
+                                                                                              maxEvaluations,
+                                                                                              minVol,
+                                                                                              maxVol);
         }
     }
 };
