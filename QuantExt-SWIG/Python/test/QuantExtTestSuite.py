@@ -15,6 +15,7 @@ from instruments import PaymentTest
 from instruments import CrossCurrencyFixFloatSwapTest
 from ratehelpers import AverageOISRateHelpersTest
 from ratehelpers import CrossCcyBasisSwapHelperTest
+from ratehelpers import TenorBasisSwapHelperTest
 
 def test():
     import QuantExt
@@ -33,6 +34,7 @@ def test():
     suite.addTest(unittest.makeSuite(CrossCurrencyFixFloatSwapTest, 'test'))
     suite.addTest(unittest.makeSuite(AverageOISRateHelpersTest, 'test'))
     suite.addTest(unittest.makeSuite(CrossCcyBasisSwapHelperTest, 'test'))
+    suite.addTest(unittest.makeSuite(TenorBasisSwapHelperTest, 'test'))
 
     result = unittest.TextTestRunner(verbosity=2).run(suite)
 
