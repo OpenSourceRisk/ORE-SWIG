@@ -22,6 +22,7 @@ from ratehelpers import OIBSHelperTest
 from ratehelpers import BasisTwoSwapHelperTest
 from ratehelpers import OICCBSHelperTest
 from ratehelpers import ImmFraRateHelperTest
+from ratehelpers import CrossCcyFixFloatSwapHelperTest
 
 def test():
     import QuantExt
@@ -47,6 +48,7 @@ def test():
     suite.addTest(unittest.makeSuite(BasisTwoSwapHelperTest, 'test'))
     suite.addTest(unittest.makeSuite(OICCBSHelperTest, 'test'))
     suite.addTest(unittest.makeSuite(ImmFraRateHelperTest, 'test'))
+    suite.addTest(unittest.makeSuite(CrossCcyFixFloatSwapHelperTest, 'test'))
     result = unittest.TextTestRunner(verbosity=2).run(suite)
 
     if not result.wasSuccessful:

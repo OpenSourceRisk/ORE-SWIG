@@ -211,7 +211,7 @@ class OICCBSHelperTest(unittest.TestCase):
     def testSimpleInspectors(self):
         """ Test OICCBS simple inspector. """
         self.assertEqual(self.oiccbshelper.quote().value(),self.spreadQuote.value())
-        
+
 
 class ImmFraRateHelperTest(unittest.TestCase):
     def setUp(self):
@@ -230,7 +230,34 @@ class ImmFraRateHelperTest(unittest.TestCase):
                                        self.index)
     
     def testSimpleInspectors(self):
+        """ Test  ImmFraRateHelper simple inspector """
         self.assertEqual(self.immfraratehelper.quote().value(),self.rate.value())
+
+class CrossCcyFixFloatSwapHelperTest(unittest.TestCase):
+    def setUp(self):
+        """ Set-up crossccyfixfloat rate helper """
+        self.todays_date=Date(1,October,2018)
+        Settings.instance().setEvaluationDate(self.todays_date)
+        self.rate=QuoteHandle(SimpleQuote(0.02))
+        self.spotFx=QuoteHandle(SimpleQuote(1.0))
+        self.settlementDays=2
+        self.paymentCalendar=UnitedStates()
+        self.paymentConvention=Following
+        self.tenor=Period(6,Months)
+        self.fixedCurrency=USDCurrency()
+        self.fixedFrequency=Annual
+        self.fixedConvention=Following
+        self.fixedDayCount=Actual360()
+        self.indexSwap=Eonia()
+        self.flat_forward=FlatForward(self.todays_date, 0.03, Actual360())
+        self.floatDiscount=RelinkableYieldTermStructureHandle(self.flat_forward)
+        self.spread=QuoteHandle(SimpleQuote(0.03))
+        self.crossccyfixfloatswaphelper=CrossCcyFixFloatSwapHelper(self.rate,self.spotFx,self.settlementDays,self.paymentCalendar,self.paymentConvention,self.tenor,self.fixedCurrency,self.fixedFrequency,self.fixedConvention,self.fixedDayCount,self.indexSwap,self.floatDiscount,self.spread)
+
+    def testSimpleInspectors(self):
+        """ Test crossccyfixfloat rate helper simple inspector """
+        self.assertEqual(self.crossccyfixfloatswaphelper.quote().value(),self.rate.value())
+
     
 if __name__ == '__main__':
     unittest.main()
