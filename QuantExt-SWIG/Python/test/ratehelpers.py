@@ -111,8 +111,31 @@ class TenorBasisSwapHelperTest(unittest.TestCase):
         """ Test Tenor Basis Swap Helper simple inspector. """
         self.assertEqual(self.spread.value(),self.tenorbasisswaphelper.quote().value())
 
+            
+class SubPeriodsSwapHelperTest(unittest.TestCase):     
+    def setUp(self):
+        """ Test consistency of SubPeriods Basis Swap Helper"""
+        self.todays_date=Date(1,October,2018)
+        Settings.instance().setEvaluationDate(self.todays_date)   
+        self.spread=QuoteHandle(SimpleQuote(0.02))
+        self.swapTenor=Period(6,Months)
+        self.fixedTenor=Period(6,Months)
+        self.fixedCalendar=UnitedStates()
+        self.fixedDayCount=Actual360()
+        self.fixedConvention=Following
+        self.floatPayTenor=Period(6,Months)
+        self.floatIndex=Eonia()
+        self.floatDayCount=Actual360()
+        self.flat_forward=FlatForward(self.todays_date, 0.03, self.floatDayCount)
+        self.discountingCurve=RelinkableYieldTermStructureHandle(self.flat_forward)
+        self.type=SubPeriodsCoupon.Compounding
+        self.subperiodsswaphelper=SubPeriodsSwapHelper(self.spread,self.swapTenor,self.fixedTenor,self.fixedCalendar,self.fixedDayCount,self.fixedConvention,self.floatPayTenor,self.floatIndex,self.floatDayCount,self.discountingCurve,self.type)
         
-        
+    def testSimpleInspectors(self):
+        """ Test SubPeriods Basis Swap Helper simple inspector. """
+        self.assertEqual(self.subperiodsswaphelper.quote().value(),self.spread.value())
+
+
 if __name__ == '__main__':
     unittest.main()
 
