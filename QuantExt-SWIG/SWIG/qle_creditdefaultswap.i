@@ -17,9 +17,11 @@
 //using QuantExt::CreditDefaultSwap;
 //using QuantExt::MidPointCdsEngine;
 using QuantExt::CdsOption;
+using QuantExt::BlackCdsOptionEngine;
 
 typedef boost::shared_ptr<Instrument> QLECreditDefaultSwapPtr;
 typedef boost::shared_ptr<PricingEngine> QLEMidPointCdsEnginePtr;
+typedef boost::shared_ptr<PricingEngine> BlackCdsOptionEnginePtr;
 typedef boost::shared_ptr<Instrument> CdsOptionPtr;
 %}
 
@@ -204,6 +206,23 @@ class CdsOptionPtr : public boost::shared_ptr<Instrument> {
                                                                                               maxEvaluations,
                                                                                               minVol,
                                                                                               maxVol);
+        }
+    }
+};
+
+%rename(BlackCdsOptionEngine) BlackCdsOptionEnginePtr;
+class BlackCdsOptionEnginePtr : public boost::shared_ptr<PricingEngine> {
+  public:
+    %extend {
+        BlackCdsOptionEnginePtr(const QuantLib::Handle<QuantLib::DefaultProbabilityTermStructure>& probability, 
+                                QuantLib::Real recoveryRate,
+                                const QuantLib::Handle<QuantLib::YieldTermStructure>& termStructure, 
+                                const QuantLib::Handle<QuantLib::BlackVolTermStructure>& vol) {
+            return new BlackCdsOptionEnginePtr(
+                new QuantExt::BlackCdsOptionEngine(probability, 
+                                                   recoveryRate,
+                                                   termStructure, 
+                                                   vol));
         }
     }
 };
