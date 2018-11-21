@@ -21,6 +21,7 @@ from ratehelpers import TenorBasisSwapHelperTest
 from ratehelpers import SubPeriodsSwapHelperTest
 from ratehelpers import OIBSHelperTest
 from ratehelpers import BasisTwoSwapHelperTest
+from ratehelpers import OICCBSHelperTest
 
 def test():
     import QuantExt
@@ -45,6 +46,7 @@ def test():
     suite.addTest(unittest.makeSuite(SubPeriodsSwapHelperTest, 'test'))
     suite.addTest(unittest.makeSuite(OIBSHelperTest, 'test'))
     suite.addTest(unittest.makeSuite(BasisTwoSwapHelperTest, 'test'))
+    suite.addTest(unittest.makeSuite(OICCBSHelperTest, 'test'))
 
     result = unittest.TextTestRunner(verbosity=2).run(suite)
 
