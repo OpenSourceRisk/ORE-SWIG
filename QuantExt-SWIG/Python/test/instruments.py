@@ -6,6 +6,66 @@
 from QuantExt import *
 import unittest
 
+class OvernightIndexedBasisSwapTest(unittest.TestCase):
+    def setUp(self):
+        """ Set-up OvernightIndexedBasisSwap"""
+        self.todays_date = Date(4, October, 2018)
+        Settings.instance().evaluationDate = self.todays_date
+        self.settlement_date = Date(6, October, 2018)
+        self.swap_tenor = Period(10, Years)
+        self.pay_tenor = Period(3, Months)
+        self.calendar = UnitedStates()
+        self.maturity_date = self.calendar.advance(self.settlement_date, self.swap_tenor)
+        self.type = OvernightIndexedBasisSwap.Payer
+        self.bdc = ModifiedFollowing
+        self.day_counter = Actual365Fixed()
+        self.nominal = 10000000
+        self.schedule = Schedule(self.settlement_date, self.maturity_date,
+                                 self.pay_tenor, self.calendar,
+                                 self.bdc, self.bdc, DateGeneration.Forward, False)
+        self.OIS_flat_forward = FlatForward(self.todays_date, 0.01, self.day_counter)
+        self.OIS_term_structure = RelinkableYieldTermStructureHandle(self.OIS_flat_forward)
+        self.OIS_index = FedFunds(self.OIS_term_structure)
+        self.LIBOR_flat_forward = FlatForward(self.todays_date, 0.03, self.day_counter)
+        self.LIBOR_term_structure = RelinkableYieldTermStructureHandle(self.LIBOR_flat_forward)
+        self.LIBOR_index = USDLibor(Period(3, Months), self.LIBOR_term_structure)
+        self.OIS_spread = 0.005
+        self.LIBOR_spread = 0.0
+        self.swap = OvernightIndexedBasisSwap(self.type, self.nominal, self.schedule, 
+                                              self.OIS_index, self.schedule, self.LIBOR_index,
+                                              self.OIS_spread, self.LIBOR_spread)
+        self.engine = DiscountingSwapEngine(self.OIS_term_structure)
+        self.swap.setPricingEngine(self.engine)
+        
+    def testSimpleInspectors(self):
+        """ Test OvernightIndexedBasisSwap simple inspectors. """
+        self.assertEqual(self.swap.nominal(), self.nominal)
+        self.assertEqual(self.swap.oisSpread(), self.OIS_spread)
+        self.assertEqual(self.swap.iborSpread(), self.LIBOR_spread)
+        
+    def testSchedules(self):
+        """ Test CrossCurrencyFixFloatSwap schedules. """
+        for i, d in enumerate(self.schedule):
+            self.assertEqual(self.swap.oisSchedule()[i], d)
+            self.assertEqual(self.swap.iborSchedule()[i], d)
+            
+    def testConsistency(self):
+        """ Test consistency of fair price and NPV() """
+        tolerance = 1.0e-8
+        fair_OIS_spread = self.swap.fairOvernightSpread()
+        swap = OvernightIndexedBasisSwap(self.type, self.nominal, self.schedule, 
+                                         self.OIS_index, self.schedule, self.LIBOR_index,
+                                         fair_OIS_spread, self.LIBOR_spread)
+        swap.setPricingEngine(self.engine)
+        self.assertFalse(abs(swap.NPV()) > tolerance)
+        fair_LIBOR_spread = self.swap.fairIborSpread()
+        swap = OvernightIndexedBasisSwap(self.type, self.nominal, self.schedule, 
+                                         self.OIS_index, self.schedule, self.LIBOR_index,
+                                         self.OIS_spread, fair_LIBOR_spread)
+        swap.setPricingEngine(self.engine)
+        self.assertFalse(abs(swap.NPV()) > tolerance)
+        
+
 class AverageOISTest(unittest.TestCase):
     def setUp(self):
         """ Set-up AverageOIS and engine """
@@ -513,5 +573,6 @@ if __name__ == '__main__':
     suite.addTest(unittest.makeSuite(EquityForwardTest, 'test'))
     suite.addTest(unittest.makeSuite(PaymentTest, 'test'))
     suite.addTest(unittest.makeSuite(AverageOISTest, 'test'))
+    suite.addTest(unittest.makeSuite(OvernightIndexedBasisSwap, 'test'))
     unittest.TextTestRunner(verbosity=2).run(suite)
 
