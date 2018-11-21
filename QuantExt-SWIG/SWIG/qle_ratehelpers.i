@@ -20,7 +20,7 @@ using QuantExt::OICCBSHelper;
 using QuantExt::OIBSHelper;
 using QuantExt::BasisTwoSwapHelper;
 using QuantExt::ImmFraRateHelper;
-//using QuantExt::CrossCcyFixFloatSwapHelper;
+using QuantExt::CrossCcyFixFloatSwapHelper;
 
 typedef boost::shared_ptr<RateHelper> CrossCcyBasisSwapHelperPtr;
 typedef boost::shared_ptr<RateHelper> TenorBasisSwapHelperPtr;
@@ -29,7 +29,7 @@ typedef boost::shared_ptr<RateHelper> OICCBSHelperPtr;
 typedef boost::shared_ptr<RateHelper> OIBSHelperPtr;
 typedef boost::shared_ptr<RateHelper> BasisTwoSwapHelperPtr;
 typedef boost::shared_ptr<RateHelper> ImmFraRateHelperPtr;
-//typedef boost::shared_ptr<RateHelper> CrossCcyFixFloatSwapHelperPtr;
+typedef boost::shared_ptr<RateHelper> CrossCcyFixFloatSwapHelperPtr;
 %}
 
 %rename(CrossCcyBasisSwapHelper) CrossCcyBasisSwapHelperPtr;
@@ -267,7 +267,6 @@ class ImmFraRateHelperPtr : public boost::shared_ptr<RateHelper> {
     }
 };
 
-/*
 %rename(CrossCcyFixFloatSwapHelper) CrossCcyFixFloatSwapHelperPtr;
 class CrossCcyFixFloatSwapHelperPtr : public boost::shared_ptr<RateHelper> {
   public:
@@ -299,7 +298,8 @@ return new CrossCcyFixFloatSwapHelperPtr(new CrossCcyFixFloatSwapHelper(rate,
 																		fixedDayCount,
 																		indexSwap,
 																		floatDiscount,
-																		spread));
+																		spread,
+                                                                        endOfMonth));
     }
 
     CrossCcyFixFloatSwapPtr swap() {
@@ -307,5 +307,5 @@ return new CrossCcyFixFloatSwapHelperPtr(new CrossCcyFixFloatSwapHelper(rate,
     }
   }
 };
-*/
+
 #endif
