@@ -11,7 +11,11 @@ from instruments import EquityForwardTest
 from instruments import TenorBasisSwapTest
 from instruments import SubPeriodsSwapTest
 from instruments import CommodityForwardTest
+from instruments import OvernightIndexedCrossCcyBasisSwapTest
+from instruments import OvernightIndexedBasisSwapTest
 from instruments import PaymentTest
+from instruments import CDSOptionTest
+from instruments import CreditDefaultSwapTest
 from instruments import CrossCurrencyFixFloatSwapTest
 from instruments import AverageOISTest
 from ratehelpers import ImmFraRateHelperTest
@@ -37,6 +41,10 @@ def test():
     suite.addTest(unittest.makeSuite(ImmFraRateHelperTest, 'test'))
     suite.addTest(unittest.makeSuite(AverageOISRateHelpersTest, 'test'))
     suite.addTest(unittest.makeSuite(CrossCcyBasisSwapHelperTest, 'test'))
+    suite.addTest(unittest.makeSuite(OvernightIndexedBasisSwapTest, 'test'))
+    suite.addTest(unittest.makeSuite(OvernightIndexedCrossCcyBasisSwapTest, 'test'))
+    suite.addTest(unittest.makeSuite(CreditDefaultSwapTest, 'test'))
+    suite.addTest(unittest.makeSuite(CDSOptionTest, 'test'))
 
     result = unittest.TextTestRunner(verbosity=2).run(suite)
 

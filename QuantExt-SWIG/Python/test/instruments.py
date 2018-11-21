@@ -6,6 +6,265 @@
 from QuantExt import *
 import unittest
 
+class CDSOptionTest(unittest.TestCase):
+    def setUp(self):
+        """ Set-up CDSOptionTest and engine"""
+        self.todays_date = Date(4, October, 2018)
+        Settings.instance().evaluationDate = self.todays_date
+        self.pay_tenor = Period(Quarterly)
+        self.calendar = TARGET()
+        self.settlement_date = self.calendar.advance(self.todays_date, Period(2, Years))
+        self.maturity_date = self.calendar.advance(self.todays_date, Period(5, Years))
+        self.exercise_date = self.calendar.advance(self.todays_date, Period(1, Years))
+        self.exercise = EuropeanExercise(self.exercise_date)
+        self.bdc = ModifiedFollowing
+        self.day_counter = Actual365Fixed()
+        self.notional = 10000000
+        self.schedule = Schedule(self.settlement_date, self.maturity_date,
+                                 self.pay_tenor, self.calendar,
+                                 self.bdc, self.bdc, DateGeneration.Forward, False)
+        self.spread = 0.01
+        self.side = Protection.Buyer
+        self.upfront = 0
+        self.recovery_rate = 0.4
+        self.settles_accrual = True
+        self.pays_at_default = True
+        self.discount_curve = YieldTermStructureHandle(FlatForward(self.todays_date, 0.01, self.day_counter))
+        self.hazard_curve = FlatHazardRate(self.todays_date, QuoteHandle(SimpleQuote(0.02)), self.day_counter)
+        self.probability_curve = DefaultProbabilityTermStructureHandle(self.hazard_curve)
+        self.vol = 0.03
+        self.volatility = BlackConstantVol(0, self.calendar, QuoteHandle(SimpleQuote(self.vol)), self.day_counter)
+        self.volatility_curve = BlackVolTermStructureHandle(self.volatility)
+        self.cds = QLECreditDefaultSwap(self.side, self.notional, self.upfront, self.spread, 
+                                        self.schedule, self.bdc, self.day_counter, 
+                                        self.settles_accrual, self.pays_at_default, 
+                                        self.settlement_date)
+        self.cds_engine = QLEMidPointCdsEngine(self.probability_curve, self.recovery_rate, self.discount_curve)
+        self.cds.setPricingEngine(self.cds_engine)
+        self.cds_option = CdsOption(self.cds, self.exercise)
+        self.engine = BlackCdsOptionEngine(self.probability_curve, self.recovery_rate, 
+                                           self.discount_curve, self.volatility_curve)
+        self.cds_option.setPricingEngine(self.engine)
+        
+    def testSimpleInspectors(self):
+        """ Test CDSOptionTest simple inspectors. """
+        self.assertEqual(self.cds_option.underlyingSwap().notional(), self.cds.notional())
+        self.assertEqual(self.cds_option.underlyingSwap().side(), self.cds.side())
+        
+    def testConsistency(self):
+        """ Test consistency of fair price and NPV() """
+        tolerance = 1.0e-8
+        atm_rate = self.cds_option.atmRate()
+        buyer_cds = QLECreditDefaultSwap(Protection.Buyer, self.notional, self.upfront, atm_rate, 
+                                         self.schedule, self.bdc, self.day_counter, 
+                                         self.settles_accrual, self.pays_at_default, 
+                                         self.settlement_date)
+        seller_cds = QLECreditDefaultSwap(Protection.Seller, self.notional, self.upfront, atm_rate, 
+                                          self.schedule, self.bdc, self.day_counter, 
+                                          self.settles_accrual, self.pays_at_default, 
+                                          self.settlement_date)
+        buyer_cds.setPricingEngine(self.cds_engine)
+        seller_cds.setPricingEngine(self.cds_engine)
+        buyer_cds_option = CdsOption(buyer_cds, self.exercise)
+        seller_cds_option = CdsOption(seller_cds, self.exercise)
+        buyer_cds_option.setPricingEngine(self.engine)
+        seller_cds_option.setPricingEngine(self.engine)
+        self.assertFalse(abs(buyer_cds_option.NPV() - seller_cds_option.NPV()) > tolerance)
+        implied_vol = self.cds_option.impliedVolatility(self.cds_option.NPV(), self.discount_curve,
+                                                        self.probability_curve, self.recovery_rate)
+        self.assertFalse(abs(implied_vol - self.vol) > 1.0e-5)
+        
+        
+class CreditDefaultSwapTest(unittest.TestCase):
+    def setUp(self):
+        """ Set-up CreditDefaultSwap and engine"""
+        self.todays_date = Date(4, October, 2018)
+        Settings.instance().evaluationDate = self.todays_date
+        self.settlement_date = Date(6, October, 2018)
+        self.swap_tenor = Period(2, Years)
+        self.pay_tenor = Period(Quarterly)
+        self.calendar = TARGET()
+        self.maturity_date = self.calendar.advance(self.settlement_date, self.swap_tenor)
+        self.bdc = ModifiedFollowing
+        self.day_counter = Actual365Fixed()
+        self.notional = 10000000
+        self.schedule = Schedule(self.settlement_date, self.maturity_date,
+                                 self.pay_tenor, self.calendar,
+                                 self.bdc, self.bdc, DateGeneration.Forward, False)
+        self.spread = 0.012
+        self.side = Protection.Buyer
+        self.upfront = 0
+        self.settles_accrual = True
+        self.pays_at_default = True
+        self.discount_curve = YieldTermStructureHandle(FlatForward(self.todays_date, 0.01, self.day_counter))
+        self.recovery_rate = 0.4
+        self.hazard_rate = 0.015
+        self.hazard_curve = FlatHazardRate(self.todays_date, QuoteHandle(SimpleQuote(self.hazard_rate)), self.day_counter)
+        self.probability_curve = DefaultProbabilityTermStructureHandle(self.hazard_curve)
+        self.cds = QLECreditDefaultSwap(self.side, self.notional, self.upfront, self.spread, 
+                                        self.schedule, self.bdc, self.day_counter, 
+                                        self.settles_accrual, self.pays_at_default, 
+                                        self.settlement_date)
+        self.engine = QLEMidPointCdsEngine(self.probability_curve, self.recovery_rate, self.discount_curve)
+        self.cds.setPricingEngine(self.engine)
+        
+    def testSimpleInspectors(self):
+        """ Test CreditDefaultSwap simple inspectors. """
+        self.assertEqual(self.cds.side(), self.side)
+        self.assertEqual(self.cds.notional(), self.notional)
+        self.assertEqual(self.cds.runningSpread(), self.spread)
+        self.assertEqual(self.cds.settlesAccrual(), self.settles_accrual)
+        self.assertEqual(self.cds.paysAtDefaultTime(), self.pays_at_default)
+        self.assertEqual(self.cds.protectionStartDate(), self.settlement_date)
+        self.assertEqual(self.cds.protectionEndDate(), self.maturity_date)
+        
+    def testConsistency(self):
+        """ Test consistency of fair price and NPV() """
+        tolerance = 1.0e-8
+        fair_spread = self.cds.fairSpread()
+        cds = QLECreditDefaultSwap(self.side, self.notional, self.upfront, fair_spread, 
+                                   self.schedule, self.bdc, self.day_counter, 
+                                   self.settles_accrual, self.pays_at_default, 
+                                   self.settlement_date)
+        cds.setPricingEngine(self.engine)
+        self.assertFalse(abs(cds.NPV()) > tolerance)
+        implied_hazard_rate = self.cds.impliedHazardRate(self.cds.NPV(), self.discount_curve, self.day_counter,
+                                                         self.recovery_rate, 1.0e-12)
+        self.assertFalse(abs(implied_hazard_rate - self.hazard_rate) > tolerance)
+         
+
+class OvernightIndexedCrossCcyBasisSwapTest(unittest.TestCase):
+    def setUp(self):
+        """ Set-up OvernightIndexedCrossCcyBasisSwap and engine"""
+        self.todays_date = Date(4, October, 2018)
+        Settings.instance().evaluationDate = self.todays_date
+        self.settlement_date = Date(6, October, 2018)
+        self.swap_tenor = Period(10, Years)
+        self.pay_tenor = Period(3, Months)
+        self.calendar = UnitedStates()
+        self.pay_currency = USDCurrency()
+        self.rec_currency = EURCurrency()
+        self.maturity_date = self.calendar.advance(self.settlement_date, self.swap_tenor)
+        self.bdc = ModifiedFollowing
+        self.day_counter = Actual365Fixed()
+        self.pay_nominal = 10000000
+        self.rec_nominal = 10000000
+        self.schedule = Schedule(self.settlement_date, self.maturity_date,
+                                 self.pay_tenor, self.calendar,
+                                 self.bdc, self.bdc, DateGeneration.Forward, False)
+        self.pay_spread = 0.005
+        self.rec_spread = 0.0
+        self.fxQuote = QuoteHandle(SimpleQuote(1.1))
+        self.USD_OIS_flat_forward = FlatForward(self.todays_date, 0.01, self.day_counter)
+        self.USD_OIS_term_structure = RelinkableYieldTermStructureHandle(self.USD_OIS_flat_forward)
+        self.USD_OIS_index = FedFunds(self.USD_OIS_term_structure)
+        self.EUR_OIS_flat_forward = FlatForward(self.todays_date, 0.01, self.day_counter)
+        self.EUR_OIS_term_structure = RelinkableYieldTermStructureHandle(self.EUR_OIS_flat_forward)
+        self.EUR_OIS_index = Eonia(self.EUR_OIS_term_structure)
+        self.swap = OvernightIndexedCrossCcyBasisSwap(self.pay_nominal, self.pay_currency, self.schedule,
+                                                      self.USD_OIS_index, self.pay_spread, self.rec_nominal, 
+                                                      self.rec_currency, self.schedule, self.EUR_OIS_index, 
+                                                      self.rec_spread)
+        self.engine = OvernightIndexedCrossCcyBasisSwapEngine(self.USD_OIS_term_structure, self.pay_currency,
+                                                              self.EUR_OIS_term_structure, self.rec_currency,
+                                                              self.fxQuote)
+        self.swap.setPricingEngine(self.engine)
+        
+    def testSimpleInspectors(self):
+        """ Test OvernightIndexedCrossCcyBasisSwap and engine simple inspectors. """
+        self.assertEqual(self.swap.payNominal(), self.pay_nominal)
+        self.assertEqual(self.swap.recNominal(), self.rec_nominal)
+        self.assertEqual(self.swap.payCurrency(), self.pay_currency)
+        self.assertEqual(self.swap.recCurrency(), self.rec_currency)
+        self.assertEqual(self.swap.paySpread(), self.pay_spread)
+        self.assertEqual(self.swap.recSpread(), self.rec_spread)
+        self.assertEqual(self.engine.ccy1(), self.pay_currency)
+        self.assertEqual(self.engine.ccy2(), self.rec_currency)
+
+    def testSchedules(self):
+        """ Test OvernightIndexedCrossCcyBasisSwap schedules. """
+        for i, d in enumerate(self.schedule):
+            self.assertEqual(self.swap.recSchedule()[i], d)
+            self.assertEqual(self.swap.paySchedule()[i], d)
+            
+    def testConsistency(self):
+        """ Test consistency of fair price and NPV() """
+        tolerance = 1.0e-8
+        fair_pay_spread = self.swap.fairPayLegSpread()
+        swap = OvernightIndexedCrossCcyBasisSwap(self.pay_nominal, self.pay_currency, self.schedule,
+                                                 self.USD_OIS_index, fair_pay_spread, self.rec_nominal, 
+                                                 self.rec_currency, self.schedule, self.EUR_OIS_index, 
+                                                 self.rec_spread)
+        swap.setPricingEngine(self.engine)
+        self.assertFalse(abs(swap.NPV()) > tolerance)
+        fair_rec_spread = self.swap.fairRecLegSpread()
+        swap = OvernightIndexedCrossCcyBasisSwap(self.pay_nominal, self.pay_currency, self.schedule,
+                                                 self.USD_OIS_index, self.pay_spread, self.rec_nominal, 
+                                                 self.rec_currency, self.schedule, self.EUR_OIS_index, 
+                                                 fair_rec_spread)
+        swap.setPricingEngine(self.engine)
+        self.assertFalse(abs(swap.NPV()) > tolerance)
+
+class OvernightIndexedBasisSwapTest(unittest.TestCase):
+    def setUp(self):
+        """ Set-up OvernightIndexedBasisSwap"""
+        self.todays_date = Date(4, October, 2018)
+        Settings.instance().evaluationDate = self.todays_date
+        self.settlement_date = Date(6, October, 2018)
+        self.swap_tenor = Period(10, Years)
+        self.pay_tenor = Period(3, Months)
+        self.calendar = UnitedStates()
+        self.maturity_date = self.calendar.advance(self.settlement_date, self.swap_tenor)
+        self.type = OvernightIndexedBasisSwap.Payer
+        self.bdc = ModifiedFollowing
+        self.day_counter = Actual365Fixed()
+        self.nominal = 10000000
+        self.schedule = Schedule(self.settlement_date, self.maturity_date,
+                                 self.pay_tenor, self.calendar,
+                                 self.bdc, self.bdc, DateGeneration.Forward, False)
+        self.OIS_flat_forward = FlatForward(self.todays_date, 0.01, self.day_counter)
+        self.OIS_term_structure = RelinkableYieldTermStructureHandle(self.OIS_flat_forward)
+        self.OIS_index = FedFunds(self.OIS_term_structure)
+        self.LIBOR_flat_forward = FlatForward(self.todays_date, 0.03, self.day_counter)
+        self.LIBOR_term_structure = RelinkableYieldTermStructureHandle(self.LIBOR_flat_forward)
+        self.LIBOR_index = USDLibor(Period(3, Months), self.LIBOR_term_structure)
+        self.OIS_spread = 0.005
+        self.LIBOR_spread = 0.0
+        self.swap = OvernightIndexedBasisSwap(self.type, self.nominal, self.schedule, 
+                                              self.OIS_index, self.schedule, self.LIBOR_index,
+                                              self.OIS_spread, self.LIBOR_spread)
+        self.engine = DiscountingSwapEngine(self.OIS_term_structure)
+        self.swap.setPricingEngine(self.engine)
+        
+    def testSimpleInspectors(self):
+        """ Test OvernightIndexedBasisSwap simple inspectors. """
+        self.assertEqual(self.swap.nominal(), self.nominal)
+        self.assertEqual(self.swap.oisSpread(), self.OIS_spread)
+        self.assertEqual(self.swap.iborSpread(), self.LIBOR_spread)
+        
+    def testSchedules(self):
+        """ Test CrossCurrencyFixFloatSwap schedules. """
+        for i, d in enumerate(self.schedule):
+            self.assertEqual(self.swap.oisSchedule()[i], d)
+            self.assertEqual(self.swap.iborSchedule()[i], d)
+            
+    def testConsistency(self):
+        """ Test consistency of fair price and NPV() """
+        tolerance = 1.0e-8
+        fair_OIS_spread = self.swap.fairOvernightSpread()
+        swap = OvernightIndexedBasisSwap(self.type, self.nominal, self.schedule, 
+                                         self.OIS_index, self.schedule, self.LIBOR_index,
+                                         fair_OIS_spread, self.LIBOR_spread)
+        swap.setPricingEngine(self.engine)
+        self.assertFalse(abs(swap.NPV()) > tolerance)
+        fair_LIBOR_spread = self.swap.fairIborSpread()
+        swap = OvernightIndexedBasisSwap(self.type, self.nominal, self.schedule, 
+                                         self.OIS_index, self.schedule, self.LIBOR_index,
+                                         self.OIS_spread, fair_LIBOR_spread)
+        swap.setPricingEngine(self.engine)
+        self.assertFalse(abs(swap.NPV()) > tolerance)
+        
+
 class AverageOISTest(unittest.TestCase):
     def setUp(self):
         """ Set-up AverageOIS and engine """
@@ -513,5 +772,9 @@ if __name__ == '__main__':
     suite.addTest(unittest.makeSuite(EquityForwardTest, 'test'))
     suite.addTest(unittest.makeSuite(PaymentTest, 'test'))
     suite.addTest(unittest.makeSuite(AverageOISTest, 'test'))
+    suite.addTest(unittest.makeSuite(OvernightIndexedBasisSwapTest, 'test'))
+    suite.addTest(unittest.makeSuite(OvernightIndexedCrossCcyBasisSwapTest, 'test'))
+    suite.addTest(unittest.makeSuite(CreditDefaultSwapTest, 'test'))
+    suite.addTest(unittest.makeSuite(CDSOptionTest, 'test'))
     unittest.TextTestRunner(verbosity=2).run(suite)
 
