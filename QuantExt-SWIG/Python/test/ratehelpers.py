@@ -156,7 +156,55 @@ class OIBSHelperTest(unittest.TestCase):
         """ Test OIBS Helper simple inspector. """
         self.assertEqual(self.oibsratehelper.quote().value(),self.oisSpread.value())
         
+        
+class OIBSHelperTest(unittest.TestCase):
+    def setUp(self):
+        """ Test consistency of OIBS Helper"""
+        self.todays_date=Date(1,October,2018)
+        Settings.instance().setEvaluationDate(self.todays_date)  
+        self.settlementDays=2
+        self.tenor=Period(6,Months)
+        self.oisSpread=QuoteHandle(SimpleQuote(0.02))
+        self.overnightFloat=FedFunds()
+        self.iborFloat=Eonia()
+        self.floatDayCount=Actual360()
+        self.flat_forward=FlatForward(self.todays_date, 0.03, self.floatDayCount)
+        self.discount=RelinkableYieldTermStructureHandle(self.flat_forward)
+        self.oibsratehelper=OIBSHelper(self.settlementDays,self.tenor,self.oisSpread,self.overnightFloat,self.iborFloat,self.discount)
+        
+        
+    def testSimpleInspectors(self):
+        """ Test OIBS Helper simple inspector. """
+        self.assertEqual(self.oibsratehelper.quote().value(),self.oisSpread.value())
+        
+class BasisTwoSwapHelperTest(unittest.TestCase):
+    def setUp(self):
+        """ Test consistency of basis to swap Helper"""
+        self.todays_date=Date(1,October,2018)
+        Settings.instance().setEvaluationDate(self.todays_date)
+        self.spread=QuoteHandle(SimpleQuote(0.02))
+        self.swapTenor=Period(6,Months)
+        self.calendar=UnitedStates()
+        self.longFixedFrequency=Annual
+        self.longFixedConvention=Following
+        self.longFixedDayCount=Actual360()
+        self.longFloat=Eonia()
+        self.shortFixedFrequency=Annual
+        self.shortFixedConvention=Following
+        self.shortFixedDayCount=Actual360()
+        self.flat_forward=FlatForward(self.todays_date, 0.03, Actual360())
+        self.ffcurve=RelinkableYieldTermStructureHandle(self.flat_forward)
+        self.shortFloat=FedFunds(self.ffcurve)
+        self.longMinusShort=True
+        self.discountingCurve=RelinkableYieldTermStructureHandle(self.flat_forward)
+        self.basistwoswaphelper=BasisTwoSwapHelper(self.spread,self.swapTenor,self.calendar,self.longFixedFrequency,self.longFixedConvention,self.longFixedDayCount,self.longFloat,self.shortFixedFrequency,self.shortFixedConvention,self.shortFixedDayCount,self.shortFloat,self.longMinusShort,self.discountingCurve)
 
+
+    def testSimpleInspectors(self):
+        """ Test basis to swap Helper simple inspector. """
+        self.assertEqual(self.basistwoswaphelper.quote().value(),self.spread.value())
+        
+        
 if __name__ == '__main__':
     unittest.main()
 
