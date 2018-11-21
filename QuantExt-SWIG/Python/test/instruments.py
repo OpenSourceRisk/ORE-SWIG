@@ -6,6 +6,64 @@
 from QuantExt import *
 import unittest
 
+class CreditDefaultSwapTest(unittest.TestCase):
+    def setUp(self):
+        """ Set-up CreditDefaultSwap and engine"""
+        self.todays_date = Date(4, October, 2018)
+        Settings.instance().evaluationDate = self.todays_date
+        self.settlement_date = Date(6, October, 2018)
+        self.swap_tenor = Period(2, Years)
+        self.pay_tenor = Period(Quarterly)
+        self.calendar = TARGET()
+        self.maturity_date = self.calendar.advance(self.settlement_date, self.swap_tenor)
+        self.bdc = ModifiedFollowing
+        self.day_counter = Actual365Fixed()
+        self.notional = 10000000
+        self.schedule = Schedule(self.settlement_date, self.maturity_date,
+                                 self.pay_tenor, self.calendar,
+                                 self.bdc, self.bdc, DateGeneration.Forward, False)
+        self.spread = 0.012
+        self.side = Protection.Buyer
+        self.upfront = 0
+        self.settles_accrual = True
+        self.pays_at_default = True
+        self.discount_curve = YieldTermStructureHandle(FlatForward(self.todays_date, 0.01, self.day_counter))
+        self.recovery_rate = 0.4
+        self.hazard_rate = 0.015
+        self.hazard_curve = FlatHazardRate(self.todays_date, QuoteHandle(SimpleQuote(self.hazard_rate)), self.day_counter)
+        self.probability_curve = DefaultProbabilityTermStructureHandle(self.hazard_curve)
+        self.cds = QLECreditDefaultSwap(self.side, self.notional, self.upfront, self.spread, 
+                                        self.schedule, self.bdc, self.day_counter, 
+                                        self.settles_accrual, self.pays_at_default, 
+                                        self.settlement_date)
+        self.engine = QLEMidPointCdsEngine(self.probability_curve, self.recovery_rate, self.discount_curve)
+        self.cds.setPricingEngine(self.engine)
+        
+    def testSimpleInspectors(self):
+        """ Test CreditDefaultSwap simple inspectors. """
+        self.assertEqual(self.cds.side(), self.side)
+        self.assertEqual(self.cds.notional(), self.notional)
+        self.assertEqual(self.cds.runningSpread(), self.spread)
+        self.assertEqual(self.cds.settlesAccrual(), self.settles_accrual)
+        self.assertEqual(self.cds.paysAtDefaultTime(), self.pays_at_default)
+        self.assertEqual(self.cds.protectionStartDate(), self.settlement_date)
+        self.assertEqual(self.cds.protectionEndDate(), self.maturity_date)
+        
+    def testConsistency(self):
+        """ Test consistency of fair price and NPV() """
+        tolerance = 1.0e-8
+        fair_spread = self.cds.fairSpread()
+        cds = QLECreditDefaultSwap(self.side, self.notional, self.upfront, fair_spread, 
+                                   self.schedule, self.bdc, self.day_counter, 
+                                   self.settles_accrual, self.pays_at_default, 
+                                   self.settlement_date)
+        cds.setPricingEngine(self.engine)
+        self.assertFalse(abs(cds.NPV()) > tolerance)
+        implied_hazard_rate = self.cds.impliedHazardRate(self.cds.NPV(), self.discount_curve, self.day_counter,
+                                                         self.recovery_rate, 1.0e-12)
+        self.assertFalse(abs(implied_hazard_rate - self.hazard_rate) > tolerance)
+         
+
 class OvernightIndexedCrossCcyBasisSwapTest(unittest.TestCase):
     def setUp(self):
         """ Set-up OvernightIndexedCrossCcyBasisSwap and engine"""
@@ -647,5 +705,6 @@ if __name__ == '__main__':
     suite.addTest(unittest.makeSuite(AverageOISTest, 'test'))
     suite.addTest(unittest.makeSuite(OvernightIndexedBasisSwapTest, 'test'))
     suite.addTest(unittest.makeSuite(OvernightIndexedCrossCcyBasisSwapTest, 'test'))
+    suite.addTest(unittest.makeSuite(CreditDefaultSwapTest, 'test'))
     unittest.TextTestRunner(verbosity=2).run(suite)
 

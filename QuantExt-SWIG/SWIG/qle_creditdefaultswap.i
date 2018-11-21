@@ -86,9 +86,6 @@ class QLECreditDefaultSwapPtr : public boost::shared_ptr<Instrument> {
         QuantLib::Rate runningSpread() const {
             return boost::dynamic_pointer_cast<QuantExt::CreditDefaultSwap>(*self)->runningSpread();
         }
-        boost::optional<QuantLib::Rate> upfront() const {
-            return boost::dynamic_pointer_cast<QuantExt::CreditDefaultSwap>(*self)->upfront();
-        }
         bool settlesAccrual() const {
             return boost::dynamic_pointer_cast<QuantExt::CreditDefaultSwap>(*self)->settlesAccrual();
         }
