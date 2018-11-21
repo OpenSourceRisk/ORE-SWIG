@@ -14,7 +14,6 @@ from instruments import CommodityForwardTest
 from instruments import PaymentTest
 from instruments import CrossCurrencyFixFloatSwapTest
 from instruments import AverageOISTest
-from ratehelpers import ImmFraRateHelperTest
 from ratehelpers import AverageOISRateHelpersTest
 from ratehelpers import CrossCcyBasisSwapHelperTest
 from ratehelpers import TenorBasisSwapHelperTest
@@ -22,6 +21,7 @@ from ratehelpers import SubPeriodsSwapHelperTest
 from ratehelpers import OIBSHelperTest
 from ratehelpers import BasisTwoSwapHelperTest
 from ratehelpers import OICCBSHelperTest
+from ratehelpers import ImmFraRateHelperTest
 
 def test():
     import QuantExt
@@ -39,7 +39,6 @@ def test():
     suite.addTest(unittest.makeSuite(PaymentTest, 'test'))
     suite.addTest(unittest.makeSuite(CrossCurrencyFixFloatSwapTest, 'test'))
     suite.addTest(unittest.makeSuite(AverageOISTest, 'test'))
-    suite.addTest(unittest.makeSuite(ImmFraRateHelperTest, 'test'))
     suite.addTest(unittest.makeSuite(AverageOISRateHelpersTest, 'test'))
     suite.addTest(unittest.makeSuite(CrossCcyBasisSwapHelperTest, 'test'))
     suite.addTest(unittest.makeSuite(TenorBasisSwapHelperTest, 'test'))
@@ -47,7 +46,7 @@ def test():
     suite.addTest(unittest.makeSuite(OIBSHelperTest, 'test'))
     suite.addTest(unittest.makeSuite(BasisTwoSwapHelperTest, 'test'))
     suite.addTest(unittest.makeSuite(OICCBSHelperTest, 'test'))
-
+    suite.addTest(unittest.makeSuite(ImmFraRateHelperTest, 'test'))
     result = unittest.TextTestRunner(verbosity=2).run(suite)
 
     if not result.wasSuccessful:
