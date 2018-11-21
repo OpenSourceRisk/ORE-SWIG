@@ -69,7 +69,7 @@ class Conventions {
     boost::shared_ptr<Convention> get(const std::string& id) const;
     void clear();
     void add(const boost::shared_ptr<Convention>& convention);
-    void loadFromXMLString(const std::string& xmlString);
+    void fromXMLString(const std::string& xmlString);
 };
 
 %ignore Convention;
