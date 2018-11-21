@@ -87,7 +87,7 @@ class CrossCcyBasisSwapHelperTest(unittest.TestCase):
         
 class TenorBasisSwapHelperTest(unittest.TestCase):     
     def setUp(self):
-        """ Test consistency of Cross Curency Basis Swap Helper"""
+        """ Test consistency of Tenor Basis Swap Helper"""
         self.todays_date=Date(1,October,2018)
         Settings.instance().setEvaluationDate(self.todays_date)   
         self.spread=QuoteHandle(SimpleQuote(0.02))
@@ -108,7 +108,7 @@ class TenorBasisSwapHelperTest(unittest.TestCase):
         
 
     def testSimpleInspectors(self):
-        """ Test Cross Curency Basis Swap Helper simple inspector. """
+        """ Test Tenor Basis Swap Helper simple inspector. """
         self.assertEqual(self.spread.value(),self.tenorbasisswaphelper.quote().value())
 
         
