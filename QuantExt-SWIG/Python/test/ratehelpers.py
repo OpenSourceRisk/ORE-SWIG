@@ -212,42 +212,6 @@ class OICCBSHelperTest(unittest.TestCase):
         """ Test OICCBS simple inspector. """
         self.assertEqual(self.oiccbshelper.quote().value(),self.spreadQuote.value())
         
-        
-""" 
-class ImmFraRateHelperTest(unittest.TestCase):
-    def setUp(self):
-        
-        self.rate=QuoteHandle(SimpleQuote(0.02))
-        self.imm1,
-        self.imm2,
-        self.ibrIndex=Eonia()
-        self.pillar,
-        self.customPillarDate=Date(1,October,2018)));
-                
-
-    def testSimpleInspectors(self):
-        
-        self.assertEqual()
-        
-               
-    ImmFraRateHelperPtr(const QuantLib::Handle<QuantLib::Quote>& rate,
-                        const QuantLib::Size imm1,
-                        const QuantLib::Size imm2,
-                        const IborIndexPtr& iborIndex,
-                        QuantLib::Pillar::Choice pillar = QuantLib::Pillar::LastRelevantDate,
-                        QuantLib::Date customPillarDate = QuantLib::Date()) {
-            boost::shared_ptr<IborIndex> ibrIndex = boost::dynamic_pointer_cast<IborIndex>(iborIndex);
-            return new ImmFraRateHelperPtr(
-                new ImmFraRateHelper(self.rate,
-                                     self.imm1,
-                                     self.imm2,
-                                     self.ibrIndex,
-                                     self.pillar,
-                                     self.customPillarDate));
-        }
-    }
-
-"""
 
 class ImmFraRateHelperTest(unittest.TestCase):
     def setUp(self):
