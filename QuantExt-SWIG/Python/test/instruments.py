@@ -6,6 +6,75 @@
 from QuantExt import *
 import unittest
 
+class CDSOptionTest(unittest.TestCase):
+    def setUp(self):
+        """ Set-up CDSOptionTest and engine"""
+        self.todays_date = Date(4, October, 2018)
+        Settings.instance().evaluationDate = self.todays_date
+        self.pay_tenor = Period(Quarterly)
+        self.calendar = TARGET()
+        self.settlement_date = self.calendar.advance(self.todays_date, Period(2, Years))
+        self.maturity_date = self.calendar.advance(self.todays_date, Period(5, Years))
+        self.exercise_date = self.calendar.advance(self.todays_date, Period(1, Years))
+        self.exercise = EuropeanExercise(self.exercise_date)
+        self.bdc = ModifiedFollowing
+        self.day_counter = Actual365Fixed()
+        self.notional = 10000000
+        self.schedule = Schedule(self.settlement_date, self.maturity_date,
+                                 self.pay_tenor, self.calendar,
+                                 self.bdc, self.bdc, DateGeneration.Forward, False)
+        self.spread = 0.01
+        self.side = Protection.Buyer
+        self.upfront = 0
+        self.recovery_rate = 0.4
+        self.settles_accrual = True
+        self.pays_at_default = True
+        self.discount_curve = YieldTermStructureHandle(FlatForward(self.todays_date, 0.01, self.day_counter))
+        self.hazard_curve = FlatHazardRate(self.todays_date, QuoteHandle(SimpleQuote(0.02)), self.day_counter)
+        self.probability_curve = DefaultProbabilityTermStructureHandle(self.hazard_curve)
+        self.vol = 0.03
+        self.volatility = BlackConstantVol(0, self.calendar, QuoteHandle(SimpleQuote(self.vol)), self.day_counter)
+        self.volatility_curve = BlackVolTermStructureHandle(self.volatility)
+        self.cds = QLECreditDefaultSwap(self.side, self.notional, self.upfront, self.spread, 
+                                        self.schedule, self.bdc, self.day_counter, 
+                                        self.settles_accrual, self.pays_at_default, 
+                                        self.settlement_date)
+        self.cds_engine = QLEMidPointCdsEngine(self.probability_curve, self.recovery_rate, self.discount_curve)
+        self.cds.setPricingEngine(self.cds_engine)
+        self.cds_option = CdsOption(self.cds, self.exercise)
+        self.engine = BlackCdsOptionEngine(self.probability_curve, self.recovery_rate, 
+                                           self.discount_curve, self.volatility_curve)
+        self.cds_option.setPricingEngine(self.engine)
+        
+    def testSimpleInspectors(self):
+        """ Test CDSOptionTest simple inspectors. """
+        self.assertEqual(self.cds_option.underlyingSwap().notional(), self.cds.notional())
+        self.assertEqual(self.cds_option.underlyingSwap().side(), self.cds.side())
+        
+    def testConsistency(self):
+        """ Test consistency of fair price and NPV() """
+        tolerance = 1.0e-8
+        atm_rate = self.cds_option.atmRate()
+        buyer_cds = QLECreditDefaultSwap(Protection.Buyer, self.notional, self.upfront, atm_rate, 
+                                         self.schedule, self.bdc, self.day_counter, 
+                                         self.settles_accrual, self.pays_at_default, 
+                                         self.settlement_date)
+        seller_cds = QLECreditDefaultSwap(Protection.Seller, self.notional, self.upfront, atm_rate, 
+                                          self.schedule, self.bdc, self.day_counter, 
+                                          self.settles_accrual, self.pays_at_default, 
+                                          self.settlement_date)
+        buyer_cds.setPricingEngine(self.cds_engine)
+        seller_cds.setPricingEngine(self.cds_engine)
+        buyer_cds_option = CdsOption(buyer_cds, self.exercise)
+        seller_cds_option = CdsOption(seller_cds, self.exercise)
+        buyer_cds_option.setPricingEngine(self.engine)
+        seller_cds_option.setPricingEngine(self.engine)
+        self.assertFalse(abs(buyer_cds_option.NPV() - seller_cds_option.NPV()) > tolerance)
+        implied_vol = self.cds_option.impliedVolatility(self.cds_option.NPV(), self.discount_curve,
+                                                        self.probability_curve, self.recovery_rate)
+        self.assertFalse(abs(implied_vol - self.vol) > 1.0e-5)
+        
+        
 class CreditDefaultSwapTest(unittest.TestCase):
     def setUp(self):
         """ Set-up CreditDefaultSwap and engine"""
@@ -706,5 +775,6 @@ if __name__ == '__main__':
     suite.addTest(unittest.makeSuite(OvernightIndexedBasisSwapTest, 'test'))
     suite.addTest(unittest.makeSuite(OvernightIndexedCrossCcyBasisSwapTest, 'test'))
     suite.addTest(unittest.makeSuite(CreditDefaultSwapTest, 'test'))
+    suite.addTest(unittest.makeSuite(CDSOptionTest, 'test'))
     unittest.TextTestRunner(verbosity=2).run(suite)
 
