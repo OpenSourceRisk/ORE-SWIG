@@ -19,6 +19,7 @@ from ratehelpers import AverageOISRateHelpersTest
 from ratehelpers import CrossCcyBasisSwapHelperTest
 from ratehelpers import TenorBasisSwapHelperTest
 from ratehelpers import SubPeriodsSwapHelperTest
+from ratehelpers import OIBSHelperTest
 
 def test():
     import QuantExt
@@ -41,12 +42,13 @@ def test():
     suite.addTest(unittest.makeSuite(CrossCcyBasisSwapHelperTest, 'test'))
     suite.addTest(unittest.makeSuite(TenorBasisSwapHelperTest, 'test'))
     suite.addTest(unittest.makeSuite(SubPeriodsSwapHelperTest, 'test'))
+    suite.addTest(unittest.makeSuite(OIBSHelperTest, 'test'))
 
     result = unittest.TextTestRunner(verbosity=2).run(suite)
 
     if not result.wasSuccessful:
         sys.exit(1)
 
-        
+
 if __name__ == '__main__':
     test()
