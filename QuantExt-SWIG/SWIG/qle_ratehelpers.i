@@ -19,6 +19,7 @@ using QuantExt::SubPeriodsSwapHelper;
 using QuantExt::OICCBSHelper;
 using QuantExt::OIBSHelper;
 using QuantExt::BasisTwoSwapHelper;
+using QuantExt::ImmFraRateHelper;
 
 typedef boost::shared_ptr<RateHelper> CrossCcyBasisSwapHelperPtr;
 typedef boost::shared_ptr<RateHelper> TenorBasisSwapHelperPtr;
@@ -26,6 +27,7 @@ typedef boost::shared_ptr<RateHelper> SubPeriodsSwapHelperPtr;
 typedef boost::shared_ptr<RateHelper> OICCBSHelperPtr;
 typedef boost::shared_ptr<RateHelper> OIBSHelperPtr;
 typedef boost::shared_ptr<RateHelper> BasisTwoSwapHelperPtr;
+typedef boost::shared_ptr<RateHelper> ImmFraRateHelperPtr;
 %}
 
 %rename(CrossCcyBasisSwapHelper) CrossCcyBasisSwapHelperPtr;
@@ -239,5 +241,29 @@ class OICCBSHelperPtr : public boost::shared_ptr<RateHelper> {
     }
   }
 };
+
+
+%rename(ImmFraRateHelper) ImmFraRateHelperPtr;
+class ImmFraRateHelperPtr : public boost::shared_ptr<RateHelper> {
+  public:
+    %extend {
+    ImmFraRateHelperPtr(const QuantLib::Handle<QuantLib::Quote>& rate,
+                        const QuantLib::Size imm1,
+                        const QuantLib::Size imm2,
+                        const IborIndexPtr& iborIndex,
+                        QuantLib::Pillar::Choice pillar = QuantLib::Pillar::LastRelevantDate,
+                        QuantLib::Date customPillarDate = QuantLib::Date()) {
+            boost::shared_ptr<IborIndex> ibrIndex = boost::dynamic_pointer_cast<IborIndex>(iborIndex);
+            return new ImmFraRateHelperPtr(
+                new ImmFraRateHelper(rate,
+                                     imm1,
+                                     imm2,
+                                     ibrIndex,
+                                     pillar,
+                                     customPillarDate));
+        }
+    }
+};
+
 
 #endif
