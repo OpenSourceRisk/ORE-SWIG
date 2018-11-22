@@ -18,12 +18,14 @@ using QuantExt::BlackVarianceSurfaceMoneynessForward;
 //using QuantExt::SwaptionVolCube2;
 using QuantExt::SwaptionVolCubeWithATM;
 using QuantLib::SwaptionVolatilityCube;
+using QuantExt::SwaptionVolatilityConstantSpread;
 
 typedef boost::shared_ptr<BlackVolTermStructure> FxBlackVannaVolgaVolatilitySurfacePtr;
 typedef boost::shared_ptr<BlackVolTermStructure> BlackVarianceSurfaceMoneynessSpotPtr;
 typedef boost::shared_ptr<BlackVolTermStructure> BlackVarianceSurfaceMoneynessForwardPtr;
 typedef boost::shared_ptr<SwaptionVolatilityStructure> QLESwaptionVolCube2Ptr;
 typedef boost::shared_ptr<SwaptionVolatilityStructure> SwaptionVolCubeWithATMPtr;
+typedef boost::shared_ptr<SwaptionVolatilityStructure> SwaptionVolatilityConstantSpreadPtr;
 %}
 
 %ignore PriceTermStructure;
@@ -225,6 +227,24 @@ class SwaptionVolCubeWithATMPtr : public boost::shared_ptr<SwaptionVolatilityStr
                 = boost::dynamic_pointer_cast<QuantLib::SwaptionVolatilityCube>(cube);
             return new SwaptionVolCubeWithATMPtr(
                 new SwaptionVolCubeWithATM(volCube));
+        }
+    }
+};
+
+%rename(SwaptionVolatilityConstantSpread) SwaptionVolatilityConstantSpreadPtr;
+class SwaptionVolatilityConstantSpreadPtr : public boost::shared_ptr<SwaptionVolatilityStructure> {
+  public:
+    %extend {
+        SwaptionVolatilityConstantSpreadPtr(const QuantLib::Handle<QuantLib::SwaptionVolatilityStructure>& atm,
+                                            const QuantLib::Handle<QuantLib::SwaptionVolatilityStructure>& cube) {
+            return new SwaptionVolatilityConstantSpreadPtr(
+                new SwaptionVolatilityConstantSpread(atm, cube));
+        }
+        const QuantLib::Handle<QuantLib::SwaptionVolatilityStructure>& atmVol() {
+            return  boost::dynamic_pointer_cast<SwaptionVolatilityConstantSpread>(*self)->atmVol();
+        }
+        const QuantLib::Handle<QuantLib::SwaptionVolatilityStructure>& cube() {
+            return  boost::dynamic_pointer_cast<SwaptionVolatilityConstantSpread>(*self)->cube();
         }
     }
 };
