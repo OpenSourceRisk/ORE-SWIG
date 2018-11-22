@@ -271,7 +271,7 @@ class ImmFraRateHelperPtr : public boost::shared_ptr<RateHelper> {
 class CrossCcyFixFloatSwapHelperPtr : public boost::shared_ptr<RateHelper> {
   public:
     %extend {
-    CrossCcyFixFloatSwapHelperPtr(const QuantLib::Handle<QuantLib::Quote>& rate, 
+      CrossCcyFixFloatSwapHelperPtr(const QuantLib::Handle<QuantLib::Quote>& rate, 
 								const QuantLib::Handle<QuantLib::Quote>& spotFx, 
 								QuantLib::Natural settlementDays, 
 								const QuantLib::Calendar& paymentCalendar, 
@@ -285,21 +285,24 @@ class CrossCcyFixFloatSwapHelperPtr : public boost::shared_ptr<RateHelper> {
 								const QuantLib::Handle<QuantLib::YieldTermStructure>& floatDiscount, 
 								const QuantLib::Handle<QuantLib::Quote>& spread = QuantLib::Handle<QuantLib::Quote>(), 
 								bool endOfMonth = false) {
-				  boost::shared_ptr<IborIndex> indexSwap = boost::dynamic_pointer_cast<IborIndex>(index);
-return new CrossCcyFixFloatSwapHelperPtr(new CrossCcyFixFloatSwapHelper(rate,
-																		spotFx,
-																		settlementDays,
-																		paymentCalendar,
-																		paymentConvention,
-																		tenor,
-																		fixedCurrency,
-																		fixedFrequency,
-																		fixedConvention,
-																		fixedDayCount,
-																		indexSwap,
-																		floatDiscount,
-																		spread,
-                                                                        endOfMonth));
+      
+      boost::shared_ptr<IborIndex> indexSwap = boost::dynamic_pointer_cast<IborIndex>(index);
+      
+      return new CrossCcyFixFloatSwapHelperPtr(
+        new CrossCcyFixFloatSwapHelper(rate,
+                                       spotFx,
+                                       settlementDays,
+                                       paymentCalendar,
+                                       paymentConvention,
+                                       tenor,
+                                       fixedCurrency,
+                                       fixedFrequency,
+                                       fixedConvention,
+                                       fixedDayCount,
+                                       indexSwap,
+                                       floatDiscount,
+                                       spread,
+                                       endOfMonth));
     }
 
     CrossCcyFixFloatSwapPtr swap() {
