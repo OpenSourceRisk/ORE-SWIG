@@ -17,9 +17,11 @@
 //using QuantExt::CreditDefaultSwap;
 //using QuantExt::MidPointCdsEngine;
 using QuantExt::CdsOption;
+using QuantExt::BlackCdsOptionEngine;
 
 typedef boost::shared_ptr<Instrument> QLECreditDefaultSwapPtr;
 typedef boost::shared_ptr<PricingEngine> QLEMidPointCdsEnginePtr;
+typedef boost::shared_ptr<PricingEngine> BlackCdsOptionEnginePtr;
 typedef boost::shared_ptr<Instrument> CdsOptionPtr;
 %}
 
@@ -35,7 +37,8 @@ class QLECreditDefaultSwapPtr : public boost::shared_ptr<Instrument> {
                                 const QuantLib::DayCounter& dayCounter, 
                                 bool settlesAccrual = true,
                                 bool paysAtDefaultTime = true, 
-                                const QuantLib::Date& protectionStart = QuantLib::Date()) {
+                                const QuantLib::Date& protectionStart = QuantLib::Date(), 
+                                const boost::shared_ptr<QuantLib::Claim>& claim = boost::shared_ptr<QuantLib::Claim>()) {
             return new QLECreditDefaultSwapPtr(
                 new QuantExt::CreditDefaultSwap(side, 
                                                 notional, 
@@ -45,7 +48,8 @@ class QLECreditDefaultSwapPtr : public boost::shared_ptr<Instrument> {
                                                 dayCounter,
                                                 settlesAccrual, 
                                                 paysAtDefaultTime,
-                                                protectionStart));
+                                                protectionStart, 
+                                                claim));
         }
         QLECreditDefaultSwapPtr(QuantLib::Protection::Side side, 
                                 QuantLib::Real notional, 
@@ -57,7 +61,8 @@ class QLECreditDefaultSwapPtr : public boost::shared_ptr<Instrument> {
                                 bool settlesAccrual = true,
                                 bool paysAtDefaultTime = true, 
                                 const QuantLib::Date& protectionStart = QuantLib::Date(),
-                                const QuantLib::Date& upfrontDate = QuantLib::Date()) {
+                                const QuantLib::Date& upfrontDate = QuantLib::Date(),
+                                const boost::shared_ptr<QuantLib::Claim>& claim = boost::shared_ptr<QuantLib::Claim>()) {
             return new QLECreditDefaultSwapPtr(
                 new QuantExt::CreditDefaultSwap(side, 
                                                 notional, 
@@ -69,7 +74,8 @@ class QLECreditDefaultSwapPtr : public boost::shared_ptr<Instrument> {
                                                 settlesAccrual,
                                                 paysAtDefaultTime,
                                                 protectionStart,
-                                                upfrontDate));
+                                                upfrontDate, 
+                                                claim));
         }
         QuantLib::Protection::Side side() const {
             return boost::dynamic_pointer_cast<QuantExt::CreditDefaultSwap>(*self)->side();
@@ -79,9 +85,6 @@ class QLECreditDefaultSwapPtr : public boost::shared_ptr<Instrument> {
         }
         QuantLib::Rate runningSpread() const {
             return boost::dynamic_pointer_cast<QuantExt::CreditDefaultSwap>(*self)->runningSpread();
-        }
-        boost::optional<QuantLib::Rate> upfront() const {
-            return boost::dynamic_pointer_cast<QuantExt::CreditDefaultSwap>(*self)->upfront();
         }
         bool settlesAccrual() const {
             return boost::dynamic_pointer_cast<QuantExt::CreditDefaultSwap>(*self)->settlesAccrual();
@@ -200,6 +203,23 @@ class CdsOptionPtr : public boost::shared_ptr<Instrument> {
                                                                                               maxEvaluations,
                                                                                               minVol,
                                                                                               maxVol);
+        }
+    }
+};
+
+%rename(BlackCdsOptionEngine) BlackCdsOptionEnginePtr;
+class BlackCdsOptionEnginePtr : public boost::shared_ptr<PricingEngine> {
+  public:
+    %extend {
+        BlackCdsOptionEnginePtr(const QuantLib::Handle<QuantLib::DefaultProbabilityTermStructure>& probability, 
+                                QuantLib::Real recoveryRate,
+                                const QuantLib::Handle<QuantLib::YieldTermStructure>& termStructure, 
+                                const QuantLib::Handle<QuantLib::BlackVolTermStructure>& vol) {
+            return new BlackCdsOptionEnginePtr(
+                new QuantExt::BlackCdsOptionEngine(probability, 
+                                                   recoveryRate,
+                                                   termStructure, 
+                                                   vol));
         }
     }
 };
