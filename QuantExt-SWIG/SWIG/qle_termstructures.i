@@ -19,6 +19,7 @@ using QuantExt::BlackVarianceSurfaceMoneynessForward;
 using QuantExt::SwaptionVolCubeWithATM;
 using QuantLib::SwaptionVolatilityCube;
 using QuantExt::SwaptionVolatilityConstantSpread;
+using QuantExt::SwapConventions;
 
 typedef boost::shared_ptr<BlackVolTermStructure> FxBlackVannaVolgaVolatilitySurfacePtr;
 typedef boost::shared_ptr<BlackVolTermStructure> BlackVarianceSurfaceMoneynessSpotPtr;
@@ -248,5 +249,18 @@ class SwaptionVolatilityConstantSpreadPtr : public boost::shared_ptr<SwaptionVol
         }
     }
 };
+
+%ignore SwapConventions;
+class SwapConventions {
+  public:
+    QuantLib::Natural settlementDays() const;
+    const QuantLib::Period& fixedTenor() const;
+    const QuantLib::Calendar& fixedCalendar() const;
+    QuantLib::BusinessDayConvention fixedConvention() const;
+    const QuantLib::DayCounter& fixedDayCounter() const;
+    const IborIndexPtr floatIndex() const;
+};
+
+%template(SwapConventions) boost::shared_ptr<SwapConventions>;  
 
 #endif
