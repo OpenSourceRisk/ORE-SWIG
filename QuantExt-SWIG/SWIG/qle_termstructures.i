@@ -20,6 +20,7 @@ using QuantExt::SwaptionVolCubeWithATM;
 using QuantLib::SwaptionVolatilityCube;
 using QuantExt::SwaptionVolatilityConstantSpread;
 using QuantExt::SwapConventions;
+using QuantExt::SwaptionVolatilityConverter;
 
 typedef boost::shared_ptr<BlackVolTermStructure> FxBlackVannaVolgaVolatilitySurfacePtr;
 typedef boost::shared_ptr<BlackVolTermStructure> BlackVarianceSurfaceMoneynessSpotPtr;
@@ -261,6 +262,16 @@ class SwapConventions {
     const IborIndexPtr floatIndex() const;
 };
 
-%template(SwapConventions) boost::shared_ptr<SwapConventions>;  
+%template(SwapConventions) boost::shared_ptr<SwapConventions>; 
+
+%ignore SwaptionVolatilityConverter;
+class SwaptionVolatilityConverter {
+  public:
+    boost::shared_ptr<QuantLib::SwaptionVolatilityStructure> convert() const;
+    QuantLib::Real& accuracy();
+    QuantLib::Natural& maxEvaluations();
+};
+
+%template(SwaptionVolatilityConverter) boost::shared_ptr<SwaptionVolatilityConverter>;  
 
 #endif
