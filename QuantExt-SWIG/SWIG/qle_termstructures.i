@@ -6,16 +6,7 @@
 #ifndef qle_termstructures_i
 #define qle_termstructures_i
 
-%include common.i
-%include types.i
-%include interestrate.i
-%include date.i
-%include calendars.i
-%include daycounters.i
-%include currencies.i
-%include observer.i
-%include marketelements.i
-%include interpolation.i
+%include termstructures.i
 
 %{
 using QuantExt::PriceTermStructure;
