@@ -135,32 +135,11 @@ class OIBSHelperTest(unittest.TestCase):
         self.discount=RelinkableYieldTermStructureHandle(self.flat_forward)
         self.oibsratehelper=OIBSHelper(self.settlementDays,self.tenor,self.oisSpread,self.overnightFloat,self.iborFloat,self.discount)
         
-        
     def testSimpleInspectors(self):
         """ Test OIBS Helper simple inspector. """
         self.assertEqual(self.oibsratehelper.quote().value(),self.oisSpread.value())
         
-        
-class OIBSHelperTest(unittest.TestCase):
-    def setUp(self):
-        """ Test consistency of OIBS Helper"""
-        self.todays_date=Date(1,October,2018)
-        Settings.instance().setEvaluationDate(self.todays_date)  
-        self.settlementDays=2
-        self.tenor=Period(6,Months)
-        self.oisSpread=QuoteHandle(SimpleQuote(0.02))
-        self.overnightFloat=FedFunds()
-        self.iborFloat=Eonia()
-        self.floatDayCount=Actual360()
-        self.flat_forward=FlatForward(self.todays_date, 0.03, self.floatDayCount)
-        self.discount=RelinkableYieldTermStructureHandle(self.flat_forward)
-        self.oibsratehelper=OIBSHelper(self.settlementDays,self.tenor,self.oisSpread,self.overnightFloat,self.iborFloat,self.discount)
-        
-        
-    def testSimpleInspectors(self):
-        """ Test OIBS Helper simple inspector. """
-        self.assertEqual(self.oibsratehelper.quote().value(),self.oisSpread.value())
-        
+
 class BasisTwoSwapHelperTest(unittest.TestCase):
     def setUp(self):
         """ Test consistency of basis to swap Helper"""
@@ -189,7 +168,6 @@ class BasisTwoSwapHelperTest(unittest.TestCase):
         self.assertEqual(self.basistwoswaphelper.quote().value(),self.spread.value())
 
 
-
 class OICCBSHelperTest(unittest.TestCase):
     def setUp(self):
         """ Test OICCBS Helper"""
@@ -207,7 +185,6 @@ class OICCBSHelperTest(unittest.TestCase):
         self.spreadQuoteOnPayLeg=True
         self.fixedDiscountOnPayLeg=False
         self.oiccbshelper=OICCBSHelper(self.settlementDays,self.term,self.payFloat,self.payTenor,self.recFloat,self.recTenor,self.spreadQuote,self.fixedDiscountCurve,self.spreadQuoteOnPayLeg,self.fixedDiscountOnPayLeg)        
-
     def testSimpleInspectors(self):
         """ Test OICCBS simple inspector. """
         self.assertEqual(self.oiccbshelper.quote().value(),self.spreadQuote.value())
@@ -224,10 +201,7 @@ class ImmFraRateHelperTest(unittest.TestCase):
         self.flat_forward = FlatForward(self.todays_date, 0.005, self.day_counter)
         self.term_structure = RelinkableYieldTermStructureHandle(self.flat_forward)
         self.index = USDLibor(Period(3, Months), self.term_structure)
-        self.immfraratehelper = ImmFraRateHelper(self.rate,
-                                       self.size1,
-                                       self.size2,
-                                       self.index)
+        self.immfraratehelper = ImmFraRateHelper(self.rate,self.size1,self.size2,self.index)
     
     def testSimpleInspectors(self):
         """ Test  ImmFraRateHelper simple inspector """
@@ -260,5 +234,16 @@ class CrossCcyFixFloatSwapHelperTest(unittest.TestCase):
 
     
 if __name__ == '__main__':
+    suite = unittest.TestSuite()
+    suite.addTest(unittest.makeSuite(AverageOISRateHelpersTest,'test'))
+    suite.addTest(unittest.makeSuite(CrossCcyBasisSwapHelperTest,'test'))
+    suite.addTest(unittest.makeSuite(TenorBasisSwapHelperTest,'test'))
+    suite.addTest(unittest.makeSuite(SubPeriodsSwapHelperTest,'test'))
+    suite.addTest(unittest.makeSuite(OIBSHelperTest,'test'))
+    suite.addTest(unittest.makeSuite(BasisTwoSwapHelperTest,'test'))
+    suite.addTest(unittest.makeSuite(OICCBSHelperTest,'test'))
+    suite.addTest(unittest.makeSuite(ImmFraRateHelperTest,'test'))
+    suite.addTest(unittest.makeSuite(CrossCcyFixFloatSwapHelperTest,'test'))
+    unittest.TextTestRunner(verbosity=2).run(suite)
     unittest.main()
 
