@@ -25,6 +25,7 @@ using QuantExt::PaymentDiscountingEngine;
 using QuantExt::OvernightIndexedBasisSwap;
 using QuantExt::Deposit;
 using QuantExt::DepositEngine;
+using QuantExt::DiscountingSwapEngineMultiCurve;
 
 typedef boost::shared_ptr<Instrument> CrossCcyBasisSwapPtr;
 typedef boost::shared_ptr<Instrument> CommodityForwardPtr;
@@ -37,6 +38,7 @@ typedef boost::shared_ptr<CashFlow> SimpleCashFlowPtr;
 typedef boost::shared_ptr<Instrument> OvernightIndexedBasisSwapPtr;
 typedef boost::shared_ptr<Instrument> DepositPtr;
 typedef boost::shared_ptr<PricingEngine> DepositEnginePtr;
+typedef boost::shared_ptr<PricingEngine> DiscountingSwapEngineMultiCurvePtr;
 %}
 
 %rename(CrossCcyBasisSwap) CrossCcyBasisSwapPtr;
@@ -411,6 +413,29 @@ public:
                                                       discountCurve, 
                                                       includeSettlementDateFlows, 
                                                       npvDate));
+        }
+    }
+};
+
+%rename(DiscountingSwapEngineMultiCurve) DiscountingSwapEngineMultiCurvePtr;
+class DiscountingSwapEngineMultiCurvePtr : public boost::shared_ptr<PricingEngine> {
+public:
+    %extend {
+        DiscountingSwapEngineMultiCurvePtr(const QuantLib::Handle<QuantLib::YieldTermStructure>& discountCurve 
+                                                = QuantLib::Handle<QuantLib::YieldTermStructure>(),
+                                           bool minimalResults = true,
+                                           boost::optional<bool> includeSettlementDateFlows = boost::none,
+                                           QuantLib::Date settlementDate = QuantLib::Date(), 
+                                           QuantLib::Date npvDate = QuantLib::Date()) {
+            return new DiscountingSwapEngineMultiCurvePtr(
+                new DiscountingSwapEngineMultiCurve(discountCurve,  
+                                                    minimalResults,
+                                                    includeSettlementDateFlows,
+                                                    settlementDate,
+                                                    npvDate));
+        }
+        QuantLib::Handle<QuantLib::YieldTermStructure> discountCurve() { 
+            return boost::dynamic_pointer_cast<DiscountingSwapEngineMultiCurve>(*self)->discountCurve(); 
         }
     }
 };

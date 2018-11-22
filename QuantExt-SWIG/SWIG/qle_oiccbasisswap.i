@@ -119,6 +119,21 @@ class OvernightIndexedCrossCcyBasisSwapEnginePtr : public boost::shared_ptr<Pric
                                                                               ccy2,
                                                                               fx));
         }
+        QuantLib::Handle<QuantLib::YieldTermStructure> ts1() { 
+            return boost::dynamic_pointer_cast<OvernightIndexedCrossCcyBasisSwapEngine>(*self)->ts1(); 
+        }
+        QuantLib::Handle<QuantLib::YieldTermStructure> ts2() { 
+            return boost::dynamic_pointer_cast<OvernightIndexedCrossCcyBasisSwapEngine>(*self)->ts2(); 
+        }
+        QuantLib::Currency ccy1() { 
+            return boost::dynamic_pointer_cast<OvernightIndexedCrossCcyBasisSwapEngine>(*self)->ccy1(); 
+        }
+        QuantLib::Currency ccy2() { 
+            return boost::dynamic_pointer_cast<OvernightIndexedCrossCcyBasisSwapEngine>(*self)->ccy2(); 
+        }
+        QuantLib::Handle<QuantLib::Quote> fx() { 
+            return boost::dynamic_pointer_cast<OvernightIndexedCrossCcyBasisSwapEngine>(*self)->fx(); 
+        }
     }
 };
 

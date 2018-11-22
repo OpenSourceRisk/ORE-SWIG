@@ -60,7 +60,11 @@ for trn in tradesVec:
     print(" qlInst pv = ", str(qlPv))
     isExp = qlInst.isExpired()
     print(" is expired? = ", isExp)
-    #legPg = trn.legs()
-    #print(" legsVec is of type ", type(legPg))
+    legPg = trn.legs()
+    print(" legsVec is of type ", type(legPg))
+    for leg in legPg:
+        print("     leg is of type ", type(leg))
+        for flow in leg:
+            print("          flow as of ", flow.date(), " is ", flow.amount())
 
 #pg end
