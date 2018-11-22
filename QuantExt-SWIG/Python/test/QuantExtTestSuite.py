@@ -23,6 +23,8 @@ from ratehelpers import BasisTwoSwapHelperTest
 from ratehelpers import OICCBSHelperTest
 from ratehelpers import ImmFraRateHelperTest
 from ratehelpers import CrossCcyFixFloatSwapHelperTest
+from cashflow import FXLinkedCashFlowTest
+from cashflow import FloatingRateFXLinkedNotionalCouponTest
 
 def test():
     import QuantExt
@@ -49,6 +51,8 @@ def test():
     suite.addTest(unittest.makeSuite(OICCBSHelperTest, 'test'))
     suite.addTest(unittest.makeSuite(ImmFraRateHelperTest, 'test'))
     suite.addTest(unittest.makeSuite(CrossCcyFixFloatSwapHelperTest, 'test'))
+    suite.addTest(unittest.makeSuite(FXLinkedCashFlowTest, 'test'))
+    suite.addTest(unittest.makeSuite(FloatingRateFXLinkedNotionalCouponTest, 'test'))
     result = unittest.TextTestRunner(verbosity=2).run(suite)
 
     if not result.wasSuccessful:
