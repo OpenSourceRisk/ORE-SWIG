@@ -16,11 +16,14 @@ using QuantExt::FxBlackVannaVolgaVolatilitySurface;
 using QuantExt::BlackVarianceSurfaceMoneynessSpot;
 using QuantExt::BlackVarianceSurfaceMoneynessForward;
 //using QuantExt::SwaptionVolCube2;
+using QuantExt::SwaptionVolCubeWithATM;
+using QuantLib::SwaptionVolatilityCube;
 
 typedef boost::shared_ptr<BlackVolTermStructure> FxBlackVannaVolgaVolatilitySurfacePtr;
 typedef boost::shared_ptr<BlackVolTermStructure> BlackVarianceSurfaceMoneynessSpotPtr;
 typedef boost::shared_ptr<BlackVolTermStructure> BlackVarianceSurfaceMoneynessForwardPtr;
 typedef boost::shared_ptr<SwaptionVolatilityStructure> QLESwaptionVolCube2Ptr;
+typedef boost::shared_ptr<SwaptionVolatilityStructure> SwaptionVolCubeWithATMPtr;
 %}
 
 %ignore PriceTermStructure;
@@ -200,14 +203,28 @@ class BlackVarianceSurfaceMoneynessForwardPtr : public boost::shared_ptr<BlackVo
                                                 bool stickyStrike = false) {
             return new BlackVarianceSurfaceMoneynessForwardPtr(
                 new BlackVarianceSurfaceMoneynessForward(cal,
-                                                      spot,
-                                                      times,
-                                                      moneyness,
-                                                      blackVolMatrix,
-                                                      dayCounter,
-                                                      forTS,
-                                                      domTS,
-                                                      stickyStrike));
+                                                         spot,
+                                                         times,
+                                                         moneyness,
+                                                         blackVolMatrix,
+                                                         dayCounter,
+                                                         forTS,
+                                                         domTS,
+                                                         stickyStrike));
+        }
+    }
+};
+
+
+%rename(SwaptionVolCubeWithATM) SwaptionVolCubeWithATMPtr;
+class SwaptionVolCubeWithATMPtr : public boost::shared_ptr<SwaptionVolatilityStructure> {
+  public:
+    %extend {
+        SwaptionVolCubeWithATMPtr(const boost::shared_ptr<SwaptionVolatilityStructure>& cube) {
+            const boost::shared_ptr<QuantLib::SwaptionVolatilityCube> volCube
+                = boost::dynamic_pointer_cast<QuantLib::SwaptionVolatilityCube>(cube);
+            return new SwaptionVolCubeWithATMPtr(
+                new SwaptionVolCubeWithATM(volCube));
         }
     }
 };
