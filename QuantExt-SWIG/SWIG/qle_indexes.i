@@ -153,4 +153,72 @@ class BMAIndexWrapperPtr : public IborIndexPtr {
 };
 
 
+%define qle_export_xibor_instance(Name)
+%{
+using QuantExt::Name;
+typedef boost::shared_ptr<Index> Name##Ptr;
+%}
+%rename(Name) Name##Ptr;
+class Name##Ptr : public IborIndexPtr {
+  public:
+    %extend {
+      Name##Ptr(const Period& tenor,
+                const Handle<YieldTermStructure>& h =
+                                    Handle<YieldTermStructure>()) {
+          return new Name##Ptr(new Name(tenor,h));
+      }
+    }
+};
+%enddef
+
+%define qle_export_overnight_instance(Name)
+%{
+using QuantExt::Name;
+typedef boost::shared_ptr<Index> Name##Ptr;
+%}
+%rename(Name) Name##Ptr;
+class Name##Ptr : public OvernightIndexPtr {
+  public:
+    %extend {
+      Name##Ptr(const Handle<YieldTermStructure>& h =
+                                    Handle<YieldTermStructure>()) {
+          return new Name##Ptr(new Name(h));
+      }
+    }
+};
+%enddef
+
+qle_export_xibor_instance(AUDbbsw);
+qle_export_xibor_instance(BRLCdi);
+qle_export_xibor_instance(COPIbr);
+qle_export_xibor_instance(CZKPribor);
+qle_export_xibor_instance(DEMLibor);
+qle_export_xibor_instance(DKKCibor);
+qle_export_xibor_instance(HKDHibor);
+qle_export_xibor_instance(HUFBubor);
+qle_export_xibor_instance(IDRIdrfix);
+qle_export_xibor_instance(INRMifor);
+qle_export_xibor_instance(KRWKoribor);
+qle_export_xibor_instance(MXNTiie);
+qle_export_xibor_instance(MYRKlibor);
+qle_export_xibor_instance(NOKNibor);
+qle_export_xibor_instance(NZDBKBM);
+qle_export_xibor_instance(PHPPhiref);
+qle_export_xibor_instance(PLNWibor);
+qle_export_xibor_instance(RUBMosprime);
+qle_export_xibor_instance(SEKStibor);
+qle_export_xibor_instance(SGDSibor);
+qle_export_xibor_instance(SGDSor);
+qle_export_xibor_instance(SKKBribor);
+qle_export_xibor_instance(THBBibor);
+qle_export_xibor_instance(TWDTaibor);
+
+qle_export_overnight_instance(CHFTois);
+qle_export_overnight_instance(CLPCamara);
+qle_export_overnight_instance(CORRA);
+qle_export_overnight_instance(DKKOis);
+qle_export_overnight_instance(SEKSior);
+qle_export_overnight_instance(Tonar);
+
+
 #endif
