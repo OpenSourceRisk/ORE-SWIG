@@ -6,6 +6,71 @@
 from QuantExt import *
 import unittest
 
+class CrossCcyBasisSwapTest(unittest.TestCase):
+    def setUp(self):
+        """ Set-up CrossCcyBasisSwap """
+        self.todays_date = Date(11, November, 2018)
+        self.pay_nominal = 10000000
+        self.rec_nominal = 12000000
+        self.pay_currency = USDCurrency()
+        self.rec_currency = EURCurrency()
+        self.settlement_date = Date(13, November, 2018)
+        self.calendar = TARGET()
+        self.day_counter = Actual365Fixed()
+        self.forward_start = self.calendar.advance(self.settlement_date, 1, Years)
+        self.forward_end = self.calendar.advance(self.forward_start, 5, Years)
+        self.tenor = Period(6, Months)
+        self.bdc = ModifiedFollowing
+        self.schedule = Schedule(self.forward_start, self.forward_end, self.tenor, self.calendar,
+                                 self.bdc, self.bdc, DateGeneration.Forward, False)
+        self.flat_forward_USD = FlatForward(self.todays_date, 0.005, self.day_counter)
+        self.discount_term_structure_USD = RelinkableYieldTermStructureHandle(self.flat_forward_USD)
+        self.flat_forward_EUR = FlatForward(self.todays_date, 0.03, self.day_counter);
+        self.discount_term_structure_EUR = RelinkableYieldTermStructureHandle(self.flat_forward_EUR)
+        self.pay_spread = 0.0
+        self.rec_spread = 0.0
+        self.pay_index = USDLibor(Period(3, Months), self.discount_term_structure_USD)
+        self.rec_index = Euribor3M(self.discount_term_structure_EUR)
+        self.fxQuote = QuoteHandle(SimpleQuote(1/0.8))
+        self.swap = CrossCcyBasisSwap(self.pay_nominal, self.pay_currency, self.schedule, 
+                                      self.pay_index, self.pay_spread, self.rec_nominal, 
+                                      self.rec_currency, self.schedule, self.rec_index, self.rec_spread)
+        self.engine = CrossCcySwapEngine(self.pay_currency, self.discount_term_structure_USD, 
+                                         self.rec_currency, self.discount_term_structure_EUR, 
+                                         self.fxQuote, False, self.settlement_date, self.todays_date)
+        self.swap.setPricingEngine(self.engine)
+        
+    def testSimpleInspectors(self):
+        """ Test CrossCcyBasisSwap simple inspectors. """
+        self.assertEqual(self.swap.payNominal(), self.pay_nominal)
+        self.assertEqual(self.swap.payCurrency(), self.pay_currency)
+        self.assertEqual(self.swap.paySpread(), self.pay_spread)
+        self.assertEqual(self.swap.recNominal(), self.rec_nominal)
+        self.assertEqual(self.swap.recCurrency(), self.rec_currency)
+        self.assertEqual(self.swap.recSpread(), self.rec_spread)
+        
+    def testSchedules(self):
+        """ Test CrossCcyBasisSwap schedules. """
+        for i, d in enumerate(self.schedule):
+            self.assertEqual(self.swap.paySchedule()[i], d)
+            self.assertEqual(self.swap.recSchedule()[i], d)
+            
+    def testConsistency(self):
+        """ Test consistency of fair price and NPV() """
+        tolerance = 1.0e-8
+        fair_rec_spread = self.swap.fairPaySpread()
+        swap = CrossCcyBasisSwap(self.pay_nominal, self.pay_currency, self.schedule, 
+                                 self.pay_index, self.pay_spread, self.rec_nominal, 
+                                 self.rec_currency, self.schedule, self.rec_index, fair_rec_spread)
+        swap.setPricingEngine(self.engine)
+        self.assertFalse(abs(swap.NPV()) > tolerance)
+        fair_pay_spread = self.swap.fairPaySpread()
+        swap = CrossCcyBasisSwap(self.pay_nominal, self.pay_currency, self.schedule, 
+                                 self.pay_index, fair_pay_spread, self.rec_nominal, 
+                                 self.rec_currency, self.schedule, self.rec_index, self.rec_spread)
+        swap.setPricingEngine(self.engine)
+        self.assertFalse(abs(swap.NPV()) > tolerance)
+
 class CDSOptionTest(unittest.TestCase):
     def setUp(self):
         """ Set-up CDSOptionTest and engine"""
@@ -243,7 +308,7 @@ class OvernightIndexedBasisSwapTest(unittest.TestCase):
         self.assertEqual(self.swap.iborSpread(), self.LIBOR_spread)
         
     def testSchedules(self):
-        """ Test CrossCurrencyFixFloatSwap schedules. """
+        """ Test OvernightIndexedBasisSwap schedules. """
         for i, d in enumerate(self.schedule):
             self.assertEqual(self.swap.oisSchedule()[i], d)
             self.assertEqual(self.swap.iborSchedule()[i], d)
@@ -776,5 +841,6 @@ if __name__ == '__main__':
     suite.addTest(unittest.makeSuite(OvernightIndexedCrossCcyBasisSwapTest, 'test'))
     suite.addTest(unittest.makeSuite(CreditDefaultSwapTest, 'test'))
     suite.addTest(unittest.makeSuite(CDSOptionTest, 'test'))
+    suite.addTest(unittest.makeSuite(CrossCcyBasisSwapTest, 'test'))
     unittest.TextTestRunner(verbosity=2).run(suite)
 
