@@ -30,6 +30,7 @@ from ratehelpers import ImmFraRateHelperTest
 from ratehelpers import CrossCcyFixFloatSwapHelperTest
 from cashflow import FXLinkedCashFlowTest
 from cashflow import FloatingRateFXLinkedNotionalCouponTest
+from termstructures import BlackVolatilityWithATMTest
 
 def test():
     import QuantExt
@@ -63,6 +64,7 @@ def test():
     suite.addTest(unittest.makeSuite(CreditDefaultSwapTest, 'test'))
     suite.addTest(unittest.makeSuite(CDSOptionTest, 'test'))
     suite.addTest(unittest.makeSuite(CrossCcyBasisSwapTest, 'test'))
+    suite.addTest(unittest.makeSuite(BlackVolatilityWithATMTest, 'test'))
 
     result = unittest.TextTestRunner(verbosity=2).run(suite)
 
