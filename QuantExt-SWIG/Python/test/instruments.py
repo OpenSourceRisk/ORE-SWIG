@@ -6,6 +6,42 @@
 from QuantExt import *
 import unittest
 
+class DiscountingSwapEngineMultiCurveTest(unittest.TestCase):
+    def setUp(self):
+        """ Set-up DiscountingSwapEngineMultiCurve """
+        self.todays_date = Date(11, November, 2018)
+        self.type = VanillaSwap.Payer
+        self.nominal = 10000000
+        self.settlement_date = Date(13, November, 2018)
+        self.calendar = TARGET()
+        self.day_counter = Actual365Fixed()
+        self.maturity_date = self.calendar.advance(self.settlement_date, 5, Years)
+        self.tenor = Period(3, Months)
+        self.bdc = ModifiedFollowing
+        self.schedule = Schedule(self.settlement_date, self.maturity_date, self.tenor, self.calendar,
+                                 self.bdc, self.bdc, DateGeneration.Forward, False)
+        self.fixed_rate = 0.03
+        self.flat_forward_EUR = FlatForward(self.todays_date, 0.03, self.day_counter);
+        self.discount_term_structure_EUR = RelinkableYieldTermStructureHandle(self.flat_forward_EUR)
+        self.OIS_flat_forward = FlatForward(self.todays_date, 0.01, self.day_counter)
+        self.OIS_term_structure = RelinkableYieldTermStructureHandle(self.OIS_flat_forward)
+        self.spread = 0.0
+        self.index = Euribor3M(self.discount_term_structure_EUR)
+        self.swap = VanillaSwap(self.type, self.nominal, self.schedule, self.fixed_rate,
+                                self.day_counter, self.schedule, self.index,
+                                self.spread, self.day_counter)
+        self.engine_multicurve = DiscountingSwapEngineMultiCurve(self.OIS_term_structure)
+        self.swap.setPricingEngine(self.engine_multicurve)
+
+    def testConsistency(self):
+        """ Test consistency of NPV() """
+        tolerance = 1.0e-8
+        npv1 = self.swap.NPV()
+        engine = DiscountingSwapEngine(self.OIS_term_structure)
+        self.swap.setPricingEngine(engine)
+        npv2 = self.swap.NPV()
+        self.assertFalse(abs(npv1 - npv2) > tolerance)
+
 class CrossCcyBasisSwapTest(unittest.TestCase):
     def setUp(self):
         """ Set-up CrossCcyBasisSwap """
@@ -842,5 +878,6 @@ if __name__ == '__main__':
     suite.addTest(unittest.makeSuite(CreditDefaultSwapTest, 'test'))
     suite.addTest(unittest.makeSuite(CDSOptionTest, 'test'))
     suite.addTest(unittest.makeSuite(CrossCcyBasisSwapTest, 'test'))
+    suite.addTest(unittest.makeSuite(DiscountingSwapEngineMultiCurveTest, 'test'))
     unittest.TextTestRunner(verbosity=2).run(suite)
 
