@@ -31,6 +31,8 @@
 %include ored_conventions.i
 %include ored_parsers.i
 
+%include cashflows.i
+
 %{
 
   
@@ -64,14 +66,17 @@ using ore::data::YieldCurveType;
 using ore::data::TodaysMarketParameters;
 using ore::data::Loader; 
 using ore::data::CurveConfigurations;
+using QuantLib::CashFlow;
 
 using namespace std;
 
 %}
 
 %template(TradeVector) std::vector<boost::shared_ptr<Trade>>;
+
 //typedef std::vector<boost::shared_ptr<ore::data::Trade>> TradeVector;
-//%template(LegVector) std::vector<std::vector<boost::shared_ptr<QuantLib::CashFlow>>>;
+%template(LegVector) std::vector<std::vector<boost::shared_ptr<CashFlow> > >;
+typedef std::vector<std::vector<boost::shared_ptr<QuantLib::CashFlow> > > LegVector;
 %template(StringStringMap) std::map<std::string, std::string>;
 
 // Market class passed around as pointer, no construction
