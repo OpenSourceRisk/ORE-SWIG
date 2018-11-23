@@ -18,9 +18,17 @@ from instruments import CDSOptionTest
 from instruments import CreditDefaultSwapTest
 from instruments import CrossCurrencyFixFloatSwapTest
 from instruments import AverageOISTest
-from ratehelpers import ImmFraRateHelperTest
 from ratehelpers import AverageOISRateHelpersTest
 from ratehelpers import CrossCcyBasisSwapHelperTest
+from ratehelpers import TenorBasisSwapHelperTest
+from ratehelpers import SubPeriodsSwapHelperTest
+from ratehelpers import OIBSHelperTest
+from ratehelpers import BasisTwoSwapHelperTest
+from ratehelpers import OICCBSHelperTest
+from ratehelpers import ImmFraRateHelperTest
+from ratehelpers import CrossCcyFixFloatSwapHelperTest
+from cashflow import FXLinkedCashFlowTest
+from cashflow import FloatingRateFXLinkedNotionalCouponTest
 
 def test():
     import QuantExt
@@ -38,9 +46,17 @@ def test():
     suite.addTest(unittest.makeSuite(PaymentTest, 'test'))
     suite.addTest(unittest.makeSuite(CrossCurrencyFixFloatSwapTest, 'test'))
     suite.addTest(unittest.makeSuite(AverageOISTest, 'test'))
-    suite.addTest(unittest.makeSuite(ImmFraRateHelperTest, 'test'))
     suite.addTest(unittest.makeSuite(AverageOISRateHelpersTest, 'test'))
     suite.addTest(unittest.makeSuite(CrossCcyBasisSwapHelperTest, 'test'))
+    suite.addTest(unittest.makeSuite(TenorBasisSwapHelperTest, 'test'))
+    suite.addTest(unittest.makeSuite(SubPeriodsSwapHelperTest, 'test'))
+    suite.addTest(unittest.makeSuite(OIBSHelperTest, 'test'))
+    suite.addTest(unittest.makeSuite(BasisTwoSwapHelperTest, 'test'))
+    suite.addTest(unittest.makeSuite(OICCBSHelperTest, 'test'))
+    suite.addTest(unittest.makeSuite(ImmFraRateHelperTest, 'test'))
+    suite.addTest(unittest.makeSuite(CrossCcyFixFloatSwapHelperTest, 'test'))
+    suite.addTest(unittest.makeSuite(FXLinkedCashFlowTest, 'test'))
+    suite.addTest(unittest.makeSuite(FloatingRateFXLinkedNotionalCouponTest, 'test'))
     suite.addTest(unittest.makeSuite(OvernightIndexedBasisSwapTest, 'test'))
     suite.addTest(unittest.makeSuite(OvernightIndexedCrossCcyBasisSwapTest, 'test'))
     suite.addTest(unittest.makeSuite(CreditDefaultSwapTest, 'test'))
@@ -51,6 +67,6 @@ def test():
     if not result.wasSuccessful:
         sys.exit(1)
 
-        
+
 if __name__ == '__main__':
     test()
