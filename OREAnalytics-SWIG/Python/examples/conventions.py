@@ -20,8 +20,10 @@ def fetchConventionObject(container, id):
         Convention.AverageOis : AverageOisConvention.getFullView,
         Convention.TenorBasisSwap : TenorBasisSwapConvention.getFullView,
         Convention.TenorBasisTwoSwap : TenorBasisTwoSwapConvention.getFullView,
+        Convention.BMABasisSwap : BMABasisSwapConvention.getFullView,
         Convention.FX : FXConvention.getFullView,
         Convention.CrossCcyBasis : CrossCcyBasisSwapConvention.getFullView,
+        Convention.CrossCcyFixFloat : CrossCcyFixFloatSwapConvention.getFullView,
         Convention.InflationSwap : InflationSwapConvention.getFullView,
         Convention.SecuritySpread : SecuritySpreadConvention.getFullView
     }
@@ -45,8 +47,10 @@ def buildFullConventionFromXML(xmlElement):
         'AverageOIS' : AverageOisConvention,
         'TenorBasisSwap' : TenorBasisSwapConvention,
         'TenorBasisTwoSwap' : TenorBasisTwoSwapConvention,
+        'BMABasisSwap' : BMABasisSwapConvention,
         'FX' : FXConvention,
         'CrossCurrencyBasis' : CrossCcyBasisSwapConvention,
+        'CrossCurrencyFixFloat' : CrossCcyFixFloatSwapConvention,
         'InflationSwap' : InflationSwapConvention
     }
     if (xmlElement.tag not in constructorMap):
@@ -86,15 +90,15 @@ print("index name is ", convObj.indexName())
 
 """
 for item in convXml:
-        
-    convObj = buildFullConventionFromXML(item)
-    if convObj is None:
-        print("skipping " + item.tag + ", " + item.find("Id").text)
-        continue
-    conv_id = convObj.id()
-    print(convObj.id())
-    print(type(convObj))
-    convStr = convObj.toXMLString()
+    print(item.find("Id").text)
+    convObj2 = buildFullConventionFromXML(item)
+    #if convObj2 is None:
+    #    print("skipping " + item.tag + ", " + item.find("Id").text)
+    #    continue
+    conv_id = convObj2.id()
+    print(convObj2.id())
+    print(type(convObj2))
+    convStr = convObj2.toXMLString()
     print(convStr)
     
     conv_id_new = conv_id + "_2"
@@ -125,3 +129,5 @@ ts = parsed_idx.forwardingTermStructure()
 print(type(ts))
 d2 = Date(11,9,2028)
 print("discount 10y = ", ts.discount(d2))
+
+
