@@ -33,5 +33,4 @@
 %include ored_market.i
 %include ored_portfolio.i
 
-
 #endif
