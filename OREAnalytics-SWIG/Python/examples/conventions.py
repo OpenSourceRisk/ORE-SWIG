@@ -66,7 +66,7 @@ print("Conventions type is ", type(conv_container))
 convFile = "C:\Apps\Dev\ExodusPoint\oreswig\OREPlus-SWIG\Python\examples\Input\conventions.xml"
 convXml = ET.parse(convFile).getroot()
 convXmlStr = ET.tostring(convXml,encoding="unicode")
-conv_container.loadFromXMLString(convXmlStr)
+conv_container.fromXMLString(convXmlStr)
 print("Loaded conventions from string")
 
 convStr = "USD-AVERAGE-OIS-CONVENTIONS"
