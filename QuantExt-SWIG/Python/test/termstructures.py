@@ -23,11 +23,31 @@ class BlackVolatilityWithATMTest(unittest.TestCase):
 
         
     def testSimpleInspectors(self):
-        """ Test Avegare Black Volatility with ATM simple inspector. """
+        """ Test Black Volatility with ATM simple inspector. """
         self.assertEqual(self.blackvolatilitywithatm.referenceDate(),self.date1)
+
+
+class BlackVarianceSurfaceMoneynessSpotTest(unittest.TestCase):
+    def setUp(self):
+        """ Test consistency of Black Variance Surface Moneyness Spot"""
+        self.cal=UnitedStates()
+        self.spot=QuoteHandle(SimpleQuote(1.0))
+        self.times=(1,2,3)
+        self.moneyness=(1.0,1.1,1.2)
+        self.blackVolMatrix =((QuoteHandle(SimpleQuote(0.2)),QuoteHandle(SimpleQuote(0.2)),QuoteHandle(SimpleQuote(0.3))),(QuoteHandle(SimpleQuote(0.2)),QuoteHandle(SimpleQuote(0.3)),QuoteHandle(SimpleQuote(0.4))),(QuoteHandle(SimpleQuote(0.3)),QuoteHandle(SimpleQuote(0.4)),QuoteHandle(SimpleQuote(0.5))))
+        self.dayCounter=Actual360()
+        self.stickyStrike=False
+        self.blackvariancesurfacemoneynessspot=BlackVarianceSurfaceMoneynessSpot(self.cal,self.spot,self.times,self.moneyness,self.blackVolMatrix,self.dayCounter,self.stickyStrike)
+
+        
+    def testSimpleInspectors(self):
+        """ Test Black Variance Surface Moneyness Spot simple inspector. """
+        self.assertEqual(self.blackvariancesurfacemoneynessspot.dayCounter(),self.dayCounter)
+
 
 if __name__ == '__main__':
     suite = unittest.TestSuite()
     suite.addTest(unittest.makeSuite(BlackVolatilityWithATM,'test'))
+    suite.addTest(unittest.makeSuite(BlackVarianceSurfaceMoneynessSpotTest,'test'))
     unittest.TextTestRunner(verbosity=2).run(suite)
     unittest.main()
