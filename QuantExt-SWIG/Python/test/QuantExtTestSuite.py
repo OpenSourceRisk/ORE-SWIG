@@ -15,6 +15,7 @@ from instruments import OvernightIndexedCrossCcyBasisSwapTest
 from instruments import OvernightIndexedBasisSwapTest
 from instruments import PaymentTest
 from instruments import CDSOptionTest
+from instruments import CrossCcyBasisSwapTest
 from instruments import CreditDefaultSwapTest
 from instruments import CrossCurrencyFixFloatSwapTest
 from instruments import AverageOISTest
@@ -61,6 +62,8 @@ def test():
     suite.addTest(unittest.makeSuite(OvernightIndexedCrossCcyBasisSwapTest, 'test'))
     suite.addTest(unittest.makeSuite(CreditDefaultSwapTest, 'test'))
     suite.addTest(unittest.makeSuite(CDSOptionTest, 'test'))
+    suite.addTest(unittest.makeSuite(CrossCcyBasisSwapTest, 'test'))
+
     result = unittest.TextTestRunner(verbosity=2).run(suite)
 
     if not result.wasSuccessful:
