@@ -19,6 +19,8 @@ using QuantExt::SubPeriodsSwapHelper;
 using QuantExt::OICCBSHelper;
 using QuantExt::OIBSHelper;
 using QuantExt::BasisTwoSwapHelper;
+using QuantExt::ImmFraRateHelper;
+using QuantExt::CrossCcyFixFloatSwapHelper;
 
 typedef boost::shared_ptr<RateHelper> CrossCcyBasisSwapHelperPtr;
 typedef boost::shared_ptr<RateHelper> TenorBasisSwapHelperPtr;
@@ -26,6 +28,8 @@ typedef boost::shared_ptr<RateHelper> SubPeriodsSwapHelperPtr;
 typedef boost::shared_ptr<RateHelper> OICCBSHelperPtr;
 typedef boost::shared_ptr<RateHelper> OIBSHelperPtr;
 typedef boost::shared_ptr<RateHelper> BasisTwoSwapHelperPtr;
+typedef boost::shared_ptr<RateHelper> ImmFraRateHelperPtr;
+typedef boost::shared_ptr<RateHelper> CrossCcyFixFloatSwapHelperPtr;
 %}
 
 %rename(CrossCcyBasisSwapHelper) CrossCcyBasisSwapHelperPtr;
@@ -236,6 +240,73 @@ class OICCBSHelperPtr : public boost::shared_ptr<RateHelper> {
     }
     OvernightIndexedCrossCcyBasisSwapPtr swap() {
         return boost::dynamic_pointer_cast<OICCBSHelper>(*self)->swap();
+    }
+  }
+};
+
+
+%rename(ImmFraRateHelper) ImmFraRateHelperPtr;
+class ImmFraRateHelperPtr : public boost::shared_ptr<RateHelper> {
+  public:
+    %extend {
+    ImmFraRateHelperPtr(const QuantLib::Handle<QuantLib::Quote>& rate,
+                        const QuantLib::Size imm1,
+                        const QuantLib::Size imm2,
+                        const IborIndexPtr& iborIndex,
+                        QuantLib::Pillar::Choice pillar = QuantLib::Pillar::LastRelevantDate,
+                        QuantLib::Date customPillarDate = QuantLib::Date()) {
+            boost::shared_ptr<IborIndex> ibrIndex = boost::dynamic_pointer_cast<IborIndex>(iborIndex);
+            return new ImmFraRateHelperPtr(
+                new ImmFraRateHelper(rate,
+                                     imm1,
+                                     imm2,
+                                     ibrIndex,
+                                     pillar,
+                                     customPillarDate));
+        }
+    }
+};
+
+%rename(CrossCcyFixFloatSwapHelper) CrossCcyFixFloatSwapHelperPtr;
+class CrossCcyFixFloatSwapHelperPtr : public boost::shared_ptr<RateHelper> {
+  public:
+    %extend {
+      CrossCcyFixFloatSwapHelperPtr(const QuantLib::Handle<QuantLib::Quote>& rate, 
+								const QuantLib::Handle<QuantLib::Quote>& spotFx, 
+								QuantLib::Natural settlementDays, 
+								const QuantLib::Calendar& paymentCalendar, 
+								QuantLib::BusinessDayConvention paymentConvention, 
+								const QuantLib::Period& tenor, 
+								const QuantLib::Currency& fixedCurrency,
+								QuantLib::Frequency fixedFrequency, 
+								QuantLib::BusinessDayConvention fixedConvention, 
+								const QuantLib::DayCounter& fixedDayCount, 
+								const IborIndexPtr& index, 
+								const QuantLib::Handle<QuantLib::YieldTermStructure>& floatDiscount, 
+								const QuantLib::Handle<QuantLib::Quote>& spread = QuantLib::Handle<QuantLib::Quote>(), 
+								bool endOfMonth = false) {
+      
+      boost::shared_ptr<IborIndex> indexSwap = boost::dynamic_pointer_cast<IborIndex>(index);
+      
+      return new CrossCcyFixFloatSwapHelperPtr(
+        new CrossCcyFixFloatSwapHelper(rate,
+                                       spotFx,
+                                       settlementDays,
+                                       paymentCalendar,
+                                       paymentConvention,
+                                       tenor,
+                                       fixedCurrency,
+                                       fixedFrequency,
+                                       fixedConvention,
+                                       fixedDayCount,
+                                       indexSwap,
+                                       floatDiscount,
+                                       spread,
+                                       endOfMonth));
+    }
+
+    CrossCcyFixFloatSwapPtr swap() {
+      return boost::dynamic_pointer_cast<CrossCcyFixFloatSwapHelper>(*self)->swap();
     }
   }
 };

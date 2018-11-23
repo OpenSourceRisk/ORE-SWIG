@@ -61,6 +61,7 @@ using QuantLib::BusinessDayConvention;
 using QuantLib::Size;
 using QuantLib::DateGeneration;
 using QuantExt::SubPeriodsCoupon;
+using QuantExt::BMAIndexWrapper;
 %}
 
 class Conventions {
@@ -69,7 +70,7 @@ class Conventions {
     boost::shared_ptr<Convention> get(const std::string& id) const;
     void clear();
     void add(const boost::shared_ptr<Convention>& convention);
-    void loadFromXMLString(const std::string& xmlString);
+    void fromXMLString(const std::string& xmlString);
 };
 
 %ignore Convention;
@@ -532,6 +533,37 @@ public:
   }
 };
 
+%rename(BMABasisSwapConvention) BMABasisSwapConventionPtr;
+class BMABasisSwapConventionPtr : public boost::shared_ptr<Convention> {
+public:
+  %extend {
+    BMABasisSwapConventionPtr() {
+        return new BMABasisSwapConventionPtr(new ore::data::BMABasisSwapConvention());
+    }
+    BMABasisSwapConventionPtr(const std::string& id,const std::string& liborIndex, 
+        const std::string& bmaIndex) {
+        
+        return new BMABasisSwapConventionPtr(new ore::data::BMABasisSwapConvention(
+            id, liborIndex, bmaIndex));
+    }
+    const IborIndexPtr liborIndex() const {
+        return boost::dynamic_pointer_cast<ore::data::BMABasisSwapConvention>(*self)->liborIndex();
+    }
+    const BMAIndexWrapperPtr bmaIndex() const {
+        return boost::dynamic_pointer_cast<ore::data::BMABasisSwapConvention>(*self)->bmaIndex();
+    }
+    const std::string& liborIndexName() const {
+        return boost::dynamic_pointer_cast<ore::data::BMABasisSwapConvention>(*self)->liborIndexName();
+    }
+    const std::string& bmaIndexName() const {
+        return boost::dynamic_pointer_cast<ore::data::BMABasisSwapConvention>(*self)->bmaIndexName();
+    }
+    static const BMABasisSwapConventionPtr getFullView(boost::shared_ptr<Convention> baseInput) const {
+        return boost::dynamic_pointer_cast<ore::data::BMABasisSwapConvention>(baseInput);
+    }
+  }
+};
+
 %rename(FXConvention) FXConventionPtr;
 class FXConventionPtr : public boost::shared_ptr<Convention> {
 public:
@@ -613,6 +645,56 @@ public:
     }
     static const CrossCcyBasisSwapConventionPtr getFullView(boost::shared_ptr<Convention> baseInput) const {
         return boost::dynamic_pointer_cast<ore::data::CrossCcyBasisSwapConvention>(baseInput);
+    }
+  }
+};
+
+%rename(CrossCcyFixFloatSwapConvention) CrossCcyFixFloatSwapConventionPtr;
+class CrossCcyFixFloatSwapConventionPtr : public boost::shared_ptr<Convention> {
+public:
+  %extend {
+    CrossCcyFixFloatSwapConventionPtr() {
+        return new CrossCcyFixFloatSwapConventionPtr(new ore::data::CrossCcyFixFloatSwapConvention());
+    }
+    CrossCcyFixFloatSwapConventionPtr(const std::string& id,const std::string& strSettlementDays, 
+        const std::string& strSettlementCalendar, const std::string& strRollConvention, 
+        const std::string& fixedCcy, const std::string& fixedFreq, const std::string& fixedConv,
+        const std::string& fixedDayCount, const std::string& index,
+        const std::string& strEom = "") {
+        
+        return new CrossCcyFixFloatSwapConventionPtr(new ore::data::CrossCcyFixFloatSwapConvention(
+            id, strSettlementDays, strSettlementCalendar, strRollConvention, fixedCcy, 
+            fixedFreq, fixedConv, fixedDayCount, index, strEom));
+    }
+    Natural settlementDays() const {
+        return boost::dynamic_pointer_cast<ore::data::CrossCcyFixFloatSwapConvention>(*self)->settlementDays();
+    }
+    const Calendar& settlementCalendar() const {
+        return boost::dynamic_pointer_cast<ore::data::CrossCcyFixFloatSwapConvention>(*self)->settlementCalendar();
+    }
+    BusinessDayConvention settlementConvention() const {
+        return boost::dynamic_pointer_cast<ore::data::CrossCcyFixFloatSwapConvention>(*self)->settlementConvention();
+    }
+    const Currency& fixedCurrency() const {
+        return boost::dynamic_pointer_cast<ore::data::CrossCcyFixFloatSwapConvention>(*self)->fixedCurrency();
+    }
+    Frequency fixedFrequency() const {
+        return boost::dynamic_pointer_cast<ore::data::CrossCcyFixFloatSwapConvention>(*self)->fixedFrequency();
+    }
+    BusinessDayConvention fixedConvention() const {
+        return boost::dynamic_pointer_cast<ore::data::CrossCcyFixFloatSwapConvention>(*self)->fixedConvention();
+    }
+    const DayCounter& fixedDayCounter() const {
+        return boost::dynamic_pointer_cast<ore::data::CrossCcyFixFloatSwapConvention>(*self)->fixedDayCounter();
+    }
+    const IborIndexPtr index() const {
+        return boost::dynamic_pointer_cast<ore::data::CrossCcyFixFloatSwapConvention>(*self)->index();
+    }
+    bool eom() const {
+        return boost::dynamic_pointer_cast<ore::data::CrossCcyFixFloatSwapConvention>(*self)->eom();
+    }
+    static const CrossCcyFixFloatSwapConventionPtr getFullView(boost::shared_ptr<Convention> baseInput) const {
+        return boost::dynamic_pointer_cast<ore::data::CrossCcyFixFloatSwapConvention>(baseInput);
     }
   }
 };
