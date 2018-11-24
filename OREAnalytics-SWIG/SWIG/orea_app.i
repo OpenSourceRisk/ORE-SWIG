@@ -7,6 +7,8 @@
 #ifndef orea_app_i
 #define orea_app_i
 
+%include ored_market.i
+
 %{
 using ore::analytics::Parameters;
 typedef boost::shared_ptr<ore::analytics::Parameters> ParametersPtr;
@@ -55,6 +57,23 @@ public:
     }
     void run() {
       boost::dynamic_pointer_cast<ore::analytics::OREApp>(*self)->run();
+    }
+    void buildMarket(const std::string& todaysMarketXML = "", const std::string& curveConfigXML = "",
+                 const std::string& conventionsXML = "",
+                 const std::vector<string>& marketData = std::vector<string>(),
+                 const std::vector<string>& fixingData = std::vector<string>()) {
+        boost::dynamic_pointer_cast<ore::analytics::OREApp>(*self)->buildMarket(
+            todaysMarketXML, curveConfigXML, conventionsXML, marketData, fixingData);     
+    }
+    MarketImplPtr getMarket() const {
+      return boost::dynamic_pointer_cast<ore::analytics::OREApp>(*self)->getMarket();
+    }
+    boost::shared_ptr<ore::data::EngineFactory> buildEngineFactoryFromXMLString(
+        const MarketImplPtr& marketImpl, const std::string& pricingEngineXML) {
+        
+        boost::shared_ptr<ore::data::Market> marketBase = 
+            boost::dynamic_pointer_cast<ore::data::Market>(marketImpl);
+        return boost::dynamic_pointer_cast<ore::analytics::OREApp>(*self)->buildEngineFactoryFromXMLString(marketBase, pricingEngineXML);
     }
   }
 };
