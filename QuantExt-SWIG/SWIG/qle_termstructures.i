@@ -8,6 +8,7 @@
 
 %include termstructures.i
 %include volatilities.i
+%include indexes.i
 
 %{
 using QuantExt::PriceTermStructure;
@@ -30,6 +31,7 @@ typedef boost::shared_ptr<SwaptionVolatilityStructure> QLESwaptionVolCube2Ptr;
 typedef boost::shared_ptr<SwaptionVolatilityStructure> SwaptionVolCubeWithATMPtr;
 typedef boost::shared_ptr<SwaptionVolatilityStructure> SwaptionVolatilityConstantSpreadPtr;
 typedef boost::shared_ptr<BlackVolTermStructure> BlackVolatilityWithATMPtr;
+typedef boost::shared_ptr<SwapConventions> SwapConventionsPtr;
 %}
 
 %ignore PriceTermStructure;
@@ -253,18 +255,39 @@ class SwaptionVolatilityConstantSpreadPtr : public boost::shared_ptr<SwaptionVol
     }
 };
 
-%ignore SwapConventions;
-class SwapConventions {
-  public:
-    QuantLib::Natural settlementDays() const;
-    const QuantLib::Period& fixedTenor() const;
-    const QuantLib::Calendar& fixedCalendar() const;
-    QuantLib::BusinessDayConvention fixedConvention() const;
-    const QuantLib::DayCounter& fixedDayCounter() const;
-    const IborIndexPtr floatIndex() const;
+%rename(SwapConventions) SwapConventionsPtr;
+class SwapConventionsPtr {
+public:
+  %extend {
+    SwapConventionsPtr(QuantLib::Natural settlementDays, const QuantLib::Period& fixedTenor, 
+        const QuantLib::Calendar& fixedCalendar, QuantLib::BusinessDayConvention fixedConvention, 
+        const QuantLib::DayCounter& fixedDayCounter,
+        const IborIndexPtr floatIndex) {
+        
+        boost::shared_ptr<IborIndex> iborIdx = boost::dynamic_pointer_cast<QuantLib::IborIndex>(floatIndex);
+        return new SwapConventionsPtr(new SwapConventions(
+            settlementDays, fixedTenor, fixedCalendar, fixedConvention, fixedDayCounter, iborIdx));
+    }
+    QuantLib::Natural settlementDays() const {
+        return boost::dynamic_pointer_cast<SwapConventions>(*self)->settlementDays();
+    }
+    const QuantLib::Period& fixedTenor() const {
+        return boost::dynamic_pointer_cast<SwapConventions>(*self)->fixedTenor();
+    }
+    const QuantLib::Calendar& fixedCalendar() const {
+        return boost::dynamic_pointer_cast<SwapConventions>(*self)->fixedCalendar();
+    }
+    QuantLib::BusinessDayConvention fixedConvention() const {
+        return boost::dynamic_pointer_cast<SwapConventions>(*self)->fixedConvention();
+    }
+    const QuantLib::DayCounter& fixedDayCounter() const {
+        return boost::dynamic_pointer_cast<SwapConventions>(*self)->fixedDayCounter();
+    }
+    const IborIndexPtr floatIndex() const {
+        return boost::dynamic_pointer_cast<SwapConventions>(*self)->floatIndex();
+    }
+  }
 };
-
-%template(SwapConventions) boost::shared_ptr<SwapConventions>; 
 
 %ignore SwaptionVolatilityConverter;
 class SwaptionVolatilityConverter {
