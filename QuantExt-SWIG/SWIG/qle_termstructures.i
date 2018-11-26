@@ -21,6 +21,7 @@ using QuantLib::SwaptionVolatilityCube;
 using QuantExt::SwaptionVolatilityConstantSpread;
 using QuantExt::SwapConventions;
 using QuantExt::SwaptionVolatilityConverter;
+using QuantExt::BlackVolatilityWithATM;
 
 typedef boost::shared_ptr<BlackVolTermStructure> FxBlackVannaVolgaVolatilitySurfacePtr;
 typedef boost::shared_ptr<BlackVolTermStructure> BlackVarianceSurfaceMoneynessSpotPtr;
@@ -28,6 +29,7 @@ typedef boost::shared_ptr<BlackVolTermStructure> BlackVarianceSurfaceMoneynessFo
 typedef boost::shared_ptr<SwaptionVolatilityStructure> QLESwaptionVolCube2Ptr;
 typedef boost::shared_ptr<SwaptionVolatilityStructure> SwaptionVolCubeWithATMPtr;
 typedef boost::shared_ptr<SwaptionVolatilityStructure> SwaptionVolatilityConstantSpreadPtr;
+typedef boost::shared_ptr<BlackVolTermStructure> BlackVolatilityWithATMPtr;
 %}
 
 %ignore PriceTermStructure;
@@ -273,5 +275,37 @@ class SwaptionVolatilityConverter {
 };
 
 %template(SwaptionVolatilityConverter) boost::shared_ptr<SwaptionVolatilityConverter>;  
+
+
+%rename(BlackVolatilityWithATM) BlackVolatilityWithATMPtr;
+class BlackVolatilityWithATMPtr : public boost::shared_ptr<BlackVolTermStructure> {
+public:
+    %extend{
+        BlackVolatilityWithATMPtr(const boost::shared_ptr<QuantLib::BlackVolTermStructure>& surface, 
+                                  const QuantLib::Handle<QuantLib::Quote>& spot,
+                                  const QuantLib::Handle<QuantLib::YieldTermStructure>& yield1, 
+                                  const QuantLib::Handle<QuantLib::YieldTermStructure>& yield2) {
+            return new BlackVolatilityWithATMPtr(
+                new BlackVolatilityWithATM(surface,spot,yield1,yield2));
+        }
+        
+        QuantLib::DayCounter dayCounter() const { return boost::dynamic_pointer_cast<BlackVolatilityWithATM>(*self)->dayCounter(); }
+        
+        QuantLib::Date maxDate() const { return boost::dynamic_pointer_cast<BlackVolatilityWithATM>(*self)->maxDate(); }
+        
+        QuantLib::Time maxTime() const { return boost::dynamic_pointer_cast<BlackVolatilityWithATM>(*self)->maxTime(); }
+        
+        const QuantLib::Date& referenceDate() const { return boost::dynamic_pointer_cast<BlackVolatilityWithATM>(*self)->referenceDate(); }
+        
+        QuantLib::Calendar calendar() const { return boost::dynamic_pointer_cast<BlackVolatilityWithATM>(*self)->calendar(); }
+        
+        QuantLib::Natural settlementDays() const { return boost::dynamic_pointer_cast<BlackVolatilityWithATM>(*self)->settlementDays(); }
+        
+        QuantLib::Rate minStrike() const { return boost::dynamic_pointer_cast<BlackVolatilityWithATM>(*self)->minStrike(); }
+        
+        QuantLib::Rate maxStrike() const { return boost::dynamic_pointer_cast<BlackVolatilityWithATM>(*self)->maxStrike(); }
+        
+    }
+};
 
 #endif
