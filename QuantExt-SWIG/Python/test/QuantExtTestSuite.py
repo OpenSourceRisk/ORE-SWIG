@@ -35,6 +35,7 @@ from termstructures import BlackVolatilityWithATMTest
 from termstructures import BlackVarianceSurfaceMoneynessSpotTest
 from termstructures import BlackVarianceSurfaceMoneynessForwardTest
 from termstructures import SwapConventionsTest
+from termstructures import SwaptionVolCubeWithATMTest
 
 def test():
     import QuantExt
@@ -73,6 +74,7 @@ def test():
     suite.addTest(unittest.makeSuite(BlackVarianceSurfaceMoneynessSpotTest, 'test'))
     suite.addTest(unittest.makeSuite(BlackVarianceSurfaceMoneynessForwardTest, 'test'))
     suite.addTest(unittest.makeSuite(SwapConventionsTest, 'test'))
+    suite.addTest(unittest.makeSuite(SwaptionVolCubeWithATMTest, 'test'))
 
     result = unittest.TextTestRunner(verbosity=2).run(suite)
 
