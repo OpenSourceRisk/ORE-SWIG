@@ -156,6 +156,28 @@ class SwaptionVolatilityConstantSpreadTest(unittest.TestCase):
         self.assertEqual(self.swaptionVolatilityConstantSpread.dayCounter(),self.dayCounter)
         
 
+class FxBlackVannaVolgaVolatilitySurfaceTest(unittest.TestCase):
+    def setUp(self):
+        """ Test consistency of QLE Swaption Vol Cube 2"""
+        self.refDate=Date(1,October,2018)
+        self.dates=(Date(1,November,2018),Date(1,December,2018),Date(1,January,2019))
+        self.atmVols=(0.0,0.10,0.20)
+        self.rr25d=(0.0,0.10,0.20)
+        self.bf25d=(0.0,0.10,0.20)
+        self.dc=Actual360()
+        self.cal=UnitedStates()
+        self.fx=QuoteHandle(SimpleQuote(1.00))
+        self.dom = RelinkableYieldTermStructureHandle()
+        self.dom.linkTo(FlatForward(self.refDate,QuoteHandle(SimpleQuote(0.05)),self.dc))
+        self.fore=RelinkableYieldTermStructureHandle()
+        self.fore.linkTo(FlatForward(self.refDate,QuoteHandle(SimpleQuote(0.03)),self.dc))
+        self.fxBlackVannaVolgaVolatilitySurface=FxBlackVannaVolgaVolatilitySurface(self.refDate,self.dates,self.atmVols,self.rr25d,self.bf25d,self.dc,self.cal,self.fx,self.dom,self.fore)
+
+    def testSimpleInspectors(self):
+        """ Test  QLE Swaption Vol Cube 2 simple inspector. """
+        
+
+        
 
 if __name__ == '__main__':
     suite = unittest.TestSuite()
@@ -165,6 +187,7 @@ if __name__ == '__main__':
     suite.addTest(unittest.makeSuite(SwapConventions,'test'))
     suite.addTest(unittest.makeSuite(SwaptionVolCubeWithATMTest,'test'))
     suite.addTest(unittest.makeSuite(QLESwaptionVolCube2Test,'test'))
+    suite.addTest(unittest.makeSuite(FxBlackVannaVolgaVolatilitySurfaceTest,'test'))
     unittest.TextTestRunner(verbosity=2).run(suite)
     unittest.main()
 
