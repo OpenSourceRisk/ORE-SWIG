@@ -18,8 +18,7 @@ class SwapConventionsTest(unittest.TestCase):
         self.flat_forward = FlatForward(self.todays_date, 0.03, self.day_counter);
         self.discount_term_structure = RelinkableYieldTermStructureHandle(self.flat_forward)
         self.index = Euribor3M(self.discount_term_structure)
-        self.swap_convs = SwapConventions(self.settlement_days, self.tenor, self.calendar, self.bdc, 
-                                          self.day_counter, self.index)
+        self.swap_convs = SwapConventions(self.settlement_days, self.tenor, self.calendar, self.bdc, self.day_counter, self.index)
         
     def testSimpleInspectors(self):
         """ Test SwapConventions simple inspectors. """
@@ -133,7 +132,6 @@ class QLESwaptionVolCube2Test(unittest.TestCase):
         self.swapIndexBase=EuriborSwapIsdaFixA(Period(10,Years),self.termStructure)
         self.shortSwapIndexBase=EuriborSwapIsdaFixA(Period(2,Years),self.termStructure)
         self.vegaWeightedSmileFit=False
-        self.swaptionVolatilityCube=SwaptionVolCube2(self.atmVolStructure,self.optionTenors,self.swapTenors,self.strikeSpreads,self.volSpreads,self.swapIndexBase,self.shortSwapIndexBase,self.vegaWeightedSmileFit)
         self.flatExtrapolation=False
         self.volsAreSpreads=False
         self.swaptionVolCube2=QLESwaptionVolCube2(self.atmVolStructure,self.optionTenors,self.swapTenors,self.strikeSpreads,self.volSpreads,self.swapIndexBase,self.shortSwapIndexBase,self.vegaWeightedSmileFit,self.flatExtrapolation,self.volsAreSpreads)
@@ -143,6 +141,19 @@ class QLESwaptionVolCube2Test(unittest.TestCase):
         """ Test  QLE Swaption Vol Cube 2 simple inspector. """
         self.assertEqual(self.swaptionVolCube2.dayCounter(),self.dayCounter)
         
+
+class SwaptionVolatilityConstantSpreadTest(unittest.TestCase):
+    def setUp(self):
+        """ Test consistency of QLE Swaption Vol Cube 2"""
+        self.today=Date(1,October,2018)
+        self.dayCounter=Actual360()
+        self.atmVolStructure=SwaptionVolatilityStructureHandle(ConstantSwaptionVolatility(self.today, UnitedStates(),Following,0.2, self.dayCounter))
+        self.atmVolStructure2=SwaptionVolatilityStructureHandle(ConstantSwaptionVolatility(self.today, UnitedStates(),Following,0.2, self.dayCounter))
+        self.swaptionVolatilityConstantSpread=SwaptionVolatilityConstantSpread(self.atmVolStructure,self.atmVolStructure2)
+
+    def testSimpleInspectors(self):
+        """ Test  QLE Swaption Vol Cube 2 simple inspector. """
+        self.assertEqual(self.swaptionVolatilityConstantSpread.dayCounter(),self.dayCounter)
         
 
 
