@@ -18,8 +18,7 @@ class SwapConventionsTest(unittest.TestCase):
         self.flat_forward = FlatForward(self.todays_date, 0.03, self.day_counter);
         self.discount_term_structure = RelinkableYieldTermStructureHandle(self.flat_forward)
         self.index = Euribor3M(self.discount_term_structure)
-        self.swap_convs = SwapConventions(self.settlement_days, self.tenor, self.calendar, self.bdc, 
-                                          self.day_counter, self.index)
+        self.swap_convs = SwapConventions(self.settlement_days, self.tenor, self.calendar, self.bdc, self.day_counter, self.index)
         
     def testSimpleInspectors(self):
         """ Test SwapConventions simple inspectors. """
@@ -133,7 +132,6 @@ class QLESwaptionVolCube2Test(unittest.TestCase):
         self.swapIndexBase=EuriborSwapIsdaFixA(Period(10,Years),self.termStructure)
         self.shortSwapIndexBase=EuriborSwapIsdaFixA(Period(2,Years),self.termStructure)
         self.vegaWeightedSmileFit=False
-        self.swaptionVolatilityCube=SwaptionVolCube2(self.atmVolStructure,self.optionTenors,self.swapTenors,self.strikeSpreads,self.volSpreads,self.swapIndexBase,self.shortSwapIndexBase,self.vegaWeightedSmileFit)
         self.flatExtrapolation=False
         self.volsAreSpreads=False
         self.swaptionVolCube2=QLESwaptionVolCube2(self.atmVolStructure,self.optionTenors,self.swapTenors,self.strikeSpreads,self.volSpreads,self.swapIndexBase,self.shortSwapIndexBase,self.vegaWeightedSmileFit,self.flatExtrapolation,self.volsAreSpreads)
@@ -143,8 +141,45 @@ class QLESwaptionVolCube2Test(unittest.TestCase):
         """ Test  QLE Swaption Vol Cube 2 simple inspector. """
         self.assertEqual(self.swaptionVolCube2.dayCounter(),self.dayCounter)
         
+
+class SwaptionVolatilityConstantSpreadTest(unittest.TestCase):
+    def setUp(self):
+        """ Test consistency of Swaption Volatility Constant Spread"""
+        self.today=Date(1,October,2018)
+        self.dayCounter=Actual360()
+        self.atmVolStructure=SwaptionVolatilityStructureHandle(ConstantSwaptionVolatility(self.today, UnitedStates(),Following,0.2, self.dayCounter))
+        self.atmVolStructure2=SwaptionVolatilityStructureHandle(ConstantSwaptionVolatility(self.today, UnitedStates(),Following,0.2, self.dayCounter))
+        self.swaptionVolatilityConstantSpread=SwaptionVolatilityConstantSpread(self.atmVolStructure,self.atmVolStructure2)
+
+    def testSimpleInspectors(self):
+        """ Test Swaption Volatility Constant Spread simple inspector. """
+        self.assertEqual(self.swaptionVolatilityConstantSpread.dayCounter(),self.dayCounter)
         
 
+class FxBlackVannaVolgaVolatilitySurfaceTest(unittest.TestCase):
+    def setUp(self):
+        """ Test consistency of Fx Black Vanna Volga Volatility Surface"""
+        self.refDate=Date(1,October,2018)
+        self.dates=(Date(1,November,2018),Date(1,December,2018),Date(1,January,2019))
+        self.atmVols=(0.0,0.10,0.20)
+        self.rr25d=(0.0,0.10,0.20)
+        self.bf25d=(0.0,0.10,0.20)
+        self.dc=Actual360()
+        self.cal=UnitedStates()
+        self.fx=QuoteHandle(SimpleQuote(1.00))
+        self.dom = RelinkableYieldTermStructureHandle()
+        self.dom.linkTo(FlatForward(self.refDate,QuoteHandle(SimpleQuote(0.05)),self.dc))
+        self.fore=RelinkableYieldTermStructureHandle()
+        self.fore.linkTo(FlatForward(self.refDate,QuoteHandle(SimpleQuote(0.03)),self.dc))
+        self.fxBlackVannaVolgaVolatilitySurface=FxBlackVannaVolgaVolatilitySurface(self.refDate,self.dates,self.atmVols,self.rr25d,self.bf25d,self.dc,self.cal,self.fx,self.dom,self.fore)
+
+    def testSimpleInspectors(self):
+        """ Test Fx Black Vanna Volga Volatility Surface simple inspector. """
+        self.assertEqual(self.fxBlackVannaVolgaVolatilitySurface.dayCounter(),self.dc)
+        
+        
+
+        
 
 if __name__ == '__main__':
     suite = unittest.TestSuite()
@@ -154,6 +189,8 @@ if __name__ == '__main__':
     suite.addTest(unittest.makeSuite(SwapConventions,'test'))
     suite.addTest(unittest.makeSuite(SwaptionVolCubeWithATMTest,'test'))
     suite.addTest(unittest.makeSuite(QLESwaptionVolCube2Test,'test'))
+    suite.addTest(unittest.makeSuite(FxBlackVannaVolgaVolatilitySurfaceTest,'test'))
+    
     unittest.TextTestRunner(verbosity=2).run(suite)
     unittest.main()
 
