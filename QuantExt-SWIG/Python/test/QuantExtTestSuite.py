@@ -15,6 +15,7 @@ from instruments import OvernightIndexedCrossCcyBasisSwapTest
 from instruments import OvernightIndexedBasisSwapTest
 from instruments import PaymentTest
 from instruments import CDSOptionTest
+from instruments import DiscountingSwapEngineMultiCurveTest
 from instruments import CrossCcyBasisSwapTest
 from instruments import CreditDefaultSwapTest
 from instruments import CrossCurrencyFixFloatSwapTest
@@ -33,6 +34,7 @@ from cashflow import FloatingRateFXLinkedNotionalCouponTest
 from termstructures import BlackVolatilityWithATMTest
 from termstructures import BlackVarianceSurfaceMoneynessSpotTest
 from termstructures import BlackVarianceSurfaceMoneynessForwardTest
+from termstructures import SwapConventionsTest
 from termstructures import SwaptionVolCubeWithATMTest
 from termstructures import QLESwaptionVolCube2Test
 
@@ -68,9 +70,11 @@ def test():
     suite.addTest(unittest.makeSuite(CreditDefaultSwapTest, 'test'))
     suite.addTest(unittest.makeSuite(CDSOptionTest, 'test'))
     suite.addTest(unittest.makeSuite(CrossCcyBasisSwapTest, 'test'))
+    suite.addTest(unittest.makeSuite(DiscountingSwapEngineMultiCurveTest, 'test'))
     suite.addTest(unittest.makeSuite(BlackVolatilityWithATMTest, 'test'))
     suite.addTest(unittest.makeSuite(BlackVarianceSurfaceMoneynessSpotTest, 'test'))
     suite.addTest(unittest.makeSuite(BlackVarianceSurfaceMoneynessForwardTest, 'test'))
+    suite.addTest(unittest.makeSuite(SwapConventionsTest, 'test'))
     suite.addTest(unittest.makeSuite(SwaptionVolCubeWithATMTest, 'test'))
     suite.addTest(unittest.makeSuite(QLESwaptionVolCube2Test, 'test'))
 

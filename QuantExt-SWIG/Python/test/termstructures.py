@@ -6,6 +6,30 @@
 from QuantExt import *
 import unittest
 
+class SwapConventionsTest(unittest.TestCase):
+    def setUp(self):
+        """ Set-up SwapConventions"""
+        self.todays_date = Date(1, October, 2018)
+        self.settlement_days = 2
+        self.tenor = Period(10, Years)
+        self.calendar = TARGET()
+        self.bdc = Following
+        self.day_counter = Actual360()
+        self.flat_forward = FlatForward(self.todays_date, 0.03, self.day_counter);
+        self.discount_term_structure = RelinkableYieldTermStructureHandle(self.flat_forward)
+        self.index = Euribor3M(self.discount_term_structure)
+        self.swap_convs = SwapConventions(self.settlement_days, self.tenor, self.calendar, self.bdc, 
+                                          self.day_counter, self.index)
+        
+    def testSimpleInspectors(self):
+        """ Test SwapConventions simple inspectors. """
+        self.assertEqual(self.swap_convs.settlementDays(), self.settlement_days)
+        self.assertEqual(self.swap_convs.fixedTenor(), self.tenor)
+        self.assertEqual(self.swap_convs.fixedCalendar(), self.calendar)
+        self.assertEqual(self.swap_convs.fixedConvention(), self.bdc)
+        self.assertEqual(self.swap_convs.fixedDayCounter(), self.day_counter)
+        self.assertEqual(self.swap_convs.floatIndex().name(), self.index.name())
+
 class BlackVolatilityWithATMTest(unittest.TestCase):
     def setUp(self):
         """ Test consistency of Black Volatility with ATM"""
@@ -127,6 +151,7 @@ if __name__ == '__main__':
     suite.addTest(unittest.makeSuite(BlackVolatilityWithATM,'test'))
     suite.addTest(unittest.makeSuite(BlackVarianceSurfaceMoneynessSpotTest,'test'))
     suite.addTest(unittest.makeSuite(BlackVarianceSurfaceMoneynessForwardTest,'test'))
+    suite.addTest(unittest.makeSuite(SwapConventions,'test'))
     suite.addTest(unittest.makeSuite(SwaptionVolCubeWithATMTest,'test'))
     suite.addTest(unittest.makeSuite(QLESwaptionVolCube2Test,'test'))
     unittest.TextTestRunner(verbosity=2).run(suite)
