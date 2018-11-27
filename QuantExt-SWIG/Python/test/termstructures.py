@@ -91,6 +91,36 @@ class SwaptionVolCubeWithATMTest(unittest.TestCase):
         """ Test Swaption Vol Cube With ATM simple inspector. """
         self.assertEqual(self.cube.dayCounter(),self.dayCounter)
         
+        
+        
+        
+class QLESwaptionVolCube2Test(unittest.TestCase):
+    def setUp(self):
+        """ Test consistency of QLE Swaption Vol Cube 2"""
+        self.today=Date(1,October,2018)
+        self.termStructure = RelinkableYieldTermStructureHandle()
+        self.dayCounter=Actual360()
+        self.termStructure.linkTo(FlatForward(self.today,QuoteHandle(SimpleQuote(0.05)), self.dayCounter))
+        self.atmVolStructure=SwaptionVolatilityStructureHandle(ConstantSwaptionVolatility(self.today, UnitedStates(),Following,0.2, self.dayCounter))
+        self.optionTenors=(Period(3,Months),Period(6,Months))
+        self.swapTenors=(Period(9,Months),Period(12,Months))
+        self.strikeSpreads=(0.00,0.10)
+        self.volSpreads=((QuoteHandle(SimpleQuote(0.10)),QuoteHandle(SimpleQuote(0.15))),(QuoteHandle(SimpleQuote(0.20)),QuoteHandle(SimpleQuote(0.25))),(QuoteHandle(SimpleQuote(0.25)),QuoteHandle(SimpleQuote(0.30))),(QuoteHandle(SimpleQuote(0.30)),QuoteHandle(SimpleQuote(0.35))))
+        self.swapIndexBase=EuriborSwapIsdaFixA(Period(10,Years),self.termStructure)
+        self.shortSwapIndexBase=EuriborSwapIsdaFixA(Period(2,Years),self.termStructure)
+        self.vegaWeightedSmileFit=False
+        self.swaptionVolatilityCube=SwaptionVolCube2(self.atmVolStructure,self.optionTenors,self.swapTenors,self.strikeSpreads,self.volSpreads,self.swapIndexBase,self.shortSwapIndexBase,self.vegaWeightedSmileFit)
+        self.flatExtrapolation=False
+        self.volsAreSpreads=False
+        self.swaptionVolCube2=QLESwaptionVolCube2(self.atmVolStructure,self.optionTenors,self.swapTenors,self.strikeSpreads,self.volSpreads,self.swapIndexBase,self.shortSwapIndexBase,self.vegaWeightedSmileFit,self.flatExtrapolation,self.volsAreSpreads)
+
+        
+    def testSimpleInspectors(self):
+        """ Test  QLE Swaption Vol Cube 2 simple inspector. """
+        self.assertEqual(self.swaptionVolCube2.dayCounter(),self.dayCounter)
+        
+        
+
 
 if __name__ == '__main__':
     suite = unittest.TestSuite()
@@ -98,5 +128,7 @@ if __name__ == '__main__':
     suite.addTest(unittest.makeSuite(BlackVarianceSurfaceMoneynessSpotTest,'test'))
     suite.addTest(unittest.makeSuite(BlackVarianceSurfaceMoneynessForwardTest,'test'))
     suite.addTest(unittest.makeSuite(SwaptionVolCubeWithATMTest,'test'))
+    suite.addTest(unittest.makeSuite(QLESwaptionVolCube2Test,'test'))
     unittest.TextTestRunner(verbosity=2).run(suite)
     unittest.main()
+
