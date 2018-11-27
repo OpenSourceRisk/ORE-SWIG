@@ -144,7 +144,7 @@ class QLESwaptionVolCube2Test(unittest.TestCase):
 
 class SwaptionVolatilityConstantSpreadTest(unittest.TestCase):
     def setUp(self):
-        """ Test consistency of QLE Swaption Vol Cube 2"""
+        """ Test consistency of Swaption Volatility Constant Spread"""
         self.today=Date(1,October,2018)
         self.dayCounter=Actual360()
         self.atmVolStructure=SwaptionVolatilityStructureHandle(ConstantSwaptionVolatility(self.today, UnitedStates(),Following,0.2, self.dayCounter))
@@ -152,13 +152,13 @@ class SwaptionVolatilityConstantSpreadTest(unittest.TestCase):
         self.swaptionVolatilityConstantSpread=SwaptionVolatilityConstantSpread(self.atmVolStructure,self.atmVolStructure2)
 
     def testSimpleInspectors(self):
-        """ Test  QLE Swaption Vol Cube 2 simple inspector. """
+        """ Test Swaption Volatility Constant Spread simple inspector. """
         self.assertEqual(self.swaptionVolatilityConstantSpread.dayCounter(),self.dayCounter)
         
 
 class FxBlackVannaVolgaVolatilitySurfaceTest(unittest.TestCase):
     def setUp(self):
-        """ Test consistency of QLE Swaption Vol Cube 2"""
+        """ Test consistency of Fx Black Vanna Volga Volatility Surface"""
         self.refDate=Date(1,October,2018)
         self.dates=(Date(1,November,2018),Date(1,December,2018),Date(1,January,2019))
         self.atmVols=(0.0,0.10,0.20)
@@ -174,7 +174,9 @@ class FxBlackVannaVolgaVolatilitySurfaceTest(unittest.TestCase):
         self.fxBlackVannaVolgaVolatilitySurface=FxBlackVannaVolgaVolatilitySurface(self.refDate,self.dates,self.atmVols,self.rr25d,self.bf25d,self.dc,self.cal,self.fx,self.dom,self.fore)
 
     def testSimpleInspectors(self):
-        """ Test  QLE Swaption Vol Cube 2 simple inspector. """
+        """ Test Fx Black Vanna Volga Volatility Surface simple inspector. """
+        self.assertEqual(self.fxBlackVannaVolgaVolatilitySurface.dayCounter(),self.dc)
+        
         
 
         
@@ -188,6 +190,7 @@ if __name__ == '__main__':
     suite.addTest(unittest.makeSuite(SwaptionVolCubeWithATMTest,'test'))
     suite.addTest(unittest.makeSuite(QLESwaptionVolCube2Test,'test'))
     suite.addTest(unittest.makeSuite(FxBlackVannaVolgaVolatilitySurfaceTest,'test'))
+    
     unittest.TextTestRunner(verbosity=2).run(suite)
     unittest.main()
 
