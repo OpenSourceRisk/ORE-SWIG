@@ -24,7 +24,7 @@ class SwapConventionsTest(unittest.TestCase):
     def testSimpleInspectors(self):
         """ Test SwapConventions simple inspectors. """
         self.assertEqual(self.swap_convs.settlementDays(), self.settlement_days)
-        self.assertEqual(self.swap_convs.fixedTenors(), self.tenor)
+        self.assertEqual(self.swap_convs.fixedTenor(), self.tenor)
         self.assertEqual(self.swap_convs.fixedCalendar(), self.calendar)
         self.assertEqual(self.swap_convs.fixedConvention(), self.bdc)
         self.assertEqual(self.swap_convs.fixedDayCounter(), self.day_counter)
