@@ -32,6 +32,7 @@ typedef boost::shared_ptr<SwaptionVolatilityStructure> SwaptionVolCubeWithATMPtr
 typedef boost::shared_ptr<SwaptionVolatilityStructure> SwaptionVolatilityConstantSpreadPtr;
 typedef boost::shared_ptr<BlackVolTermStructure> BlackVolatilityWithATMPtr;
 typedef boost::shared_ptr<SwapConventions> SwapConventionsPtr;
+typedef boost::shared_ptr<SwaptionVolatilityConverter> SwaptionVolatilityConverterPtr;
 %}
 
 %ignore PriceTermStructure;
@@ -289,15 +290,53 @@ public:
   }
 };
 
-%ignore SwaptionVolatilityConverter;
-class SwaptionVolatilityConverter {
-  public:
-    boost::shared_ptr<QuantLib::SwaptionVolatilityStructure> convert() const;
-    QuantLib::Real& accuracy();
-    QuantLib::Natural& maxEvaluations();
-};
+%rename(SwaptionVolatilityConverter) SwaptionVolatilityConverterPtr;
+class SwaptionVolatilityConverterPtr {
+public:
+  %extend {
+    SwaptionVolatilityConverterPtr(const QuantLib::Date& asof,
+        const boost::shared_ptr<QuantLib::SwaptionVolatilityStructure>& svsIn,
+        const QuantLib::Handle<QuantLib::YieldTermStructure>& discount,
+        const QuantLib::Handle<QuantLib::YieldTermStructure>& shortDiscount,
+        const SwapConventionsPtr& conventions,
+        const SwapConventionsPtr& shortConventions,
+        const QuantLib::Period& conventionsTenor, 
+        const QuantLib::Period& shortConventionsTenor,
+        const QuantLib::VolatilityType targetType, 
+        const QuantLib::Matrix& targetShifts = QuantLib::Matrix()) {
+        
+        return new SwaptionVolatilityConverterPtr(
+            new SwaptionVolatilityConverter(asof, svsIn, discount, shortDiscount, 
+                conventions, shortConventions, conventionsTenor, shortConventionsTenor, 
+                targetType, targetShifts));
+    }
+    SwaptionVolatilityConverterPtr(const QuantLib::Date& asof, 
+        const boost::shared_ptr<QuantLib::SwaptionVolatilityStructure>& svsIn,
+        const SwapIndexPtr& swapIndex,
+        const SwapIndexPtr& shortSwapIndex, 
+        const QuantLib::VolatilityType targetType,
+        const QuantLib::Matrix& targetShifts = QuantLib::Matrix()) {
+            
+        boost::shared_ptr<QuantLib::SwapIndex> swpIdx = boost::dynamic_pointer_cast<QuantLib::SwapIndex>(swapIndex);
+        boost::shared_ptr<QuantLib::SwapIndex> shtSwpIdx = boost::dynamic_pointer_cast<QuantLib::SwapIndex>(shortSwapIndex);
+            
+        return new SwaptionVolatilityConverterPtr(
+            new SwaptionVolatilityConverter(asof, svsIn, swpIdx, shtSwpIdx, targetType, targetShifts));
+    }
+        
+    boost::shared_ptr<QuantLib::SwaptionVolatilityStructure> convert() const {
+        return boost::dynamic_pointer_cast<SwaptionVolatilityConverter>(*self)->convert();
+    }
+    QuantLib::Real& accuracy() {
+        return boost::dynamic_pointer_cast<SwaptionVolatilityConverter>(*self)->accuracy();
+    }
+    QuantLib::Natural& maxEvaluations() {
+        return boost::dynamic_pointer_cast<SwaptionVolatilityConverter>(*self)->maxEvaluations();
+    }
+  }
+}; 
 
-%template(SwaptionVolatilityConverter) boost::shared_ptr<SwaptionVolatilityConverter>;  
+
 
 
 %rename(BlackVolatilityWithATM) BlackVolatilityWithATMPtr;
