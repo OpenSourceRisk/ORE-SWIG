@@ -4,6 +4,7 @@
 
 from OREAnalytics import *
 import xml.etree.ElementTree as ET
+import os
 
 # This will retrive a convention of name "id" from Conventions class "container"
 ## the type() of the retrieved object is checked so that a downcast to the derived class can be performed
@@ -67,7 +68,7 @@ def buildFullConventionFromXML(xmlElement):
 #### Therefore, we need to downcast the returned object (using the getFullView() functions implemented in SWIG)
 conv_container = Conventions()
 print("Conventions type is ", type(conv_container))
-convFile = "C:\Apps\Dev\ExodusPoint\oreswig\OREPlus-SWIG\Python\examples\Input\conventions.xml"
+convFile = os.path.join("Input","conventions.xml")
 convXml = ET.parse(convFile).getroot()
 convXmlStr = ET.tostring(convXml,encoding="unicode")
 conv_container.fromXMLString(convXmlStr)

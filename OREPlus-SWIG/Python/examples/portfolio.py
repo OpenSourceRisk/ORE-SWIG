@@ -4,6 +4,7 @@
 
 from OREPlus import *
 import xml.etree.ElementTree as ET
+import os
 
 print ("Loading parameters...")
 params = Parameters()
@@ -29,7 +30,7 @@ print ("   retrieved market's asof date is", asof)
 
 
 pfolio = Portfolio()
-pfolioFile = "C:\Apps\Dev\ExodusPoint\oreswig\OREPlus-SWIG\Python\examples\Input\portfolio.xml"
+pfolioFile = os.path.join("Input","portfolio.xml")
 pfolioXml = ET.parse(pfolioFile).getroot()
 pfolioXmlStr = ET.tostring(pfolioXml,encoding="unicode")
 pfolio.loadFromXMLString(pfolioXmlStr)

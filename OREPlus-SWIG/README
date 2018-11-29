@@ -43,27 +43,31 @@ macos automake build using python distutils
 windows
 =======
 
-1) Add Python INCLUDE and LIBRARY paths to the system environment if they do not exist, e.g. 
-   SET PYTHON_INCLUDE="C:\Users\Danilo Delgado\AppData\Local\Continuum\anaconda3\include"
-   SET PYTHON_LIB="C:\Users\Danilo Delgado\AppData\Local\Continuum\anaconda3\libs"
+1) Include SWIG path to the Path environment variable:
+   set Path=%Path%;C:\swigwin-3.0.12
    
-2) Add BOOST_ROOT and BOOST_LIBRARYDIR paths to the system environment, e.g. 
-   SET BOOST_ROOT=C:\repos\boost_1_65_1
-   SET BOOST_LIBRARYDIR=C:\repos\boost_1_65_1\lib\x64\lib\lib
-
-3) Add ORE path to the SYSTEM ENVIRONMENT, e.g. 
-   SET ORE_DIR=C:\dev\openxva
-
-4) Run the following python scripts to install ORE Plus libraries:
+2) Add PYTHON_INCLUDE and PYTHON_LIB variables to the system environment, e.g. 
+   set PYTHON_INCLUDE="C:\Users\Danilo Delgado\AppData\Local\Continuum\anaconda3\include"
+   set PYTHON_LIB="C:\Users\Danilo Delgado\AppData\Local\Continuum\anaconda3\libs"
+   
+3) Add BOOST_ROOT and BOOST_LIBRARYDIR variables to the system environment, e.g. 
+   set BOOST_ROOT=C:\repos\boost_1_65_1
+   set BOOST_LIBRARYDIR=C:\repos\boost_1_65_1\lib\x64\lib\lib
+   
+4) Add ORE_DIR and QL_DIR variables to the system environment, e.g.
+   set ORE_DIR=C:\dev\openxva
+   
+5) Run the following python scripts to install ORE Plus libraries:
    cd Python
    python setup.py wrap
    python setup.py build
    python setup.py install
 
-5) Try examples (all work):
+6) Try examples (all work):
    cd examples
    python ore.py
    python swap.py
    python commodityforward.py
-
+   python conventions.py
+   python portfolio.py
 
