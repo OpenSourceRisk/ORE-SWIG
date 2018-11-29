@@ -56,8 +56,7 @@ windows
    
 4) Add ORE_DIR and QL_DIR variables to the system environment, e.g.
    set ORE_DIR=C:\dev\openxva
-   set QL_DIR=%ORE_DIR%\QuantLib
-
+   
 5) Run the following python scripts to install ORE Plus libraries:
    cd Python
    python setup.py wrap
@@ -69,5 +68,6 @@ windows
    python ore.py
    python swap.py
    python commodityforward.py
-
+   python conventions.py
+   python portfolio.py
 

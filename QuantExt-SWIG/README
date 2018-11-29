@@ -49,8 +49,7 @@ windows
    
 4) Add ORE_DIR and QL_DIR variables to the system environment, e.g.
    set ORE_DIR=C:\dev\openxva
-   set QL_DIR=%ORE_DIR%\QuantLib
-
+   
 5) Run the following python scripts to install QuantExt libraries:
    cd Python
    python setup.py wrap

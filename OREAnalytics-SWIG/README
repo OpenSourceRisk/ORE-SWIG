@@ -32,7 +32,7 @@ macos
    cd examples
    python swap.py
 
-   
+
 windows
 =======
 
@@ -49,8 +49,7 @@ windows
    
 4) Add ORE_DIR and QL_DIR variables to the system environment, e.g.
    set ORE_DIR=C:\dev\openxva
-   set QL_DIR=%ORE_DIR%\QuantLib
-
+   
 5) Run the following python scripts to install ORE Analytics libraries:
    cd Python
    python setup.py wrap
@@ -61,5 +60,8 @@ windows
    cd examples
    python ore.py
    python swap.py
+   python market.py
    python commodityforward.py
+   python conventions.py
+   python portfolio.py
 
