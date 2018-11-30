@@ -238,7 +238,7 @@ classifiers = [
 ]
 
 setup(name             = "QuantExt-Python",
-      version          = "1.13",
+      version          = "1.8.3.1",
       description      = "Python bindings for the QuantExt library",
       long_description = """
 QuantExt (http://opensourcerisk.org/) is a C++ library for financial quantitative
