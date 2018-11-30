@@ -257,7 +257,7 @@ classifiers = [
 ]
 
 setup(name             = "OREPlus-Python",
-      version          = "@PACKAGE_VERSION@",
+      version          = "1.8.3.1",
       description      = "Python bindings for the OREPlus library",
       long_description = """
 OREPlus (http://opensourcerisk.org/) is a C++ library for financial quantitative
