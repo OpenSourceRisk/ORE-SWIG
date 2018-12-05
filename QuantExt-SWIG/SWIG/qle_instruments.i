@@ -155,8 +155,8 @@ class DepositEnginePtr : public boost::shared_ptr<PricingEngine> {
     %extend {
         DepositEnginePtr(const QuantLib::Handle<QuantLib::YieldTermStructure>& discountCurve = QuantLib::Handle<QuantLib::YieldTermStructure>(),
                          boost::optional<bool> includeSettlementDateFlows = boost::none,
-                         QuantLib::Date& settlementDate = QuantLib::Date(),
-                         QuantLib::Date& npvDate = QuantLib::Date()) {
+                         QuantLib::Date settlementDate = QuantLib::Date(),
+                         QuantLib::Date npvDate = QuantLib::Date()) {
             return new DepositEnginePtr(
                 new DepositEngine(discountCurve,
                                   includeSettlementDateFlows,
