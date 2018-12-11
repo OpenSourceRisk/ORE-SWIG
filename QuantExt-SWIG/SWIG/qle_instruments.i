@@ -11,11 +11,13 @@
 %include cashflows.i
 %include timebasket.i
 %include indexes.i
-
+%include qle_ccyswap.i
+%include qle_indexes.i
 %include qle_termstructures.i
 
 %{
 using QuantExt::CrossCcyBasisSwap;
+using QuantExt::CrossCcyBasisMtMResetSwap;
 using QuantExt::CommodityForward;
 using QuantExt::DiscountingCommodityForwardEngine;
 using QuantExt::FxForward;
@@ -28,6 +30,7 @@ using QuantExt::DepositEngine;
 using QuantExt::DiscountingSwapEngineMultiCurve;
 
 typedef boost::shared_ptr<Instrument> CrossCcyBasisSwapPtr;
+typedef boost::shared_ptr<Instrument> CrossCcyBasisMtMResetSwapPtr;
 typedef boost::shared_ptr<Instrument> CommodityForwardPtr;
 typedef boost::shared_ptr<Instrument> PaymentPtr;
 typedef boost::shared_ptr<PricingEngine> DiscountingCommodityForwardEnginePtr;
@@ -42,7 +45,7 @@ typedef boost::shared_ptr<PricingEngine> DiscountingSwapEngineMultiCurvePtr;
 %}
 
 %rename(CrossCcyBasisSwap) CrossCcyBasisSwapPtr;
-class CrossCcyBasisSwapPtr : public boost::shared_ptr<Instrument> {
+class CrossCcyBasisSwapPtr : public CrossCcySwapPtr {
   public:
     %extend {
         CrossCcyBasisSwapPtr(QuantLib::Real payNominal,
@@ -98,6 +101,47 @@ class CrossCcyBasisSwapPtr : public boost::shared_ptr<Instrument> {
         }
         QuantLib::Spread fairRecSpread() const { 
             return boost::dynamic_pointer_cast<CrossCcyBasisSwap>(*self)->fairRecSpread(); 
+        }
+    }
+};
+
+
+%rename(CrossCcyBasisMtMResetSwap) CrossCcyBasisMtMResetSwapPtr;
+class CrossCcyBasisMtMResetSwapPtr : public CrossCcySwapPtr {
+  public:
+    %extend {
+        CrossCcyBasisMtMResetSwapPtr(Real fgnNominal, 
+                                     const Currency& fgnCurrency, 
+                                     const Schedule& fgnSchedule,
+                                     const IborIndexPtr& fgnIndex, 
+                                     Spread fgnSpread,
+                                     const Currency& domCurrency, 
+                                     const Schedule& domSchedule,
+                                     const IborIndexPtr& domIndex, 
+                                     Spread domSpread, 
+                                     const FxIndexPtr& fxIdx, 
+                                     bool invertFxIdx = false) {
+            boost::shared_ptr<IborIndex> fIndex = boost::dynamic_pointer_cast<IborIndex>(fgnIndex);
+            boost::shared_ptr<IborIndex> dIndex = boost::dynamic_pointer_cast<IborIndex>(domIndex);
+            boost::shared_ptr<FxIndex> fxIndex = boost::dynamic_pointer_cast<FxIndex>(fxIdx);
+            return new CrossCcyBasisMtMResetSwapPtr(
+                new CrossCcyBasisMtMResetSwap(fgnNominal,
+                                              fgnCurrency,
+                                              fgnSchedule,
+                                              fIndex,
+                                              fgnSpread,
+                                              domCurrency,
+                                              domSchedule,
+                                              dIndex,
+                                              domSpread,
+                                              fxIndex, 
+                                              invertFxIdx));
+        }
+        Spread fairFgnSpread() const { 
+            return boost::dynamic_pointer_cast<CrossCcyBasisMtMResetSwap>(*self)->fairFgnSpread(); 
+        }
+        Spread fairDomSpread() const { 
+            return boost::dynamic_pointer_cast<CrossCcyBasisMtMResetSwap>(*self)->fairDomSpread(); 
         }
     }
 };

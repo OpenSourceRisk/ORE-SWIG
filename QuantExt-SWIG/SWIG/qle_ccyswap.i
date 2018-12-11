@@ -19,7 +19,7 @@ typedef boost::shared_ptr<Instrument> CrossCcySwapPtr;
 %}
 
 %rename(CrossCcySwap) CrossCcySwapPtr;
-class CrossCcySwapPtr : public boost::shared_ptr<Instrument> {
+class CrossCcySwapPtr : public SwapPtr {
 public:
     %extend {
 	CrossCcySwapPtr(const QuantLib::Leg& firstLeg,
