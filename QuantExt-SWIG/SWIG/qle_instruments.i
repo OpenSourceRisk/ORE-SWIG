@@ -120,7 +120,8 @@ class CrossCcyBasisMtMResetSwapPtr : public CrossCcySwapPtr {
                                      const IborIndexPtr& domIndex, 
                                      Spread domSpread, 
                                      const FxIndexPtr& fxIdx, 
-                                     bool invertFxIdx = false) {
+                                     bool invertFxIdx = false,
+                                     bool receiveDom = true) {
             boost::shared_ptr<IborIndex> fIndex = boost::dynamic_pointer_cast<IborIndex>(fgnIndex);
             boost::shared_ptr<IborIndex> dIndex = boost::dynamic_pointer_cast<IborIndex>(domIndex);
             boost::shared_ptr<FxIndex> fxIndex = boost::dynamic_pointer_cast<FxIndex>(fxIdx);
@@ -135,7 +136,8 @@ class CrossCcyBasisMtMResetSwapPtr : public CrossCcySwapPtr {
                                               dIndex,
                                               domSpread,
                                               fxIndex, 
-                                              invertFxIdx));
+                                              invertFxIdx,
+                                              receiveDom));
         }
         Spread fairFgnSpread() const { 
             return boost::dynamic_pointer_cast<CrossCcyBasisMtMResetSwap>(*self)->fairFgnSpread(); 
