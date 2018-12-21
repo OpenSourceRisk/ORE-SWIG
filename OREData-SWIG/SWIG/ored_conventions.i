@@ -71,6 +71,7 @@ class Conventions {
     void clear();
     void add(const boost::shared_ptr<Convention>& convention);
     void fromXMLString(const std::string& xmlString);
+    void fromFile(const std::string& xmlFileName);
 };
 
 %ignore Convention;
