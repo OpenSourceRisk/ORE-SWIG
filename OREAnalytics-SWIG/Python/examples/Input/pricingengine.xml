@@ -75,17 +75,6 @@
       <Parameter name="Correlation">1.0</Parameter>
     </EngineParameters>
   </Product>
-  <Product type="CapFlooredInterpolatedIborLeg">
-    <Model>BlackOrBachelier</Model>
-    <ModelParameters/>
-    <Engine>BlackInterpolatedIborCouponPricer</Engine>
-    <EngineParameters>
-      <!-- Black76 or BivariateLognormal -->
-      <Parameter name="TimingAdjustment">BivariateLognormal</Parameter>
-      <!-- Correlation Parameter for BivariateLognormal -->
-      <Parameter name="Correlation">1.0</Parameter>
-    </EngineParameters>
-  </Product>
   <Product type="EquityForward">
     <Model>DiscountedCashflows</Model>
     <ModelParameters/>
