@@ -14,6 +14,7 @@
 
 %{
 using QuantExt::CrossCcyBasisSwapHelper;
+using QuantExt::CrossCcyBasisMtMResetSwapHelper;
 using QuantExt::TenorBasisSwapHelper;
 using QuantExt::SubPeriodsSwapHelper;
 using QuantExt::OICCBSHelper;
@@ -23,6 +24,7 @@ using QuantExt::ImmFraRateHelper;
 using QuantExt::CrossCcyFixFloatSwapHelper;
 
 typedef boost::shared_ptr<RateHelper> CrossCcyBasisSwapHelperPtr;
+typedef boost::shared_ptr<RateHelper> CrossCcyBasisMtMResetSwapHelperPtr;
 typedef boost::shared_ptr<RateHelper> TenorBasisSwapHelperPtr;
 typedef boost::shared_ptr<RateHelper> SubPeriodsSwapHelperPtr;
 typedef boost::shared_ptr<RateHelper> OICCBSHelperPtr;
@@ -31,6 +33,52 @@ typedef boost::shared_ptr<RateHelper> BasisTwoSwapHelperPtr;
 typedef boost::shared_ptr<RateHelper> ImmFraRateHelperPtr;
 typedef boost::shared_ptr<RateHelper> CrossCcyFixFloatSwapHelperPtr;
 %}
+
+%rename(CrossCcyBasisMtMResetSwapHelper) CrossCcyBasisMtMResetSwapHelperPtr;
+class CrossCcyBasisMtMResetSwapHelperPtr : public boost::shared_ptr<RateHelper> {
+  public:
+    %extend {
+    CrossCcyBasisMtMResetSwapHelperPtr(const Handle<Quote>& spreadQuote, 
+                                       const Handle<Quote>& spotFX, 
+                                       Natural settlementDays,
+                                       const Calendar& settlementCalendar, 
+                                       const Period& swapTenor,
+                                       BusinessDayConvention rollConvention,
+                                       const IborIndexPtr& foreignCcyIndex,
+                                       const IborIndexPtr& domesticCcyIndex,
+                                       const Handle<YieldTermStructure>& foreignCcyDiscountCurve,
+                                       const Handle<YieldTermStructure>& domesticCcyDiscountCurve,
+                                       const Handle<YieldTermStructure>& foreignCcyFxFwdRateCurve 
+                                            = Handle<YieldTermStructure>(),
+                                       const Handle<YieldTermStructure>& domesticCcyFxFwdRateCurve 
+                                            = Handle<YieldTermStructure>(),
+                                       bool eom = false,
+                                       bool spreadOnForeignCcy = true,
+                                       bool invertFxIndex = false) {
+        boost::shared_ptr<IborIndex> foreignIndex = boost::dynamic_pointer_cast<IborIndex>(foreignCcyIndex);
+        boost::shared_ptr<IborIndex> domesticIndex = boost::dynamic_pointer_cast<IborIndex>(domesticCcyIndex);
+        return new CrossCcyBasisSwapHelperPtr(
+            new CrossCcyBasisMtMResetSwapHelper(spreadQuote, 
+                                                spotFX, 
+                                                settlementDays, 
+                                                settlementCalendar, 
+                                                swapTenor, 
+                                                rollConvention, 
+                                                foreignIndex, 
+                                                domesticIndex, 
+                                                foreignCcyDiscountCurve,
+                                                domesticCcyDiscountCurve,
+                                                foreignCcyFxFwdRateCurve,
+                                                domesticCcyFxFwdRateCurve,
+                                                eom,
+                                                spreadOnForeignCcy,
+                                                invertFxIndex));
+    }
+    CrossCcyBasisMtMResetSwapPtr swap() {
+        return boost::dynamic_pointer_cast<CrossCcyBasisMtMResetSwapHelper>(*self)->swap();
+    }
+  }
+};
 
 %rename(CrossCcyBasisSwapHelper) CrossCcyBasisSwapHelperPtr;
 class CrossCcyBasisSwapHelperPtr : public boost::shared_ptr<RateHelper> {

@@ -12,8 +12,7 @@
 %include cashflows.i
 %include timebasket.i
 %include indexes.i
-
-//%include qle_averageois.i
+%include qle_averageois.i
 
 %{
 using QuantExt::AverageOISRateHelper;
@@ -60,7 +59,7 @@ public:
             return boost::dynamic_pointer_cast<AverageOISRateHelper>(*self)->onSpread();
         }
         
-        boost::shared_ptr<AverageOIS> averageOIS() const {
+        AverageOISPtr averageOIS() const {
             return boost::dynamic_pointer_cast<AverageOISRateHelper>(*self)->averageOIS();
         }
         
