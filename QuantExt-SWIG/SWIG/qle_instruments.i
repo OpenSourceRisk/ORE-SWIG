@@ -110,38 +110,40 @@ class CrossCcyBasisSwapPtr : public CrossCcySwapPtr {
 class CrossCcyBasisMtMResetSwapPtr : public CrossCcySwapPtr {
   public:
     %extend {
-        CrossCcyBasisMtMResetSwapPtr(Real fgnNominal, 
-                                     const Currency& fgnCurrency, 
-                                     const Schedule& fgnSchedule,
-                                     const IborIndexPtr& fgnIndex, 
-                                     Spread fgnSpread,
-                                     const Currency& domCurrency, 
-                                     const Schedule& domSchedule,
-                                     const IborIndexPtr& domIndex, 
-                                     Spread domSpread, 
+        CrossCcyBasisMtMResetSwapPtr(Real foreignNominal, 
+                                     const Currency& foreignCurrency, 
+                                     const Schedule& foreignSchedule,
+                                     const IborIndexPtr& foreignIndex, 
+                                     Spread foreignSpread,
+                                     const Currency& domesticCurrency, 
+                                     const Schedule& domesticSchedule,
+                                     const IborIndexPtr& domesticIndex, 
+                                     Spread domesticSpread, 
                                      const FxIndexPtr& fxIdx, 
-                                     bool invertFxIdx = false) {
-            boost::shared_ptr<IborIndex> fIndex = boost::dynamic_pointer_cast<IborIndex>(fgnIndex);
-            boost::shared_ptr<IborIndex> dIndex = boost::dynamic_pointer_cast<IborIndex>(domIndex);
+                                     bool invertFxIdx = false,
+                                     bool receiveDomestic = true) {
+            boost::shared_ptr<IborIndex> fIndex = boost::dynamic_pointer_cast<IborIndex>(foreignIndex);
+            boost::shared_ptr<IborIndex> dIndex = boost::dynamic_pointer_cast<IborIndex>(domesticIndex);
             boost::shared_ptr<FxIndex> fxIndex = boost::dynamic_pointer_cast<FxIndex>(fxIdx);
             return new CrossCcyBasisMtMResetSwapPtr(
-                new CrossCcyBasisMtMResetSwap(fgnNominal,
-                                              fgnCurrency,
-                                              fgnSchedule,
+                new CrossCcyBasisMtMResetSwap(foreignNominal,
+                                              foreignCurrency,
+                                              foreignSchedule,
                                               fIndex,
-                                              fgnSpread,
-                                              domCurrency,
-                                              domSchedule,
+                                              foreignSpread,
+                                              domesticCurrency,
+                                              domesticSchedule,
                                               dIndex,
-                                              domSpread,
+                                              domesticSpread,
                                               fxIndex, 
-                                              invertFxIdx));
+                                              invertFxIdx,
+                                              receiveDomestic));
         }
-        Spread fairFgnSpread() const { 
-            return boost::dynamic_pointer_cast<CrossCcyBasisMtMResetSwap>(*self)->fairFgnSpread(); 
+        Spread fairForeignSpread() const { 
+            return boost::dynamic_pointer_cast<CrossCcyBasisMtMResetSwap>(*self)->fairForeignSpread(); 
         }
-        Spread fairDomSpread() const { 
-            return boost::dynamic_pointer_cast<CrossCcyBasisMtMResetSwap>(*self)->fairDomSpread(); 
+        Spread fairDomesticSpread() const { 
+            return boost::dynamic_pointer_cast<CrossCcyBasisMtMResetSwap>(*self)->fairDomesticSpread(); 
         }
     }
 };

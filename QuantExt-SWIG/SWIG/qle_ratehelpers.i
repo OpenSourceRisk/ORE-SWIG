@@ -44,19 +44,19 @@ class CrossCcyBasisMtMResetSwapHelperPtr : public boost::shared_ptr<RateHelper> 
                                        const Calendar& settlementCalendar, 
                                        const Period& swapTenor,
                                        BusinessDayConvention rollConvention,
-                                       const IborIndexPtr& fgnCcyIndex,
-                                       const IborIndexPtr& domCcyIndex,
-                                       const Handle<YieldTermStructure>& fgnCcyDiscountCurve,
-                                       const Handle<YieldTermStructure>& domCcyDiscountCurve,
-                                       const Handle<YieldTermStructure>& fgnCcyFxFwdRateCurve 
+                                       const IborIndexPtr& foreignCcyIndex,
+                                       const IborIndexPtr& domesticCcyIndex,
+                                       const Handle<YieldTermStructure>& foreignCcyDiscountCurve,
+                                       const Handle<YieldTermStructure>& domesticCcyDiscountCurve,
+                                       const Handle<YieldTermStructure>& foreignCcyFxFwdRateCurve 
                                             = Handle<YieldTermStructure>(),
-                                       const Handle<YieldTermStructure>& domCcyFxFwdRateCurve 
+                                       const Handle<YieldTermStructure>& domesticCcyFxFwdRateCurve 
                                             = Handle<YieldTermStructure>(),
                                        bool eom = false,
-                                       bool spreadOnFgnCcy = true,
+                                       bool spreadOnForeignCcy = true,
                                        bool invertFxIndex = false) {
-        boost::shared_ptr<IborIndex> fgnIndex = boost::dynamic_pointer_cast<IborIndex>(fgnCcyIndex);
-        boost::shared_ptr<IborIndex> domIndex = boost::dynamic_pointer_cast<IborIndex>(domCcyIndex);
+        boost::shared_ptr<IborIndex> foreignIndex = boost::dynamic_pointer_cast<IborIndex>(foreignCcyIndex);
+        boost::shared_ptr<IborIndex> domesticIndex = boost::dynamic_pointer_cast<IborIndex>(domesticCcyIndex);
         return new CrossCcyBasisSwapHelperPtr(
             new CrossCcyBasisMtMResetSwapHelper(spreadQuote, 
                                                 spotFX, 
@@ -64,14 +64,14 @@ class CrossCcyBasisMtMResetSwapHelperPtr : public boost::shared_ptr<RateHelper> 
                                                 settlementCalendar, 
                                                 swapTenor, 
                                                 rollConvention, 
-                                                fgnIndex, 
-                                                domIndex, 
-                                                fgnCcyDiscountCurve,
-                                                domCcyDiscountCurve,
-                                                fgnCcyFxFwdRateCurve,
-                                                domCcyFxFwdRateCurve,
+                                                foreignIndex, 
+                                                domesticIndex, 
+                                                foreignCcyDiscountCurve,
+                                                domesticCcyDiscountCurve,
+                                                foreignCcyFxFwdRateCurve,
+                                                domesticCcyFxFwdRateCurve,
                                                 eom,
-                                                spreadOnFgnCcy,
+                                                spreadOnForeignCcy,
                                                 invertFxIndex));
     }
     CrossCcyBasisMtMResetSwapPtr swap() {
