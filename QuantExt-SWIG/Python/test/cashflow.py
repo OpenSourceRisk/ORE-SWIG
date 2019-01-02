@@ -69,8 +69,8 @@ class FloatingRateFXLinkedNotionalCouponTest(unittest.TestCase):
         self.settlementDays=2
         self.currency=GBPCurrency()
         self.floatIndex=USDLibor(self.tenor,self.sourceYts)
-
-        self.floatingratefxlinkednotionalcoupon=FloatingRateFXLinkedNotionalCoupon(self.foreignAmount,self.fxFixingDate,self.fxindex,self.invertFxIndex,self.paymentDate,self.startDate,self.endDate,self.fixingDays,self.floatIndex,self.gearing,self.spread,self.refPeriodStart,self.refPeriodEnd,self.dayCounter,self.isInArrears)
+        self.undCpn = IborCoupon(self.paymentDate,self.foreignAmount, self.startDate,self.endDate,self.fixingDays,self.floatIndex,self.gearing,self.spread,self.refPeriodStart,self.refPeriodEnd,self.dayCounter)
+        self.floatingratefxlinkednotionalcoupon=FloatingRateFXLinkedNotionalCoupon(self.fxFixingDate,self.foreignAmount,self.fxindex,self.invertFxIndex,self.undCpn)
         
     def testSimpleInspectors(self):
         """ Test Floating Rate FX Linked Notional Coupon inspectors. """
