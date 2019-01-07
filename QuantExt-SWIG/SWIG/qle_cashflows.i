@@ -45,11 +45,11 @@ public:
         QuantLib::Date fxFixingDate() const {
             return boost::dynamic_pointer_cast<FXLinkedCashFlow>(*self)->fxFixingDate();
         }
-        const FxIndexPtr index() const {
-            return boost::dynamic_pointer_cast<FXLinkedCashFlow>(*self)->index();
+        const FxIndexPtr fxIndex() const {
+            return boost::dynamic_pointer_cast<FXLinkedCashFlow>(*self)->fxIndex();
         }
-        bool invertIndex() const {
-            return boost::dynamic_pointer_cast<FXLinkedCashFlow>(*self)->invertIndex();
+        bool invertFxIndex() const {
+            return boost::dynamic_pointer_cast<FXLinkedCashFlow>(*self)->invertFxIndex();
         }
         QuantLib::Real fxRate() const {
             return boost::dynamic_pointer_cast<FXLinkedCashFlow>(*self)->fxRate();
@@ -61,42 +61,32 @@ public:
 class FloatingRateFXLinkedNotionalCouponPtr : public FloatingRateCouponPtr {
 public:
     %extend{
-        FloatingRateFXLinkedNotionalCouponPtr(QuantLib::Real foreignAmount, 
-                                              const QuantLib::Date& fxFixingDate, 
+        FloatingRateFXLinkedNotionalCouponPtr(const QuantLib::Date& fxFixingDate,
+                                              QuantLib::Real foreignAmount,
                                               FxIndexPtr fxIndex,
                                               bool invertFxIndex, 
-                                              const QuantLib::Date& paymentDate, 
-                                              const QuantLib::Date& startDate,
-                                              const QuantLib::Date& endDate, 
-                                              QuantLib::Natural fixingDays,
-                                              const InterestRateIndexPtr& index, 
-                                              QuantLib::Real gearing = 1.0,
-                                              QuantLib::Spread spread = 0.0, 
-                                              const QuantLib::Date& refPeriodStart = QuantLib::Date(),
-                                              const QuantLib::Date& refPeriodEnd = QuantLib::Date(), 
-                                              const QuantLib::DayCounter& dayCounter = QuantLib::DayCounter(),
-                                              bool isInArrears = false) {
-            boost::shared_ptr<FxIndex> FXIndex = boost::dynamic_pointer_cast<FxIndex>(fxIndex);
-            boost::shared_ptr<InterestRateIndex> floatIndex = boost::dynamic_pointer_cast<InterestRateIndex>(index);
+                                              const FloatingRateCouponPtr underlying) {
+            boost::shared_ptr<FxIndex> fxidx = boost::dynamic_pointer_cast<FxIndex>(fxIndex);
+            boost::shared_ptr<FloatingRateCoupon> floatCoupon = boost::dynamic_pointer_cast<FloatingRateCoupon>(underlying);
             return new FloatingRateFXLinkedNotionalCouponPtr(
-                new FloatingRateFXLinkedNotionalCoupon(foreignAmount,
-                                                       fxFixingDate,
-                                                       FXIndex,
+                new FloatingRateFXLinkedNotionalCoupon(fxFixingDate,
+                                                       foreignAmount,
+                                                       fxidx,
                                                        invertFxIndex,
-                                                       paymentDate,
-                                                       startDate,
-                                                       endDate,
-                                                       fixingDays,
-                                                       floatIndex,
-                                                       gearing,
-                                                       spread,
-                                                       refPeriodStart,
-                                                       refPeriodEnd,
-                                                       dayCounter,
-                                                       isInArrears));
+                                                       floatCoupon));
         }
-        const FXLinkedCashFlow& fxLinkedCashFlow() {
-            return boost::dynamic_pointer_cast<FloatingRateFXLinkedNotionalCoupon>(*self)->fxLinkedCashFlow();
+        
+        Real nominal() const { 
+            return boost::dynamic_pointer_cast<FloatingRateFXLinkedNotionalCoupon>(*self)->nominal(); 
+        }
+        Rate rate() const { 
+            return boost::dynamic_pointer_cast<FloatingRateFXLinkedNotionalCoupon>(*self)->rate(); 
+        }
+        Rate indexFixing() const { 
+            return boost::dynamic_pointer_cast<FloatingRateFXLinkedNotionalCoupon>(*self)->indexFixing(); 
+        }
+        void setPricer(const boost::shared_ptr<FloatingRateCouponPricer>& p) {
+            return boost::dynamic_pointer_cast<FloatingRateFXLinkedNotionalCoupon>(*self)->setPricer(p);
         }
     }
 };
