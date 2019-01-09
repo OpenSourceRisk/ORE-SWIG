@@ -56,12 +56,56 @@ ORE-SWIG/OREAnalytics-SWIG/Python/Examples and run
 
 	python ore.py
 
+You can also try the IPython example in the same directory: Launch
+
+	jupyter notebook
+
+wait for your browser to open, select ore.ipy from the list of files
+and then run all cells.
+
 To try a simple OREAnalytics Java example, change to
 ORE-SWIG/OREAnalytics-SWIG/Java/Examples and run 
 
 	java -Djava.library.path=../../../build/OREAnalytics-SWIG/Java \
 		-jar ../../../build/OREAnalytics-SWIG/Java/ORERunner.jar \
 		Input/ore.xml
+
+
+Python Bindings on Windows 
+--------------------------
+
+On Windows you can also use the following steps to build the Python
+bindings using the provided setup.py script:
+
+	1. Include SWIG path to the Path environment variable, e.g.
+	   set Path=%Path%;C:\swigwin-3.0.12
+   
+	2. Add PYTHON_INCLUDE and PYTHON_LIB variables to the system environment, e.g. 
+	   set PYTHON_INCLUDE="C:\Users\Name\AppData\Local\Continuum\anaconda3\include"
+	   set PYTHON_LIB="C:\Users\Name\AppData\Local\Continuum\anaconda3\libs"
+   
+	3. Add BOOST_ROOT and BOOST_LIBRARYDIR variables to the system environment, e.g. 
+	   set BOOST_ROOT=C:\repos\boost_1_65_1
+	   set BOOST_LIBRARYDIR=C:\repos\boost_1_65_1\lib\x64\lib\lib
+   
+	4. Add ORE_DIR and QL_DIR variables to the system environment, e.g.
+	   set ORE_DIR=C:\dev\ORE
+   
+	5. Change to directory OREAnalytics-SWIG/Python and run the following
+	   python scripts to build and install ORE Analytics Python module:
+	   cd Python
+	   python setup.py wrap
+	   python setup.py build
+	   python setup.py install
+
+	6. Try examples (all work):
+	   cd Examples
+	   python ore.py
+	   python swap.py
+	   python market.py
+	   python commodityforward.py
+	   python conventions.py
+	   python portfolio.py
 
 Contributing
 ------------
