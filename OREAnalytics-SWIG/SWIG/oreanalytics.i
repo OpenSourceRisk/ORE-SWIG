@@ -4,6 +4,13 @@
  All rights reserved.
 */
 
+// UNCOMMENT THE BELOW IF YOU WISH TO BUILD THE C++ CODE IN DEBUG MODE
+//%begin %{
+//#ifdef _MSC_VER
+//#define SWIG_PYTHON_INTERPRETER_NO_DEBUG
+//#endif
+//%}
+
 #if defined(SWIGRUBY)
 %module OREAnalyticsc
 #elif defined(SWIGCSHARP)

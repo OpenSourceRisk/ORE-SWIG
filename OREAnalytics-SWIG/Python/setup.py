@@ -174,9 +174,9 @@ class my_build_ext(build_ext):
 
         elif compiler == 'unix':
             ql_compile_args = \
-                os.popen('ore-config --cflags').read()[:-1].split()
+                os.popen('oreanalytics-config --cflags').read()[:-1].split()
             ql_link_args = \
-                os.popen('ore-config --libs').read()[:-1].split()
+                os.popen('oreplus-config --libs').read()[:-1].split()
 
             self.define += [ (arg[2:],None) for arg in ql_compile_args
                              if arg.startswith('-D') ]
@@ -249,7 +249,7 @@ classifiers = [
 ]
 
 setup(name             = "OREAnalytics-Python",
-      version          = "1.14",
+      version          = "1.8.3.2",
       description      = "Python bindings for the OREAnalytics library",
       long_description = """
 OREAnalytics (http://opensourcerisk.org/) is a C++ library for financial quantitative

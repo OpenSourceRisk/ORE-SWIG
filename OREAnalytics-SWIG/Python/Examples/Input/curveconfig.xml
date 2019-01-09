@@ -4,10 +4,13 @@
     <FXVolatility>
       <CurveId>EURUSD</CurveId>
       <CurveDescription/>
-      <Dimension>ATM</Dimension>
+      <Dimension>Smile</Dimension>
       <Expiries>
         1M,3M,6M,1Y,2Y,3Y,10Y
       </Expiries>
+      <FXSpotID>FX/EUR/USD</FXSpotID>
+      <FXForeignCurveID>Yield/USD/USD1D</FXForeignCurveID>
+      <FXDomesticCurveID>Yield/EUR/EUR1D</FXDomesticCurveID>
     </FXVolatility>
     <FXVolatility>
       <CurveId>EURGBP</CurveId>
@@ -16,6 +19,7 @@
       <Expiries>
         1M,3M,6M,1Y,2Y,5Y,10Y
       </Expiries>
+      <FXSpotID>FX/EUR/GBP</FXSpotID>
     </FXVolatility>
     <FXVolatility>
       <CurveId>EURCHF</CurveId>
@@ -24,6 +28,7 @@
       <Expiries>
         1M,3M,6M,1Y,2Y,3Y,4Y,5Y,10Y
       </Expiries>
+      <FXSpotID>FX/EUR/CHF</FXSpotID>
     </FXVolatility>
     <FXVolatility>
       <CurveId>EURJPY</CurveId>
@@ -32,6 +37,7 @@
       <Expiries>
         1M,3M,6M,1Y,2Y,3Y,4Y,5Y,10Y
       </Expiries>
+      <FXSpotID>FX/EUR/JPY</FXSpotID>
     </FXVolatility>
     <FXVolatility>
       <CurveId>GBPUSD</CurveId>
@@ -40,6 +46,7 @@
       <Expiries>
         1M,3M,6M,1Y,2Y,3Y,4Y,5Y,10Y
       </Expiries>
+      <FXSpotID>FX/GBP/USD</FXSpotID>
     </FXVolatility>
   </FXVolatilities>
   <SwaptionVolatilities>
@@ -1172,21 +1179,6 @@
           <Conventions>EUR-1M-SWAP-CONVENTIONS</Conventions>
           <ProjectionCurve>EUR1M</ProjectionCurve>
         </Simple>
-      </Segments>
-    </YieldCurve>
-    <YieldCurve>
-      <CurveId>EUR2M</CurveId>
-      <CurveDescription>Euribor2M forwarding curve, interpolated from 1M and 3M</CurveDescription>
-      <Currency>EUR</Currency>
-      <DiscountCurve>EUR1D</DiscountCurve>
-      <Segments>
-        <WeightedAverage>
-          <Type>Weighted Average</Type>
-          <ReferenceCurve1>EUR1M</ReferenceCurve1>
-          <ReferenceCurve2>EUR3M</ReferenceCurve2>
-          <Weight1>0.5</Weight1>
-          <Weight2>0.5</Weight2>
-        </WeightedAverage>
       </Segments>
     </YieldCurve>
     <YieldCurve>
