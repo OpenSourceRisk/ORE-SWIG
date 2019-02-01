@@ -43,4 +43,3 @@ print("End of printing log message.")
 # FIFO
 assert msg_w in msg_w_buf
 assert msg_e in msg_e_buf
-

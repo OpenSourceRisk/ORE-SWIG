@@ -115,7 +115,8 @@ public:
 
 %rename(MLOG) MLOGSWIG;
 %inline %{
-static void MLOGSWIG(unsigned mask, const std::string& text, const char* filename="", int lineNo=0) {
+static void MLOGSWIG(unsigned mask, const std::string& text, const char* filename, int lineNo) {
+    QL_REQUIRE(lineNo > 0, "lineNo must be greater than 0");
     if (ore::data::Log::instance().enabled() && ore::data::Log::instance().filter(mask)) {
         ore::data::Log::instance().header(mask, filename, lineNo);
         ore::data::Log::instance().logStream() << text;
