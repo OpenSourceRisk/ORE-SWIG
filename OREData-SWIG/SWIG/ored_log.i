@@ -88,17 +88,34 @@ public:
   %extend {
         FileLoggerPtr(const std::string& filename) {
             return new FileLoggerPtr(new FileLogger(filename));
-    }
+        }
+  }
+};
+
+%{
+using ore::data::BufferLogger;
+typedef boost::shared_ptr<Logger> BufferLoggerPtr;
+%}
+
+%rename(BufferLogger) BufferLoggerPtr;
+class BufferLoggerPtr : public boost::shared_ptr<Logger> {
+public:
+  %extend {
+        BufferLoggerPtr(unsigned minLevel = ORE_DATA) {
+            return new BufferLoggerPtr(new BufferLogger(minLevel));
+        }
+        bool hasNext() {
+            return boost::dynamic_pointer_cast<BufferLogger>(*self)->hasNext();
+        }
+        std::string next() {
+            return boost::dynamic_pointer_cast<BufferLogger>(*self)->next();
+        }
   }
 };
 
 %rename(MLOG) MLOGSWIG;
 %inline %{
-static void MLOGSWIG(unsigned mask, const std::string& text, const char* filename=0, int lineNo=0) {
-    if (!filename) {
-        MLOG(mask, text);
-        return;
-    }
+static void MLOGSWIG(unsigned mask, const std::string& text, const char* filename="", int lineNo=0) {
     if (ore::data::Log::instance().enabled() && ore::data::Log::instance().filter(mask)) {
         ore::data::Log::instance().header(mask, filename, lineNo);
         ore::data::Log::instance().logStream() << text;
