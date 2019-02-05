@@ -32,5 +32,7 @@
 %include ored_parsers.i
 %include ored_market.i
 %include ored_portfolio.i
+%include ored_loader.i
+%include ored_marketdatum.i
 
 #endif
