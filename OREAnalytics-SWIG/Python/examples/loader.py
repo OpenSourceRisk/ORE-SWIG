@@ -9,6 +9,11 @@ date = Date(5, February, 2016)
 name = "CC_BASIS_SWAP/BASIS_SPREAD/USD/3M/CHF/3M/4Y"
 value = -0.008303
 
+#20150202 EUR-EURIBOR-1W -0.00022
+fix_date = Date(2, February, 2015)
+fix_name = "EUR-EURIBOR-1W"
+fix_value = -0.00022
+
 def check_data(loader):
     assert loader.has(name, date)
 
@@ -32,6 +37,12 @@ def check_data(loader):
     assert quote.asofDate() == quote2.asofDate()
     assert quote.instrumentType() == quote2.instrumentType()
     assert quote.quoteType() == quote2.quoteType()
+
+    fixing = loader.loadFixings()[3]
+    assert fixing.date == fix_date
+    assert fixing.name == fix_name
+    assert fixing.fixing == fix_value
+    
 
 csv_loader = CSVLoader("Input/market_20160205.txt", "Input/fixings_20160205.txt", True)
 check_data(csv_loader)
@@ -58,5 +69,8 @@ im_loader.add(date, "CC_BASIS_SWAP/BASIS_SPREAD/USD/3M/CHF/3M/2Y", -0.006647)
 im_loader.add(date, "CC_BASIS_SWAP/BASIS_SPREAD/USD/3M/CHF/3M/3Y", -0.007387)
 im_loader.add(date, "CC_BASIS_SWAP/BASIS_SPREAD/USD/3M/CHF/3M/4Y", -0.008303)
 
+im_loader.addFixing(fix_date, "FX-ECB-EUR-USD", 1.0919)
+im_loader.addFixing(fix_date, "EUR-EONIA", -0.00024)
+im_loader.addFixing(fix_date, "EUR-EURIBOR-1M", 3e-05)
+im_loader.addFixing(fix_date, "EUR-EURIBOR-1W", -0.00022)
 check_data(im_loader)
-

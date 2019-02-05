@@ -21,10 +21,18 @@ public:
     const boost::shared_ptr<MarketDatum>& get(const std::string& name, const QuantLib::Date&) const;
     bool has(const std::string& name, const QuantLib::Date& d) const;
     boost::shared_ptr<MarketDatum> get(const std::pair<std::string, bool>& name, const QuantLib::Date& d) const;
-    //const std::vector<Fixing>& loadFixings() const;
-    //const std::vector<Fixing>& loadDividends() const;
+    const std::vector<Fixing>& loadFixings() const;
+    const std::vector<Fixing>& loadDividends() const;
 };
 %template(Loader) boost::shared_ptr<Loader>;
+%template(StringBoolPair) std::pair<std::string, bool>;
+%template(MarketDatumVector) std::vector<boost::shared_ptr<MarketDatum>>;
+
+// Fixing class has no default ctor, excluding some features of std::vector
+%ignore std::vector<Fixing>::pop;
+%ignore std::vector<Fixing>::resize;
+%ignore std::vector<Fixing>::vector(size_type);
+%template(FixingVector) std::vector<Fixing>;
 
 %{
 using ore::data::CSVLoader;
@@ -67,16 +75,12 @@ public:
   }
 };
 
-/*struct Fixing {
+struct Fixing {
     QuantLib::Date date;
     std::string name;
     QuantLib::Real fixing;
     Fixing(const QuantLib::Date& d, const std::string& s, const QuantLib::Real f);
-};*/
-
-%template(StringBoolPair) std::pair<std::string, bool>;
-%template(MarketDatumVector) std::vector<boost::shared_ptr<MarketDatum>>;
-//%template(FixingVector) std::vector<ore::data::Fixing>;
+};
 
 
 #endif
