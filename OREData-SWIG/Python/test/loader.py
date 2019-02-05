@@ -117,6 +117,7 @@ class InMemoryLoaderTest(LoaderTest):
 
         
 if __name__ == '__main__':
+    import OREData
     print('testing OREData ' + OREData.__version__)
     suite = unittest.TestSuite()
     suite.addTest(unittest.makeSuite(CSVLoaderTest,'test'))

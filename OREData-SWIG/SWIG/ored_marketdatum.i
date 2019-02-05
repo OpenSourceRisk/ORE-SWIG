@@ -51,6 +51,7 @@ public:
         INDEX_CDS_OPTION,
         COMMODITY_SPOT,
         COMMODITY_FWD,
+        CORRELATION,
         COMMODITY_OPTION,
         CPR
     };
@@ -112,6 +113,7 @@ public:
     static const MarketDatum::InstrumentType InstrumentType_INDEX_CDS_OPTION = MarketDatum::InstrumentType::INDEX_CDS_OPTION;
     static const MarketDatum::InstrumentType InstrumentType_COMMODITY_SPOT = MarketDatum::InstrumentType::COMMODITY_SPOT;
     static const MarketDatum::InstrumentType InstrumentType_COMMODITY_FWD = MarketDatum::InstrumentType::COMMODITY_FWD;
+    static const MarketDatum::InstrumentType InstrumentType_CORRELATION = MarketDatum::InstrumentType::CORRELATION;
     static const MarketDatum::InstrumentType InstrumentType_COMMODITY_OPTION = MarketDatum::InstrumentType::COMMODITY_OPTION;
     static const MarketDatum::InstrumentType InstrumentType_CPR = MarketDatum::InstrumentType::CPR;
 
@@ -162,6 +164,9 @@ public:
         const Period& term() const {
             return boost::dynamic_pointer_cast<MoneyMarketQuote>(*self)->term();
         }
+        static const MoneyMarketQuotePtr getFullView(boost::shared_ptr<MarketDatum> baseInput) const {
+            return boost::dynamic_pointer_cast<MoneyMarketQuote>(baseInput);
+        }
   }
 };
 
@@ -190,6 +195,9 @@ public:
         const Period& term() const {
             return boost::dynamic_pointer_cast<FRAQuote>(*self)->term();
         }
+        static const FRAQuotePtr getFullView(boost::shared_ptr<MarketDatum> baseInput) const {
+            return boost::dynamic_pointer_cast<FRAQuote>(baseInput);
+        }
   }
 };
 
@@ -216,6 +224,9 @@ public:
         }
         const Size& imm2() const {
             return boost::dynamic_pointer_cast<ImmFraQuote>(*self)->imm2();
+        }
+        static const ImmFraQuotePtr getFullView(boost::shared_ptr<MarketDatum> baseInput) const {
+            return boost::dynamic_pointer_cast<ImmFraQuote>(baseInput);
         }
   }
 };
@@ -247,6 +258,9 @@ public:
         }
         const Period& tenor() const {
             return boost::dynamic_pointer_cast<SwapQuote>(*self)->tenor();
+        }
+        static const SwapQuotePtr getFullView(boost::shared_ptr<MarketDatum> baseInput) const {
+            return boost::dynamic_pointer_cast<SwapQuote>(baseInput);
         }
   }
 };
@@ -282,6 +296,9 @@ public:
         bool tenorBased() const {
             return boost::dynamic_pointer_cast<ZeroQuote>(*self)->tenorBased();
         }
+        static const ZeroQuotePtr getFullView(boost::shared_ptr<MarketDatum> baseInput) const {
+            return boost::dynamic_pointer_cast<ZeroQuote>(baseInput);
+        }
   }
 };
 
@@ -304,6 +321,9 @@ public:
         }
         Date date() const {
             return boost::dynamic_pointer_cast<DiscountQuote>(*self)->date();
+        }
+        static const DiscountQuotePtr getFullView(boost::shared_ptr<MarketDatum> baseInput) const {
+            return boost::dynamic_pointer_cast<DiscountQuote>(baseInput);
         }
   }
 };
@@ -342,6 +362,9 @@ public:
         const Period& tenor() const {
             return boost::dynamic_pointer_cast<MMFutureQuote>(*self)->tenor();
         }
+        static const MMFutureQuotePtr getFullView(boost::shared_ptr<MarketDatum> baseInput) const {
+            return boost::dynamic_pointer_cast<MMFutureQuote>(baseInput);
+        }
   }
 };
 
@@ -373,6 +396,9 @@ public:
         const Period& maturity() const {
             return boost::dynamic_pointer_cast<BasisSwapQuote>(*self)->maturity();
         }
+        static const BasisSwapQuotePtr getFullView(boost::shared_ptr<MarketDatum> baseInput) const {
+            return boost::dynamic_pointer_cast<BasisSwapQuote>(baseInput);
+        }
   }
 };
 
@@ -400,6 +426,9 @@ public:
         }
         const Period& maturity() const {
             return boost::dynamic_pointer_cast<BMASwapQuote>(*self)->maturity();
+        }
+        static const BMASwapQuotePtr getFullView(boost::shared_ptr<MarketDatum> baseInput) const {
+            return boost::dynamic_pointer_cast<BMASwapQuote>(baseInput);
         }
   }
 };
@@ -434,6 +463,9 @@ public:
         }
         const Period& maturity() const {
             return boost::dynamic_pointer_cast<CrossCcyBasisSwapQuote>(*self)->maturity();
+        }
+        static const CrossCcyBasisSwapQuotePtr getFullView(boost::shared_ptr<MarketDatum> baseInput) const {
+            return boost::dynamic_pointer_cast<CrossCcyBasisSwapQuote>(baseInput);
         }
   }
 };
@@ -473,6 +505,9 @@ public:
         const QuantLib::Period& maturity() const {
             return boost::dynamic_pointer_cast<CrossCcyFixFloatSwapQuote>(*self)->maturity();
         }
+        static const CrossCcyFixFloatSwapQuotePtr getFullView(boost::shared_ptr<MarketDatum> baseInput) const {
+            return boost::dynamic_pointer_cast<CrossCcyFixFloatSwapQuote>(baseInput);
+        }
   }
 };
 
@@ -503,6 +538,9 @@ public:
         }
         const std::string& underlyingName() const {
             return boost::dynamic_pointer_cast<CdsSpreadQuote>(*self)->underlyingName();
+        }
+        static const CdsSpreadQuotePtr getFullView(boost::shared_ptr<MarketDatum> baseInput) const {
+            return boost::dynamic_pointer_cast<CdsSpreadQuote>(baseInput);
         }
   }
 };
@@ -535,6 +573,9 @@ public:
         const std::string& underlyingName() const {
             return boost::dynamic_pointer_cast<HazardRateQuote>(*self)->underlyingName();
         }
+        static const HazardRateQuotePtr getFullView(boost::shared_ptr<MarketDatum> baseInput) const {
+            return boost::dynamic_pointer_cast<HazardRateQuote>(baseInput);
+        }
   }
 };
 
@@ -562,6 +603,9 @@ public:
         }
         const std::string& underlyingName() const {
             return boost::dynamic_pointer_cast<RecoveryRateQuote>(*self)->underlyingName();
+        }
+        static const RecoveryRateQuotePtr getFullView(boost::shared_ptr<MarketDatum> baseInput) const {
+            return boost::dynamic_pointer_cast<RecoveryRateQuote>(baseInput);
         }
   }
 };
@@ -597,6 +641,9 @@ public:
         Real strike() const {
             return boost::dynamic_pointer_cast<SwaptionQuote>(*self)->strike();
         }
+        static const SwaptionQuotePtr getFullView(boost::shared_ptr<MarketDatum> baseInput) const {
+            return boost::dynamic_pointer_cast<SwaptionQuote>(baseInput);
+        }
   }
 };
 
@@ -622,6 +669,9 @@ public:
         }
         const Period& term() const {
             return boost::dynamic_pointer_cast<SwaptionShiftQuote>(*self)->term();
+        }
+        static const SwaptionShiftQuotePtr getFullView(boost::shared_ptr<MarketDatum> baseInput) const {
+            return boost::dynamic_pointer_cast<SwaptionShiftQuote>(baseInput);
         }
   }
 };
@@ -660,7 +710,9 @@ public:
         Real strike() const {
             return boost::dynamic_pointer_cast<CapFloorQuote>(*self)->strike();
         }
-        
+        static const CapFloorQuotePtr getFullView(boost::shared_ptr<MarketDatum> baseInput) const {
+            return boost::dynamic_pointer_cast<CapFloorQuote>(baseInput);
+        }
   }
 };
 
@@ -685,6 +737,9 @@ public:
         const Period& indexTenor() const {
             return boost::dynamic_pointer_cast<CapFloorShiftQuote>(*self)->indexTenor();
         }
+        static const CapFloorShiftQuotePtr getFullView(boost::shared_ptr<MarketDatum> baseInput) const {
+            return boost::dynamic_pointer_cast<CapFloorShiftQuote>(baseInput);
+        }
   }
 };
 
@@ -708,6 +763,9 @@ public:
         }
         const std::string& ccy() const {
             return boost::dynamic_pointer_cast<FXSpotQuote>(*self)->ccy();
+        }
+        static const FXSpotQuotePtr getFullView(boost::shared_ptr<MarketDatum> baseInput) const {
+            return boost::dynamic_pointer_cast<FXSpotQuote>(baseInput);
         }
   }
 };
@@ -741,6 +799,9 @@ public:
         Real conversionFactor() const {
             return boost::dynamic_pointer_cast<FXForwardQuote>(*self)->conversionFactor();
         }
+        static const FXForwardQuotePtr getFullView(boost::shared_ptr<MarketDatum> baseInput) const {
+            return boost::dynamic_pointer_cast<FXForwardQuote>(baseInput);
+        }
   }
 };
 
@@ -773,6 +834,9 @@ public:
         const std::string& strike() const {
             return boost::dynamic_pointer_cast<FXOptionQuote>(*self)->strike();
         }
+        static const FXOptionQuotePtr getFullView(boost::shared_ptr<MarketDatum> baseInput) const {
+            return boost::dynamic_pointer_cast<FXOptionQuote>(baseInput);
+        }
   }
 };
 
@@ -795,6 +859,9 @@ public:
         }
         Period term() const {
             return boost::dynamic_pointer_cast<ZcInflationSwapQuote>(*self)->term();
+        }
+        static const ZcInflationSwapQuotePtr getFullView(boost::shared_ptr<MarketDatum> baseInput) const {
+            return boost::dynamic_pointer_cast<ZcInflationSwapQuote>(baseInput);
         }
   }
 };
@@ -830,6 +897,9 @@ public:
         std::string strike() const {
             return boost::dynamic_pointer_cast<InflationCapFloorQuote>(*self)->strike();
         }
+        static const InflationCapFloorQuotePtr getFullView(boost::shared_ptr<MarketDatum> baseInput) const {
+            return boost::dynamic_pointer_cast<InflationCapFloorQuote>(baseInput);
+        }
   }
 };
 
@@ -863,6 +933,9 @@ public:
         std::string strike() const {
             return boost::dynamic_pointer_cast<ZcInflationCapFloorQuote>(*self)->strike();
         }
+        static const ZcInflationCapFloorQuotePtr getFullView(boost::shared_ptr<MarketDatum> baseInput) const {
+            return boost::dynamic_pointer_cast<ZcInflationCapFloorQuote>(baseInput);
+        }
   }
 };
 
@@ -885,6 +958,9 @@ public:
         }
         Period term() const {
             return boost::dynamic_pointer_cast<YoYInflationSwapQuote>(*self)->term();
+        }
+        static const YoYInflationSwapQuotePtr getFullView(boost::shared_ptr<MarketDatum> baseInput) const {
+            return boost::dynamic_pointer_cast<YoYInflationSwapQuote>(baseInput);
         }
   }
 };
@@ -919,6 +995,9 @@ public:
         std::string strike() const {
             return boost::dynamic_pointer_cast<YyInflationCapFloorQuote>(*self)->strike();
         }
+        static const YyInflationCapFloorQuotePtr getFullView(boost::shared_ptr<MarketDatum> baseInput) const {
+            return boost::dynamic_pointer_cast<YyInflationCapFloorQuote>(baseInput);
+        }
   }
 };
 
@@ -949,6 +1028,9 @@ public:
         QuantLib::Size applyMonth() const {
             return boost::dynamic_pointer_cast<SeasonalityQuote>(*self)->applyMonth();
         }
+        static const SeasonalityQuotePtr getFullView(boost::shared_ptr<MarketDatum> baseInput) const {
+            return boost::dynamic_pointer_cast<SeasonalityQuote>(baseInput);
+        }
   }
 };
 
@@ -973,6 +1055,9 @@ public:
         }
         const std::string& ccy() const {
             return boost::dynamic_pointer_cast<EquitySpotQuote>(*self)->ccy();
+        }
+        static const EquitySpotQuotePtr getFullView(boost::shared_ptr<MarketDatum> baseInput) const {
+            return boost::dynamic_pointer_cast<EquitySpotQuote>(baseInput);
         }
   }
 };
@@ -1003,6 +1088,9 @@ public:
         const Date& expiryDate() const {
             return boost::dynamic_pointer_cast<EquityForwardQuote>(*self)->expiryDate();
         }
+        static const EquityForwardQuotePtr getFullView(boost::shared_ptr<MarketDatum> baseInput) const {
+            return boost::dynamic_pointer_cast<EquityForwardQuote>(baseInput);
+        }
   }
 };
 
@@ -1031,6 +1119,9 @@ public:
         }
         const Date& tenorDate() const {
             return boost::dynamic_pointer_cast<EquityDividendYieldQuote>(*self)->tenorDate();
+        }
+        static const EquityDividendYieldQuotePtr getFullView(boost::shared_ptr<MarketDatum> baseInput) const {
+            return boost::dynamic_pointer_cast<EquityDividendYieldQuote>(baseInput);
         }
   }
 };
@@ -1064,6 +1155,9 @@ public:
         const std::string& strike() const {
             return boost::dynamic_pointer_cast<EquityOptionQuote>(*self)->strike();
         }
+        static const EquityOptionQuotePtr getFullView(boost::shared_ptr<MarketDatum> baseInput) const {
+            return boost::dynamic_pointer_cast<EquityOptionQuote>(baseInput);
+        }
   }
 };
 
@@ -1083,6 +1177,9 @@ public:
         }
         const std::string& securityID() const {
             return boost::dynamic_pointer_cast<SecuritySpreadQuote>(*self)->securityID();
+        }
+        static const SecuritySpreadQuotePtr getFullView(boost::shared_ptr<MarketDatum> baseInput) const {
+            return boost::dynamic_pointer_cast<SecuritySpreadQuote>(baseInput);
         }
   }
 };
@@ -1113,6 +1210,9 @@ public:
         Period term() const {
             return boost::dynamic_pointer_cast<BaseCorrelationQuote>(*self)->term();
         }
+        static const BaseCorrelationQuotePtr getFullView(boost::shared_ptr<MarketDatum> baseInput) const {
+            return boost::dynamic_pointer_cast<BaseCorrelationQuote>(baseInput);
+        }
   }
 };
 
@@ -1135,6 +1235,9 @@ public:
         }
         const std::string& expiry() const {
             return boost::dynamic_pointer_cast<IndexCDSOptionQuote>(*self)->expiry();
+        }
+        static const IndexCDSOptionQuotePtr getFullView(boost::shared_ptr<MarketDatum> baseInput) const {
+            return boost::dynamic_pointer_cast<IndexCDSOptionQuote>(baseInput);
         }
   }
 };
@@ -1161,6 +1264,9 @@ public:
         }
         const std::string& quoteCurrency() const {
             return boost::dynamic_pointer_cast<CommoditySpotQuote>(*self)->quoteCurrency();
+        }
+        static const CommoditySpotQuotePtr getFullView(boost::shared_ptr<MarketDatum> baseInput) const {
+            return boost::dynamic_pointer_cast<CommoditySpotQuote>(baseInput);
         }
   }
 };
@@ -1192,6 +1298,9 @@ public:
         }
         const QuantLib::Date& expiryDate() const {
             return boost::dynamic_pointer_cast<CommodityForwardQuote>(*self)->expiryDate();
+        }
+        static const CommodityForwardQuotePtr getFullView(boost::shared_ptr<MarketDatum> baseInput) const {
+            return boost::dynamic_pointer_cast<CommodityForwardQuote>(baseInput);
         }
   }
 };
@@ -1228,6 +1337,9 @@ public:
         const std::string& strike() const {
             return boost::dynamic_pointer_cast<CommodityOptionQuote>(*self)->strike();
         }
+        static const CommodityOptionQuotePtr getFullView(boost::shared_ptr<MarketDatum> baseInput) const {
+            return boost::dynamic_pointer_cast<CommodityOptionQuote>(baseInput);
+        }
   }
 };
 
@@ -1263,6 +1375,9 @@ public:
         const std::string& strike() const {
             return boost::dynamic_pointer_cast<CorrelationQuote>(*self)->strike();
         }
+        static const CorrelationQuotePtr getFullView(boost::shared_ptr<MarketDatum> baseInput) const {
+            return boost::dynamic_pointer_cast<CorrelationQuote>(baseInput);
+        }
   }
 };
 
@@ -1281,6 +1396,9 @@ public:
         }
         const std::string& securityID() const {
             return boost::dynamic_pointer_cast<CPRQuote>(*self)->securityID();
+        }
+        static const CPRQuotePtr getFullView(boost::shared_ptr<MarketDatum> baseInput) const {
+            return boost::dynamic_pointer_cast<CPRQuote>(baseInput);
         }
   }
 };
