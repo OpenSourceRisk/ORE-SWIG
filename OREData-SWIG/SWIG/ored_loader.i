@@ -75,7 +75,7 @@ public:
 };*/
 
 %template(StringBoolPair) std::pair<std::string, bool>;
-%template(MarketDatumVector) std::vector<boost::shared_ptr<ore::data::MarketDatum>>;
+%template(MarketDatumVector) std::vector<boost::shared_ptr<MarketDatum>>;
 //%template(FixingVector) std::vector<ore::data::Fixing>;
 
 
