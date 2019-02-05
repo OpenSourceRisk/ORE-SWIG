@@ -9,7 +9,10 @@
 
 %{
 using ore::data::MarketDatum;
+using ore::data::parseMarketDatum;
 %}
+
+boost::shared_ptr<MarketDatum> parseMarketDatum(const Date&, const std::string&, const Real&);
 
 %ignore MarketDatum;
 class MarketDatum {
