@@ -580,7 +580,7 @@ public:
 };
 
 %{
-using ore::data::RecoveryRateQuote;
+//using ore::data::RecoveryRateQuote;
 typedef boost::shared_ptr<MarketDatum> RecoveryRateQuotePtr;
 %}
 
@@ -591,21 +591,21 @@ public:
         RecoveryRateQuotePtr(Real value, Date asofDate, const std::string& name,
                              const std::string& underlyingName, const std::string& seniority,
                              const std::string& ccy) {
-            return new RecoveryRateQuotePtr(new RecoveryRateQuote(value, asofDate, name,
-                                                                  underlyingName, seniority,
-                                                                  ccy));
+            return new RecoveryRateQuotePtr(new ore::data::RecoveryRateQuote(value, asofDate, name,
+                                                                             underlyingName, seniority,
+                                                                             ccy));
         }
         const std::string& seniority() const {
-            return boost::dynamic_pointer_cast<RecoveryRateQuote>(*self)->seniority();
+            return boost::dynamic_pointer_cast<ore::data::RecoveryRateQuote>(*self)->seniority();
         }
         const std::string& ccy() const {
-            return boost::dynamic_pointer_cast<RecoveryRateQuote>(*self)->ccy();
+            return boost::dynamic_pointer_cast<ore::data::RecoveryRateQuote>(*self)->ccy();
         }
         const std::string& underlyingName() const {
-            return boost::dynamic_pointer_cast<RecoveryRateQuote>(*self)->underlyingName();
+            return boost::dynamic_pointer_cast<ore::data::RecoveryRateQuote>(*self)->underlyingName();
         }
         static const RecoveryRateQuotePtr getFullView(boost::shared_ptr<MarketDatum> baseInput) const {
-            return boost::dynamic_pointer_cast<RecoveryRateQuote>(baseInput);
+            return boost::dynamic_pointer_cast<ore::data::RecoveryRateQuote>(baseInput);
         }
   }
 };
