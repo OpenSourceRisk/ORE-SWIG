@@ -1,11 +1,13 @@
 
 /*
- Copyright (C) 2018 Quaternion Risk Management Ltd
+ Copyright (C) 2019 Quaternion Risk Management Ltd
  All rights reserved.
 */
 
-%{
+#ifndef orep_i
+#define orep_i
 
+%{
 #include <boost/shared_ptr.hpp>
 #include <boost/assert.hpp>
 #include <boost/current_function.hpp>
@@ -16,90 +18,24 @@
 #include <map>
 #include <vector>
 
-#ifdef BOOST_MSVC 
-#include <orepapp/auto_link.hpp>
-#define BOOST_LIB_NAME boost_regex
-#include <boost/config/auto_link.hpp>
-#define BOOST_LIB_NAME boost_serialization
-#include <boost/config/auto_link.hpp>
-#define BOOST_LIB_NAME boost_date_time
-#include <boost/config/auto_link.hpp>
-#define BOOST_LIB_NAME boost_filesystem
-#include <boost/config/auto_link.hpp>
-#define BOOST_LIB_NAME boost_system
-#include <boost/config/auto_link.hpp>
-#endif
-
 #include <ql/errors.hpp>
 
-#include <orepapp/orea/app/oreplusapp.hpp>
+#ifdef BOOST_MSVC
+#include <oreap/auto_link.hpp>
+#include <oredp/auto_link.hpp>
+#include <orepsensi/auto_link.hpp>
+#include <orepbase/auto_link.hpp>
+#include <qlep/auto_link.hpp>
+#endif
 
-
-using oreplus::analytics::OREPlusApp;
-typedef boost::shared_ptr<oreplus::analytics::OREPlusApp> OREPlusAppPtr;
-
-using ore::analytics::OREApp;
-typedef boost::shared_ptr<ore::analytics::OREApp> OREAppPtr;
-
-using ore::analytics::Parameters;
-typedef boost::shared_ptr<ore::analytics::Parameters> ParametersPtr;
-
-using ore::data::MarketImpl;
-typedef boost::shared_ptr<ore::data::MarketImpl> MarketImplPtr;
-
-using ore::data::EngineFactory;
-typedef boost::shared_ptr<ore::data::EngineFactory> EngineFactoryPtr;
-
-using ore::data::Portfolio;
-typedef boost::shared_ptr<ore::data::Portfolio> PortfolioPtr;
+#include <oreap/oreap.hpp>
+#include <oredp/oredp.hpp>
+#include <orepsensi/orepsensi.hpp>
+#include <orepbase/orepbase.hpp>
+#include <qlep/quantextplus.hpp>
 
 %}
 
-%include ored.i
+%include orep_creditdefaultswap.i
 
-%rename(ORE) OREPlusAppPtr;
-//class OREPlusAppPtr : public OREAppPtr {
-class OREPlusAppPtr {
-public:
-  %extend {
-    OREPlusAppPtr(const ParametersPtr& p, std::ostream& out = std::cout) {
-      boost::shared_ptr<ore::analytics::Parameters> param = boost::dynamic_pointer_cast<ore::analytics::Parameters>(p);
-      return new OREPlusAppPtr(new oreplus::analytics::OREPlusApp(param, out));
-    }
-    //boost::shared_ptr<ore::data::MarketImpl> getMarket() const {
-    MarketImplPtr getMarket() const {
-      return boost::dynamic_pointer_cast<oreplus::analytics::OREPlusApp>(*self)->getMarket();
-    }
-    boost::shared_ptr<ore::analytics::ScenarioSimMarket> getSimulationMarket() const {
-      return boost::dynamic_pointer_cast<oreplus::analytics::OREPlusApp>(*self)->getSimulationMarket();
-    }
-    boost::shared_ptr<ore::analytics::DateGrid> getDateGrid() const {
-      return boost::dynamic_pointer_cast<oreplus::analytics::OREPlusApp>(*self)->getDateGrid();
-    }
-    void buildMarket(const std::string& todaysMarketXML = "", const std::string& curveConfigXML = "",
-                     const std::string& conventionsXML = "",
-                     const std::vector<string>& marketData = std::vector<string>(),
-                     const std::vector<string>& fixingData = std::vector<string>()) {
-      boost::dynamic_pointer_cast<oreplus::analytics::OREPlusApp>(*self)->buildMarket(todaysMarketXML, curveConfigXML, conventionsXML, marketData, fixingData);     
-    }
-    void buildSimulationMarket(const std::string& simulationXML = "") {
-      boost::dynamic_pointer_cast<oreplus::analytics::OREPlusApp>(*self)->buildSimulationMarket(simulationXML);     
-    }
-    boost::shared_ptr<ore::data::EngineFactory> buildEngineFactoryFromXMLString(const MarketImplPtr& marketImpl,
-										const std::string& pricingEngineXML) {
-      boost::shared_ptr<ore::data::Market> marketBase = boost::dynamic_pointer_cast<ore::data::Market>(marketImpl);
-      return boost::dynamic_pointer_cast<oreplus::analytics::OREPlusApp>(*self)->buildEngineFactoryFromXMLString(marketBase, pricingEngineXML);
-    }
-    PortfolioPtr buildPortfolioFromXMLString(const boost::shared_ptr<ore::data::EngineFactory>& engineFact,
-										const std::string& portfolioXML) {
-      return boost::dynamic_pointer_cast<oreplus::analytics::OREPlusApp>(*self)->buildPortfolioFromXMLString(engineFact, portfolioXML);
-    }
-    PortfolioPtr buildPortfolioFromXMLStrings(const MarketImplPtr& marketImpl,
-										const std::string& portfolioXML,
-                                        const std::string& pricingEngineXML) {
-      boost::shared_ptr<ore::data::Market> marketBase = boost::dynamic_pointer_cast<ore::data::Market>(marketImpl);
-      return boost::dynamic_pointer_cast<oreplus::analytics::OREPlusApp>(*self)->buildPortfolioFromXMLStrings(marketBase, portfolioXML, pricingEngineXML);
-    }
-    
-  }
-};
+#endif
