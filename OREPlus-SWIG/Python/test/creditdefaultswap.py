@@ -74,10 +74,12 @@ class IndexCDSOptionTest(unittest.TestCase):
         seller_cds_option = IndexCdsOption(seller_cds, self.exercise)
         buyer_cds_option.setPricingEngine(self.engine)
         seller_cds_option.setPricingEngine(self.engine)
-        self.assertFalse(abs(buyer_cds_option.NPV() - seller_cds_option.NPV()) > tolerance)
+        decimal_place = 7
+        self.assertAlmostEqual(buyer_cds_option.NPV(), seller_cds_option.NPV(), decimal_place)
         implied_vol = self.cds_option.impliedVolatility(self.cds_option.NPV(), self.discount_curve,
                                                         self.probability_curve, self.recovery_rate)
-        self.assertFalse(abs(implied_vol - self.vol) > 1.0e-5)
+        decimal_place = 5
+        self.assertAlmostEqual(implied_vol, self.vol, decimal_place)
         
         
 class IndexCreditDefaultSwapTest(unittest.TestCase):
@@ -128,7 +130,6 @@ class IndexCreditDefaultSwapTest(unittest.TestCase):
         
     def testConsistency(self):
         """ Test consistency of fair price and NPV() """
-        tolerance = 1.0e-8
         fair_spread = self.cds.fairSpread()
         cds = IndexCreditDefaultSwap(self.side, self.notional, self.underlyingNotionals,
                                      self.upfront, fair_spread,
@@ -136,10 +137,11 @@ class IndexCreditDefaultSwapTest(unittest.TestCase):
                                      self.settles_accrual, self.pays_at_default,
                                      self.settlement_date)
         cds.setPricingEngine(self.engine)
-        self.assertFalse(abs(cds.NPV()) > tolerance)
-        #implied_hazard_rate = self.cds.impliedHazardRate(self.cds.NPV(), self.discount_curve, self.day_counter,
-        #                                                 self.recovery_rate, 1.0e-12)
-        #self.assertFalse(abs(implied_hazard_rate - self.hazard_rate) > tolerance)
+        decimal_place = 7
+        self.assertAlmostEqual(cds.NPV(), 0, decimal_place)
+        implied_hazard_rate = self.cds.impliedHazardRate(self.cds.NPV(), self.discount_curve, self.day_counter,
+                                                         self.recovery_rate, 1.0e-12)
+        self.assertAlmostEqual(implied_hazard_rate, self.hazard_rate, decimal_place)
 
 
 if __name__ == '__main__':
