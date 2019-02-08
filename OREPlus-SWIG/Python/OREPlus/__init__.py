@@ -30,6 +30,12 @@ elif hasattr(_OREPlus.cvar,'__hexversion__'):
 else:
     print('Could not find __hexversion__ attribute')
 
+import datetime
+now = datetime.datetime.now()
+expiry = datetime.datetime(2019, 3, 15)
+if now > expiry:
+    raise "Evaluation license expired. Please contact info@quaternion.com to renew license"
+
 __license__ = """
 COPYRIGHT AND PERMISSION NOTICE
 
