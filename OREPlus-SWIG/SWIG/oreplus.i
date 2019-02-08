@@ -56,10 +56,7 @@ const char* __version__;
 //#endif
 
 // include all quantlib .i's
-%include ql_patched.i
-
-// for faster build: include minimal set of quantlib .i's (dates, term structures, indexes) 
-//%include qlshort.i
+%include ql.i
 
 // include all quantext .i's
 %include qle.i
@@ -70,5 +67,5 @@ const char* __version__;
 // include all OREAnalytics .i's
 %include orea.i
 
-// include OREPlus .i's
+// include all OREPlus .i's
 %include orep.i

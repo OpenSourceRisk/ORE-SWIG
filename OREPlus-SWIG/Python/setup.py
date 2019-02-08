@@ -17,7 +17,7 @@ from distutils import sysconfig
 
 class test(Command):
     # Original version of this class posted
-    # by Berthold Höllmann to distutils-sig@python.org
+    # by Berthold Hï¿½llmann to distutils-sig@python.org
     description = "test the distribution prior to install"
 
     user_options = [
@@ -136,18 +136,23 @@ class my_build_ext(build_ext):
                 self.include_dirs += [os.path.join(ORE_INSTALL_DIR,'QuantExt')]
                 self.include_dirs += [os.path.join(ORE_INSTALL_DIR,'OREData')]
                 self.include_dirs += [os.path.join(ORE_INSTALL_DIR,'OREAnalytics')]
-                self.include_dirs += [os.path.join(ORE_INSTALL_DIR,'OREPlus')]
-                self.include_dirs += [os.path.join(ORE_INSTALL_DIR,'OREPlus','App')]
+                self.include_dirs += [os.path.join(ORE_INSTALL_DIR,'QuantExtPlus')]
+                self.include_dirs += [os.path.join(ORE_INSTALL_DIR,'OREPlus', 'Base')]
                 self.include_dirs += [os.path.join(ORE_INSTALL_DIR,'OREPlus','Sensitivity')]
+                self.include_dirs += [os.path.join(ORE_INSTALL_DIR,'OREDataPlus')]
+                self.include_dirs += [os.path.join(ORE_INSTALL_DIR,'OREAnalyticsPlus')]
 
 				# ADD LIBRARY DIRECTORIES
                 self.library_dirs += [BOOST_LIB]
-                self.library_dirs += [os.path.join(ORE_INSTALL_DIR,'QuantLib','lib')]
-                self.library_dirs += [os.path.join(ORE_INSTALL_DIR,'QuantExt','lib')]
-                self.library_dirs += [os.path.join(ORE_INSTALL_DIR,'OREData','lib')]
-                self.library_dirs += [os.path.join(ORE_INSTALL_DIR,'OREAnalytics','lib')]
-                self.library_dirs += [os.path.join(ORE_INSTALL_DIR,'OREPlus','App','lib')]
-                self.library_dirs += [os.path.join(ORE_INSTALL_DIR,'OREPlus','Sensitivity','lib')]
+                self.library_dirs += [os.path.join(ORE_INSTALL_DIR,'QuantLib', 'lib')]
+                self.library_dirs += [os.path.join(ORE_INSTALL_DIR,'QuantExt', 'lib')]
+                self.library_dirs += [os.path.join(ORE_INSTALL_DIR,'OREData', 'lib')]
+                self.library_dirs += [os.path.join(ORE_INSTALL_DIR,'OREAnalytics', 'lib')]
+                self.library_dirs += [os.path.join(ORE_INSTALL_DIR,'QuantExtPlus', 'lib')]
+                self.library_dirs += [os.path.join(ORE_INSTALL_DIR,'OREPlus', 'Base', 'lib')]
+                self.library_dirs += [os.path.join(ORE_INSTALL_DIR,'OREPlus','Sensitivity', 'lib')]
+                self.library_dirs += [os.path.join(ORE_INSTALL_DIR,'OREDataPlus', 'lib')]
+                self.library_dirs += [os.path.join(ORE_INSTALL_DIR,'OREAnalyticsPlus', 'lib')]
 
             except KeyError:
                 print('warning: unable to detect BOOST/ORE installation')
@@ -182,9 +187,9 @@ class my_build_ext(build_ext):
 
         elif compiler == 'unix':
             ql_compile_args = \
-                os.popen('ore-config --cflags').read()[:-1].split()
+                os.popen('oreplus-config --cflags').read()[:-1].split()
             ql_link_args = \
-                os.popen('ore-config --libs').read()[:-1].split()
+                os.popen('oreplus-config --libs').read()[:-1].split()
 
             self.define += [ (arg[2:],None) for arg in ql_compile_args
                              if arg.startswith('-D') ]
@@ -257,7 +262,7 @@ classifiers = [
 ]
 
 setup(name             = "OREPlus-Python",
-      version          = "1.8.3.1",
+      version          = "1.8.3.2",
       description      = "Python bindings for the OREPlus library",
       long_description = """
 OREPlus (http://opensourcerisk.org/) is a C++ library for financial quantitative
