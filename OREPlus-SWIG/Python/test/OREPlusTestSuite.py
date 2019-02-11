@@ -8,6 +8,8 @@ import unittest
 
 from creditdefaultswap import IndexCreditDefaultSwapTest
 from creditdefaultswap import IndexCDSOptionTest
+from creditdefaultswap import IndexCreditDefaultSwapTestVectorOfCurves
+from creditdefaultswap import IndexCDSOptionTestVectorOfCurves
 
 def test():
     import OREPlus
@@ -18,6 +20,8 @@ def test():
     """ Add test suites below """
     suite.addTest(unittest.makeSuite(IndexCreditDefaultSwapTest, 'test'))
     suite.addTest(unittest.makeSuite(IndexCDSOptionTest, 'test'))
+    suite.addTest(unittest.makeSuite(IndexCreditDefaultSwapTestVectorOfCurves, 'test'))
+    suite.addTest(unittest.makeSuite(IndexCDSOptionTestVectorOfCurves, 'test'))
 
     result = unittest.TextTestRunner(verbosity=2).run(suite)
 
