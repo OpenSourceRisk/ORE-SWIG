@@ -256,4 +256,6 @@ class BlackIndexCdsOptionEnginePtr : public boost::shared_ptr<PricingEngine> {
     }
 };
 
+%template(DefaultProbailityTermStructureHandleVector) std::vector<Handle<QuantLib::DefaultProbabilityTermStructure>>;
+
 #endif
