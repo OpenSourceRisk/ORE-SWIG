@@ -32,7 +32,8 @@ class IndexCDSOptionTest(unittest.TestCase):
         self.settles_accrual = True
         self.pays_at_default = True
         self.discount_curve = YieldTermStructureHandle(FlatForward(self.todays_date, 0.01, self.day_counter))
-        self.hazard_curve = FlatHazardRate(self.todays_date, QuoteHandle(SimpleQuote(0.02)), self.day_counter)
+        self.hazard_rate = 0.02
+        self.hazard_curve = FlatHazardRate(self.todays_date, QuoteHandle(SimpleQuote(self.hazard_rate)), self.day_counter)
         self.probability_curve = DefaultProbabilityTermStructureHandle(self.hazard_curve)
         self.vol = 0.03
         self.volatility = BlackConstantVol(0, self.calendar, QuoteHandle(SimpleQuote(self.vol)), self.day_counter)
@@ -45,7 +46,7 @@ class IndexCDSOptionTest(unittest.TestCase):
         self.cds_engine = MidPointIndexCdsEngine(self.probability_curve, self.recovery_rate, self.discount_curve)
         self.cds.setPricingEngine(self.cds_engine)
         self.cds_option = IndexCdsOption(self.cds, self.exercise)
-        self.engine = BlackIndexCdsOptionEngine(self.probability_curve, self.recovery_rate, 
+        self.engine = BlackIndexCdsOptionEngine(self.probability_curve, self.recovery_rate,
                                                 self.discount_curve, self.volatility_curve)
         self.cds_option.setPricingEngine(self.engine)
         
@@ -56,7 +57,6 @@ class IndexCDSOptionTest(unittest.TestCase):
         
     def testConsistency(self):
         """ Test consistency of fair price and NPV() """
-        tolerance = 1.0e-8
         atm_rate = self.cds_option.atmRate()
         buyer_cds = IndexCreditDefaultSwap(Protection.Buyer, self.notional, self.underlyingNotionals,
                                            self.upfront, atm_rate,
@@ -144,11 +144,84 @@ class IndexCreditDefaultSwapTest(unittest.TestCase):
         self.assertAlmostEqual(implied_hazard_rate, self.hazard_rate, decimal_place)
 
 
+class IndexCreditDefaultSwapTestVectorOfCurves(IndexCreditDefaultSwapTest):
+    def setUp(self):
+        super(IndexCreditDefaultSwapTestVectorOfCurves, self).setUp()
+        self.recovery_rate = [0.4, 0.39, 0.37]
+        self.hazard_rate = [0.02, 0.022, 0.021]
+
+        self.hazard_curve = [
+            FlatHazardRate(self.todays_date, QuoteHandle(SimpleQuote(h)), self.day_counter)
+            for h in self.hazard_rate]
+        self.probability_curve = DefaultProbailityTermStructureHandleVector([
+            DefaultProbabilityTermStructureHandle(hc)
+            for hc in self.hazard_curve])
+        self.engine = MidPointIndexCdsEngine(self.probability_curve, self.recovery_rate, self.discount_curve)
+        self.cds.setPricingEngine(self.engine)
+
+    def testConsistency(self):
+        """ Test consistency of fair price and NPV() """
+        fair_spread = self.cds.fairSpread()
+        cds = IndexCreditDefaultSwap(self.side, self.notional, self.underlyingNotionals,
+                                     self.upfront, fair_spread,
+                                     self.schedule, self.bdc, self.day_counter,
+                                     self.settles_accrual, self.pays_at_default,
+                                     self.settlement_date)
+        cds.setPricingEngine(self.engine)
+        decimal_place = 7
+        self.assertAlmostEqual(cds.NPV(), 0, decimal_place)
+
+
+class IndexCDSOptionTestVectorOfCurves(IndexCDSOptionTest):
+    def setUp(self):
+        super(IndexCDSOptionTestVectorOfCurves, self).setUp()
+        self.recovery_rate = [0.4, 0.39, 0.37]
+        self.hazard_rate = [0.02, 0.022, 0.021]
+
+        self.hazard_curve = [
+            FlatHazardRate(self.todays_date, QuoteHandle(SimpleQuote(h)), self.day_counter)
+            for h in self.hazard_rate]
+        self.probability_curve = DefaultProbailityTermStructureHandleVector([
+            DefaultProbabilityTermStructureHandle(hc)
+            for hc in self.hazard_curve])
+        self.engine = MidPointIndexCdsEngine(self.probability_curve, self.recovery_rate, self.discount_curve)
+        self.cds.setPricingEngine(self. cds_engine)
+
+        self.cds_option = IndexCdsOption(self.cds, self.exercise)
+        self.engine = BlackIndexCdsOptionEngine(self.probability_curve, self.recovery_rate,
+                                                self.discount_curve, self.volatility_curve)
+        self.cds_option.setPricingEngine(self.engine)
+        
+    def testConsistency(self):
+        """ Test consistency of fair price and NPV() """
+        atm_rate = self.cds_option.atmRate()
+        buyer_cds = IndexCreditDefaultSwap(Protection.Buyer, self.notional, self.underlyingNotionals,
+                                           self.upfront, atm_rate,
+                                           self.schedule, self.bdc, self.day_counter,
+                                           self.settles_accrual, self.pays_at_default,
+                                           self.settlement_date)
+        seller_cds = IndexCreditDefaultSwap(Protection.Seller, self.notional, self.underlyingNotionals,
+                                            self.upfront, atm_rate,
+                                            self.schedule, self.bdc, self.day_counter,
+                                            self.settles_accrual, self.pays_at_default,
+                                            self.settlement_date)
+        buyer_cds.setPricingEngine(self.cds_engine)
+        seller_cds.setPricingEngine(self.cds_engine)
+        buyer_cds_option = IndexCdsOption(buyer_cds, self.exercise)
+        seller_cds_option = IndexCdsOption(seller_cds, self.exercise)
+        buyer_cds_option.setPricingEngine(self.engine)
+        seller_cds_option.setPricingEngine(self.engine)
+        decimal_place = 7
+        self.assertAlmostEqual(buyer_cds_option.NPV(), seller_cds_option.NPV(), decimal_place)
+
+
 if __name__ == '__main__':
-    import QuantExt
+    import OREPlus
     print('testing OREPlus ' + OREPlus.__version__)
     suite = unittest.TestSuite()
     suite.addTest(unittest.makeSuite(IndexCreditDefaultSwapTest, 'test'))
     suite.addTest(unittest.makeSuite(IndexCDSOptionTest, 'test'))
+    suite.addTest(unittest.makeSuite(IndexCreditDefaultSwapTestVectorOfCurves, 'test'))
+    suite.addTest(unittest.makeSuite(IndexCDSOptionTestVectorOfCurves, 'test'))
     unittest.TextTestRunner(verbosity=2).run(suite)
 
