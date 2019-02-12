@@ -40,7 +40,6 @@ RUN cd OREPlus-SWIG/Python \
   && cd build.release \
   && cmake .. \
   && make -j ${num_cores} \
-  && make install \
   && cd ../../../QuantLib-SWIG/Python/test \
   && python3 -c "import sys, OREPlus; sys.modules['QuantLib']=OREPlus;import QuantLibTestSuite;QuantLibTestSuite.test()" \
   && cd ../../../QuantExt-SWIG/Python/test \
