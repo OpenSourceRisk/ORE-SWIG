@@ -1,12 +1,22 @@
 ARG ore_plus_version=latest
-ARG ore_swig_version=latest
+ARG cmake_version=latest
 
-FROM env_ore_swig:${ore_swigversion}
-FROM env_ore:${ore_plus_version} as env_ore
+FROM env_ore_plus:${ore_plus_version} as env_ore_plus
+FROM env_cmake:${cmake_version} as env_cmake
 
 # Take the binaries and includes from ORE environment
-COPY --from=env_ore /usr/local/lib /usr/local/lib
-COPY --from=env_ore /usr/local/include /usr/local/include
+COPY --from=env_ore_plus /usr/local/lib /usr/local/lib
+COPY --from=env_ore_plus /usr/local/include /usr/local/include
+
+# Replace apt-get cmake with local build
+RUN apt remove --purge --auto-remove -y cmake
+COPY --from=env_cmake /usr/local/bin/cmake /usr/local/bin/cmake
+
+# Install SWIG and python3
+RUN apt-get update \
+  && apt-get install -y swig3.0 python3-dev \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /swig
 
@@ -14,23 +24,30 @@ WORKDIR /swig
 ARG num_cores=1
 
 COPY OREPlus-SWIG ./OREPlus-SWIG
+COPY OREAnalytics-SWIG ./OREAnalytics-SWIG
+COPY OREData-SWIG ./OREData-SWIG
+COPY QuantExt-SWIG ./QuantExt-SWIG
+COPY QuantLib-SWIG ./QuantLib-SWIG
+COPY cmake ./cmake
 
-COPY OREAnalyticsPlus /ore/OREAnalyticsPlus
-COPY OREDataPlus /ore/OREDataPlus
-COPY OREPlus/Sensitivity /ore/OREPlus/Sensitivity
-COPY OREPlus/Base /ore/OREPlus/Base
-COPY QuantExtPlus /ore/QuantExtPlus
-COPY OREAnalytics /ore/OREAnalytics
-COPY OREData /ore/OREData
-COPY QuantExt /ore/QuantExt
-COPY QuantLib /ore/QuantLib
+ENV PYTHONPATH=/swig/OREAnalytics-SWIG/Python/build.release/
+ENV PYTHON_LIBRARY=/usr/lib/x86_64-linux-gnu/
+ENV PYTHON_INCLUDE_DIR=/usr/include/x86_64-linux-gnu/python3.5m
+ENV CXXFLAGS="-O2 -std=c++11 -DBOOST_MATH_DISABLE_FLOAT128"
 
 RUN cd OREPlus-SWIG/Python \
   && mkdir build.release \
   && cd build.release \
-  && cmake -DOREP:STRING=/ore .. -DDYNAMIC_LINK=FALSE \
+  && cmake .. \
   && make -j ${num_cores} \
-  && cd /OREPlus-SWIG/Python/test \
-  && python OREPlusTestSuite.py \
+  && make install \
+  && cd ../../../QuantLib-SWIG/Python/test \
+  && python3 -c "import sys, OREPlus; sys.modules['QuantLib']=OREPlus;import QuantLibTestSuite;QuantLibTestSuite.test()" \
+  && cd ../../../QuantExt-SWIG/Python/test \
+  && python3 -c "import sys, OREPlus; sys.modules['QuantExt']=OREPlus;import QuantExtTestSuite;QuantExtTestSuite.test()" \
+  && cd ../../../OREData-SWIG/Python/test \
+  && python3 -c "import sys, OREPlus; sys.modules['OREData']=OREPlus;import OREDataTestSuite;OREDataTestSuite.test()" \
+  && cd ../../../OREPlus-SWIG/Python/test \
+  && python3 -c "import sys, OREPlus; sys.modules['OREData']=OREPlus;import OREPlusTestSuite;OREPlusTestSuite.test()" \
   && cd / \
-  && rm -rf ore
+  && rm -rf swig

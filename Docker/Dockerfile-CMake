@@ -1,0 +1,26 @@
+ARG tag=latest
+FROM debian:${tag}
+
+ARG cmake_version
+ARG cmake_build
+
+MAINTAINER Quaternion Risk Management
+LABEL Description="Build CMake from source"
+
+# Install SWIG
+RUN apt-get update \
+  && apt-get install -y build-essential wget \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/*
+
+# Build cmake
+RUN mkdir temp \
+  && cd temp \
+  && wget https://cmake.org/files/v$cmake_version/cmake-$cmake_version.$cmake_build.tar.gz \
+  && tar -xzvf cmake-$cmake_version.$cmake_build.tar.gz \
+  && cd cmake-$cmake_version.$cmake_build/ \
+  && ./bootstrap \
+  && make -j4 \
+  && make install \
+  && cd / \
+  && rm -rf temp
