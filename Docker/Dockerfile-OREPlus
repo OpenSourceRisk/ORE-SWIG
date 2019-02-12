@@ -1,0 +1,36 @@
+ARG ore_plus_version=latest
+ARG ore_swig_version=latest
+
+FROM env_ore_swig:${ore_swigversion}
+FROM env_ore:${ore_plus_version} as env_ore
+
+# Take the binaries and includes from ORE environment
+COPY --from=env_ore /usr/local/lib /usr/local/lib
+COPY --from=env_ore /usr/local/include /usr/local/include
+
+WORKDIR /swig
+
+# Argument for number of cores to use while building
+ARG num_cores=1
+
+COPY OREPlus-SWIG ./OREPlus-SWIG
+
+COPY OREAnalyticsPlus /ore/OREAnalyticsPlus
+COPY OREDataPlus /ore/OREDataPlus
+COPY OREPlus/Sensitivity /ore/OREPlus/Sensitivity
+COPY OREPlus/Base /ore/OREPlus/Base
+COPY QuantExtPlus /ore/QuantExtPlus
+COPY OREAnalytics /ore/OREAnalytics
+COPY OREData /ore/OREData
+COPY QuantExt /ore/QuantExt
+COPY QuantLib /ore/QuantLib
+
+RUN cd OREPlus-SWIG/Python \
+  && mkdir build.release \
+  && cd build.release \
+  && cmake -DOREP:STRING=/ore .. -DDYNAMIC_LINK=FALSE \
+  && make -j ${num_cores} \
+  && cd /OREPlus-SWIG/Python/test \
+  && python OREPlusTestSuite.py \
+  && cd / \
+  && rm -rf ore

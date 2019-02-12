@@ -1,0 +1,8 @@
+version: '0'
+
+services:
+  env_ore_plus_swig:
+    image: env_ore_plus_swig
+    build:
+      context: ../
+      dockerfile: Docker/Dockerfile-OREPlus

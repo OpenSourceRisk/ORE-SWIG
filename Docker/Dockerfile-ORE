@@ -1,0 +1,42 @@
+ARG ore_version=latest
+
+FROM env_ore:${ore_version} as env_ore
+
+# Take the binaries and includes from ORE environment
+COPY --from=env_ore /usr/local/lib /usr/local/lib
+COPY --from=env_ore /usr/local/include /usr/local/include
+
+# Install SWIG
+RUN apt-get update \
+  && apt-get install -y swig \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /swig
+
+# Argument for number of cores to use while building
+ARG num_cores=1
+
+COPY OREAnalytics-SWIG ./OREAnalytics-SWIG
+COPY OREData-SWIG ./OREData-SWIG
+COPY QuantExt-SWIG ./QuantExt-SWIG
+COPY QuantLib-SWIG ./QuantLib-SWIG
+
+COPY OREAnalytics /ore/OREAnalytics
+COPY OREData /ore/OREData
+COPY QuantExt /ore/QuantExt
+COPY QuantLib /ore/QuantLib
+
+RUN cd OREAnalytics-SWIG/Python \
+  && mkdir build.release \
+  && cd build.release \
+  && cmake -DOREP:STRING=/ore .. -DDYNAMIC_LINK=FALSE \
+  && make -j ${num_cores} \
+  && cd /QuantLib-SWIG/Python/test \
+  && python QuantLibTestSuite.py \
+  && cd /QuantExt-SWIG/Python/test \
+  && python QuantExtTestSuite.py \
+  && cd /OREData-SWIG/Python/test \
+  && python OREDataTestSuite.py \
+  && cd / \
+  && rm -rf ore
