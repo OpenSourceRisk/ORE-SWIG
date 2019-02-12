@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.8)
 
 project(OREAnalytics-Python)
 
+SET(ORE $ENV{ORE} CACHE STRING "ORE path")
+
 include(${ORE}/cmake/commonSettings.cmake)
 
 # Append /bigobj to compiler flags on Windows for this target
