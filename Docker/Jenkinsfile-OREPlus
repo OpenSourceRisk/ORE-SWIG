@@ -1,0 +1,25 @@
+pipeline {
+    agent any
+    stages {
+        stage ('Start') {
+            steps {
+                slackSend (color: '#FFFF00', message: "STARTED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
+            }
+        }
+        stage('Build Images') {
+            steps {
+                sh 'docker-compose -f Docker/docker-compose-ore-plus.yml build --no-cache'
+            }
+        }
+    }
+    post {
+        success {
+            slackSend (color: '#00FF00', message: ":smiley: :thumbsup_all: SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
+        }
+        failure {
+            sh 'docker rm $(docker ps -a -q)'
+            sh 'docker rmi $(docker images | grep "^<none>" | awk "{print $3}")'
+            slackSend (color: '#FF0000', message: ":angry: :thumbsdown: FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
+        }
+    }
+}
