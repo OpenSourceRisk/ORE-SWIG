@@ -33,7 +33,9 @@ ENV PYTHONPATH=/swig/OREAnalytics-SWIG/Python/build.release/
 ENV PYTHON_LIBRARY=/usr/lib/x86_64-linux-gnu/
 ENV PYTHON_INCLUDE_DIR=/usr/include/x86_64-linux-gnu/python3.5m
 
-RUN cd OREAnalytics-SWIG/Python \
+RUN \
+  find -regex ".*\.\(sh\|in\|ac\|am\)" -exec dos2unix {} ';' \
+  && cd OREAnalytics-SWIG/Python \
   && mkdir build.release \
   && cd build.release \
   && cmake .. \
