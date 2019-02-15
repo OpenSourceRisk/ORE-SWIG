@@ -28,7 +28,7 @@ configure_msvc_runtime()
 # To build the module, we moreover need Boost, Swig, Python
 find_package(Boost COMPONENTS serialization date_time regex filesystem system REQUIRED)
 find_package(SWIG REQUIRED)
-find_package(PythonLibs)
+find_package(Python)
 
 # What does this mean?
 include(${SWIG_USE_FILE})
