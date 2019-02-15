@@ -11,18 +11,22 @@ pipeline {
                 sh 'mkdir build && cd build'
                 sh 'cmake ..'
                 sh 'make'
+            }
+        }
+        stage('Run Unit Tests') {
+            steps {
                 sh 'cd ../OREPlus-SWIG/Python/test/'
                 sh 'python OREPlusTestSuite.py'
             }
         }
     }
     post {
-        success {
+        //success {
          //   slackSend (color: '#00FF00', message: ":smiley: :thumbsup_all: SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
-        }
-        failure {
+        //}
+        //failure {
         //    slackSend (color: '#FF0000', message: ":angry: :thumbsdown: FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
-        }
+        //}
         always {
             sh 'docker ps -q -f status=exited | xargs --no-run-if-empty docker rm || true'
             sh 'docker images -q -f dangling=true | xargs --no-run-if-empty docker rmi || true'
