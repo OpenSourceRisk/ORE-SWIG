@@ -56,7 +56,7 @@ const char* __version__;
 //#endif
 
 // include all quantlib .i's
-%include ql_patched.i
+%include ql.i
 
 // include all quantext .i's
 %include qle.i
