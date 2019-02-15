@@ -1,20 +1,14 @@
 ARG ore_version=latest
 
-FROM env_ore:${ore_version} as env_ore
+FROM env_ore:${ore_version}
 
-# Replace apt-get stable cmake and build-essential with experimental (cmake>=3.8, gcc>=7)
-RUN echo deb http://deb.debian.org/debian experimental main >> /etc/apt/sources.list \
-  && echo deb http://ftp.uk.debian.org/debian/ unstable main contrib non-free >> /etc/apt/sources.list \
+# Install cmake from testing (cmake>=3.8)
+# Install dos2unix, SWIG and python3
+RUN echo deb http://deb.debian.org/debian testing main >> /etc/apt/sources.list \
   && apt-get update \
-  && apt remove --purge --auto-remove -y cmake build-essential \
-  && apt-get -t experimental install -y cmake build-essential
-
-# Take the binaries and includes from ORE environment
-COPY --from=env_ore /usr/local/lib /usr/local/lib
-COPY --from=env_ore /usr/local/include /usr/local/include
-
-# Install SWIG and python3
-RUN apt-get install -y swig3.0 python3-dev \
+  && apt-get remove --purge -y cmake \
+  && apt-get -t testing install -y cmake \
+  && apt-get install -y swig3.0 python3-dev \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
 
@@ -29,9 +23,9 @@ COPY QuantExt-SWIG ./QuantExt-SWIG
 COPY QuantLib-SWIG ./QuantLib-SWIG
 COPY cmake ./cmake
 
-ENV PYTHONPATH=/swig/OREAnalytics-SWIG/Python/build.release/
-ENV PYTHON_LIBRARY=/usr/lib/x86_64-linux-gnu/
-ENV PYTHON_INCLUDE_DIR=/usr/include/x86_64-linux-gnu/python3.5m
+ENV PYTHONPATH=/swig/OREAnalytics-SWIG/Python/build.release/ \
+    PYTHON_LIBRARY=/usr/lib/x86_64-linux-gnu/ \
+    PYTHON_INCLUDE_DIR=/usr/include/x86_64-linux-gnu/python3.5m
 
 RUN \
   find -regex ".*\.\(sh\|in\|ac\|am\)" -exec dos2unix {} ';' \
@@ -45,4 +39,19 @@ RUN \
   && cd ../../../QuantExt-SWIG/Python/test \
   && python3 -c "import sys, OREAnalytics; sys.modules['QuantExt']=OREAnalytics;import QuantExtTestSuite;QuantExtTestSuite.test()" \
   && cd ../../../OREData-SWIG/Python/test \
-  && python3 -c "import sys, OREAnalytics; sys.modules['OREData']=OREAnalytics;import OREDataTestSuite;OREDataTestSuite.test()"
+  && python3 -c "import sys, OREAnalytics; sys.modules['OREData']=OREAnalytics;import OREDataTestSuite;OREDataTestSuite.test()" \
+  && cd ../../../OREAnalytics-SWIG/Python/test \
+  && python3 OREAnalyticsTestSuite.py \
+  && cd / \
+  && mkdir build \
+  && mv /swig/OREAnalytics-SWIG/Python/build.release/OREAnalytics.py build \
+  && mv /swig/OREAnalytics-SWIG/Python/build.release/_OREAnalytics.so build \
+  && rm -rf /swig \
+  && cd /usr/local/include \
+  && rm -rf boost \
+  && rm -rf orea \
+  && rm -rf ored \
+  && rm -rf ql \
+  && rm -rf qle
+
+ENV PYTHONPATH=/build
