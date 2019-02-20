@@ -24,11 +24,11 @@ $ORE/QuantLib/ql/.libs/\
     }
     
     stages {
-        //stage ('Start') {
-        //    steps {
-        //        slackSend (color: '#FFFF00', message: "STARTED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
-        //    }
-        //}
+        stage ('Start') {
+            steps {
+                slackSend (color: '#FFFF00', message: "STARTED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
+            }
+        }
         stage('Build') {
             steps {
                 sh 'mkdir -p OREPlus-SWIG/Python/build'
@@ -59,12 +59,12 @@ $ORE/QuantLib/ql/.libs/\
         }
     }
     post {
-        //success {
-         //   slackSend (color: '#00FF00', message: ":smiley: :thumbsup_all: SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
-        //}
-        //failure {
-        //    slackSend (color: '#FF0000', message: ":angry: :thumbsdown: FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
-        //}
+        success {
+            slackSend (color: '#00FF00', message: ":smiley: :thumbsup_all: SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
+        }
+        failure {
+            slackSend (color: '#FF0000', message: ":angry: :thumbsdown: FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
+        }
         always {
             sh 'docker ps -q -f status=exited | xargs --no-run-if-empty docker rm || true'
             sh 'docker images -q -f dangling=true | xargs --no-run-if-empty docker rmi || true'
