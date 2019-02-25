@@ -32,7 +32,7 @@ RUN \
   && cd OREAnalytics-SWIG/Python \
   && mkdir build.release \
   && cd build.release \
-  && cmake .. \
+  && cmake -DORE=../../ .. \
   && make -j ${num_cores} \
   && cd ../../../QuantLib-SWIG/Python/test \
   && python3 -c "import sys, OREAnalytics; sys.modules['QuantLib']=OREAnalytics;import QuantLibTestSuite;QuantLibTestSuite.test()" \

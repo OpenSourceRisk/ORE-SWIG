@@ -33,7 +33,7 @@ RUN \
   && cd OREPlus-SWIG/Python \
   && mkdir build.release \
   && cd build.release \
-  && cmake .. \
+  && cmake -DORE=../../ .. \
   && make -j ${num_cores} \
   && cd ../../../QuantLib-SWIG/Python/test \
   && python3 -c "import sys, OREPlus; sys.modules['QuantLib']=OREPlus;import QuantLibTestSuite;QuantLibTestSuite.test()" \

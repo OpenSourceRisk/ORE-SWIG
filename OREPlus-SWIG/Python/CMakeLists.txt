@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.8)
 
 project(OREPlus-Python)
 
-include(../../cmake/commonSettings.cmake)
+include(${ORE}/cmake/commonSettings.cmake)
 
 # Append /bigobj to compiler flags on Windows for this target
 if (MSVC)
