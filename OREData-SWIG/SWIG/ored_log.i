@@ -127,6 +127,7 @@ static void MLOGSWIG(unsigned mask, const std::string& text, const char* filenam
 
 %define export_log(Name,Mask)
 
+#if defined(SWIGPYTHON)
 %pythoncode %{
 def Name##(text):
     import inspect
@@ -134,6 +135,7 @@ def Name##(text):
     call_frame = inspect.getouterframes(current_frame, 2)[-1]
     MLOG(Mask##, text, call_frame.filename, call_frame.lineno)
 %}
+#endif
 
 %enddef
 
