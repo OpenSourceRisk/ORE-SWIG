@@ -3,7 +3,7 @@ ORE-SWIG: Language bindings for ORE
 ===================================
 
 The [Open Source Risk](http://opensourcerisk.org) project aims at
-estblishing a transparent peer-reviewed framework for pricing and risk
+establishing a transparent peer-reviewed framework for pricing and risk
 analysis. Open Source Risk Engine (ORE) is based on QuantLib
 (<http://quantlib.org>) and consists of three libraries written in
 C++.
