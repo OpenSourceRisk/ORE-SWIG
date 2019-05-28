@@ -126,6 +126,7 @@ static void MLOGSWIG(unsigned mask, const std::string& text, const char* filenam
 %}
 
 %define export_log(Name,Mask)
+
 #if defined(SWIGPYTHON)
 %pythoncode %{
 def Name##(text):
@@ -135,6 +136,7 @@ def Name##(text):
     MLOG(Mask##, text, call_frame.filename, call_frame.lineno)
 %}
 #endif
+
 %enddef
 
 export_log(ALOG, ORE_ALERT);
