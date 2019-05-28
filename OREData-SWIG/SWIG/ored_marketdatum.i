@@ -664,9 +664,9 @@ public:
         const std::string& ccy() const {
             return boost::dynamic_pointer_cast<SwaptionShiftQuote>(*self)->ccy();
         }
-        const Period& expiry() const {
-            return boost::dynamic_pointer_cast<SwaptionShiftQuote>(*self)->expiry();
-        }
+	//        const Period& expiry() const {
+	//            return boost::dynamic_pointer_cast<SwaptionShiftQuote>(*self)->expiry();
+	//        }
         const Period& term() const {
             return boost::dynamic_pointer_cast<SwaptionShiftQuote>(*self)->term();
         }

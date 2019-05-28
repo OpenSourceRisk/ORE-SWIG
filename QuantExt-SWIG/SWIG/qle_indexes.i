@@ -189,7 +189,6 @@ class Name##Ptr : public OvernightIndexPtr {
 %enddef
 
 qle_export_xibor_instance(AUDbbsw);
-qle_export_xibor_instance(COPIbr);
 qle_export_xibor_instance(CZKPribor);
 qle_export_xibor_instance(DEMLibor);
 qle_export_xibor_instance(DKKCibor);
@@ -215,6 +214,7 @@ qle_export_xibor_instance(TWDTaibor);
 qle_export_overnight_instance(BRLCdi);
 qle_export_overnight_instance(CHFTois);
 qle_export_overnight_instance(CLPCamara);
+qle_export_overnight_instance(COPIbr);
 qle_export_overnight_instance(CORRA);
 qle_export_overnight_instance(DKKOis);
 qle_export_overnight_instance(SEKSior);
