@@ -143,12 +143,12 @@
       <SwapIndexBase>CHF-CMS-30Y</SwapIndexBase>
     </SwaptionVolatility>
     <SwaptionVolatility>
-      <CurveId>JPY_SW_N</CurveId>
+      <CurveId>JPY_SW_LN</CurveId>
       <CurveDescription>JPY normal swaption volatilities</CurveDescription>
       <!-- ATM (Smile not yet supported) -->
       <Dimension>ATM</Dimension>
       <!-- Normal or Lognormal or ShiftedLognormal -->
-      <VolatilityType>Normal</VolatilityType>
+      <VolatilityType>Lognormal</VolatilityType>
       <!-- Flat or Linear -->
       <Extrapolation>Flat</Extrapolation>
       <!-- Day counter for date to time conversion -->
