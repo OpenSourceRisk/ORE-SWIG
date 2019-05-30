@@ -155,6 +155,7 @@ class my_build_ext(build_ext):
                 self.library_dirs += [os.path.join(ORE_INSTALL_DIR,'OREPlus','Sensitivity', 'lib')]
                 self.library_dirs += [os.path.join(ORE_INSTALL_DIR,'OREDataPlus', 'lib')]
                 self.library_dirs += [os.path.join(ORE_INSTALL_DIR,'OREAnalyticsPlus', 'lib')]
+                self.libraries += ['Advapi32']
 
             except KeyError:
                 print('warning: unable to detect BOOST/ORE installation')
