@@ -10,6 +10,7 @@ pipeline {
         LIBRARY_PATH = """\
 $ORE/OREAnalyticsPlus/oreap/.libs/:\
 $ORE/OREDataPlus/oredp/.libs/:\
+$ORE/OREPlus/FormulaBasedCoupon/orepfbc/.libs/:\
 $ORE/OREPlus/Sensitivity/orepsensi/.libs/:\
 $ORE/OREPlus/Base/orepbase/.libs/:\
 $ORE/QuantExtPlus/qlep/.libs/:\
