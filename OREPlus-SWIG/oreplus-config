@@ -40,11 +40,11 @@ while test $# -gt 0; do
       ;;
     --cflags)
       #echo -I${prefix}/include  
-      echo -I${prefix}/OREAnalyticsPlus -I${prefix}/OREDataPlus -I${prefix}/OREPlus/Sensitivity -I${prefix}/OREPlus/Base -I${prefix}/QuantExtPlus -I${prefix}/OREAnalytics -I${prefix}/OREData -I${prefix}/QuantExt -I${prefix}/QuantLib -I${BOOST}
+      echo -I${prefix}/OREAnalyticsPlus -I${prefix}/OREDataPlus -I${prefix}/OREPlus/Sensitivity -I${prefix}/OREPlus/FormulaBasedCoupon -I${prefix}/OREPlus/Base -I${prefix}/QuantExtPlus -I${prefix}/OREAnalytics -I${prefix}/OREData -I${prefix}/QuantExt -I${prefix}/QuantLib -I${BOOST}
       ;;
     --libs)
       #echo -L${exec_prefix}/lib  -lQuantLib  
-      echo -L${exec_prefix}/OREAnalyticsPlus/oreap/.libs -lOREAnalyticsPlus -L${exec_prefix}/OREDataPlus/oredp/.libs -lOREDataPlus -L${exec_prefix}/OREPlus/Sensitivity/orepsnesi/.libs -lOREPlusSensi -L${exec_prefix}/OREPlus/Base/orepbase/.libs -lOREPlusBase -L${exec_prefix}/QuantExtPlus/qlep/.libs -lQuantExtPlus -L${exec_prefix}/OREAnalytics/orea/.libs -lOREAnalytics -L${exec_prefix}/OREData/ored/.libs -lOREData -L${exec_prefix}/QuantExt/qle/.libs -lQuantExt -L${exec_prefix}/QuantLib/ql/.libs -lQuantLib -L${BOOST}/stage/lib -lboost_thread -lboost_system -lboost_serialization -lboost_date_time -lboost_regex -lboost_filesystem
+      echo -L${exec_prefix}/OREAnalyticsPlus/oreap/.libs -lOREAnalyticsPlus -L${exec_prefix}/OREDataPlus/oredp/.libs -lOREDataPlus -L${exec_prefix}/OREPlus/Sensitivity/orepsnesi/.libs -lOREPlusSensi -L${exec_prefix}/OREPlus/FormulaBasedCoupon/orepfbc/.libs -lOREPlusFBC -L${exec_prefix}/OREPlus/Base/orepbase/.libs -lOREPlusBase -L${exec_prefix}/QuantExtPlus/qlep/.libs -lQuantExtPlus -L${exec_prefix}/OREAnalytics/orea/.libs -lOREAnalytics -L${exec_prefix}/OREData/ored/.libs -lOREData -L${exec_prefix}/QuantExt/qle/.libs -lQuantExt -L${exec_prefix}/QuantLib/ql/.libs -lQuantLib -L${BOOST}/stage/lib -lboost_thread -lboost_system -lboost_serialization -lboost_date_time -lboost_regex -lboost_filesystem
       ;;
     *)
       echo "${usage}" 1>&2

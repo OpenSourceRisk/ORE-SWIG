@@ -138,6 +138,7 @@ class my_build_ext(build_ext):
                 self.include_dirs += [os.path.join(ORE_INSTALL_DIR,'OREAnalytics')]
                 self.include_dirs += [os.path.join(ORE_INSTALL_DIR,'QuantExtPlus')]
                 self.include_dirs += [os.path.join(ORE_INSTALL_DIR,'OREPlus', 'Base')]
+                self.include_dirs += [os.path.join(ORE_INSTALL_DIR,'OREPlus', 'FormulaBasedCoupon')]
                 self.include_dirs += [os.path.join(ORE_INSTALL_DIR,'OREPlus','Sensitivity')]
                 self.include_dirs += [os.path.join(ORE_INSTALL_DIR,'OREDataPlus')]
                 self.include_dirs += [os.path.join(ORE_INSTALL_DIR,'OREAnalyticsPlus')]
@@ -150,6 +151,7 @@ class my_build_ext(build_ext):
                 self.library_dirs += [os.path.join(ORE_INSTALL_DIR,'OREAnalytics', 'lib')]
                 self.library_dirs += [os.path.join(ORE_INSTALL_DIR,'QuantExtPlus', 'lib')]
                 self.library_dirs += [os.path.join(ORE_INSTALL_DIR,'OREPlus', 'Base', 'lib')]
+                self.library_dirs += [os.path.join(ORE_INSTALL_DIR,'OREPlus', 'FormulaBasedCoupon', 'lib')]
                 self.library_dirs += [os.path.join(ORE_INSTALL_DIR,'OREPlus','Sensitivity', 'lib')]
                 self.library_dirs += [os.path.join(ORE_INSTALL_DIR,'OREDataPlus', 'lib')]
                 self.library_dirs += [os.path.join(ORE_INSTALL_DIR,'OREAnalyticsPlus', 'lib')]
@@ -271,7 +273,7 @@ framework for quantitative finance.
       """,
       author           = "Quaternion Risk Management",
       author_email     = "info@quaternion.com",
-      url              = "http://quternion.com",
+      url              = "http://quaternion.com",
       license          = codecs.open('../LICENSE.TXT','r+',
                                      encoding='utf8').read(),
       classifiers      = classifiers,
