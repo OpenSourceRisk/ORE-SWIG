@@ -105,7 +105,6 @@ class CrossCcyBasisSwapPtr : public CrossCcySwapPtr {
     }
 };
 
-
 %rename(CrossCcyBasisMtMResetSwap) CrossCcyBasisMtMResetSwapPtr;
 class CrossCcyBasisMtMResetSwapPtr : public CrossCcySwapPtr {
   public:
@@ -120,8 +119,7 @@ class CrossCcyBasisMtMResetSwapPtr : public CrossCcySwapPtr {
                                      const IborIndexPtr& domesticIndex, 
                                      Spread domesticSpread, 
                                      const FxIndexPtr& fxIdx, 
-                                     bool invertFxIdx = false,
-                                     bool receiveDomestic = true) {
+				     bool receiveDomestic = true) {
             boost::shared_ptr<IborIndex> fIndex = boost::dynamic_pointer_cast<IborIndex>(foreignIndex);
             boost::shared_ptr<IborIndex> dIndex = boost::dynamic_pointer_cast<IborIndex>(domesticIndex);
             boost::shared_ptr<FxIndex> fxIndex = boost::dynamic_pointer_cast<FxIndex>(fxIdx);
@@ -136,8 +134,7 @@ class CrossCcyBasisMtMResetSwapPtr : public CrossCcySwapPtr {
                                               dIndex,
                                               domesticSpread,
                                               fxIndex, 
-                                              invertFxIdx,
-                                              receiveDomestic));
+					      receiveDomestic));
         }
         Spread fairForeignSpread() const { 
             return boost::dynamic_pointer_cast<CrossCcyBasisMtMResetSwap>(*self)->fairForeignSpread(); 
@@ -147,7 +144,6 @@ class CrossCcyBasisMtMResetSwapPtr : public CrossCcySwapPtr {
         }
     }
 };
-
 
 %rename(Deposit) DepositPtr;
 class DepositPtr : public boost::shared_ptr<Instrument> {

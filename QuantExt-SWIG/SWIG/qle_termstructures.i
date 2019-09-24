@@ -49,9 +49,9 @@ IsObservable(boost::shared_ptr<PriceTermStructure>);
 IsObservable(Handle<PriceTermStructure>);
 
 %template(RelinkablePriceTermStructureHandle) RelinkableHandle<PriceTermStructure>;
-
+				    
 %define export_Interpolated_Price_Curve(Name, Interpolator)
-
+				    
 %{
 typedef boost::shared_ptr<PriceTermStructure> Name##Ptr;
 %}
@@ -62,35 +62,39 @@ typedef boost::shared_ptr<PriceTermStructure> Name##Ptr;
 class Name##Ptr : public boost::shared_ptr<PriceTermStructure> {
   public:
     %extend {
-        Name##Ptr(const std::vector<QuantLib::Time>& times,
+        Name##Ptr(const std::vector<QuantLib::Period>& tenors,
                   const std::vector<QuantLib::Real>& prices, 
                   const QuantLib::DayCounter& dc) {
             return new Name##Ptr(
-                new InterpolatedPriceCurve<Interpolator>(times, 
+                new InterpolatedPriceCurve<Interpolator>(tenors, 
                                                          prices, 
                                                          dc));
         }
-        Name##Ptr(const std::vector<QuantLib::Time>& times,
+        Name##Ptr(const std::vector<QuantLib::Period>& tenors,
                   const std::vector<QuantLib::Handle<QuantLib::Quote>>& quotes,
                   const QuantLib::DayCounter& dc) {
             return new Name##Ptr(
-                new InterpolatedPriceCurve<Interpolator>(times, 
+                new InterpolatedPriceCurve<Interpolator>(tenors, 
                                                          quotes, 
                                                          dc));
         }
-        Name##Ptr(const std::vector<QuantLib::Date>& dates,
+        Name##Ptr(const QuantLib::Date& referenceDate,
+		  const std::vector<QuantLib::Date>& dates,
                   const std::vector<QuantLib::Real>& prices,
                   const QuantLib::DayCounter& dc) {
             return new Name##Ptr(
-                new InterpolatedPriceCurve<Interpolator>(dates, 
+		new InterpolatedPriceCurve<Interpolator>(referenceDate,
+							 dates, 
                                                          prices, 
                                                          dc));
         }
-        Name##Ptr(const std::vector<QuantLib::Date>& dates,
+        Name##Ptr(const QuantLib::Date& referenceDate,
+		  const std::vector<QuantLib::Date>& dates,
                   const std::vector<QuantLib::Handle<QuantLib::Quote>>& quotes,
                   const QuantLib::DayCounter& dc) {
             return new Name##Ptr(
-                new InterpolatedPriceCurve<Interpolator>(dates, 
+		new InterpolatedPriceCurve<Interpolator>(referenceDate,
+							 dates, 
                                                          quotes, 
                                                          dc));
         }
@@ -105,13 +109,14 @@ class Name##Ptr : public boost::shared_ptr<PriceTermStructure> {
 
 %enddef
 
+ /*
 export_Interpolated_Price_Curve(LinearInterpolatedPriceCurve, Linear);
 export_Interpolated_Price_Curve(BackwardFlatInterpolatedPriceCurve, BackwardFlat);
 export_Interpolated_Price_Curve(LogLinearInterpolatedPriceCurve, LogLinear);
 export_Interpolated_Price_Curve(CubicInterpolatedPriceCurve, Cubic);
 export_Interpolated_Price_Curve(SplineCubicInterpolatedPriceCurve, SplineCubic);
 export_Interpolated_Price_Curve(MonotonicCubicInterpolatedPriceCurve, MonotonicCubic);
-
+ */
 %rename(QLESwaptionVolCube2) QLESwaptionVolCube2Ptr;
 class QLESwaptionVolCube2Ptr : public boost::shared_ptr<SwaptionVolatilityStructure> {
   public:

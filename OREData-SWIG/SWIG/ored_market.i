@@ -194,12 +194,6 @@ class MarketImplPtr {
     }
 
     // Commodity curves
-    Handle<Quote>
-      commoditySpot(const std::string& commodityName, 
-            const std::string& configuration = Market::defaultConfiguration) const {
-      return boost::dynamic_pointer_cast<ore::data::MarketImpl>(*self)->commoditySpot(commodityName, configuration);      
-    }
-
     Handle<QuantExt::PriceTermStructure>
       commodityPriceCurve(const std::string& commodityName,
               const std::string& configuration = Market::defaultConfiguration) const {
