@@ -109,14 +109,13 @@ class Name##Ptr : public boost::shared_ptr<PriceTermStructure> {
 
 %enddef
 
- /*
 export_Interpolated_Price_Curve(LinearInterpolatedPriceCurve, Linear);
 export_Interpolated_Price_Curve(BackwardFlatInterpolatedPriceCurve, BackwardFlat);
 export_Interpolated_Price_Curve(LogLinearInterpolatedPriceCurve, LogLinear);
 export_Interpolated_Price_Curve(CubicInterpolatedPriceCurve, Cubic);
 export_Interpolated_Price_Curve(SplineCubicInterpolatedPriceCurve, SplineCubic);
 export_Interpolated_Price_Curve(MonotonicCubicInterpolatedPriceCurve, MonotonicCubic);
- */
+
 %rename(QLESwaptionVolCube2) QLESwaptionVolCube2Ptr;
 class QLESwaptionVolCube2Ptr : public boost::shared_ptr<SwaptionVolatilityStructure> {
   public:
