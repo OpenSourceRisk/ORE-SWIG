@@ -36,9 +36,10 @@ class QLECreditDefaultSwapPtr : public boost::shared_ptr<Instrument> {
                                 QuantLib::BusinessDayConvention paymentConvention, 
                                 const QuantLib::DayCounter& dayCounter, 
                                 bool settlesAccrual = true,
-                                bool paysAtDefaultTime = true, 
+                                QuantExt::CreditDefaultSwap::ProtectionPaymentTime protectionPaymentTime = QuantExt::CreditDefaultSwap::atDefault,
                                 const QuantLib::Date& protectionStart = QuantLib::Date(), 
-                                const boost::shared_ptr<QuantLib::Claim>& claim = boost::shared_ptr<QuantLib::Claim>()) {
+                                const boost::shared_ptr<QuantLib::Claim>& claim = boost::shared_ptr<QuantLib::Claim>(),
+				const DayCounter& lastPeriodDayCounter = DayCounter()) {
             return new QLECreditDefaultSwapPtr(
                 new QuantExt::CreditDefaultSwap(side, 
                                                 notional, 
@@ -47,9 +48,10 @@ class QLECreditDefaultSwapPtr : public boost::shared_ptr<Instrument> {
                                                 paymentConvention, 
                                                 dayCounter,
                                                 settlesAccrual, 
-                                                paysAtDefaultTime,
+                                                protectionPaymentTime,
                                                 protectionStart, 
-                                                claim));
+                                                claim,
+						lastPeriodDayCounter));
         }
         QLECreditDefaultSwapPtr(QuantLib::Protection::Side side, 
                                 QuantLib::Real notional, 
@@ -59,10 +61,11 @@ class QLECreditDefaultSwapPtr : public boost::shared_ptr<Instrument> {
                                 QuantLib::BusinessDayConvention paymentConvention, 
                                 const QuantLib::DayCounter& dayCounter, 
                                 bool settlesAccrual = true,
-                                bool paysAtDefaultTime = true, 
+                                QuantExt::CreditDefaultSwap::ProtectionPaymentTime protectionPaymentTime = QuantExt::CreditDefaultSwap::atDefault, 
                                 const QuantLib::Date& protectionStart = QuantLib::Date(),
                                 const QuantLib::Date& upfrontDate = QuantLib::Date(),
-                                const boost::shared_ptr<QuantLib::Claim>& claim = boost::shared_ptr<QuantLib::Claim>()) {
+                                const boost::shared_ptr<QuantLib::Claim>& claim = boost::shared_ptr<QuantLib::Claim>(),
+				const DayCounter& lastPeriodDayCounter = DayCounter()) {
             return new QLECreditDefaultSwapPtr(
                 new QuantExt::CreditDefaultSwap(side, 
                                                 notional, 
@@ -72,10 +75,11 @@ class QLECreditDefaultSwapPtr : public boost::shared_ptr<Instrument> {
                                                 paymentConvention,
                                                 dayCounter, 
                                                 settlesAccrual,
-                                                paysAtDefaultTime,
+                                                protectionPaymentTime,
                                                 protectionStart,
                                                 upfrontDate, 
-                                                claim));
+                                                claim,
+						lastPeriodDayCounter));
         }
         QuantLib::Protection::Side side() const {
             return boost::dynamic_pointer_cast<QuantExt::CreditDefaultSwap>(*self)->side();
@@ -89,8 +93,8 @@ class QLECreditDefaultSwapPtr : public boost::shared_ptr<Instrument> {
         bool settlesAccrual() const {
             return boost::dynamic_pointer_cast<QuantExt::CreditDefaultSwap>(*self)->settlesAccrual();
         }
-        bool paysAtDefaultTime() const {
-            return boost::dynamic_pointer_cast<QuantExt::CreditDefaultSwap>(*self)->paysAtDefaultTime();
+        QuantExt::CreditDefaultSwap::ProtectionPaymentTime protectionPaymentTime() const {
+            return boost::dynamic_pointer_cast<QuantExt::CreditDefaultSwap>(*self)->protectionPaymentTime();
         }
         const QuantLib::Leg& coupons() const {
             return boost::dynamic_pointer_cast<QuantExt::CreditDefaultSwap>(*self)->coupons();
@@ -107,7 +111,7 @@ class QLECreditDefaultSwapPtr : public boost::shared_ptr<Instrument> {
         QuantLib::Rate fairSpread() const {
             return boost::dynamic_pointer_cast<QuantExt::CreditDefaultSwap>(*self)->fairSpread();
         }
-       QuantLib::Real couponLegBPS() const {
+        QuantLib::Real couponLegBPS() const {
             return boost::dynamic_pointer_cast<QuantExt::CreditDefaultSwap>(*self)->couponLegBPS();
         }
         QuantLib::Real upfrontBPS() const {

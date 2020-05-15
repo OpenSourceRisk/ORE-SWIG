@@ -134,18 +134,11 @@ class MarketImplPtr {
       return boost::dynamic_pointer_cast<ore::data::MarketImpl>(*self)->yoyInflationIndex(indexName, configuration).currentLink();      
     }
 
-    // CPI Inflation Cap Floor Price Surfaces
-    Handle<QuantLib::CPICapFloorTermPriceSurface>
-      cpiInflationCapFloorPriceSurface(const std::string& indexName,
-                       const std::string& configuration = Market::defaultConfiguration) const {
-      return boost::dynamic_pointer_cast<ore::data::MarketImpl>(*self)->cpiInflationCapFloorPriceSurface(indexName, configuration);
-    }
-
-    // YoY Inflation Cap Floor Price Surfaces
-    Handle<QuantLib::YoYCapFloorTermPriceSurface>
-      yoyInflationCapFloorPriceSurface(const std::string& indexName,
-                       const std::string& configuration = Market::defaultConfiguration) const {
-      return boost::dynamic_pointer_cast<ore::data::MarketImpl>(*self)->yoyInflationCapFloorPriceSurface(indexName, configuration);
+    // Inflation Cap Floor Volatility Surfaces
+    Handle<QuantLib::CPIVolatilitySurface>
+      cpiInflationCapFloorVolatilitySurface(const std::string& indexName,
+					    const std::string& configuration = Market::defaultConfiguration) const {
+      return boost::dynamic_pointer_cast<ore::data::MarketImpl>(*self)->cpiInflationCapFloorVolatilitySurface(indexName, configuration);
     }
 
     // Cpi Base Quotes
@@ -165,7 +158,6 @@ class MarketImplPtr {
       equityCurve(const std::string& eqName, const std::string& configuration = Market::defaultConfiguration) const {
       return boost::dynamic_pointer_cast<ore::data::MarketImpl>(*self)->equityCurve(eqName, configuration);
     }
-
     Handle<YieldTermStructure>
       equityDividendCurve(const std::string& eqName,
               const std::string& configuration = Market::defaultConfiguration) const {
@@ -206,6 +198,12 @@ class MarketImplPtr {
       return boost::dynamic_pointer_cast<ore::data::MarketImpl>(*self)->commodityVolatility(commodityName, configuration);
     }
 
+    Handle<QuantExt::CorrelationTermStructure>
+      correlationCurve(const std::string& index1, const std::string& index2,
+		       const std::string& configuration = Market::defaultConfiguration) const {
+      return boost::dynamic_pointer_cast<ore::data::MarketImpl>(*self)->correlationCurve(index1, index2, configuration);
+    }
+    
   }
 };
 

@@ -481,8 +481,8 @@ public:
   %extend {
         CrossCcyFixFloatSwapQuotePtr(Real value, Date asofDate, const std::string& name,
                                      MarketDatum::QuoteType quoteType,
-                                     const QuantLib::Currency& floatCurrency, const Period& floatTenor,
-                                     const QuantLib::Currency& fixedCurrency, const Period& fixedTenor,
+                                     const std::string& floatCurrency, const Period& floatTenor,
+                                     const std::string& fixedCurrency, const Period& fixedTenor,
                                      const Period& maturity = 3 * Months) {
             return new CrossCcyFixFloatSwapQuotePtr(new CrossCcyFixFloatSwapQuote(value, asofDate, name,
                                                                                   quoteType,
@@ -490,13 +490,13 @@ public:
                                                                                   fixedCurrency, fixedTenor,
                                                                                   maturity));
         }
-        const QuantLib::Currency& floatCurrency() const {
+        const std::string& floatCurrency() const {
             return boost::dynamic_pointer_cast<CrossCcyFixFloatSwapQuote>(*self)->floatCurrency();
         }
         const QuantLib::Period& floatTenor() const {
             return boost::dynamic_pointer_cast<CrossCcyFixFloatSwapQuote>(*self)->floatTenor();
         }
-        const QuantLib::Currency& fixedCurrency() const {
+        const std::string& fixedCurrency() const {
             return boost::dynamic_pointer_cast<CrossCcyFixFloatSwapQuote>(*self)->fixedCurrency();
         }
         const QuantLib::Period& fixedTenor() const {
@@ -512,35 +512,35 @@ public:
 };
 
 %{
-using ore::data::CdsSpreadQuote;
-typedef boost::shared_ptr<MarketDatum> CdsSpreadQuotePtr;
+using ore::data::CdsQuote;
+typedef boost::shared_ptr<MarketDatum> CdsQuotePtr;
 %}
 
-%rename(CdsSpreadQuote) CdsSpreadQuotePtr;
-class CdsSpreadQuotePtr : public boost::shared_ptr<MarketDatum> {
+%rename(CdsQuote) CdsQuotePtr;
+class CdsQuotePtr : public boost::shared_ptr<MarketDatum> {
 public:
   %extend {
-        CdsSpreadQuotePtr(Real value, Date asofDate, const std::string& name,
-                          const std::string& underlyingName, const std::string& seniority,
-                          const std::string& ccy, Period term) {
-            return new CdsSpreadQuotePtr(new CdsSpreadQuote(value, asofDate, name,
-                                                            underlyingName, seniority,
-                                                            ccy, term));
+    CdsQuotePtr(Real value, Date asofDate, const std::string& name, MarketDatum::QuoteType type,
+		const std::string& underlyingName, const std::string& seniority,
+		const std::string& ccy, Period term) {
+            return new CdsQuotePtr(new CdsQuote(value, asofDate, name, type,
+						underlyingName, seniority,
+						ccy, term));
         }
         const Period& term() const {
-            return boost::dynamic_pointer_cast<CdsSpreadQuote>(*self)->term();
+            return boost::dynamic_pointer_cast<CdsQuote>(*self)->term();
         }
         const std::string& seniority() const {
-            return boost::dynamic_pointer_cast<CdsSpreadQuote>(*self)->seniority();
+            return boost::dynamic_pointer_cast<CdsQuote>(*self)->seniority();
         }
         const std::string& ccy() const {
-            return boost::dynamic_pointer_cast<CdsSpreadQuote>(*self)->ccy();
+            return boost::dynamic_pointer_cast<CdsQuote>(*self)->ccy();
         }
         const std::string& underlyingName() const {
-            return boost::dynamic_pointer_cast<CdsSpreadQuote>(*self)->underlyingName();
+            return boost::dynamic_pointer_cast<CdsQuote>(*self)->underlyingName();
         }
-        static const CdsSpreadQuotePtr getFullView(boost::shared_ptr<MarketDatum> baseInput) const {
-            return boost::dynamic_pointer_cast<CdsSpreadQuote>(baseInput);
+        static const CdsQuotePtr getFullView(boost::shared_ptr<MarketDatum> baseInput) const {
+            return boost::dynamic_pointer_cast<CdsQuote>(baseInput);
         }
   }
 };
@@ -1219,6 +1219,10 @@ public:
 %{
 using ore::data::IndexCDSOptionQuote;
 typedef boost::shared_ptr<MarketDatum> IndexCDSOptionQuotePtr;
+using ore::data::Expiry;
+typedef boost::shared_ptr<Expiry> ExpiryPtr;
+using ore::data::BaseStrike;
+typedef boost::shared_ptr<BaseStrike> BaseStrikePtr;
 %}
 
 %rename(IndexCDSOptionQuote) IndexCDSOptionQuotePtr;
@@ -1226,14 +1230,15 @@ class IndexCDSOptionQuotePtr : public boost::shared_ptr<MarketDatum> {
 public:
   %extend {
         IndexCDSOptionQuotePtr(Real value, Date asofDate, const std::string& name,
-                               const std::string& indexName, const std::string& expiry) {
+                               const std::string& indexName, const ExpiryPtr& expiry,
+			       const std::string& indexTerm, const BaseStrikePtr& baseStrike) {
             return new IndexCDSOptionQuotePtr(new IndexCDSOptionQuote(value, asofDate, name,
-                                                                      indexName, expiry));
+                                                                      indexName, expiry, indexTerm, baseStrike));
         }
         const std::string& indexName() const {
             return boost::dynamic_pointer_cast<IndexCDSOptionQuote>(*self)->indexName();
         }
-        const std::string& expiry() const {
+        const ExpiryPtr& expiry() const {
             return boost::dynamic_pointer_cast<IndexCDSOptionQuote>(*self)->expiry();
         }
         static const IndexCDSOptionQuotePtr getFullView(boost::shared_ptr<MarketDatum> baseInput) const {
@@ -1318,8 +1323,8 @@ public:
                                 MarketDatum::QuoteType quoteType,
                                 const std::string commodityName,
                                 const std::string quoteCurrency,
-                                const std::string expiry,
-                                const std::string strike) {
+                                const ExpiryPtr& expiry,
+                                const BaseStrikePtr& strike) {
             return new CommodityOptionQuotePtr(new CommodityOptionQuote(value, asofDate, name,
                                                                         quoteType,
                                                                         commodityName, quoteCurrency,
@@ -1331,10 +1336,10 @@ public:
         const std::string& quoteCurrency() const {
             return boost::dynamic_pointer_cast<CommodityOptionQuote>(*self)->quoteCurrency();
         }
-        const std::string& expiry() const {
+        const ExpiryPtr& expiry() const {
             return boost::dynamic_pointer_cast<CommodityOptionQuote>(*self)->expiry();
         }
-        const std::string& strike() const {
+        const BaseStrikePtr& strike() const {
             return boost::dynamic_pointer_cast<CommodityOptionQuote>(*self)->strike();
         }
         static const CommodityOptionQuotePtr getFullView(boost::shared_ptr<MarketDatum> baseInput) const {

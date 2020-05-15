@@ -33,6 +33,7 @@ using QuantLib::Calendar;
 using QuantLib::Date;
 
 using ore::data::Conventions;
+using ore::data::Convention;
 using ore::data::IRSwapConvention;
 
 using ore::data::parseIborIndex;
@@ -61,7 +62,7 @@ IborIndexPtr parseIborIndex(const std::string& s,
 SwapIndexPtr parseSwapIndex(const std::string& s, 
     const Handle<YieldTermStructure>& forwarding = Handle<YieldTermStructure>(),
     const Handle<YieldTermStructure>& discounting = Handle<YieldTermStructure>(),
-    boost::shared_ptr<IRSwapConvention> convention = boost::shared_ptr<IRSwapConvention>());
+    boost::shared_ptr<Convention> convention = boost::shared_ptr<Convention>());
 
 boost::shared_ptr<Index> parseIndex(const std::string& s,
     const Conventions& conventions = Conventions());

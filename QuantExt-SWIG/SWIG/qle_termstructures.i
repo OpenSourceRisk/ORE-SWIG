@@ -9,6 +9,7 @@
 %include termstructures.i
 %include volatilities.i
 %include indexes.i
+%include currencies.i
 
 %{
 using QuantExt::PriceTermStructure;
@@ -64,39 +65,47 @@ class Name##Ptr : public boost::shared_ptr<PriceTermStructure> {
     %extend {
         Name##Ptr(const std::vector<QuantLib::Period>& tenors,
                   const std::vector<QuantLib::Real>& prices, 
-                  const QuantLib::DayCounter& dc) {
+                  const QuantLib::DayCounter& dc,
+		  const QuantLib::Currency& currency) {
             return new Name##Ptr(
                 new InterpolatedPriceCurve<Interpolator>(tenors, 
                                                          prices, 
-                                                         dc));
+                                                         dc,
+							 currency));
         }
         Name##Ptr(const std::vector<QuantLib::Period>& tenors,
                   const std::vector<QuantLib::Handle<QuantLib::Quote>>& quotes,
-                  const QuantLib::DayCounter& dc) {
+                  const QuantLib::DayCounter& dc,
+		  const QuantLib::Currency& currency) {
             return new Name##Ptr(
                 new InterpolatedPriceCurve<Interpolator>(tenors, 
                                                          quotes, 
-                                                         dc));
+                                                         dc,
+							 currency));
         }
         Name##Ptr(const QuantLib::Date& referenceDate,
 		  const std::vector<QuantLib::Date>& dates,
                   const std::vector<QuantLib::Real>& prices,
-                  const QuantLib::DayCounter& dc) {
+                  const QuantLib::DayCounter& dc,
+		  const QuantLib::Currency& currency) {
             return new Name##Ptr(
 		new InterpolatedPriceCurve<Interpolator>(referenceDate,
 							 dates, 
                                                          prices, 
-                                                         dc));
+                                                         dc,
+							 currency));
         }
         Name##Ptr(const QuantLib::Date& referenceDate,
 		  const std::vector<QuantLib::Date>& dates,
                   const std::vector<QuantLib::Handle<QuantLib::Quote>>& quotes,
-                  const QuantLib::DayCounter& dc) {
+                  const QuantLib::DayCounter& dc,
+		  const QuantLib::Currency& currency) {
             return new Name##Ptr(
 		new InterpolatedPriceCurve<Interpolator>(referenceDate,
 							 dates, 
                                                          quotes, 
-                                                         dc));
+                                                         dc,
+							 currency));
         }
         const std::vector<QuantLib::Time>& times() const {
             return boost::dynamic_pointer_cast<InterpolatedPriceCurve<Interpolator>>(*self)->times();
