@@ -1,7 +1,19 @@
-
 /*
- Copyright (C) 2018 Quaternion Risk Management Ltd
+ Copyright (C) 2018, 2020 Quaternion Risk Management Ltd
  All rights reserved.
+
+ This file is part of ORE, a free-software/open-source library
+ for transparent pricing and risk analysis - http://opensourcerisk.org
+
+ ORE is free software: you can redistribute it and/or modify it
+ under the terms of the Modified BSD License.  You should have received a
+ copy of the license along with this program.
+ The license is also available online at <http://opensourcerisk.org>
+
+ This program is distributed on the basis that it will form a useful
+ contribution to risk analytics and model standardisation, but WITHOUT
+ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ FITNESS FOR A PARTICULAR PURPOSE. See the license for more details.
 */
 
 #ifndef ored_parsers_i
@@ -33,7 +45,6 @@ using QuantLib::Calendar;
 using QuantLib::Date;
 
 using ore::data::Conventions;
-using ore::data::Convention;
 using ore::data::IRSwapConvention;
 
 using ore::data::parseIborIndex;
@@ -56,21 +67,21 @@ using ore::data::parseBusinessDayConvention;
 using ore::data::parseDate;
 %}
 
-IborIndexPtr parseIborIndex(const std::string& s,
-    const Handle<YieldTermStructure>& h = Handle<YieldTermStructure>());
+boost::shared_ptr<IborIndex> parseIborIndex(const std::string& s,
+                                            const Handle<YieldTermStructure>& h = Handle<YieldTermStructure>());
     
-SwapIndexPtr parseSwapIndex(const std::string& s, 
-    const Handle<YieldTermStructure>& forwarding = Handle<YieldTermStructure>(),
-    const Handle<YieldTermStructure>& discounting = Handle<YieldTermStructure>(),
-    boost::shared_ptr<Convention> convention = boost::shared_ptr<Convention>());
+boost::shared_ptr<SwapIndex> parseSwapIndex(const std::string& s,
+                                            const Handle<YieldTermStructure>& forwarding = Handle<YieldTermStructure>(),
+                                            const Handle<YieldTermStructure>& discounting = Handle<YieldTermStructure>(),
+                                            boost::shared_ptr<IRSwapConvention> convention = boost::shared_ptr<IRSwapConvention>());
 
 boost::shared_ptr<Index> parseIndex(const std::string& s,
-    const Conventions& conventions = Conventions());
+                                    const Conventions& conventions = Conventions());
     
-ZeroInflationIndexPtr parseZeroInflationIndex(const std::string& s, bool isInterpolated = false,
-    const Handle<ZeroInflationTermStructure>& h = Handle<ZeroInflationTermStructure>());
+boost::shared_ptr<ZeroInflationIndex> parseZeroInflationIndex(const std::string& s, bool isInterpolated = false,
+                                                              const Handle<ZeroInflationTermStructure>& h = Handle<ZeroInflationTermStructure>());
     
-FxIndexPtr parseFxIndex(const std::string& s);
+boost::shared_ptr<FxIndex> parseFxIndex(const std::string& s);
 
 QuantLib::Calendar parseCalendar(const std::string& s);
 QuantLib::Period parsePeriod(const std::string& s);

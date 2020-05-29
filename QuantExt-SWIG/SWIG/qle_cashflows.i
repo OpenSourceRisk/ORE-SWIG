@@ -1,6 +1,19 @@
 /*
- Copyright (C) 2018 Quaternion Risk Management Ltd
+ Copyright (C) 2018, 2020 Quaternion Risk Management Ltd
  All rights reserved.
+
+ This file is part of ORE, a free-software/open-source library
+ for transparent pricing and risk analysis - http://opensourcerisk.org
+
+ ORE is free software: you can redistribute it and/or modify it
+ under the terms of the Modified BSD License.  You should have received a
+ copy of the license along with this program.
+ The license is also available online at <http://opensourcerisk.org>
+
+ This program is distributed on the basis that it will form a useful
+ contribution to risk analytics and model standardisation, but WITHOUT
+ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ FITNESS FOR A PARTICULAR PURPOSE. See the license for more details.
 */
 
 #ifndef qle_cashflows_i
@@ -18,70 +31,33 @@
 %include qle_indexes.i
 
 %{
-  using QuantExt::FXLinkedCashFlow;
-  using QuantExt::FloatingRateFXLinkedNotionalCoupon;
-
-  typedef boost::shared_ptr<CashFlow> FXLinkedCashFlowPtr;
-  typedef boost::shared_ptr<CashFlow> FloatingRateFXLinkedNotionalCouponPtr;
+using QuantExt::FXLinkedCashFlow;
+using QuantExt::FloatingRateFXLinkedNotionalCoupon;
 %}
 
-%rename(FXLinkedCashFlow) FXLinkedCashFlowPtr;
-class FXLinkedCashFlowPtr : public boost::shared_ptr<CashFlow> {
-public:
-    %extend{
-        FXLinkedCashFlowPtr(const QuantLib::Date& cashFlowDate,
-                            const QuantLib::Date& fixingDate,
-                            QuantLib::Real foreignAmount,
-                            FxIndexPtr fxIndex) {
-            boost::shared_ptr<FxIndex> FXIndex = boost::dynamic_pointer_cast<FxIndex>(fxIndex);
-            return new FXLinkedCashFlowPtr(
-                new FXLinkedCashFlow(cashFlowDate,
-                                     fixingDate,
-                                     foreignAmount,
-                                     FXIndex));
-        }
-        QuantLib::Date fxFixingDate() const {
-            return boost::dynamic_pointer_cast<FXLinkedCashFlow>(*self)->fxFixingDate();
-        }
-        const FxIndexPtr fxIndex() const {
-            return boost::dynamic_pointer_cast<FXLinkedCashFlow>(*self)->fxIndex();
-        }
-        QuantLib::Real fxRate() const {
-            return boost::dynamic_pointer_cast<FXLinkedCashFlow>(*self)->fxRate();
-        }
-    }
+%shared_ptr(FXLinkedCashFlow)
+class FXLinkedCashFlow : public CashFlow {
+  public:
+    FXLinkedCashFlow(const QuantLib::Date& cashFlowDate,
+                     const QuantLib::Date& fixingDate,
+                     QuantLib::Real foreignAmount,
+                     boost::shared_ptr<FxIndex> fxIndex);
+    QuantLib::Date fxFixingDate() const;
+    const boost::shared_ptr<FxIndex> fxIndex() const;
+    QuantLib::Real fxRate() const;
 };
 
-%rename(FloatingRateFXLinkedNotionalCoupon) FloatingRateFXLinkedNotionalCouponPtr;
-class FloatingRateFXLinkedNotionalCouponPtr : public FloatingRateCouponPtr {
-public:
-    %extend{
-        FloatingRateFXLinkedNotionalCouponPtr(const QuantLib::Date& fxFixingDate,
-                                              QuantLib::Real foreignAmount,
-                                              FxIndexPtr fxIndex,
-					      const FloatingRateCouponPtr underlying) {
-            boost::shared_ptr<FxIndex> fxidx = boost::dynamic_pointer_cast<FxIndex>(fxIndex);
-            boost::shared_ptr<FloatingRateCoupon> floatCoupon = boost::dynamic_pointer_cast<FloatingRateCoupon>(underlying);
-            return new FloatingRateFXLinkedNotionalCouponPtr(
-                new FloatingRateFXLinkedNotionalCoupon(fxFixingDate,
-                                                       foreignAmount,
-                                                       fxidx,
-						       floatCoupon));
-        }
-        
-        Real nominal() const {
-            return boost::dynamic_pointer_cast<FloatingRateFXLinkedNotionalCoupon>(*self)->nominal();
-        }
-        Rate rate() const {
-            return boost::dynamic_pointer_cast<FloatingRateFXLinkedNotionalCoupon>(*self)->rate();
-        }
-        Rate indexFixing() const {
-            return boost::dynamic_pointer_cast<FloatingRateFXLinkedNotionalCoupon>(*self)->indexFixing();
-        }
-        void setPricer(const boost::shared_ptr<FloatingRateCouponPricer>& p) {
-            return boost::dynamic_pointer_cast<FloatingRateFXLinkedNotionalCoupon>(*self)->setPricer(p);
-        }
-    }
+%shared_ptr(FloatingRateFXLinkedNotionalCoupon)
+class FloatingRateFXLinkedNotionalCoupon : public FloatingRateCoupon {
+  public:
+    FloatingRateFXLinkedNotionalCoupon(const QuantLib::Date& fxFixingDate,
+                                       QuantLib::Real foreignAmount,
+                                       boost::shared_ptr<FxIndex> fxIndex,
+                                       const boost::shared_ptr<FloatingRateCoupon> underlying);
+    Real nominal() const;
+    Rate rate() const;
+    Rate indexFixing() const;
+    void setPricer(const boost::shared_ptr<FloatingRateCouponPricer>& p);
 };
 
 #endif

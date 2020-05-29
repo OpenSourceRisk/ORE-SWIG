@@ -92,28 +92,3 @@ swig_link_libraries(OREPlus ${OREPFBC_LIB_NAME})
 swig_link_libraries(OREPlus ${OREPSENSI_LIB_NAME})
 swig_link_libraries(OREPlus ${OREDP_LIB_NAME})
 swig_link_libraries(OREPlus ${OREAP_LIB_NAME})
-
-#if (APPLE) 
-#
-   # Use rpath for the module library _OREPlus
-#  set_target_properties(_OREPlus PROPERTIES MACOSX_RPATH TRUE)
-#
-   # append directories in the linker search path and outside the project to the INSTALL_RPATH
-#  set_target_properties(_OREPlus PROPERTIES CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
-#
-   # this is where libtriv_stats.dylib is installed relative to where _simple_module.so is installed
-#  set_target_properties(_OREPlus PROPERTIES INSTALL_RPATH "@loader_path/../../..")
-#
-#else()
-#
-#  #set_target_properties(_OREPlus PROPERTIES INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
-#  set_target_properties(_OREPlus PROPERTIES INSTALL_RPATH_USE_LINK_PATH TRUE)
-#
-#endif()
-
-# Installation involves copying _OREPlus.so and OREPlus.py, and adding __init__.py.
-# The below simply copies the files to the PYTHONPATH, but does not
-# integrate the additional module with the exisiting ones.  
-# To run thr code it suffices to add the directory that contains _OREPlus.so and OREPlus.py to the PYTHONPATH.
-#install(TARGETS _OREPlus DESTINATION "${PYTHON_INSTALL_PATH}")
-#install(FILES ${CMAKE_CURRENT_BINARY_DIR}/OREPlus.py ${PROJECT_SOURCE_DIR}/OREPlus/__init__.py DESTINATION "${PYTHON_INSTALL_PATH}")
