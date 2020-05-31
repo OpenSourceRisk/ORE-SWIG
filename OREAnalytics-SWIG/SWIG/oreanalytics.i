@@ -23,9 +23,7 @@
 //#endif
 //%}
 
-#if defined(SWIGRUBY)
-%module OREAnalyticsc
-#elif defined(SWIGCSHARP)
+#if defined(SWIGCSHARP)
 %module(directors="1") NOREAnalyticsc
 #elif defined(SWIGJAVA)
 %module(directors="1") OREAnalytics
