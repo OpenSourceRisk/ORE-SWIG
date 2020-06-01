@@ -93,7 +93,28 @@ class Convention {
     Convention::Type type() const;
     void fromXMLString(const std::string& xmlString);
     std::string toXMLString();
-  private:
+
+    %extend {
+      static const Convention::Type Zero = Convention::Type::Zero;
+      static const Convention::Type Deposit = Convention::Type::Deposit;
+      static const Convention::Type Future = Convention::Type::Future;
+      static const Convention::Type FRA = Convention::Type::FRA;
+      static const Convention::Type OIS = Convention::Type::OIS;
+      static const Convention::Type Swap = Convention::Type::Swap;
+      static const Convention::Type AverageOis = Convention::Type::AverageOIS;
+      static const Convention::Type TenorBasisSwap = Convention::Type::TenorBasisSwap;
+      static const Convention::Type TenorBasisTwoSwap = Convention::Type::TenorBasisTwoSwap;
+      static const Convention::Type BMABasisSwap = Convention::Type::BMABasisSwap;
+      static const Convention::Type FX = Convention::Type::FX;
+      static const Convention::Type CrossCcyBasis = Convention::Type::CrossCcyBasis;
+      static const Convention::Type CrossCcyFixFloat = Convention::Type::CrossCcyFixFloat;
+      static const Convention::Type CDS = Convention::Type::CDS;
+      static const Convention::Type SwapIndex = Convention::Type::SwapIndex;
+      static const Convention::Type InflationSwap = Convention::Type::InflationSwap;
+      static const Convention::Type SecuritySpread = Convention::Type::SecuritySpread;
+    }
+
+ private:
     Convention();
 };
 
