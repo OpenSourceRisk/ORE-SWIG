@@ -53,11 +53,13 @@ class CrossCcyBasisSwapPtr : public CrossCcySwapPtr {
                              const QuantLib::Schedule& paySchedule,
                              const IborIndexPtr& payIndex,
                              QuantLib::Spread paySpread,
+                             QuantLib::Real payGearing,
                              QuantLib::Real recNominal,
                              const QuantLib::Currency& recCurrency,
                              const QuantLib::Schedule& recSchedule,
                              const IborIndexPtr& recIndex,
-                             QuantLib::Spread recSpread) {
+                             QuantLib::Spread recSpread,
+                             QuantLib::Real recGearing) {
             boost::shared_ptr<IborIndex> pIndex = boost::dynamic_pointer_cast<IborIndex>(payIndex);
             boost::shared_ptr<IborIndex> rIndex = boost::dynamic_pointer_cast<IborIndex>(recIndex);
             return new CrossCcyBasisSwapPtr(
@@ -66,11 +68,13 @@ class CrossCcyBasisSwapPtr : public CrossCcySwapPtr {
                                       paySchedule,
                                       pIndex,
                                       paySpread,
+                                      payGearing,
                                       recNominal,
                                       recCurrency,
                                       recSchedule,
                                       rIndex,
-                                      recSpread));
+                                      recSpread,
+                                      recGearing));
         }
         QuantLib::Real payNominal() const { 
             return boost::dynamic_pointer_cast<CrossCcyBasisSwap>(*self)->payNominal(); 
@@ -84,6 +88,9 @@ class CrossCcyBasisSwapPtr : public CrossCcySwapPtr {
         QuantLib::Spread paySpread() const { 
             return boost::dynamic_pointer_cast<CrossCcyBasisSwap>(*self)->paySpread(); 
         }
+        QuantLib::Real payGearing() const { 
+            return boost::dynamic_pointer_cast<CrossCcyBasisSwap>(*self)->payGearing(); 
+        }
         QuantLib::Real recNominal() const { 
             return boost::dynamic_pointer_cast<CrossCcyBasisSwap>(*self)->recNominal(); 
         }
@@ -95,6 +102,9 @@ class CrossCcyBasisSwapPtr : public CrossCcySwapPtr {
         }
         QuantLib::Spread recSpread() const { 
             return boost::dynamic_pointer_cast<CrossCcyBasisSwap>(*self)->recSpread(); 
+        }
+        QuantLib::Real recGearing() const { 
+            return boost::dynamic_pointer_cast<CrossCcyBasisSwap>(*self)->recGearing(); 
         }
         QuantLib::Spread fairPaySpread() const { 
             return boost::dynamic_pointer_cast<CrossCcyBasisSwap>(*self)->fairPaySpread(); 
