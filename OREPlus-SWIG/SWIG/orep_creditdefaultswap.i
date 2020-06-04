@@ -10,6 +10,7 @@
 %include options.i
 
 %{
+using QuantLib::Option;
 using QuantExt::IndexCreditDefaultSwap;
 using QuantExt::IndexCdsOption;
 using QuantExt::MidPointIndexCdsEngine;
@@ -17,7 +18,7 @@ using QuantExt::BlackIndexCdsOptionEngine;
 %}
 
 %shared_ptr(IndexCreditDefaultSwap)
-class IndexCreditDefaultSwap : public Instrument {
+class IndexCreditDefaultSwap : public QLECreditDefaultSwap {
   public:
     IndexCreditDefaultSwap(QuantLib::Protection::Side side,
                            QuantLib::Real notional,
@@ -27,9 +28,10 @@ class IndexCreditDefaultSwap : public Instrument {
                            QuantLib::BusinessDayConvention paymentConvention,
                            const QuantLib::DayCounter& dayCounter,
                            bool settlesAccrual = true,
-                           bool paysAtDefaultTime = true,
+                           QLECreditDefaultSwap::ProtectionPaymentTime protectionPaymentTime = atDefault,
                            const QuantLib::Date& protectionStart = QuantLib::Date(),
-                           const boost::shared_ptr<QuantLib::Claim>& claim = boost::shared_ptr<QuantLib::Claim>());
+                           const boost::shared_ptr<QuantLib::Claim>& claim = boost::shared_ptr<QuantLib::Claim>(),
+			   const QuantLib::DayCounter& lastPeriodDayCounter = DayCounter());
     IndexCreditDefaultSwap(QuantLib::Protection::Side side,
                            QuantLib::Real notional,
                            std::vector<QuantLib::Real> underlyingNotionals,
@@ -39,46 +41,22 @@ class IndexCreditDefaultSwap : public Instrument {
                            QuantLib::BusinessDayConvention paymentConvention,
                            const QuantLib::DayCounter& dayCounter,
                            bool settlesAccrual = true,
-                           bool paysAtDefaultTime = true,
+                           QLECreditDefaultSwap::ProtectionPaymentTime protectionPaymentTime = atDefault,
                            const QuantLib::Date& protectionStart = QuantLib::Date(),
                            const QuantLib::Date& upfrontDate = Date(),
-                           const boost::shared_ptr<QuantLib::Claim>& claim = boost::shared_ptr<QuantLib::Claim>());
-    QuantLib::Protection::Side side() const;
-    QuantLib::Real notional() const;
-    QuantLib::Rate runningSpread() const;
-    bool settlesAccrual() const;
-    bool paysAtDefaultTime() const;
-    const QuantLib::Leg& coupons() const;
-    const QuantLib::Date& protectionStartDate() const;
-    const QuantLib::Date& protectionEndDate() const;
-    QuantLib::Rate fairUpfront() const;
-    QuantLib::Rate fairSpread() const;
-    QuantLib::Real couponLegBPS() const;
-    QuantLib::Real upfrontBPS() const;
-    QuantLib::Real couponLegNPV() const;
-    QuantLib::Real defaultLegNPV() const;
-    QuantLib::Real upfrontNPV() const;
-    QuantLib::Real accrualRebateNPV() const;
-    QuantLib::Date maturity() const;
-    QuantLib::Rate impliedHazardRate(QuantLib::Real targetNPV,
-                                     const QuantLib::Handle<QuantLib::YieldTermStructure>& discountCurve,
-                                     const QuantLib::DayCounter& dayCounter,
-                                     QuantLib::Real recoveryRate = 0.4,
-                                     QuantLib::Real accuracy = 1.0e-6) const;
-    QuantLib::Rate conventionalSpread(QuantLib::Real conventionalRecovery,
-                                      const QuantLib::Handle<QuantLib::YieldTermStructure>& discountCurve,
-                                      const QuantLib::DayCounter& dayCounter) const;
+                           const boost::shared_ptr<QuantLib::Claim>& claim = boost::shared_ptr<QuantLib::Claim>(),
+			   const QuantLib::DayCounter& lastPeriodDayCounter = DayCounter());
     const std::vector<QuantLib::Real>& underlyingNotionals() const;
 };
 
 %shared_ptr(IndexCdsOption)
-class IndexCdsOption : public Instrument {
+class IndexCdsOption : public Option {
   public:
     IndexCdsOption(const boost::shared_ptr<IndexCreditDefaultSwap>& swap,
                    const boost::shared_ptr<QuantLib::Exercise>& exercise,
-                   bool knocksOut = true);
-    boost::shared_ptr<QuantLib::Payoff> payoff();
-    boost::shared_ptr<QuantLib::Exercise> exercise();
+                   bool knocksOut = true,
+		   const QuantLib::Real strike = QuantLib::Null<QuantLib::Real>(),
+                   const QuantExt::CdsOption::StrikeType strikeType = QuantExt::CdsOption::StrikeType::Spread);
     const boost::shared_ptr<IndexCreditDefaultSwap> underlyingSwap() const;
     QuantLib::Rate atmRate() const;
     QuantLib::Real riskyAnnuity() const;

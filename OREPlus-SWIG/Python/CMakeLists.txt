@@ -21,7 +21,7 @@ endif()
 # The module depends on a number of libraries in the ORE project: determine their exact names
 get_library_name("OREAnalyticsPlus" OREAP_LIB_NAME)
 get_library_name("OREDataPlus" OREDP_LIB_NAME)
-get_library_name("OREPlusFBC" OREPFBC_LIB_NAME)
+get_library_name("OREPlusFormulaBasedCoupon" OREPFBC_LIB_NAME)
 get_library_name("OREPlusSensitivity" OREPSENSI_LIB_NAME)
 get_library_name("OREPlusBase" OREPBASE_LIB_NAME)
 get_library_name("QuantExtPlus" QLEP_LIB_NAME)
