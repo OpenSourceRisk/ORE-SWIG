@@ -27,6 +27,7 @@
 #include <qlep/auto_link.hpp>
 #endif
 
+#include <oreap/app/oreappplus.hpp>
 #include <oreap/oreap.hpp>
 #include <oredp/oredp.hpp>
 #include <orepsensi/orepsensi.hpp>
@@ -35,6 +36,7 @@
 
 %}
 
+%include oreap_app.i
 %include orep_creditdefaultswap.i
 
 #endif

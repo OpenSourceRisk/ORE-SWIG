@@ -36,6 +36,7 @@ using QLEBlackCdsOptionEngine = QuantExt::BlackCdsOptionEngine;
 %shared_ptr(QLECreditDefaultSwap)
 class QLECreditDefaultSwap : public Instrument {
   public:
+    enum ProtectionPaymentTime { atDefault, atPeriodEnd, atMaturity };
     QLECreditDefaultSwap(QuantLib::Protection::Side side,
                          QuantLib::Real notional,
                          QuantLib::Rate spread,

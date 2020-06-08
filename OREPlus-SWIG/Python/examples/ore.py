@@ -10,8 +10,8 @@ print ("   params is of type", type(params))
 params.fromFile("Input/ore.xml")
 print ("   setup/asofdate = " + params.get("setup","asofDate"))
 
-print ("Building ORE App...")
-ore = ORE(params)
+print ("Building ORE+ App...")
+ore = OREAppPlus(params)
 print ("   ore is of type", type(ore))
 
 print ("Running ORE process...");
