@@ -1,6 +1,19 @@
 /*
- Copyright (C) 2018 Quaternion Risk Management Ltd
+ Copyright (C) 2018, 2020 Quaternion Risk Management Ltd
  All rights reserved.
+
+ This file is part of ORE, a free-software/open-source library
+ for transparent pricing and risk analysis - http://opensourcerisk.org
+
+ ORE is free software: you can redistribute it and/or modify it
+ under the terms of the Modified BSD License.  You should have received a
+ copy of the license along with this program.
+ The license is also available online at <http://opensourcerisk.org>
+
+ This program is distributed on the basis that it will form a useful
+ contribution to risk analytics and model standardisation, but WITHOUT
+ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ FITNESS FOR A PARTICULAR PURPOSE. See the license for more details.
 */
 
 #ifndef qle_credit_default_swap_i
@@ -14,219 +27,103 @@
 %include creditdefaultswap.i
 
 %{
-//using QuantExt::CreditDefaultSwap;
-//using QuantExt::MidPointCdsEngine;
-using QuantExt::CdsOption;
-using QuantExt::BlackCdsOptionEngine;
-
-typedef boost::shared_ptr<Instrument> QLECreditDefaultSwapPtr;
-typedef boost::shared_ptr<PricingEngine> QLEMidPointCdsEnginePtr;
-typedef boost::shared_ptr<PricingEngine> BlackCdsOptionEnginePtr;
-typedef boost::shared_ptr<Instrument> CdsOptionPtr;
+using QLECreditDefaultSwap = QuantExt::CreditDefaultSwap;
+using QLEMidPointCdsEngine = QuantExt::MidPointCdsEngine;
+using QLECdsOption = QuantExt::CdsOption;
+using QLEBlackCdsOptionEngine = QuantExt::BlackCdsOptionEngine;
 %}
 
-%rename(QLECreditDefaultSwap) QLECreditDefaultSwapPtr;
-class QLECreditDefaultSwapPtr : public boost::shared_ptr<Instrument> {
+%shared_ptr(QLECreditDefaultSwap)
+class QLECreditDefaultSwap : public Instrument {
   public:
-    %extend {
-        QLECreditDefaultSwapPtr(QuantLib::Protection::Side side, 
-                                QuantLib::Real notional, 
-                                QuantLib::Rate spread, 
-                                const QuantLib::Schedule& schedule,
-                                QuantLib::BusinessDayConvention paymentConvention, 
-                                const QuantLib::DayCounter& dayCounter, 
-                                bool settlesAccrual = true,
-                                QuantExt::CreditDefaultSwap::ProtectionPaymentTime protectionPaymentTime = QuantExt::CreditDefaultSwap::atDefault,
-                                const QuantLib::Date& protectionStart = QuantLib::Date(), 
-                                const boost::shared_ptr<QuantLib::Claim>& claim = boost::shared_ptr<QuantLib::Claim>(),
-				const DayCounter& lastPeriodDayCounter = DayCounter()) {
-            return new QLECreditDefaultSwapPtr(
-                new QuantExt::CreditDefaultSwap(side, 
-                                                notional, 
-                                                spread, 
-                                                schedule,
-                                                paymentConvention, 
-                                                dayCounter,
-                                                settlesAccrual, 
-                                                protectionPaymentTime,
-                                                protectionStart, 
-                                                claim,
-						lastPeriodDayCounter));
-        }
-        QLECreditDefaultSwapPtr(QuantLib::Protection::Side side, 
-                                QuantLib::Real notional, 
-                                QuantLib::Rate upfront, 
-                                QuantLib::Rate spread, 
-                                const QuantLib::Schedule& schedule,
-                                QuantLib::BusinessDayConvention paymentConvention, 
-                                const QuantLib::DayCounter& dayCounter, 
-                                bool settlesAccrual = true,
-                                QuantExt::CreditDefaultSwap::ProtectionPaymentTime protectionPaymentTime = QuantExt::CreditDefaultSwap::atDefault, 
-                                const QuantLib::Date& protectionStart = QuantLib::Date(),
-                                const QuantLib::Date& upfrontDate = QuantLib::Date(),
-                                const boost::shared_ptr<QuantLib::Claim>& claim = boost::shared_ptr<QuantLib::Claim>(),
-				const DayCounter& lastPeriodDayCounter = DayCounter()) {
-            return new QLECreditDefaultSwapPtr(
-                new QuantExt::CreditDefaultSwap(side, 
-                                                notional, 
-                                                upfront, 
-                                                spread,
-                                                schedule, 
-                                                paymentConvention,
-                                                dayCounter, 
-                                                settlesAccrual,
-                                                protectionPaymentTime,
-                                                protectionStart,
-                                                upfrontDate, 
-                                                claim,
-						lastPeriodDayCounter));
-        }
-        QuantLib::Protection::Side side() const {
-            return boost::dynamic_pointer_cast<QuantExt::CreditDefaultSwap>(*self)->side();
-        }
-        QuantLib::Real notional() const {
-            return boost::dynamic_pointer_cast<QuantExt::CreditDefaultSwap>(*self)->notional();
-        }
-        QuantLib::Rate runningSpread() const {
-            return boost::dynamic_pointer_cast<QuantExt::CreditDefaultSwap>(*self)->runningSpread();
-        }
-        bool settlesAccrual() const {
-            return boost::dynamic_pointer_cast<QuantExt::CreditDefaultSwap>(*self)->settlesAccrual();
-        }
-        QuantExt::CreditDefaultSwap::ProtectionPaymentTime protectionPaymentTime() const {
-            return boost::dynamic_pointer_cast<QuantExt::CreditDefaultSwap>(*self)->protectionPaymentTime();
-        }
-        const QuantLib::Leg& coupons() const {
-            return boost::dynamic_pointer_cast<QuantExt::CreditDefaultSwap>(*self)->coupons();
-        }
-        const QuantLib::Date& protectionStartDate() const {
-            return boost::dynamic_pointer_cast<QuantExt::CreditDefaultSwap>(*self)->protectionStartDate();
-        }
-        const QuantLib::Date& protectionEndDate() const {
-            return boost::dynamic_pointer_cast<QuantExt::CreditDefaultSwap>(*self)->protectionEndDate();
-        }
-        QuantLib::Rate fairUpfront() const {
-            return boost::dynamic_pointer_cast<QuantExt::CreditDefaultSwap>(*self)->fairUpfront();
-        }
-        QuantLib::Rate fairSpread() const {
-            return boost::dynamic_pointer_cast<QuantExt::CreditDefaultSwap>(*self)->fairSpread();
-        }
-        QuantLib::Real couponLegBPS() const {
-            return boost::dynamic_pointer_cast<QuantExt::CreditDefaultSwap>(*self)->couponLegBPS();
-        }
-        QuantLib::Real upfrontBPS() const {
-            return boost::dynamic_pointer_cast<QuantExt::CreditDefaultSwap>(*self)->upfrontBPS();
-        }
-        QuantLib::Real couponLegNPV() const {
-            return boost::dynamic_pointer_cast<QuantExt::CreditDefaultSwap>(*self)->couponLegNPV();
-        }
-        QuantLib::Real defaultLegNPV() const {
-            return boost::dynamic_pointer_cast<QuantExt::CreditDefaultSwap>(*self)->defaultLegNPV();
-        }
-        QuantLib::Real upfrontNPV() const {
-            return boost::dynamic_pointer_cast<QuantExt::CreditDefaultSwap>(*self)->upfrontNPV();
-        }
-        QuantLib::Real accrualRebateNPV() const {
-            return boost::dynamic_pointer_cast<QuantExt::CreditDefaultSwap>(*self)->accrualRebateNPV();
-        }
-        QuantLib::Date maturity() const {
-            return boost::dynamic_pointer_cast<QuantExt::CreditDefaultSwap>(*self)->maturity();
-        }
-        QuantLib::Rate impliedHazardRate(QuantLib::Real targetNPV, 
-                                         const QuantLib::Handle<QuantLib::YieldTermStructure>& discountCurve,
-                                         const QuantLib::DayCounter& dayCounter, 
-                                         QuantLib::Real recoveryRate = 0.4, 
-                                         QuantLib::Real accuracy = 1.0e-6) const {
-            return boost::dynamic_pointer_cast<QuantExt::CreditDefaultSwap>(*self)->impliedHazardRate(targetNPV, 
-                                                                                                      discountCurve, 
-                                                                                                      dayCounter,
-                                                                                                      recoveryRate, 
-                                                                                                      accuracy);
-        }
-        QuantLib::Rate conventionalSpread(QuantLib::Real conventionalRecovery, 
-                                          const QuantLib::Handle<QuantLib::YieldTermStructure>& discountCurve,
-                                          const QuantLib::DayCounter& dayCounter) const {
-            return boost::dynamic_pointer_cast<QuantExt::CreditDefaultSwap>(*self)->conventionalSpread(conventionalRecovery,
-                                                                                                       discountCurve,
-                                                                                                       dayCounter);
-        }
-    }
+    enum ProtectionPaymentTime { atDefault, atPeriodEnd, atMaturity };
+    QLECreditDefaultSwap(QuantLib::Protection::Side side,
+                         QuantLib::Real notional,
+                         QuantLib::Rate spread,
+                         const QuantLib::Schedule& schedule,
+                         QuantLib::BusinessDayConvention paymentConvention,
+                         const QuantLib::DayCounter& dayCounter,
+                         bool settlesAccrual = true,
+			 QLECreditDefaultSwap::ProtectionPaymentTime protectionPaymentTime = QLECreditDefaultSwap::atDefault,
+                         const QuantLib::Date& protectionStart = QuantLib::Date(),
+                         const boost::shared_ptr<QuantLib::Claim>& claim = boost::shared_ptr<QuantLib::Claim>(),
+			 const QuantLib::DayCounter& lastPeriodDayCounter = QuantLib::DayCounter());
+
+    QLECreditDefaultSwap(QuantLib::Protection::Side side,
+                         QuantLib::Real notional,
+                         QuantLib::Rate upfront,
+                         QuantLib::Rate spread,
+                         const QuantLib::Schedule& schedule,
+                         QuantLib::BusinessDayConvention paymentConvention,
+                         const QuantLib::DayCounter& dayCounter,
+                         bool settlesAccrual = true,
+                         QLECreditDefaultSwap::ProtectionPaymentTime protectionPaymentTime = QLECreditDefaultSwap::atDefault,
+                         const QuantLib::Date& protectionStart = QuantLib::Date(),
+                         const QuantLib::Date& upfrontDate = QuantLib::Date(),
+                         const boost::shared_ptr<QuantLib::Claim>& claim = boost::shared_ptr<QuantLib::Claim>(),
+			 const QuantLib::DayCounter& lastPeriodDayCounter = QuantLib::DayCounter());
+    QuantLib::Protection::Side side() const;
+    QuantLib::Real notional() const;
+    QuantLib::Rate runningSpread() const;
+    bool settlesAccrual() const;
+    QLECreditDefaultSwap::ProtectionPaymentTime protectionPaymentTime() const;
+    const QuantLib::Leg& coupons() const;
+    const QuantLib::Date& protectionStartDate() const;
+    const QuantLib::Date& protectionEndDate() const;
+    QuantLib::Rate fairUpfront() const;
+    QuantLib::Rate fairSpread() const;
+    QuantLib::Real couponLegBPS() const;
+    QuantLib::Real upfrontBPS() const;
+    QuantLib::Real couponLegNPV() const;
+    QuantLib::Real defaultLegNPV() const;
+    QuantLib::Real upfrontNPV() const;
+    QuantLib::Real accrualRebateNPV() const;
+    QuantLib::Date maturity() const;
+    QuantLib::Rate impliedHazardRate(QuantLib::Real targetNPV,
+                                     const QuantLib::Handle<QuantLib::YieldTermStructure>& discountCurve,
+                                     const QuantLib::DayCounter& dayCounter,
+                                     QuantLib::Real recoveryRate = 0.4,
+                                     QuantLib::Real accuracy = 1.0e-6) const;
+    QuantLib::Rate conventionalSpread(QuantLib::Real conventionalRecovery,
+                                      const QuantLib::Handle<QuantLib::YieldTermStructure>& discountCurve,
+                                      const QuantLib::DayCounter& dayCounter) const;
+};
+
+%shared_ptr(QLEMidPointCdsEngine)
+class QLEMidPointCdsEngine : public PricingEngine {
+  public:
+    QLEMidPointCdsEngine(const QuantLib::Handle<QuantLib::DefaultProbabilityTermStructure>& probability,
+                         QuantLib::Real recoveryRate,
+                         const QuantLib::Handle<QuantLib::YieldTermStructure>& discountCurve);
 };
 
 
-%rename(QLEMidPointCdsEngine) QLEMidPointCdsEnginePtr;
-class QLEMidPointCdsEnginePtr : public boost::shared_ptr<PricingEngine> {
+%shared_ptr(QLECdsOption)
+class QLECdsOption : public Instrument {
   public:
-    %extend {
-        QLEMidPointCdsEnginePtr(const QuantLib::Handle<QuantLib::DefaultProbabilityTermStructure>& probability, 
-                                QuantLib::Real recoveryRate,
-                                const QuantLib::Handle<QuantLib::YieldTermStructure>& discountCurve) {
-            return new QLEMidPointCdsEnginePtr(
-                new QuantExt::MidPointCdsEngine(probability, 
-                                                recoveryRate,
-                                                discountCurve));
-        }
-    }
+    QLECdsOption(const boost::shared_ptr<QLECreditDefaultSwap> swap,
+		 const boost::shared_ptr<QuantLib::Exercise>& exercise,
+		 bool knocksOut = true);
+    const boost::shared_ptr<QLECreditDefaultSwap> underlyingSwap() const;
+    QuantLib::Rate atmRate() const;
+    QuantLib::Real riskyAnnuity() const;
+    QuantLib::Volatility impliedVolatility(QuantLib::Real price,
+                                           const QuantLib::Handle<QuantLib::YieldTermStructure>& termStructure,
+                                           const QuantLib::Handle<QuantLib::DefaultProbabilityTermStructure>& probability,
+                                           QuantLib::Real recoveryRate,
+                                           QuantLib::Real accuracy = 1.e-4,
+                                           QuantLib::Size maxEvaluations = 100,
+                                           QuantLib::Volatility minVol = 1.0e-7,
+                                           QuantLib::Volatility maxVol = 4.0) const;
 };
 
-%rename(CdsOption) CdsOptionPtr;
-class CdsOptionPtr : public boost::shared_ptr<Instrument> {
+%shared_ptr(QLEBlackCdsOptionEngine)
+class QLEBlackCdsOptionEngine : public PricingEngine {
   public:
-    %extend {
-        CdsOptionPtr(const QLECreditDefaultSwapPtr& swap, 
-                     const boost::shared_ptr<QuantLib::Exercise>& exercise,
-                     bool knocksOut = true) {
-            boost::shared_ptr<QuantExt::CreditDefaultSwap> cds = boost::dynamic_pointer_cast<QuantExt::CreditDefaultSwap>(swap);
-            return new CdsOptionPtr(
-                new QuantExt::CdsOption(cds,
-                                        exercise,
-                                        knocksOut));
-        }
-        const QLECreditDefaultSwapPtr underlyingSwap() const {
-            return boost::dynamic_pointer_cast<QuantExt::CdsOption>(*self)->underlyingSwap();
-        }
-        QuantLib::Rate atmRate() const {
-            return boost::dynamic_pointer_cast<QuantExt::CdsOption>(*self)->atmRate();
-        }
-        QuantLib::Real riskyAnnuity() const {
-            return boost::dynamic_pointer_cast<QuantExt::CdsOption>(*self)->riskyAnnuity();
-        }
-        QuantLib::Volatility impliedVolatility(QuantLib::Real price, 
-                                               const QuantLib::Handle<QuantLib::YieldTermStructure>& termStructure,
-                                               const QuantLib::Handle<QuantLib::DefaultProbabilityTermStructure>& probability, 
-                                               QuantLib::Real recoveryRate,
-                                               QuantLib::Real accuracy = 1.e-4, 
-                                               QuantLib::Size maxEvaluations = 100, 
-                                               QuantLib::Volatility minVol = 1.0e-7,
-                                               QuantLib::Volatility maxVol = 4.0) const {
-            return boost::dynamic_pointer_cast<QuantExt::CdsOption>(*self)->impliedVolatility(price,
-                                                                                              termStructure,
-                                                                                              probability,
-                                                                                              recoveryRate,
-                                                                                              accuracy,
-                                                                                              maxEvaluations,
-                                                                                              minVol,
-                                                                                              maxVol);
-        }
-    }
+    QLEBlackCdsOptionEngine(const QuantLib::Handle<QuantLib::DefaultProbabilityTermStructure>& probability,
+			    QuantLib::Real recoveryRate,
+			    const QuantLib::Handle<QuantLib::YieldTermStructure>& termStructure,
+			    const QuantLib::Handle<QuantLib::BlackVolTermStructure>& vol);
 };
-
-%rename(BlackCdsOptionEngine) BlackCdsOptionEnginePtr;
-class BlackCdsOptionEnginePtr : public boost::shared_ptr<PricingEngine> {
-  public:
-    %extend {
-        BlackCdsOptionEnginePtr(const QuantLib::Handle<QuantLib::DefaultProbabilityTermStructure>& probability, 
-                                QuantLib::Real recoveryRate,
-                                const QuantLib::Handle<QuantLib::YieldTermStructure>& termStructure, 
-                                const QuantLib::Handle<QuantLib::BlackVolTermStructure>& vol) {
-            return new BlackCdsOptionEnginePtr(
-                new QuantExt::BlackCdsOptionEngine(probability, 
-                                                   recoveryRate,
-                                                   termStructure, 
-                                                   vol));
-        }
-    }
-};
-
 
 #endif

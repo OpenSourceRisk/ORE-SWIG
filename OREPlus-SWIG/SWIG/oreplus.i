@@ -1,4 +1,3 @@
-
 /*
  Copyright (C) 2018 Quaternion Risk Management Ltd
  All rights reserved.

@@ -1,4 +1,3 @@
-
 /*
  Copyright (C) 2019 Quaternion Risk Management Ltd
  All rights reserved.
@@ -28,6 +27,7 @@
 #include <qlep/auto_link.hpp>
 #endif
 
+#include <oreap/app/oreappplus.hpp>
 #include <oreap/oreap.hpp>
 #include <oredp/oredp.hpp>
 #include <orepsensi/orepsensi.hpp>
@@ -36,6 +36,7 @@
 
 %}
 
+%include oreap_app.i
 %include orep_creditdefaultswap.i
 
 #endif

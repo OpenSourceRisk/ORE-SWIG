@@ -1,7 +1,19 @@
-
 /*
- Copyright (C) 2018 Quaternion Risk Management Ltd
+ Copyright (C) 2018, 2020 Quaternion Risk Management Ltd
  All rights reserved.
+
+ This file is part of ORE, a free-software/open-source library
+ for transparent pricing and risk analysis - http://opensourcerisk.org
+
+ ORE is free software: you can redistribute it and/or modify it
+ under the terms of the Modified BSD License.  You should have received a
+ copy of the license along with this program.
+ The license is also available online at <http://opensourcerisk.org>
+
+ This program is distributed on the basis that it will form a useful
+ contribution to risk analytics and model standardisation, but WITHOUT
+ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ FITNESS FOR A PARTICULAR PURPOSE. See the license for more details.
 */
 
 #ifndef ored_market_i
@@ -11,215 +23,172 @@
 
 %{
 using ore::data::Market;
-typedef boost::shared_ptr<ore::data::Market> MarketPtr;
 using ore::data::MarketImpl;
-typedef boost::shared_ptr<ore::data::MarketImpl> MarketImplPtr;
 using ore::data::TodaysMarket;
-typedef boost::shared_ptr<ore::data::MarketImpl> TodaysMarketPtr;
 
 using ore::data::YieldCurveType;
 using ore::data::TodaysMarketParameters;
-using ore::data::Loader; 
+using ore::data::Loader;
 using ore::data::CurveConfigurations;
 %}
 
 // Market class passed around as pointer, no construction
-%rename(MarketImpl) MarketImplPtr;
-class MarketImplPtr {
- public:
-  %extend {
-    MarketImplPtr() {
-      return new MarketImplPtr(new ore::data::MarketImpl());
-    }
-    Date asofDate() const {
-      return boost::dynamic_pointer_cast<ore::data::MarketImpl>(*self)->asofDate();
-    }
+%shared_ptr(MarketImpl)
+class MarketImpl {
+  public:
+    MarketImpl();
+    Date asofDate() const;
 
     // Yield curves
     Handle<YieldTermStructure> yieldCurve(const YieldCurveType& type, const std::string& name,
-                      const std::string& configuration = Market::defaultConfiguration) const {
-      return boost::dynamic_pointer_cast<ore::data::MarketImpl>(*self)->yieldCurve(type, name, configuration);
-    }
+                                          const std::string& configuration = Market::defaultConfiguration) const;
     Handle<YieldTermStructure> yieldCurve(const std::string& name,
-                                          const std::string& configuration = Market::defaultConfiguration) const {
-      return boost::dynamic_pointer_cast<ore::data::MarketImpl>(*self)->yieldCurve(name, configuration);
-    }
+                                          const std::string& configuration = Market::defaultConfiguration) const;
     Handle<YieldTermStructure> discountCurve(const std::string& ccy,
-                              const std::string& configuration = Market::defaultConfiguration) const { 
-      return boost::dynamic_pointer_cast<ore::data::MarketImpl>(*self)->discountCurve(ccy, configuration);       
-    }
+                              const std::string& configuration = Market::defaultConfiguration) const;
     
-    // Return IborIndexPtr rather than Handle (FIXME?)
-    IborIndexPtr iborIndex(const std::string& indexName,
-               const std::string& configuration = Market::defaultConfiguration) const {
-      return boost::dynamic_pointer_cast<ore::data::MarketImpl>(*self)->iborIndex(indexName, configuration).currentLink();
-    }
-    // Return SwapIndexPtr rather than Handle (FIXME?)
-    SwapIndexPtr swapIndex(const std::string& indexName,
-               const std::string& configuration = Market::defaultConfiguration) const {
-      return boost::dynamic_pointer_cast<ore::data::MarketImpl>(*self)->swapIndex(indexName, configuration).currentLink();  
+    %extend {
+      boost::shared_ptr<IborIndex> iborIndex(const std::string& indexName,
+                                             const std::string& configuration = Market::defaultConfiguration) const {
+          return self->iborIndex(indexName, configuration).currentLink();
+      }
+      boost::shared_ptr<SwapIndex> swapIndex(const std::string& indexName,
+                                             const std::string& configuration = Market::defaultConfiguration) const {
+          return self->swapIndex(indexName, configuration).currentLink();
+      }
     }
 
     // Swaptions
     Handle<QuantLib::SwaptionVolatilityStructure>
-      swaptionVol(const std::string& ccy, const std::string& configuration = Market::defaultConfiguration) const {
-      return boost::dynamic_pointer_cast<ore::data::MarketImpl>(*self)->swaptionVol(ccy, configuration);
-    }
+      swaptionVol(const std::string& ccy,
+                  const std::string& configuration = Market::defaultConfiguration) const;
     const std::string shortSwapIndexBase(const std::string& ccy,
-                     const std::string& configuration = Market::defaultConfiguration) const {
-      return boost::dynamic_pointer_cast<ore::data::MarketImpl>(*self)->shortSwapIndexBase(ccy, configuration);
-    }
+                                         const std::string& configuration = Market::defaultConfiguration) const;
     const std::string swapIndexBase(const std::string& ccy,
-                    const std::string& configuration = Market::defaultConfiguration) const {
-      return boost::dynamic_pointer_cast<ore::data::MarketImpl>(*self)->swapIndexBase(ccy, configuration);
-    }
+                                    const std::string& configuration = Market::defaultConfiguration) const;
+
+    // Yield volatilities
+    Handle<SwaptionVolatilityStructure>
+      yieldVol(const std::string& securityID, const std::string& configuration = Market::defaultConfiguration) const;
 
     // FX
     Handle<Quote> fxSpot(const std::string& ccypair,
-             const std::string& configuration = Market::defaultConfiguration) const {
-      return boost::dynamic_pointer_cast<ore::data::MarketImpl>(*self)->fxSpot(ccypair, configuration);
-    }
+                         const std::string& configuration = Market::defaultConfiguration) const;
     Handle<BlackVolTermStructure> fxVol(const std::string& ccypair,
-                                        const std::string& configuration = Market::defaultConfiguration) const {
-      return boost::dynamic_pointer_cast<ore::data::MarketImpl>(*self)->fxVol(ccypair, configuration);
-    }
+                                        const std::string& configuration = Market::defaultConfiguration) const;
 
     // Default Curves and Recovery Rates
     Handle<DefaultProbabilityTermStructure>
       defaultCurve(const std::string& name,
-           const std::string& configuration = Market::defaultConfiguration) const {
-      return boost::dynamic_pointer_cast<ore::data::MarketImpl>(*self)->defaultCurve(name, configuration);
-    }
+                   const std::string& configuration = Market::defaultConfiguration) const;
     Handle<Quote> recoveryRate(const std::string& name,
-                   const std::string& configuration = Market::defaultConfiguration) const {
-      return boost::dynamic_pointer_cast<ore::data::MarketImpl>(*self)->recoveryRate(name, configuration);
-    }
+                               const std::string& configuration = Market::defaultConfiguration) const;
 
-    // CDS volatilities
+    // CDS Option volatilities
     Handle<BlackVolTermStructure> cdsVol(const std::string& name,
-                                         const std::string& configuration = Market::defaultConfiguration) const {
-      return boost::dynamic_pointer_cast<ore::data::MarketImpl>(*self)->cdsVol(name, configuration);
-    }
+                                         const std::string& configuration = Market::defaultConfiguration) const;
 
     // Base correlation structures
     Handle<QuantLib::BaseCorrelationTermStructure<QuantLib::BilinearInterpolation>>
       baseCorrelation(const std::string& name,
-              const std::string& configuration = Market::defaultConfiguration) const {
-      return boost::dynamic_pointer_cast<ore::data::MarketImpl>(*self)->baseCorrelation(name, configuration);
-    }
+                      const std::string& configuration = Market::defaultConfiguration) const;
 
     // CapFloor volatilities
     Handle<OptionletVolatilityStructure>
       capFloorVol(const std::string& ccy,
-          const std::string& configuration = Market::defaultConfiguration) const {
-      return boost::dynamic_pointer_cast<ore::data::MarketImpl>(*self)->capFloorVol(ccy, configuration);
-    }
-   
+                  const std::string& configuration = Market::defaultConfiguration) const;
+
     // YoY Inflation CapFloor volatilities
     Handle<QuantExt::YoYOptionletVolatilitySurface>
       yoyCapFloorVol(const std::string& ccy,
-             const std::string& configuration = Market::defaultConfiguration) const {
-      return boost::dynamic_pointer_cast<ore::data::MarketImpl>(*self)->yoyCapFloorVol(ccy, configuration);
-    }
+                     const std::string& configuration = Market::defaultConfiguration) const;
 
     // Inflation Indexes (Pointer rather than Handle)
-    ZeroInflationIndexPtr
-      zeroInflationIndex(const std::string& indexName,
-             const std::string& configuration = Market::defaultConfiguration) const {
-      return boost::dynamic_pointer_cast<ore::data::MarketImpl>(*self)->zeroInflationIndex(indexName, configuration).currentLink();      
-    }
-    YoYInflationIndexPtr
-      yoyInflationIndex(const std::string& indexName,
-            const std::string& configuration = Market::defaultConfiguration) const {
-      return boost::dynamic_pointer_cast<ore::data::MarketImpl>(*self)->yoyInflationIndex(indexName, configuration).currentLink();      
+    %extend {
+      boost::shared_ptr<ZeroInflationIndex> zeroInflationIndex(const std::string& indexName,
+                                                               const std::string& configuration =
+                                                                 Market::defaultConfiguration) const {
+          return self->zeroInflationIndex(indexName, configuration).currentLink();
+      }
+      boost::shared_ptr<YoYInflationIndex> yoyInflationIndex(const std::string& indexName,
+                                                             const std::string& configuration =
+                                                               Market::defaultConfiguration) const {
+          return self->yoyInflationIndex(indexName, configuration).currentLink();
+      }
     }
 
-    // Inflation Cap Floor Volatility Surfaces
+    // CPI Inflation Cap Floor Volatility Surfaces
     Handle<QuantLib::CPIVolatilitySurface>
       cpiInflationCapFloorVolatilitySurface(const std::string& indexName,
-					    const std::string& configuration = Market::defaultConfiguration) const {
-      return boost::dynamic_pointer_cast<ore::data::MarketImpl>(*self)->cpiInflationCapFloorVolatilitySurface(indexName, configuration);
-    }
-
-    // Cpi Base Quotes
-    Handle<QuantExt::InflationIndexObserver>
-      baseCpis(const std::string& index,
-           const std::string& configuration = Market::defaultConfiguration) const {
-      return boost::dynamic_pointer_cast<ore::data::MarketImpl>(*self)->baseCpis(index, configuration);
-    }
+					    const std::string& configuration = Market::defaultConfiguration) const;
 
     // Equity curves
-    Handle<Quote>
-      equitySpot(const std::string& eqName,
-         const std::string& configuration = Market::defaultConfiguration) const {
-      return boost::dynamic_pointer_cast<ore::data::MarketImpl>(*self)->equitySpot(eqName, configuration);
-    }
-    Handle<QuantExt::EquityIndex>
-      equityCurve(const std::string& eqName, const std::string& configuration = Market::defaultConfiguration) const {
-      return boost::dynamic_pointer_cast<ore::data::MarketImpl>(*self)->equityCurve(eqName, configuration);
-    }
-    Handle<YieldTermStructure>
-      equityDividendCurve(const std::string& eqName,
-              const std::string& configuration = Market::defaultConfiguration) const {
-      return boost::dynamic_pointer_cast<ore::data::MarketImpl>(*self)->equityDividendCurve(eqName, configuration);
+    Handle<Quote> equitySpot(const std::string& eqName,
+                             const std::string& configuration = Market::defaultConfiguration) const;
+    %extend {
+      boost::shared_ptr<QuantExt::EquityIndex> equityCurve(const std::string& indexName,
+                                                           const std::string& configuration =
+							   Market::defaultConfiguration) const {
+          return self->equityCurve(indexName, configuration).currentLink();
+      }
     }
 
-    // Equity volatilities
-    Handle<BlackVolTermStructure>
-      equityVol(const std::string& eqName,
-        const std::string& configuration = Market::defaultConfiguration) const {
-      return boost::dynamic_pointer_cast<ore::data::MarketImpl>(*self)->equityVol(eqName, configuration);
-    }
+    // Equity dividend curves
+    Handle<YieldTermStructure>
+      equityDividendCurve(const std::string& eqName,
+                          const std::string& configuration = Market::defaultConfiguration) const;
 
     // Equity forecasting curves
     Handle<YieldTermStructure>
       equityForecastCurve(const std::string& eqName,
-              const std::string& configuration = Market::defaultConfiguration) const {
-      return boost::dynamic_pointer_cast<ore::data::MarketImpl>(*self)->equityForecastCurve(eqName, configuration);
-    }
+                          const std::string& configuration = Market::defaultConfiguration) const;
+
+    // Equity volatilities
+    Handle<BlackVolTermStructure>
+      equityVol(const std::string& eqName,
+                const std::string& configuration = Market::defaultConfiguration) const;
 
     // Bond Spreads
     Handle<Quote>
       securitySpread(const std::string& securityID,
-             const std::string& configuration = Market::defaultConfiguration) const {
-      return boost::dynamic_pointer_cast<ore::data::MarketImpl>(*self)->securitySpread(securityID, configuration);      
-    }
+                     const std::string& configuration = Market::defaultConfiguration) const;
 
-    // Commodity curves
-    Handle<QuantExt::PriceTermStructure>
+    // Commodity price curve
+    Handle<PriceTermStructure>
       commodityPriceCurve(const std::string& commodityName,
-              const std::string& configuration = Market::defaultConfiguration) const {
-      return boost::dynamic_pointer_cast<ore::data::MarketImpl>(*self)->commodityPriceCurve(commodityName, configuration);
-    }
+                          const std::string& configuration = Market::defaultConfiguration) const;
 
+    // Commodity volatility
     Handle<BlackVolTermStructure>
       commodityVolatility(const std::string& commodityName,
-              const std::string& configuration = Market::defaultConfiguration) const {
-      return boost::dynamic_pointer_cast<ore::data::MarketImpl>(*self)->commodityVolatility(commodityName, configuration);
-    }
+                          const std::string& configuration = Market::defaultConfiguration) const;
 
+    // Index-Index Correlations
     Handle<QuantExt::CorrelationTermStructure>
-      correlationCurve(const std::string& index1, const std::string& index2,
-		       const std::string& configuration = Market::defaultConfiguration) const {
-      return boost::dynamic_pointer_cast<ore::data::MarketImpl>(*self)->correlationCurve(index1, index2, configuration);
-    }
-    
-  }
+    correlationCurve(const std::string& index1, const std::string& index2,
+                     const std::string& configuration = Market::defaultConfiguration) const;
+
+    // Conditional Prepayment Rates
+    Handle<Quote> cpr(const std::string& securityID,
+		      const std::string& configuration = Market::defaultConfiguration) const;
 };
 
-%rename(TodaysMarket) TodaysMarketPtr;
-class TodaysMarketPtr : public MarketImplPtr {
+
+%template(YoYOptionletVolatilitySurfaceHandle) Handle<QuantExt::YoYOptionletVolatilitySurface>;
+%template(CPICapFloorTermPriceSurfaceHandle) Handle<QuantLib::CPICapFloorTermPriceSurface>;
+%template(YoYCapFloorTermPriceSurfaceHandle) Handle<QuantLib::YoYCapFloorTermPriceSurface>;
+
+%shared_ptr(TodaysMarket)
+class TodaysMarket : public MarketImpl {
  public:
-  %extend {
-    TodaysMarketPtr(const Date& asof,
-            const TodaysMarketParameters& params,
-            const Loader& loader,
-            const CurveConfigurations& curveConfigs,
-            const Conventions& conventions) {
-      return new TodaysMarketPtr(new ore::data::TodaysMarket(asof, params, loader, curveConfigs, conventions));
-    }
-  }
+    TodaysMarket(const Date& asof,
+                 const TodaysMarketParameters& params,
+                 const Loader& loader,
+                 const CurveConfigurations& curveConfigs,
+                 const Conventions& conventions,
+		 const bool continueOnError = false,
+		 bool loadFixings = true,
+		 const boost::shared_ptr<ore::data::ReferenceDataManager>& referenceData = nullptr);
 };
-
 
 #endif

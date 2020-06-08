@@ -1,6 +1,19 @@
 /*
- Copyright (C) 2018 Quaternion Risk Management Ltd
+ Copyright (C) 2018, 2020 Quaternion Risk Management Ltd
  All rights reserved.
+
+ This file is part of ORE, a free-software/open-source library
+ for transparent pricing and risk analysis - http://opensourcerisk.org
+
+ ORE is free software: you can redistribute it and/or modify it
+ under the terms of the Modified BSD License.  You should have received a
+ copy of the license along with this program.
+ The license is also available online at <http://opensourcerisk.org>
+
+ This program is distributed on the basis that it will form a useful
+ contribution to risk analytics and model standardisation, but WITHOUT
+ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ FITNESS FOR A PARTICULAR PURPOSE. See the license for more details.
 */
 
 #ifndef qle_indexes_i
@@ -19,154 +32,78 @@
 %{
 using QuantExt::FxIndex;
 using QuantExt::BMAIndexWrapper;
-
-typedef boost::shared_ptr<Index> FxIndexPtr;
-typedef boost::shared_ptr<Index> BMAIndexWrapperPtr;
-
 using QuantLib::BMAIndex;
-typedef boost::shared_ptr<Index> BMAIndexPtr;
 %}
 
-%rename(FxIndex) FxIndexPtr;
-class FxIndexPtr : public boost::shared_ptr<Index> {
+%shared_ptr(FxIndex)
+class FxIndex : public Index {
   public:
-    %extend {
-        FxIndexPtr(const std::string& familyName, 
-                   QuantLib::Natural fixingDays, 
-                   const QuantLib::Currency& source, 
-                   const QuantLib::Currency& target,
-                   const QuantLib::Calendar& fixingCalendar, 
-                   const QuantLib::Handle<QuantLib::YieldTermStructure>& sourceYts 
-                        = QuantLib::Handle<QuantLib::YieldTermStructure>(),
-                   const QuantLib::Handle<QuantLib::YieldTermStructure>& targetYts 
-                            = QuantLib::Handle<QuantLib::YieldTermStructure>()) {
-            return new FxIndexPtr(
-                new FxIndex(familyName,
-                            fixingDays,
-                            source,
-                            target,
-                            fixingCalendar,
-                            sourceYts,
-                            targetYts));
-        }
-        FxIndexPtr(const std::string& familyName, 
-                   QuantLib::Natural fixingDays, 
-                   const QuantLib::Currency& source, 
-                   const QuantLib::Currency& target,
-                   const QuantLib::Calendar& fixingCalendar, 
-                   const QuantLib::Handle<QuantLib::Quote> fxQuote,
-                   const QuantLib::Handle<QuantLib::YieldTermStructure>& sourceYts 
-                        = QuantLib::Handle<QuantLib::YieldTermStructure>(),
-                   const QuantLib::Handle<QuantLib::YieldTermStructure>& targetYts 
-                        = QuantLib::Handle<QuantLib::YieldTermStructure>()) {
-            return new FxIndexPtr(
-                new FxIndex(familyName,
-                            fixingDays,
-                            source,
-                            target,
-                            fixingCalendar,
-                            fxQuote,
-                            sourceYts,
-                            targetYts));
-        }
-        std::string familyName() const {
-            return boost::dynamic_pointer_cast<FxIndex>(*self)->familyName();
-        }
-        QuantLib::Natural fixingDays() const {
-            return boost::dynamic_pointer_cast<FxIndex>(*self)->fixingDays();
-        }
-        QuantLib::Date fixingDate(const QuantLib::Date& valueDate) const {
-            return boost::dynamic_pointer_cast<FxIndex>(*self)->fixingDate(valueDate);
-        }
-        const QuantLib::Currency& sourceCurrency() const {
-            return boost::dynamic_pointer_cast<FxIndex>(*self)->sourceCurrency();
-        }
-        const QuantLib::Currency& targetCurrency() const {
-            return boost::dynamic_pointer_cast<FxIndex>(*self)->targetCurrency();
-        }
-        virtual QuantLib::Date valueDate(const QuantLib::Date& fixingDate) const {
-            return boost::dynamic_pointer_cast<FxIndex>(*self)->valueDate(fixingDate);
-        }
-        QuantLib::Real forecastFixing(const QuantLib::Date& fixingDate) const {
-            return boost::dynamic_pointer_cast<FxIndex>(*self)->forecastFixing(fixingDate);
-        }
-        QuantLib::Real pastFixing(const QuantLib::Date& fixingDate) const {
-            return boost::dynamic_pointer_cast<FxIndex>(*self)->pastFixing(fixingDate);
-        }
-    }
+    FxIndex(const std::string& familyName,
+            QuantLib::Natural fixingDays,
+            const QuantLib::Currency& source,
+            const QuantLib::Currency& target,
+            const QuantLib::Calendar& fixingCalendar,
+            const QuantLib::Handle<QuantLib::YieldTermStructure>& sourceYts
+                = QuantLib::Handle<QuantLib::YieldTermStructure>(),
+            const QuantLib::Handle<QuantLib::YieldTermStructure>& targetYts
+                = QuantLib::Handle<QuantLib::YieldTermStructure>());
+    FxIndex(const std::string& familyName,
+            QuantLib::Natural fixingDays,
+            const QuantLib::Currency& source,
+            const QuantLib::Currency& target,
+            const QuantLib::Calendar& fixingCalendar,
+            const QuantLib::Handle<QuantLib::Quote> fxQuote,
+            const QuantLib::Handle<QuantLib::YieldTermStructure>& sourceYts
+                = QuantLib::Handle<QuantLib::YieldTermStructure>(),
+            const QuantLib::Handle<QuantLib::YieldTermStructure>& targetYts
+                = QuantLib::Handle<QuantLib::YieldTermStructure>());
+    std::string familyName() const;
+    QuantLib::Natural fixingDays() const;
+    QuantLib::Date fixingDate(const QuantLib::Date& valueDate) const;
+    const QuantLib::Currency& sourceCurrency() const;
+    const QuantLib::Currency& targetCurrency() const;
+    virtual QuantLib::Date valueDate(const QuantLib::Date& fixingDate) const;
+    QuantLib::Real forecastFixing(const QuantLib::Date& fixingDate) const;
+    QuantLib::Real pastFixing(const QuantLib::Date& fixingDate) const;
 };
 
 // QuantLib BMA Index (not yet wrapped in QL v1.14)
-%rename(BMAIndex) BMAIndexPtr;
-class BMAIndexPtr : public InterestRateIndexPtr {
+%shared_ptr(BMAIndex)
+class BMAIndex : public InterestRateIndex {
   public:
-    %extend {
-        BMAIndexPtr(const QuantLib::Handle<QuantLib::YieldTermStructure>& h =
-                                                QuantLib::Handle<QuantLib::YieldTermStructure>()) {
-            return new BMAIndexPtr(new QuantLib::BMAIndex(h));
-        }
-        std::string name() const {
-            return boost::dynamic_pointer_cast<BMAIndex>(*self)->name();
-        }
-        bool isValidFixingDate(const Date& fixingDate) const {
-            return boost::dynamic_pointer_cast<BMAIndex>(*self)->isValidFixingDate(fixingDate);
-        }
-        QuantLib::Handle<QuantLib::YieldTermStructure> forwardingTermStructure() const {
-            return boost::dynamic_pointer_cast<BMAIndex>(*self)->forwardingTermStructure();
-        }
-        QuantLib::Date maturityDate(const Date& valueDate) const {
-            return boost::dynamic_pointer_cast<BMAIndex>(*self)->maturityDate(valueDate);
-        }
-        QuantLib::Schedule fixingSchedule(const QuantLib::Date& start, const QuantLib::Date& end) const {
-            return boost::dynamic_pointer_cast<BMAIndex>(*self)->fixingSchedule(start, end);
-        }
-    }
+    BMAIndex(const QuantLib::Handle<QuantLib::YieldTermStructure>& h =
+        QuantLib::Handle<QuantLib::YieldTermStructure>());
+    std::string name() const;
+    bool isValidFixingDate(const Date& fixingDate) const;
+    QuantLib::Handle<QuantLib::YieldTermStructure> forwardingTermStructure() const;
+    QuantLib::Date maturityDate(const Date& valueDate) const;
+    QuantLib::Schedule fixingSchedule(const QuantLib::Date& start, const QuantLib::Date& end);
 };
 
-%rename(BMAIndexWrapper) BMAIndexWrapperPtr;
-class BMAIndexWrapperPtr : public IborIndexPtr {
+%shared_ptr(BMAIndexWrapper)
+class BMAIndexWrapper : public IborIndex {
   public:
-    %extend {
-        BMAIndexWrapperPtr(const BMAIndexPtr bma) {
-            boost::shared_ptr<BMAIndex> bmaCast = boost::dynamic_pointer_cast<BMAIndex>(bma);
-            return new BMAIndexWrapperPtr(new BMAIndexWrapper(bmaCast));
-        }
-        std::string name() const {
-            return boost::dynamic_pointer_cast<BMAIndexWrapper>(*self)->name();
-        }
-        bool isValidFixingDate(const Date& fixingDate) const {
-            return boost::dynamic_pointer_cast<BMAIndexWrapper>(*self)->isValidFixingDate(fixingDate);
-        }
-        QuantLib::Handle<QuantLib::YieldTermStructure> forwardingTermStructure() const {
-            return boost::dynamic_pointer_cast<BMAIndexWrapper>(*self)->forwardingTermStructure();
-        }
-        QuantLib::Date maturityDate(const Date& valueDate) const {
-            return boost::dynamic_pointer_cast<BMAIndexWrapper>(*self)->maturityDate(valueDate);
-        }
-        QuantLib::Schedule fixingSchedule(const QuantLib::Date& start, const QuantLib::Date& end) const {
-            return boost::dynamic_pointer_cast<BMAIndexWrapper>(*self)->fixingSchedule(start, end);
-        }
-        BMAIndexPtr bma() const {
-            return boost::dynamic_pointer_cast<BMAIndexWrapper>(*self)->bma();
-        }
-    }
+    BMAIndexWrapper(const boost::shared_ptr<BMAIndex> bma);
+    std::string name() const;
+    bool isValidFixingDate(const Date& fixingDate) const;
+    QuantLib::Handle<QuantLib::YieldTermStructure> forwardingTermStructure() const;
+    QuantLib::Date maturityDate(const Date& valueDate) const;
+    QuantLib::Schedule fixingSchedule(const QuantLib::Date& start, const QuantLib::Date& end);
+    boost::shared_ptr<BMAIndex> bma() const;
 };
 
 
 %define qle_export_xibor_instance(Name)
 %{
 using QuantExt::Name;
-typedef boost::shared_ptr<Index> Name##Ptr;
 %}
-%rename(Name) Name##Ptr;
-class Name##Ptr : public IborIndexPtr {
+%shared_ptr(Name)
+class Name : public IborIndex {
   public:
-    %extend {
-      Name##Ptr(const Period& tenor,
-                const Handle<YieldTermStructure>& h =
-                                    Handle<YieldTermStructure>()) {
-          return new Name##Ptr(new Name(tenor,h));
-      }
+    Name(const Period& tenor,
+         const Handle<YieldTermStructure>& h =
+                                Handle<YieldTermStructure>()) {
+        return new Name(new Name(tenor,h));
     }
 };
 %enddef
@@ -174,16 +111,13 @@ class Name##Ptr : public IborIndexPtr {
 %define qle_export_overnight_instance(Name)
 %{
 using QuantExt::Name;
-typedef boost::shared_ptr<Index> Name##Ptr;
 %}
-%rename(Name) Name##Ptr;
-class Name##Ptr : public OvernightIndexPtr {
+%shared_ptr(Name)
+class Name : public OvernightIndex {
   public:
-    %extend {
-      Name##Ptr(const Handle<YieldTermStructure>& h =
-                                    Handle<YieldTermStructure>()) {
-          return new Name##Ptr(new Name(h));
-      }
+    Name(const Handle<YieldTermStructure>& h =
+                                Handle<YieldTermStructure>()) {
+        return new Name(new Name(h));
     }
 };
 %enddef
@@ -219,6 +153,5 @@ qle_export_overnight_instance(CORRA);
 qle_export_overnight_instance(DKKOis);
 qle_export_overnight_instance(SEKSior);
 qle_export_overnight_instance(Tonar);
-
 
 #endif

@@ -1,6 +1,19 @@
 /*
- Copyright (C) 2018 Quaternion Risk Management Ltd
+ Copyright (C) 2018, 2020 Quaternion Risk Management Ltd
  All rights reserved.
+
+ This file is part of ORE, a free-software/open-source library
+ for transparent pricing and risk analysis - http://opensourcerisk.org
+
+ ORE is free software: you can redistribute it and/or modify it
+ under the terms of the Modified BSD License.  You should have received a
+ copy of the license along with this program.
+ The license is also available online at <http://opensourcerisk.org>
+
+ This program is distributed on the basis that it will form a useful
+ contribution to risk analytics and model standardisation, but WITHOUT
+ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ FITNESS FOR A PARTICULAR PURPOSE. See the license for more details.
 */
 
 #ifndef qle_oiccbasisswap_i
@@ -13,128 +26,57 @@
 %{
 using QuantExt::OvernightIndexedCrossCcyBasisSwap;
 using QuantExt::OvernightIndexedCrossCcyBasisSwapEngine;
-
-typedef boost::shared_ptr<Instrument> OvernightIndexedCrossCcyBasisSwapPtr;
-typedef boost::shared_ptr<PricingEngine> OvernightIndexedCrossCcyBasisSwapEnginePtr;
 %}
 
-%rename(OvernightIndexedCrossCcyBasisSwap) OvernightIndexedCrossCcyBasisSwapPtr;
-class OvernightIndexedCrossCcyBasisSwapPtr : public boost::shared_ptr<Instrument> {
-    public:
-    %extend {
-        OvernightIndexedCrossCcyBasisSwapPtr(QuantLib::Real payNominal,
-                                             QuantLib::Currency payCurrency,
-                                             const QuantLib::Schedule& paySchedule,
-                                             const OvernightIndexPtr& payIndex,
-                                             QuantLib::Real paySpread,
-                                             QuantLib::Real recNominal,
-                                             QuantLib::Currency recCurrency,
-                                             const QuantLib::Schedule& recSchedule,
-                                             const OvernightIndexPtr& recIndex,
-                                             QuantLib::Real recSpread) {
-            boost::shared_ptr<OvernightIndex> pIndex = boost::dynamic_pointer_cast<OvernightIndex>(payIndex);
-            boost::shared_ptr<OvernightIndex> rIndex = boost::dynamic_pointer_cast<OvernightIndex>(recIndex);
-            return new OvernightIndexedCrossCcyBasisSwapPtr(
-                new OvernightIndexedCrossCcyBasisSwap(payNominal,
-                                                      payCurrency,
-                                                      paySchedule,
-                                                      pIndex,
-                                                      paySpread,
-                                                      recNominal,
-                                                      recCurrency,
-                                                      recSchedule,
-                                                      rIndex,
-                                                      recSpread));
-        }
-        /*Name Inspectors*/
-        /*Pay Leg*/
-        QuantLib::Real payNominal() const { 
-            return boost::dynamic_pointer_cast<OvernightIndexedCrossCcyBasisSwap>(*self)->payNominal(); 
-        }
-        QuantLib::Currency payCurrency() { 
-            return boost::dynamic_pointer_cast<OvernightIndexedCrossCcyBasisSwap>(*self)->payCurrency(); 
-        }
-        const QuantLib::Schedule& paySchedule() { 
-            return boost::dynamic_pointer_cast<OvernightIndexedCrossCcyBasisSwap>(*self)->paySchedule(); 
-        }
-        QuantLib::Real paySpread() { 
-            return boost::dynamic_pointer_cast<OvernightIndexedCrossCcyBasisSwap>(*self)->paySpread(); 
-        }
-        /*Receiver Leg*/
-        QuantLib::Real recNominal() const { 
-            return boost::dynamic_pointer_cast<OvernightIndexedCrossCcyBasisSwap>(*self)->recNominal(); 
-        }
-        QuantLib::Currency recCurrency() { 
-            return boost::dynamic_pointer_cast<OvernightIndexedCrossCcyBasisSwap>(*self)->recCurrency(); 
-        }
-        const QuantLib::Schedule& recSchedule() { 
-            return boost::dynamic_pointer_cast<OvernightIndexedCrossCcyBasisSwap>(*self)->recSchedule(); 
-        }
-        QuantLib::Real recSpread() { 
-            return boost::dynamic_pointer_cast<OvernightIndexedCrossCcyBasisSwap>(*self)->recSpread(); 
-        }
-        /*Other*/
-        const QuantLib::Leg& payLeg() { 
-            return boost::dynamic_pointer_cast<OvernightIndexedCrossCcyBasisSwap>(*self)->payLeg(); 
-        }
-        const QuantLib::Leg& recLeg() { 
-            return boost::dynamic_pointer_cast<OvernightIndexedCrossCcyBasisSwap>(*self)->recLeg(); 
-        }
-        /*Name Results*/
-        QuantLib::Real payLegBPS() { 
-            return boost::dynamic_pointer_cast<OvernightIndexedCrossCcyBasisSwap>(*self)->payLegBPS(); 
-        }
-        QuantLib::Real payLegNPV() { 
-            return boost::dynamic_pointer_cast<OvernightIndexedCrossCcyBasisSwap>(*self)->payLegNPV(); 
-        }
-        QuantLib::Real fairPayLegSpread() const { 
-            return boost::dynamic_pointer_cast<OvernightIndexedCrossCcyBasisSwap>(*self)->fairPayLegSpread(); 
-        }
-        QuantLib::Real recLegBPS() const { 
-            return boost::dynamic_pointer_cast<OvernightIndexedCrossCcyBasisSwap>(*self)->recLegBPS(); 
-        }
-        QuantLib::Real recLegNPV() const { 
-            return boost::dynamic_pointer_cast<OvernightIndexedCrossCcyBasisSwap>(*self)->recLegNPV(); 
-        }
-        QuantLib::Spread fairRecLegSpread() const { 
-            return boost::dynamic_pointer_cast<OvernightIndexedCrossCcyBasisSwap>(*self)->fairRecLegSpread(); 
-        }
-    }
+%shared_ptr(OvernightIndexedCrossCcyBasisSwap)
+class OvernightIndexedCrossCcyBasisSwap : public Instrument {
+  public:
+    OvernightIndexedCrossCcyBasisSwap(QuantLib::Real payNominal,
+                                      QuantLib::Currency payCurrency,
+                                      const QuantLib::Schedule& paySchedule,
+                                      const boost::shared_ptr<OvernightIndex>& payIndex,
+                                      QuantLib::Real paySpread,
+                                      QuantLib::Real recNominal,
+                                      QuantLib::Currency recCurrency,
+                                      const QuantLib::Schedule& recSchedule,
+                                      const boost::shared_ptr<OvernightIndex>& recIndex,
+                                      QuantLib::Real recSpread);
+    /*Name Inspectors*/
+    /*Pay Leg*/
+    QuantLib::Real payNominal() const;
+    QuantLib::Currency payCurrency();
+    const QuantLib::Schedule& paySchedule();
+    QuantLib::Real paySpread();
+    /*Receiver Leg*/
+    QuantLib::Real recNominal() const;
+    QuantLib::Currency recCurrency();
+    const QuantLib::Schedule& recSchedule();
+    QuantLib::Real recSpread();
+    /*Other*/
+    const QuantLib::Leg& payLeg();
+    const QuantLib::Leg& recLeg();
+    /*Name Results*/
+    QuantLib::Real payLegBPS();
+    QuantLib::Real payLegNPV();
+    QuantLib::Real fairPayLegSpread() const;
+    QuantLib::Real recLegBPS() const;
+    QuantLib::Real recLegNPV() const;
+    QuantLib::Spread fairRecLegSpread() const;
 };
 
-
-%rename(OvernightIndexedCrossCcyBasisSwapEngine) OvernightIndexedCrossCcyBasisSwapEnginePtr;
-class OvernightIndexedCrossCcyBasisSwapEnginePtr : public boost::shared_ptr<PricingEngine> {
+%shared_ptr(OvernightIndexedCrossCcyBasisSwapEngine)
+class OvernightIndexedCrossCcyBasisSwapEngine : public PricingEngine {
   public:
-    %extend {
-        OvernightIndexedCrossCcyBasisSwapEnginePtr(const QuantLib::Handle<QuantLib::YieldTermStructure>& ts1,
-                                                   const QuantLib::Currency& ccy1,
-                                                   const QuantLib::Handle<QuantLib::YieldTermStructure>& ts2,
-                                                   const QuantLib::Currency& ccy2,
-                                                   const QuantLib::Handle<QuantLib::Quote>& fx) {
-            return new OvernightIndexedCrossCcyBasisSwapEnginePtr(
-                                  new OvernightIndexedCrossCcyBasisSwapEngine(ts1,
-                                                                              ccy1,
-                                                                              ts2,
-                                                                              ccy2,
-                                                                              fx));
-        }
-        QuantLib::Handle<QuantLib::YieldTermStructure> ts1() { 
-            return boost::dynamic_pointer_cast<OvernightIndexedCrossCcyBasisSwapEngine>(*self)->ts1(); 
-        }
-        QuantLib::Handle<QuantLib::YieldTermStructure> ts2() { 
-            return boost::dynamic_pointer_cast<OvernightIndexedCrossCcyBasisSwapEngine>(*self)->ts2(); 
-        }
-        QuantLib::Currency ccy1() { 
-            return boost::dynamic_pointer_cast<OvernightIndexedCrossCcyBasisSwapEngine>(*self)->ccy1(); 
-        }
-        QuantLib::Currency ccy2() { 
-            return boost::dynamic_pointer_cast<OvernightIndexedCrossCcyBasisSwapEngine>(*self)->ccy2(); 
-        }
-        QuantLib::Handle<QuantLib::Quote> fx() { 
-            return boost::dynamic_pointer_cast<OvernightIndexedCrossCcyBasisSwapEngine>(*self)->fx(); 
-        }
-    }
+    OvernightIndexedCrossCcyBasisSwapEngine(const QuantLib::Handle<QuantLib::YieldTermStructure>& ts1,
+                                            const QuantLib::Currency& ccy1,
+                                            const QuantLib::Handle<QuantLib::YieldTermStructure>& ts2,
+                                            const QuantLib::Currency& ccy2,
+                                            const QuantLib::Handle<QuantLib::Quote>& fx);
+    QuantLib::Handle<QuantLib::YieldTermStructure> ts1();
+    QuantLib::Handle<QuantLib::YieldTermStructure> ts2();
+    QuantLib::Currency ccy1();
+    QuantLib::Currency ccy2();
+    QuantLib::Handle<QuantLib::Quote> fx();
 };
 
 #endif

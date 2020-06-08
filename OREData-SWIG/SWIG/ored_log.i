@@ -1,7 +1,19 @@
-
 /*
- Copyright (C) 2019 Quaternion Risk Management Ltd
+ Copyright (C) 2019, 2020 Quaternion Risk Management Ltd
  All rights reserved.
+
+ This file is part of ORE, a free-software/open-source library
+ for transparent pricing and risk analysis - http://opensourcerisk.org
+
+ ORE is free software: you can redistribute it and/or modify it
+ under the terms of the Modified BSD License.  You should have received a
+ copy of the license along with this program.
+ The license is also available online at <http://opensourcerisk.org>
+
+ This program is distributed on the basis that it will form a useful
+ contribution to risk analytics and model standardisation, but WITHOUT
+ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ FITNESS FOR A PARTICULAR PURPOSE. See the license for more details.
 */
 
 #ifndef ored_log_i
@@ -71,46 +83,32 @@ class Log {
     }
 };
 
-%ignore Logger;
+%shared_ptr(Logger)
 class Logger {
-public:
+  private:
+    Logger();
 };
-%template(Logger) boost::shared_ptr<Logger>;
 
 %{
 using ore::data::FileLogger;
-typedef boost::shared_ptr<Logger> FileLoggerPtr;
 %}
 
-%rename(FileLogger) FileLoggerPtr;
-class FileLoggerPtr : public boost::shared_ptr<Logger> {
-public:
-  %extend {
-        FileLoggerPtr(const std::string& filename) {
-            return new FileLoggerPtr(new FileLogger(filename));
-        }
-  }
+%shared_ptr(FileLogger)
+class FileLogger : public Logger {
+  public:
+    FileLogger(const std::string& filename);
 };
 
 %{
 using ore::data::BufferLogger;
-typedef boost::shared_ptr<Logger> BufferLoggerPtr;
 %}
 
-%rename(BufferLogger) BufferLoggerPtr;
-class BufferLoggerPtr : public boost::shared_ptr<Logger> {
-public:
-  %extend {
-        BufferLoggerPtr(unsigned minLevel = ORE_DATA) {
-            return new BufferLoggerPtr(new BufferLogger(minLevel));
-        }
-        bool hasNext() {
-            return boost::dynamic_pointer_cast<BufferLogger>(*self)->hasNext();
-        }
-        std::string next() {
-            return boost::dynamic_pointer_cast<BufferLogger>(*self)->next();
-        }
-  }
+%shared_ptr(BufferLogger)
+class BufferLogger : public Logger {
+  public:
+    BufferLogger(unsigned minLevel = ORE_DATA);
+    bool hasNext();
+    std::string next();
 };
 
 %rename(MLOG) MLOGSWIG;

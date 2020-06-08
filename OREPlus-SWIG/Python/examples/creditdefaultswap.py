@@ -1,6 +1,6 @@
 
 """
- Copyright (C) 2019 Quaternion Risk Management Ltd
+ Copyright (C) 2019, 2020 Quaternion Risk Management Ltd
  All rights reserved.
 """
 
@@ -25,7 +25,7 @@ spread = 0.01
 side = Protection.Buyer
 upfront = 0
 settles_accrual = True
-pays_at_default = True
+protection_payment_time = QLECreditDefaultSwap.atDefault
 
 # Define CDS schedule
 schedule = Schedule(settlement_date, maturity_date,
@@ -36,7 +36,7 @@ schedule = Schedule(settlement_date, maturity_date,
 cds = IndexCreditDefaultSwap(side, notional, underlyingNotionals,
                              upfront, spread,
                              schedule, bdc, day_counter,
-                             settles_accrual, pays_at_default,
+                             settles_accrual, protection_payment_time,
                              settlement_date)
 
 
@@ -56,7 +56,7 @@ assert cds.side() == side
 assert cds.notional() == notional
 assert cds.runningSpread() == spread
 assert cds.settlesAccrual() == settles_accrual
-assert cds.paysAtDefaultTime() == pays_at_default
+assert cds.protectionPaymentTime() == protection_payment_time
 assert cds.protectionStartDate() == settlement_date
 assert cds.protectionEndDate() == maturity_date
 assert tuple(cds.underlyingNotionals()) == tuple(underlyingNotionals)
@@ -67,7 +67,7 @@ fair_spread = cds.fairSpread()
 fair_cds = IndexCreditDefaultSwap(side, notional, underlyingNotionals,
                                   upfront, fair_spread,
                                   schedule, bdc, day_counter,
-                                  settles_accrual, pays_at_default,
+                                  settles_accrual, protection_payment_time,
                                   settlement_date)
 fair_cds.setPricingEngine(engine)
 tol = 1e-8
@@ -109,12 +109,12 @@ atm_rate = cds_option.atmRate()
 buyer_cds = IndexCreditDefaultSwap(Protection.Buyer, notional, underlyingNotionals,
                                    upfront, atm_rate,
                                    schedule, bdc, day_counter,
-                                   settles_accrual, pays_at_default,
+                                   settles_accrual, protection_payment_time,
                                    settlement_date)
 seller_cds = IndexCreditDefaultSwap(Protection.Seller, notional, underlyingNotionals,
                                     upfront, atm_rate,
                                     schedule, bdc, day_counter,
-                                    settles_accrual, pays_at_default,
+                                    settles_accrual, protection_payment_time,
                                     settlement_date)
 buyer_cds.setPricingEngine(engine)
 seller_cds.setPricingEngine(engine)

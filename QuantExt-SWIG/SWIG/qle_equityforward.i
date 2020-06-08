@@ -1,6 +1,19 @@
 /*
- Copyright (C) 2018 Quaternion Risk Management Ltd
+ Copyright (C) 2018, 2020 Quaternion Risk Management Ltd
  All rights reserved.
+
+ This file is part of ORE, a free-software/open-source library
+ for transparent pricing and risk analysis - http://opensourcerisk.org
+
+ ORE is free software: you can redistribute it and/or modify it
+ under the terms of the Modified BSD License.  You should have received a
+ copy of the license along with this program.
+ The license is also available online at <http://opensourcerisk.org>
+
+ This program is distributed on the basis that it will form a useful
+ contribution to risk analytics and model standardisation, but WITHOUT
+ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ FITNESS FOR A PARTICULAR PURPOSE. See the license for more details.
 */
 
 #ifndef qle_equityforward_i
@@ -17,93 +30,41 @@
 %{
 using QuantExt::EquityForward;
 using QuantExt::DiscountingEquityForwardEngine;
-
-typedef boost::shared_ptr<Instrument> EquityForwardPtr;
-typedef boost::shared_ptr<PricingEngine> DiscountingEquityForwardEnginePtr;
 %}
 
-%rename(EquityForward) EquityForwardPtr;
-class EquityForwardPtr : public boost::shared_ptr<Instrument> {
-public:
-    %extend{
-        EquityForwardPtr(const std::string& name,
-                         const QuantLib::Currency& currency,
-                         const QuantLib::Position::Type& longShort,
-                         const QuantLib::Real& quantity,
-                         const QuantLib::Date& maturityDate,
-                         const QuantLib::Real& strike) {
-            return new EquityForwardPtr(
-                new EquityForward(name,currency,longShort,quantity,maturityDate,strike));
-        }
-        
-        bool isExpired() const {
-            return boost::dynamic_pointer_cast<EquityForward>(*self)->isExpired();
-        }
-        
-        const std::string& name(){
-            return boost::dynamic_pointer_cast<EquityForward>(*self)->name();
-        }
-        
-        QuantLib::Currency currency() {
-            return boost::dynamic_pointer_cast<EquityForward>(*self)->currency();
-        }
-        
-        QuantLib::Position::Type longShort() {
-            return boost::dynamic_pointer_cast<EquityForward>(*self)->longShort();
-        }
-        
-        QuantLib::Real quantity() {
-            return boost::dynamic_pointer_cast<EquityForward>(*self)->quantity();
-        }
-                
-        QuantLib::Date maturityDate() {
-            return boost::dynamic_pointer_cast<EquityForward>(*self)->maturityDate();
-        }
-        
-        QuantLib::Real strike() {
-            return boost::dynamic_pointer_cast<EquityForward>(*self)->strike();
-        }
- 
-    }
+%shared_ptr(EquityForward)
+class EquityForward : public Instrument {
+  public:
+    EquityForward(const std::string& name,
+                  const QuantLib::Currency& currency,
+                  const QuantLib::Position::Type& longShort,
+                  const QuantLib::Real& quantity,
+                  const QuantLib::Date& maturityDate,
+                  const QuantLib::Real& strike);
+    bool isExpired() const;
+    const std::string& name();
+    QuantLib::Currency currency();
+    QuantLib::Position::Type longShort();
+    QuantLib::Real quantity();
+    QuantLib::Date maturityDate();
+    QuantLib::Real strike();
 };
 
-
-%rename(DiscountingEquityForwardEngine) DiscountingEquityForwardEnginePtr;
-class DiscountingEquityForwardEnginePtr : public boost::shared_ptr<PricingEngine> {
-public:
-    %extend{
-        DiscountingEquityForwardEnginePtr(const QuantLib::Handle<QuantLib::YieldTermStructure>& equityInterestRateCurve,
-                                          const QuantLib::Handle<QuantLib::YieldTermStructure>& dividendYieldCurve,
-                                          const QuantLib::Handle<QuantLib::Quote>& equitySpot, 
-                                          const QuantLib::Handle<QuantLib::YieldTermStructure>& discountCurve,
-                                          boost::optional<bool> includeSettlementDateFlows = boost::none,
-                                          const QuantLib::Date& settlementDate = QuantLib::Date(), 
-                                          const QuantLib::Date& npvDate = QuantLib::Date()) {
-            return new DiscountingEquityForwardEnginePtr(
-                new DiscountingEquityForwardEngine(equityInterestRateCurve,dividendYieldCurve,equitySpot,discountCurve,includeSettlementDateFlows,settlementDate,npvDate));
-        }
-        
-        void calculate() {
-            return boost::dynamic_pointer_cast<DiscountingEquityForwardEngine>(*self)->calculate();
-        }
-        
-        const QuantLib::Handle<QuantLib::YieldTermStructure>& equityReferenceRateCurve(){
-            return boost::dynamic_pointer_cast<DiscountingEquityForwardEngine>(*self)->equityReferenceRateCurve();
-        }
-        
-        const QuantLib::Handle<QuantLib::YieldTermStructure>& divYieldCurve() {
-            return boost::dynamic_pointer_cast<DiscountingEquityForwardEngine>(*self)->divYieldCurve();
-        }
-        
-        const QuantLib::Handle<QuantLib::YieldTermStructure>& discountCurve() {
-            return boost::dynamic_pointer_cast<DiscountingEquityForwardEngine>(*self)->discountCurve();
-        }
-        
-        const QuantLib::Handle<QuantLib::Quote>& equitySpot() {
-            return boost::dynamic_pointer_cast<DiscountingEquityForwardEngine>(*self)->equitySpot();
-        }
-
-    }
+%shared_ptr(DiscountingEquityForwardEngine)
+class DiscountingEquityForwardEngine : public PricingEngine {
+  public:
+    DiscountingEquityForwardEngine(const QuantLib::Handle<QuantLib::YieldTermStructure>& equityInterestRateCurve,
+                                   const QuantLib::Handle<QuantLib::YieldTermStructure>& dividendYieldCurve,
+                                   const QuantLib::Handle<QuantLib::Quote>& equitySpot,
+                                   const QuantLib::Handle<QuantLib::YieldTermStructure>& discountCurve,
+                                   boost::optional<bool> includeSettlementDateFlows = boost::none,
+                                   const QuantLib::Date& settlementDate = QuantLib::Date(),
+                                   const QuantLib::Date& npvDate = QuantLib::Date());
+    void calculate();
+    const QuantLib::Handle<QuantLib::YieldTermStructure>& equityReferenceRateCurve();
+    const QuantLib::Handle<QuantLib::YieldTermStructure>& divYieldCurve();
+    const QuantLib::Handle<QuantLib::YieldTermStructure>& discountCurve();
+    const QuantLib::Handle<QuantLib::Quote>& equitySpot();
 };
 
 #endif

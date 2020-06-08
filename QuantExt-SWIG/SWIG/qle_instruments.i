@@ -1,6 +1,19 @@
 /*
- Copyright (C) 2018 Quaternion Risk Management Ltd
+ Copyright (C) 2018, 2020 Quaternion Risk Management Ltd
  All rights reserved.
+
+ This file is part of ORE, a free-software/open-source library
+ for transparent pricing and risk analysis - http://opensourcerisk.org
+
+ ORE is free software: you can redistribute it and/or modify it
+ under the terms of the Modified BSD License.  You should have received a
+ copy of the license along with this program.
+ The license is also available online at <http://opensourcerisk.org>
+
+ This program is distributed on the basis that it will form a useful
+ contribution to risk analytics and model standardisation, but WITHOUT
+ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ FITNESS FOR A PARTICULAR PURPOSE. See the license for more details.
 */
 
 #ifndef qle_instruments_i
@@ -28,459 +41,208 @@ using QuantExt::OvernightIndexedBasisSwap;
 using QuantExt::Deposit;
 using QuantExt::DepositEngine;
 using QuantExt::DiscountingSwapEngineMultiCurve;
-
-typedef boost::shared_ptr<Instrument> CrossCcyBasisSwapPtr;
-typedef boost::shared_ptr<Instrument> CrossCcyBasisMtMResetSwapPtr;
-typedef boost::shared_ptr<Instrument> CommodityForwardPtr;
-typedef boost::shared_ptr<Instrument> PaymentPtr;
-typedef boost::shared_ptr<PricingEngine> DiscountingCommodityForwardEnginePtr;
-typedef boost::shared_ptr<Instrument> FxForwardPtr;
-typedef boost::shared_ptr<PricingEngine> DiscountingFxForwardEnginePtr;
-typedef boost::shared_ptr<PricingEngine> PaymentDiscountingEnginePtr;
-typedef boost::shared_ptr<CashFlow> SimpleCashFlowPtr;
-typedef boost::shared_ptr<Instrument> OvernightIndexedBasisSwapPtr;
-typedef boost::shared_ptr<Instrument> DepositPtr;
-typedef boost::shared_ptr<PricingEngine> DepositEnginePtr;
-typedef boost::shared_ptr<PricingEngine> DiscountingSwapEngineMultiCurvePtr;
 %}
 
-%rename(CrossCcyBasisSwap) CrossCcyBasisSwapPtr;
-class CrossCcyBasisSwapPtr : public CrossCcySwapPtr {
+%shared_ptr(CrossCcyBasisSwap)
+class CrossCcyBasisSwap : public CrossCcySwap {
   public:
-    %extend {
-        CrossCcyBasisSwapPtr(QuantLib::Real payNominal,
-                             const QuantLib::Currency& payCurrency,
-                             const QuantLib::Schedule& paySchedule,
-                             const IborIndexPtr& payIndex,
-                             QuantLib::Spread paySpread,
-                             QuantLib::Real recNominal,
-                             const QuantLib::Currency& recCurrency,
-                             const QuantLib::Schedule& recSchedule,
-                             const IborIndexPtr& recIndex,
-                             QuantLib::Spread recSpread) {
-            boost::shared_ptr<IborIndex> pIndex = boost::dynamic_pointer_cast<IborIndex>(payIndex);
-            boost::shared_ptr<IborIndex> rIndex = boost::dynamic_pointer_cast<IborIndex>(recIndex);
-            return new CrossCcyBasisSwapPtr(
-                new CrossCcyBasisSwap(payNominal,
-                                      payCurrency,
-                                      paySchedule,
-                                      pIndex,
-                                      paySpread,
-                                      recNominal,
-                                      recCurrency,
-                                      recSchedule,
-                                      rIndex,
-                                      recSpread));
-        }
-        QuantLib::Real payNominal() const { 
-            return boost::dynamic_pointer_cast<CrossCcyBasisSwap>(*self)->payNominal(); 
-        }
-        const QuantLib::Currency& payCurrency() const { 
-            return boost::dynamic_pointer_cast<CrossCcyBasisSwap>(*self)->payCurrency(); 
-        }
-        const QuantLib::Schedule& paySchedule() const { 
-            return boost::dynamic_pointer_cast<CrossCcyBasisSwap>(*self)->paySchedule(); 
-        }
-        QuantLib::Spread paySpread() const { 
-            return boost::dynamic_pointer_cast<CrossCcyBasisSwap>(*self)->paySpread(); 
-        }
-        QuantLib::Real recNominal() const { 
-            return boost::dynamic_pointer_cast<CrossCcyBasisSwap>(*self)->recNominal(); 
-        }
-        const QuantLib::Currency& recCurrency() const { 
-            return boost::dynamic_pointer_cast<CrossCcyBasisSwap>(*self)->recCurrency(); 
-        }
-        const QuantLib::Schedule& recSchedule() const { 
-            return boost::dynamic_pointer_cast<CrossCcyBasisSwap>(*self)->recSchedule(); 
-        }
-        QuantLib::Spread recSpread() const { 
-            return boost::dynamic_pointer_cast<CrossCcyBasisSwap>(*self)->recSpread(); 
-        }
-        QuantLib::Spread fairPaySpread() const { 
-            return boost::dynamic_pointer_cast<CrossCcyBasisSwap>(*self)->fairPaySpread(); 
-        }
-        QuantLib::Spread fairRecSpread() const { 
-            return boost::dynamic_pointer_cast<CrossCcyBasisSwap>(*self)->fairRecSpread(); 
-        }
-    }
-};
-
-%rename(CrossCcyBasisMtMResetSwap) CrossCcyBasisMtMResetSwapPtr;
-class CrossCcyBasisMtMResetSwapPtr : public CrossCcySwapPtr {
-  public:
-    %extend {
-        CrossCcyBasisMtMResetSwapPtr(Real foreignNominal, 
-                                     const Currency& foreignCurrency, 
-                                     const Schedule& foreignSchedule,
-                                     const IborIndexPtr& foreignIndex, 
-                                     Spread foreignSpread,
-                                     const Currency& domesticCurrency, 
-                                     const Schedule& domesticSchedule,
-                                     const IborIndexPtr& domesticIndex, 
-                                     Spread domesticSpread, 
-                                     const FxIndexPtr& fxIdx, 
-				     bool receiveDomestic = true) {
-            boost::shared_ptr<IborIndex> fIndex = boost::dynamic_pointer_cast<IborIndex>(foreignIndex);
-            boost::shared_ptr<IborIndex> dIndex = boost::dynamic_pointer_cast<IborIndex>(domesticIndex);
-            boost::shared_ptr<FxIndex> fxIndex = boost::dynamic_pointer_cast<FxIndex>(fxIdx);
-            return new CrossCcyBasisMtMResetSwapPtr(
-                new CrossCcyBasisMtMResetSwap(foreignNominal,
-                                              foreignCurrency,
-                                              foreignSchedule,
-                                              fIndex,
-                                              foreignSpread,
-                                              domesticCurrency,
-                                              domesticSchedule,
-                                              dIndex,
-                                              domesticSpread,
-                                              fxIndex, 
-					      receiveDomestic));
-        }
-        Spread fairForeignSpread() const { 
-            return boost::dynamic_pointer_cast<CrossCcyBasisMtMResetSwap>(*self)->fairForeignSpread(); 
-        }
-        Spread fairDomesticSpread() const { 
-            return boost::dynamic_pointer_cast<CrossCcyBasisMtMResetSwap>(*self)->fairDomesticSpread(); 
-        }
-    }
-};
-
-%rename(Deposit) DepositPtr;
-class DepositPtr : public boost::shared_ptr<Instrument> {
-  public:
-    %extend {
-        DepositPtr(const QuantLib::Real nominal,
-                   const QuantLib::Rate rate,
-                   const QuantLib::Period& tenor, 
-                   const QuantLib::Natural fixingDays,
-                   const QuantLib::Calendar& calendar, 
-                   const QuantLib::BusinessDayConvention convention, 
-                   const bool endOfMonth,
-                   const QuantLib::DayCounter& dayCounter, 
-                   const QuantLib::Date& tradeDate, 
-                   const bool isLong = true,
-                   const QuantLib::Period forwardStart = QuantLib::Period(0, QuantLib::Days)) {
-            return new DepositPtr(
-                new Deposit(nominal,
-                            rate,
-                            tenor,
-                            fixingDays,
-                            calendar,
-                            convention,
-                            endOfMonth,
-                            dayCounter,
-                            tradeDate,
-                            isLong,
-                            forwardStart));
-        }
-        QuantLib::Date fixingDate() const { 
-            return boost::dynamic_pointer_cast<Deposit>(*self)->fixingDate(); 
-        }
-        QuantLib::Date startDate() const { 
-            return boost::dynamic_pointer_cast<Deposit>(*self)->startDate(); 
-        }
-        QuantLib::Date maturityDate() const { 
-            return boost::dynamic_pointer_cast<Deposit>(*self)->maturityDate(); 
-        }
-        QuantLib::Real fairRate() const { 
-            return boost::dynamic_pointer_cast<Deposit>(*self)->fairRate(); 
-        }
-        const QuantLib::Leg& leg() const { 
-            return boost::dynamic_pointer_cast<Deposit>(*self)->leg(); 
-        }
-    }
-};
-
-%rename(DepositEngine) DepositEnginePtr;
-class DepositEnginePtr : public boost::shared_ptr<PricingEngine> {
-  public:
-    %extend {
-        DepositEnginePtr(const QuantLib::Handle<QuantLib::YieldTermStructure>& discountCurve = QuantLib::Handle<QuantLib::YieldTermStructure>(),
-                         boost::optional<bool> includeSettlementDateFlows = boost::none,
-                         QuantLib::Date settlementDate = QuantLib::Date(),
-                         QuantLib::Date npvDate = QuantLib::Date()) {
-            return new DepositEnginePtr(
-                new DepositEngine(discountCurve,
-                                  includeSettlementDateFlows,
-                                  settlementDate,
-                                  npvDate));
-        }
-    }
+    CrossCcyBasisSwap(QuantLib::Real payNominal,
+                      const QuantLib::Currency& payCurrency,
+                      const QuantLib::Schedule& paySchedule,
+                      const boost::shared_ptr<IborIndex>& payIndex,
+                      QuantLib::Spread paySpread,
+		      QuantLib::Real payGearing,
+                      QuantLib::Real recNominal,
+                      const QuantLib::Currency& recCurrency,
+                      const QuantLib::Schedule& recSchedule,
+                      const boost::shared_ptr<IborIndex>& recIndex,
+                      QuantLib::Spread recSpread,
+		      QuantLib::Real recGearing);
+    QuantLib::Real payNominal() const;
+    const QuantLib::Currency& payCurrency() const;
+    const QuantLib::Schedule& paySchedule() const;
+    QuantLib::Spread paySpread() const;
+    QuantLib::Real payGearing() const;
+    QuantLib::Real recNominal() const;
+    const QuantLib::Currency& recCurrency() const;
+    const QuantLib::Schedule& recSchedule() const;
+    QuantLib::Spread recSpread() const;
+    QuantLib::Real recGearing() const;
+    QuantLib::Spread fairPaySpread() const;
+    QuantLib::Spread fairRecSpread() const;
 };
 
 
-%ignore OvernightIndexedBasisSwap;
-class OvernightIndexedBasisSwap {
+%shared_ptr(CrossCcyBasisMtMResetSwap)
+class CrossCcyBasisMtMResetSwap : public CrossCcySwap {
+  public:
+    CrossCcyBasisMtMResetSwap(Real foreignNominal,
+                              const Currency& foreignCurrency,
+                              const Schedule& foreignSchedule,
+                              const boost::shared_ptr<IborIndex>& foreignIndex,
+                              Spread foreignSpread,
+                              const Currency& domesticCurrency,
+                              const Schedule& domesticSchedule,
+                              const boost::shared_ptr<IborIndex>& domesticIndex,
+                              Spread domesticSpread,
+                              const boost::shared_ptr<FxIndex>& fxIdx,
+                              bool receiveDomestic = true);
+    Spread fairForeignSpread() const;
+    Spread fairDomesticSpread() const;
+};
+
+
+%shared_ptr(Deposit)
+class Deposit : public Instrument {
+  public:
+    Deposit(const QuantLib::Real nominal,
+            const QuantLib::Rate rate,
+            const QuantLib::Period& tenor,
+            const QuantLib::Natural fixingDays,
+            const QuantLib::Calendar& calendar,
+            const QuantLib::BusinessDayConvention convention,
+            const bool endOfMonth,
+            const QuantLib::DayCounter& dayCounter,
+            const QuantLib::Date& tradeDate,
+            const bool isLong = true,
+            const QuantLib::Period forwardStart = QuantLib::Period(0, QuantLib::Days));
+    QuantLib::Date fixingDate() const;
+    QuantLib::Date startDate() const;
+    QuantLib::Date maturityDate() const;
+    QuantLib::Real fairRate() const;
+    const QuantLib::Leg& leg() const;
+};
+
+%shared_ptr(DepositEngine)
+class DepositEngine : public PricingEngine {
+  public:
+    DepositEngine(const QuantLib::Handle<QuantLib::YieldTermStructure>& discountCurve = QuantLib::Handle<QuantLib::YieldTermStructure>(),
+                  boost::optional<bool> includeSettlementDateFlows = boost::none,
+                  QuantLib::Date settlementDate = QuantLib::Date(),
+                  QuantLib::Date npvDate = QuantLib::Date());
+};
+
+%shared_ptr(OvernightIndexedBasisSwap)
+class OvernightIndexedBasisSwap : public Swap {
   public:
     enum Type { Receiver = -1, Payer = 1 };
+    OvernightIndexedBasisSwap(OvernightIndexedBasisSwap::Type type,
+                                    QuantLib::Real nominal,
+                                    const QuantLib::Schedule& oisSchedule,
+                                    const boost::shared_ptr<OvernightIndex>& overnightIndex,
+                                    const QuantLib::Schedule& iborSchedule,
+                                    const boost::shared_ptr<IborIndex>& iborIndex,
+                                    QuantLib::Spread oisSpread = 0.0,
+                                    QuantLib::Spread iborSpread = 0.0);
+    QuantLib::Real nominal() const ;
+    const QuantLib::Schedule& oisSchedule();
+    const QuantLib::Schedule& iborSchedule();
+    QuantLib::Spread oisSpread();
+    QuantLib::Spread iborSpread();
+    const QuantLib::Leg& iborLeg();
+    const QuantLib::Leg& overnightLeg();
+    QuantLib::Real iborLegBPS() const;
+    QuantLib::Real iborLegNPV() const;
+    QuantLib::Real fairIborSpread() const;
+    QuantLib::Real overnightLegBPS() const;
+    QuantLib::Real overnightLegNPV() const;
+    QuantLib::Real fairOvernightSpread() const;
 };
 
-%rename(OvernightIndexedBasisSwap) OvernightIndexedBasisSwapPtr;
-class OvernightIndexedBasisSwapPtr : public SwapPtr {
+
+%shared_ptr(Payment)
+class Payment : public Instrument {
   public:
-    %extend {
-        static const OvernightIndexedBasisSwap::Type Receiver = OvernightIndexedBasisSwap::Receiver;
-        static const OvernightIndexedBasisSwap::Type Payer = OvernightIndexedBasisSwap::Payer;
-        OvernightIndexedBasisSwapPtr(OvernightIndexedBasisSwap::Type type,
-                                     QuantLib::Real nominal, 
-                                     const QuantLib::Schedule& oisSchedule,
-                                     const OvernightIndexPtr& overnightIndex,
-                                     const QuantLib::Schedule& iborSchedule,
-                                     const IborIndexPtr& iborIndex,
-                                     QuantLib::Spread oisSpread = 0.0,
-                                     QuantLib::Spread iborSpread = 0.0) {
-            boost::shared_ptr<OvernightIndex> onIndex = boost::dynamic_pointer_cast<OvernightIndex>(overnightIndex);
-            boost::shared_ptr<IborIndex> ibIndex = boost::dynamic_pointer_cast<IborIndex>(iborIndex);
-            return new OvernightIndexedBasisSwapPtr(
-                new OvernightIndexedBasisSwap(type,
-                                              nominal,
-                                              oisSchedule,
-                                              onIndex,
-                                              iborSchedule,
-                                              ibIndex,
-                                              oisSpread,
-                                              iborSpread));
-        } 
-        QuantLib::Real nominal() const { 
-            return boost::dynamic_pointer_cast<OvernightIndexedBasisSwap>(*self)->nominal(); 
-        }
-        const QuantLib::Schedule& oisSchedule() { 
-            return boost::dynamic_pointer_cast<OvernightIndexedBasisSwap>(*self)->oisSchedule(); 
-        }
-        const QuantLib::Schedule& iborSchedule() { 
-            return boost::dynamic_pointer_cast<OvernightIndexedBasisSwap>(*self)->iborSchedule(); 
-        }
-        QuantLib::Spread oisSpread() { 
-            return boost::dynamic_pointer_cast<OvernightIndexedBasisSwap>(*self)->oisSpread(); 
-        }
-        QuantLib::Spread iborSpread() { 
-            return boost::dynamic_pointer_cast<OvernightIndexedBasisSwap>(*self)->iborSpread(); 
-        }
-        const QuantLib::Leg& iborLeg() { 
-            return boost::dynamic_pointer_cast<OvernightIndexedBasisSwap>(*self)->iborLeg(); 
-        }
-        const QuantLib::Leg& overnightLeg() { 
-            return boost::dynamic_pointer_cast<OvernightIndexedBasisSwap>(*self)->overnightLeg(); 
-        }
-        QuantLib::Real iborLegBPS() const { 
-            return boost::dynamic_pointer_cast<OvernightIndexedBasisSwap>(*self)->iborLegBPS(); 
-        }
-        QuantLib::Real iborLegNPV() const { 
-            return boost::dynamic_pointer_cast<OvernightIndexedBasisSwap>(*self)->iborLegNPV(); 
-        }
-        QuantLib::Real fairIborSpread() const { 
-            return boost::dynamic_pointer_cast<OvernightIndexedBasisSwap>(*self)->fairIborSpread(); 
-        }
-        QuantLib::Real overnightLegBPS() const { 
-            return boost::dynamic_pointer_cast<OvernightIndexedBasisSwap>(*self)->overnightLegBPS(); 
-        }
-        QuantLib::Real overnightLegNPV() const { 
-            return boost::dynamic_pointer_cast<OvernightIndexedBasisSwap>(*self)->overnightLegNPV(); 
-        }
-        QuantLib::Real fairOvernightSpread() const { 
-            return boost::dynamic_pointer_cast<OvernightIndexedBasisSwap>(*self)->fairOvernightSpread(); 
-        }
-    }
+    Payment(const QuantLib::Real amount,
+            const QuantLib::Currency& currency,
+            const QuantLib::Date& date);
+    QuantLib::Currency currency() const;
+    boost::shared_ptr<SimpleCashFlow> cashFlow() const;
 };
 
 
-%rename(Payment) PaymentPtr;
-class PaymentPtr : public boost::shared_ptr<Instrument> {
-public:
-    %extend{
-        PaymentPtr(const QuantLib::Real amount, 
-                   const QuantLib::Currency& currency, 
-                   const QuantLib::Date& date) {
-            return new PaymentPtr(
-                new Payment(amount, currency, date));
-        }
-        
-        QuantLib::Currency currency() const {
-            return boost::dynamic_pointer_cast<Payment>(*self)->currency();
-        }
-                
-        SimpleCashFlowPtr cashFlow() const {
-            return boost::dynamic_pointer_cast<Payment>(*self)->cashFlow();
-        }
-        
-    }
+%shared_ptr(PaymentDiscountingEngine)
+class PaymentDiscountingEngine : public PricingEngine {
+  public:
+    PaymentDiscountingEngine(const QuantLib::Handle<QuantLib::YieldTermStructure>& discountCurve,
+                             const QuantLib::Handle<QuantLib::Quote>& spotFX = QuantLib::Handle<QuantLib::Quote>(),
+                             boost::optional<bool> includeSettlementDateFlows = boost::none,
+                             const QuantLib::Date& settlementDate = QuantLib::Date(),
+                             const QuantLib::Date& npvDate = QuantLib::Date());    
+    const QuantLib::Handle<QuantLib::YieldTermStructure>& discountCurve();    
+    const QuantLib::Handle<QuantLib::Quote>& spotFX();
 };
 
 
-%rename(PaymentDiscountingEngine) PaymentDiscountingEnginePtr;
-class PaymentDiscountingEnginePtr : public boost::shared_ptr<PricingEngine> {
-public:
-    %extend{
-        PaymentDiscountingEnginePtr(const QuantLib::Handle<QuantLib::YieldTermStructure>& discountCurve,
-                                    const QuantLib::Handle<QuantLib::Quote>& spotFX = QuantLib::Handle<QuantLib::Quote>(),
-                                    boost::optional<bool> includeSettlementDateFlows = boost::none,
-                                    const QuantLib::Date& settlementDate = QuantLib::Date(), 
-                                    const QuantLib::Date& npvDate = QuantLib::Date()) {
-            return new PaymentDiscountingEnginePtr(
-                new PaymentDiscountingEngine(discountCurve, spotFX, includeSettlementDateFlows,settlementDate,npvDate));
-        }
-        
-        const QuantLib::Handle<QuantLib::YieldTermStructure>& discountCurve() {
-            return boost::dynamic_pointer_cast<PaymentDiscountingEngine>(*self)->discountCurve(); 
-        }
-        
-        const QuantLib::Handle<QuantLib::Quote>& spotFX() {
-            return boost::dynamic_pointer_cast<PaymentDiscountingEngine>(*self)->spotFX(); 
-        }
-    }
-    
-    
-    
+%shared_ptr(FxForward)
+class FxForward : public Instrument {
+  public:
+    FxForward(const QuantLib::Real& nominal1,
+              const QuantLib::Currency& currency1,
+              const QuantLib::Real& nominal2,
+              const QuantLib::Currency& currency2,
+              const QuantLib::Date& maturityDate,
+              const bool& payCurrency1);
+    const QuantLib::ExchangeRate& fairForwardRate();
+    QuantLib::Real currency1Nominal() const;
+    QuantLib::Real currency2Nominal() const;
+    QuantLib::Currency currency1() const;
+    QuantLib::Currency currency2() const;
+    QuantLib::Date maturityDate() const;
+    bool payCurrency1() const;
 };
 
 
-%rename(FxForward) FxForwardPtr;
-class FxForwardPtr : public boost::shared_ptr<Instrument> {
+%shared_ptr(DiscountingFxForwardEngine)
+class DiscountingFxForwardEngine : public PricingEngine {
+  public:
+    DiscountingFxForwardEngine(const QuantLib::Currency& ccy1,
+                               const QuantLib::Handle<QuantLib::YieldTermStructure>& currency1Discountcurve,
+                               const QuantLib::Currency& ccy2,
+                               const QuantLib::Handle<QuantLib::YieldTermStructure>& currency2Discountcurve,
+                               const QuantLib::Handle<QuantLib::Quote>& spotFX,
+                               boost::optional<bool> includeSettlementDateFlows = boost::none,
+                               const QuantLib::Date& settlementDate = QuantLib::Date(),
+                               const QuantLib::Date& npvDate = QuantLib::Date());
+};
+
+
+%shared_ptr(CommodityForward)
+class CommodityForward : public Instrument {
 public:
-    %extend {
-        FxForwardPtr(const QuantLib::Real& nominal1,
-                     const QuantLib::Currency& currency1,
-                     const QuantLib::Real& nominal2,
-                     const QuantLib::Currency& currency2,
+    CommodityForward(const std::string& name,
+                     const QuantLib::Currency& currency,
+                     QuantLib::Position::Type position,
+                     QuantLib::Real quantity,
                      const QuantLib::Date& maturityDate,
-                     const bool& payCurrency1) {
-            return new FxForwardPtr(
-                new FxForward(nominal1, 
-                              currency1, 
-                              nominal2, 
-                              currency2,
-                              maturityDate, 
-                              payCurrency1));
-        }
-        const QuantLib::ExchangeRate& fairForwardRate() { 
-            return boost::dynamic_pointer_cast<FxForward>(*self)->fairForwardRate(); 
-        }
-        QuantLib::Real currency1Nominal() const { 
-            return boost::dynamic_pointer_cast<FxForward>(*self)->currency1Nominal(); 
-        }
-        QuantLib::Real currency2Nominal() const { 
-            return boost::dynamic_pointer_cast<FxForward>(*self)->currency2Nominal(); 
-        }
-        QuantLib::Currency currency1() const { 
-            return boost::dynamic_pointer_cast<FxForward>(*self)->currency1(); 
-        }
-        QuantLib::Currency currency2() const { 
-            return boost::dynamic_pointer_cast<FxForward>(*self)->currency2(); 
-        }
-        QuantLib::Date maturityDate() const { 
-            return boost::dynamic_pointer_cast<FxForward>(*self)->maturityDate(); 
-        }
-        bool payCurrency1() const { 
-            return boost::dynamic_pointer_cast<FxForward>(*self)->payCurrency1(); 
-        }
-    }
+                     QuantLib::Real strike);
+    const std::string& name() const;
+    const QuantLib::Currency& currency() const;
+    QuantLib::Position::Type position() const;
+    QuantLib::Real quantity() const;
+    const QuantLib::Date& maturityDate() const;
+    QuantLib::Real strike() const;
 };
 
-
-%rename(DiscountingFxForwardEngine) DiscountingFxForwardEnginePtr;
-class DiscountingFxForwardEnginePtr : public boost::shared_ptr<PricingEngine> {
-  public:
-    %extend {
-        DiscountingFxForwardEnginePtr(const QuantLib::Currency& ccy1,
-                                      const QuantLib::Handle<QuantLib::YieldTermStructure>& currency1Discountcurve,
-                                      const QuantLib::Currency& ccy2,
-                                      const QuantLib::Handle<QuantLib::YieldTermStructure>& currency2Discountcurve,
-                                      const QuantLib::Handle<QuantLib::Quote>& spotFX,
+%shared_ptr(DiscountingCommodityForwardEngine)
+class DiscountingCommodityForwardEngine : public PricingEngine {
+public:
+    DiscountingCommodityForwardEngine(const QuantLib::Handle<PriceTermStructure>& priceCurve,
+                                      const QuantLib::Handle<QuantLib::YieldTermStructure>& discountCurve,
                                       boost::optional<bool> includeSettlementDateFlows = boost::none,
-                                      const QuantLib::Date& settlementDate = QuantLib::Date(),
-                                      const QuantLib::Date& npvDate = QuantLib::Date()) {
-            return new DiscountingFxForwardEnginePtr(
-                                  new DiscountingFxForwardEngine(ccy1,
-                                                                 currency1Discountcurve,
-                                                                 ccy2,
-                                                                 currency2Discountcurve,
-                                                                 spotFX,
-                                                                 includeSettlementDateFlows,
-                                                                 settlementDate,
-                                                                 npvDate));
-        }
-    }
+                                      const QuantLib::Date& npvDate = QuantLib::Date());
 };
 
-
-%rename(CommodityForward) CommodityForwardPtr;
-class CommodityForwardPtr : public boost::shared_ptr<Instrument> {
+%shared_ptr(DiscountingSwapEngineMultiCurve)
+class DiscountingSwapEngineMultiCurve : public PricingEngine {
 public:
-    %extend {
-        CommodityForwardPtr(const std::string& name, 
-                            const QuantLib::Currency& currency,
-                            QuantLib::Position::Type position, 
-                            QuantLib::Real quantity,
-                            const QuantLib::Date& maturityDate, 
-                            QuantLib::Real strike) {
-            return new CommodityForwardPtr(
-                new CommodityForward(name, 
-                                     currency, 
-                                     position, 
-                                     quantity, 
-                                     maturityDate, 
-                                     strike));
-        }
-        const std::string& name() const { 
-            return boost::dynamic_pointer_cast<CommodityForward>(*self)->name(); 
-        }
-        const QuantLib::Currency& currency() const {
-            return boost::dynamic_pointer_cast<CommodityForward>(*self)->currency();
-        }
-        QuantLib::Position::Type position() const {
-            return boost::dynamic_pointer_cast<CommodityForward>(*self)->position();
-        }
-        QuantLib::Real quantity() const { 
-            return boost::dynamic_pointer_cast<CommodityForward>(*self)->quantity(); 
-        }
-        const QuantLib::Date& maturityDate() const {
-            return boost::dynamic_pointer_cast<CommodityForward>(*self)->maturityDate();
-        }
-        QuantLib::Real strike() const { 
-            return boost::dynamic_pointer_cast<CommodityForward>(*self)->strike(); 
-        }
-    }
+    DiscountingSwapEngineMultiCurve(const QuantLib::Handle<QuantLib::YieldTermStructure>& discountCurve
+                                        = QuantLib::Handle<QuantLib::YieldTermStructure>(),
+                                    bool minimalResults = true,
+                                    boost::optional<bool> includeSettlementDateFlows = boost::none,
+                                    QuantLib::Date settlementDate = QuantLib::Date(),
+                                    QuantLib::Date npvDate = QuantLib::Date());
+    QuantLib::Handle<QuantLib::YieldTermStructure> discountCurve();
 };
-
-%rename(DiscountingCommodityForwardEngine) DiscountingCommodityForwardEnginePtr;
-class DiscountingCommodityForwardEnginePtr : public boost::shared_ptr<PricingEngine> {
-public:
-    %extend {
-        DiscountingCommodityForwardEnginePtr(const QuantLib::Handle<PriceTermStructure>& priceCurve,
-                                             const QuantLib::Handle<QuantLib::YieldTermStructure>& discountCurve,
-                                             boost::optional<bool> includeSettlementDateFlows = boost::none,
-                                             const QuantLib::Date& npvDate = QuantLib::Date()) {
-            return new DiscountingCommodityForwardEnginePtr(
-                new DiscountingCommodityForwardEngine(priceCurve, 
-                                                      discountCurve, 
-                                                      includeSettlementDateFlows, 
-                                                      npvDate));
-        }
-    }
-};
-
-%rename(DiscountingSwapEngineMultiCurve) DiscountingSwapEngineMultiCurvePtr;
-class DiscountingSwapEngineMultiCurvePtr : public boost::shared_ptr<PricingEngine> {
-public:
-    %extend {
-        DiscountingSwapEngineMultiCurvePtr(const QuantLib::Handle<QuantLib::YieldTermStructure>& discountCurve 
-                                                = QuantLib::Handle<QuantLib::YieldTermStructure>(),
-                                           bool minimalResults = true,
-                                           boost::optional<bool> includeSettlementDateFlows = boost::none,
-                                           QuantLib::Date settlementDate = QuantLib::Date(), 
-                                           QuantLib::Date npvDate = QuantLib::Date()) {
-            return new DiscountingSwapEngineMultiCurvePtr(
-                new DiscountingSwapEngineMultiCurve(discountCurve,  
-                                                    minimalResults,
-                                                    includeSettlementDateFlows,
-                                                    settlementDate,
-                                                    npvDate));
-        }
-        QuantLib::Handle<QuantLib::YieldTermStructure> discountCurve() { 
-            return boost::dynamic_pointer_cast<DiscountingSwapEngineMultiCurve>(*self)->discountCurve(); 
-        }
-    }
-};
-
 
 #endif
