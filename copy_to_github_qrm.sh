@@ -30,4 +30,6 @@ done
 echo -------
 
 cp -R cmake ${GITHUB_BASE}
-cp News.txt ${GITHUB_BASE}
+cp News.txt LICENSE.txt README.md ${GITHUB_BASE}
+cp OREAnalytics-SWIG/Python/Examples/Input/*  $GITHUB_BASE/OREAnalytics-SWIG/Python/Examples/Input
+cp OREData-SWIG/Python/test/Input/*  $GITHUB_BASE/OREData-SWIG/Python/test/Input
