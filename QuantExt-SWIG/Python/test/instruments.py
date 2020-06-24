@@ -862,6 +862,7 @@ class PaymentTest(unittest.TestCase):
         self.assertFalse(abs(self.payment.NPV() - self.nominal) > tolerance)
         
 if __name__ == '__main__':
+    import QuantExt
     print('testing QuantExt ' + QuantExt.__version__)
     suite = unittest.TestSuite()
     suite.addTest(unittest.makeSuite(CrossCurrencyFixFloatSwapTest, 'test'))

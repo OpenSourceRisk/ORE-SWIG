@@ -1,0 +1,7 @@
+Changes for the 5th ORE release (1.8.5.0):
+==========================================
+
+Update almost all interface files to work with QuantLib-SWIG 1.18
+and to use the SWIG wrapper of boost::shared_ptr.
+
+
