@@ -17,7 +17,7 @@ from distutils import sysconfig
 
 class test(Command):
     # Original version of this class posted
-    # by Berthold Höllmann to distutils-sig@python.org
+    # by Berthold Hï¿½llmann to distutils-sig@python.org
     description = "test the distribution prior to install"
 
     user_options = [
@@ -176,7 +176,7 @@ class my_build_ext(build_ext):
             ql_compile_args = \
                 os.popen('oreanalytics-config --cflags').read()[:-1].split()
             ql_link_args = \
-                os.popen('oreplus-config --libs').read()[:-1].split()
+                os.popen('oreanalytics-config --libs').read()[:-1].split()
 
             self.define += [ (arg[2:],None) for arg in ql_compile_args
                              if arg.startswith('-D') ]
@@ -258,8 +258,8 @@ framework for quantitative finance.
       """,
       author           = "Quaternion Risk Management",
       author_email     = "info@quaternion.com",
-      url              = "http://quternion.com",
-      license          = codecs.open('../../LICENSE.TXT','r+',
+      url              = "http://quaternion.com",
+      license          = codecs.open('../LICENSE.TXT','r+',
                                      encoding='utf8').read(),
       classifiers      = classifiers,
       py_modules       = ['OREAnalytics.__init__','OREAnalytics.OREAnalytics'],

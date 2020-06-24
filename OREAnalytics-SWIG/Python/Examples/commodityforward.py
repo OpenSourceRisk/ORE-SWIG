@@ -46,9 +46,10 @@ quotes = [ QuoteHandle(SimpleQuote(100.0)),
            QuoteHandle(SimpleQuote(102.25)) ]
 
 tsDayCounter = Actual365Fixed()
+currency = EURCurrency();
 
 # price curve
-priceCurve = LinearInterpolatedPriceCurve(dates, quotes, tsDayCounter);
+priceCurve = LinearInterpolatedPriceCurve(todaysDate, dates, quotes, tsDayCounter, currency);
 priceCurve.enableExtrapolation();
 priceTermStructure = RelinkablePriceTermStructureHandle();
 priceTermStructure.linkTo(priceCurve)

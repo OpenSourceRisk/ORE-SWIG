@@ -1,7 +1,19 @@
-
 /*
- Copyright (C) 2018 Quaternion Risk Management Ltd
+ Copyright (C) 2018, 2020 Quaternion Risk Management Ltd
  All rights reserved.
+
+ This file is part of ORE, a free-software/open-source library
+ for transparent pricing and risk analysis - http://opensourcerisk.org
+
+ ORE is free software: you can redistribute it and/or modify it
+ under the terms of the Modified BSD License.  You should have received a
+ copy of the license along with this program.
+ The license is also available online at <http://opensourcerisk.org>
+
+ This program is distributed on the basis that it will form a useful
+ contribution to risk analytics and model standardisation, but WITHOUT
+ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ FITNESS FOR A PARTICULAR PURPOSE. See the license for more details.
 */
 
 #ifndef qle_averageoisratehelper_i
@@ -16,55 +28,26 @@
 
 %{
 using QuantExt::AverageOISRateHelper;
-typedef boost::shared_ptr<RateHelper> AverageOISRateHelperPtr;
 %}
 
-%rename(AverageOISRateHelper) AverageOISRateHelperPtr;
-class AverageOISRateHelperPtr : public boost::shared_ptr<RateHelper> {
+%shared_ptr(AverageOISRateHelper)
+class AverageOISRateHelper : public RateHelper {
 public:
-    %extend{
-        AverageOISRateHelperPtr(const QuantLib::Handle<QuantLib::Quote>& fixedRate, 
-                                const QuantLib::Period& spotLagTenor, 
-                                const QuantLib::Period& swapTenor,
-                                const QuantLib::Period& fixedTenor, 
-                                const QuantLib::DayCounter& fixedDayCounter, 
-                                const QuantLib::Calendar& fixedCalendar,
-                                QuantLib::BusinessDayConvention fixedConvention, 
-                                QuantLib::BusinessDayConvention fixedPaymentAdjustment,
-                                OvernightIndexPtr& overnightIndex, 
-                                const QuantLib::Period& onTenor,
-                                const QuantLib::Handle<QuantLib::Quote>& onSpread, 
-                                QuantLib::Natural rateCutoff,
-                                const QuantLib::Handle<QuantLib::YieldTermStructure>& discountCurve = QuantLib::Handle<QuantLib::YieldTermStructure>()) {
-                                
-            boost::shared_ptr<OvernightIndex> onIdx = boost::dynamic_pointer_cast<OvernightIndex>(overnightIndex);
-            return new AverageOISRateHelperPtr(
-                new AverageOISRateHelper(fixedRate,
-                                         spotLagTenor,
-                                         swapTenor,
-                                         fixedTenor,
-                                         fixedDayCounter,
-                                         fixedCalendar,
-                                         fixedConvention,
-                                         fixedPaymentAdjustment,
-                                         onIdx,
-                                         onTenor,
-                                         onSpread,
-                                         rateCutoff,
-                                         discountCurve
-                                         ));
-        }
-        
-        QuantLib::Real onSpread() const {
-            return boost::dynamic_pointer_cast<AverageOISRateHelper>(*self)->onSpread();
-        }
-        
-        AverageOISPtr averageOIS() const {
-            return boost::dynamic_pointer_cast<AverageOISRateHelper>(*self)->averageOIS();
-        }
-        
-    }
-    
+    AverageOISRateHelper(const QuantLib::Handle<QuantLib::Quote>& fixedRate,
+                         const QuantLib::Period& spotLagTenor,
+                         const QuantLib::Period& swapTenor,
+                         const QuantLib::Period& fixedTenor,
+                         const QuantLib::DayCounter& fixedDayCounter,
+                         const QuantLib::Calendar& fixedCalendar,
+                         QuantLib::BusinessDayConvention fixedConvention,
+                         QuantLib::BusinessDayConvention fixedPaymentAdjustment,
+                         boost::shared_ptr<OvernightIndex>& overnightIndex,
+                         const QuantLib::Period& onTenor,
+                         const QuantLib::Handle<QuantLib::Quote>& onSpread,
+                         QuantLib::Natural rateCutoff,
+                         const QuantLib::Handle<QuantLib::YieldTermStructure>& discountCurve = QuantLib::Handle<QuantLib::YieldTermStructure>());
+    QuantLib::Real onSpread() const;
+    boost::shared_ptr<AverageOIS> averageOIS() const;
 };
 
 #endif

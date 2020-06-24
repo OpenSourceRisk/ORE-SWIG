@@ -1,6 +1,19 @@
 /*
- Copyright (C) 2018 Quaternion Risk Management Ltd
+ Copyright (C) 2018, 2020 Quaternion Risk Management Ltd
  All rights reserved.
+
+ This file is part of ORE, a free-software/open-source library
+ for transparent pricing and risk analysis - http://opensourcerisk.org
+
+ ORE is free software: you can redistribute it and/or modify it
+ under the terms of the Modified BSD License.  You should have received a
+ copy of the license along with this program.
+ The license is also available online at <http://opensourcerisk.org>
+
+ This program is distributed on the basis that it will form a useful
+ contribution to risk analytics and model standardisation, but WITHOUT
+ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ FITNESS FOR A PARTICULAR PURPOSE. See the license for more details.
 */
 
 #ifndef qle_crossccyfixfloatswap_i
@@ -14,113 +27,47 @@
 
 %{
 using QuantExt::CrossCcyFixFloatSwap;
-typedef boost::shared_ptr<Instrument> CrossCcyFixFloatSwapPtr;
 %}
 
-%ignore CrossCcyFixFloatSwap;
-class CrossCcyFixFloatSwap {
+%shared_ptr(CrossCcyFixFloatSwap)
+class CrossCcyFixFloatSwap : public CrossCcySwap {
   public:
     enum Type { Receiver = -1, Payer = 1 };
-};
-
-%rename(CrossCcyFixFloatSwap) CrossCcyFixFloatSwapPtr;
-class CrossCcyFixFloatSwapPtr : public CrossCcySwapPtr {
-  public:
-    %extend {
-        static const CrossCcyFixFloatSwap::Type Receiver = CrossCcyFixFloatSwap::Receiver;
-        static const CrossCcyFixFloatSwap::Type Payer = CrossCcyFixFloatSwap::Payer;
-        CrossCcyFixFloatSwapPtr(CrossCcyFixFloatSwap::Type type, 
-                                QuantLib::Real fixedNominal,
-                                const QuantLib::Currency& fixedCurrency,
-                                const QuantLib::Schedule& fixedSchedule,
-                                QuantLib::Rate fixedRate,
-                                const QuantLib::DayCounter& fixedDayCount,
-                                QuantLib::BusinessDayConvention fixedPaymentBdc,
-                                QuantLib::Natural fixedPaymentLag,
-                                const QuantLib::Calendar& fixedPaymentCalendar,
-                                QuantLib::Real floatNominal,
-                                const QuantLib::Currency& floatCurrency,
-                                const QuantLib::Schedule& floatSchedule,
-                                const IborIndexPtr& floatIndex,
-                                QuantLib::Spread floatSpread,
-                                QuantLib::BusinessDayConvention floatPaymentBdc,
-                                QuantLib::Natural floatPaymentLag,
-                                const QuantLib::Calendar& floatPaymentCalendar) {
-            boost::shared_ptr<IborIndex> flIndex = boost::dynamic_pointer_cast<IborIndex>(floatIndex);
-            return new CrossCcyFixFloatSwapPtr(
-                new CrossCcyFixFloatSwap(type,
-                                         fixedNominal,
-                                         fixedCurrency,
-                                         fixedSchedule,
-                                         fixedRate,
-                                         fixedDayCount,
-                                         fixedPaymentBdc,
-                                         fixedPaymentLag,
-                                         fixedPaymentCalendar,
-                                         floatNominal,
-                                         floatCurrency,
-                                         floatSchedule,
-                                         flIndex,
-                                         floatSpread,
-                                         floatPaymentBdc,
-                                         floatPaymentLag,
-                                         floatPaymentCalendar));
-        }
-        CrossCcyFixFloatSwap::Type type() const {
-            return boost::dynamic_pointer_cast<CrossCcyFixFloatSwap>(*self)->type();
-        }
-        QuantLib::Real fixedNominal() const {
-            return boost::dynamic_pointer_cast<CrossCcyFixFloatSwap>(*self)->fixedNominal();
-        }
-        const QuantLib::Currency& fixedCurrency() const {
-            return boost::dynamic_pointer_cast<CrossCcyFixFloatSwap>(*self)->fixedCurrency();
-        }
-        const QuantLib::Schedule& fixedSchedule() const {
-            return boost::dynamic_pointer_cast<CrossCcyFixFloatSwap>(*self)->fixedSchedule();
-        }
-        QuantLib::Rate fixedRate() const {
-            return boost::dynamic_pointer_cast<CrossCcyFixFloatSwap>(*self)->fixedRate();
-        }
-        const QuantLib::DayCounter& fixedDayCount() const {
-            return boost::dynamic_pointer_cast<CrossCcyFixFloatSwap>(*self)->fixedDayCount();
-        }
-        QuantLib::BusinessDayConvention fixedPaymentBdc() {
-            return boost::dynamic_pointer_cast<CrossCcyFixFloatSwap>(*self)->fixedPaymentBdc();
-        }
-        QuantLib::Natural fixedPaymentLag() const {
-            return boost::dynamic_pointer_cast<CrossCcyFixFloatSwap>(*self)->fixedPaymentLag();
-        }
-        const QuantLib::Calendar& fixedPaymentCalendar() const {
-            return boost::dynamic_pointer_cast<CrossCcyFixFloatSwap>(*self)->fixedPaymentCalendar();
-        }
-        QuantLib::Real floatNominal() const {
-            return boost::dynamic_pointer_cast<CrossCcyFixFloatSwap>(*self)->floatNominal();
-        }
-        const QuantLib::Currency& floatCurrency() const {
-            return boost::dynamic_pointer_cast<CrossCcyFixFloatSwap>(*self)->floatCurrency();
-        }
-        const QuantLib::Schedule& floatSchedule() const {
-            return boost::dynamic_pointer_cast<CrossCcyFixFloatSwap>(*self)->floatSchedule();
-        }
-        QuantLib::Rate floatSpread() const {
-            return boost::dynamic_pointer_cast<CrossCcyFixFloatSwap>(*self)->floatSpread();
-        }
-        QuantLib::BusinessDayConvention floatPaymentBdc() {
-            return boost::dynamic_pointer_cast<CrossCcyFixFloatSwap>(*self)->floatPaymentBdc();
-        }
-        QuantLib::Natural floatPaymentLag() const {
-            return boost::dynamic_pointer_cast<CrossCcyFixFloatSwap>(*self)->floatPaymentLag();
-        }
-        const QuantLib::Calendar& floatPaymentCalendar() const {
-            return boost::dynamic_pointer_cast<CrossCcyFixFloatSwap>(*self)->floatPaymentCalendar();
-        }
-        QuantLib::Rate fairFixedRate() const {
-            return boost::dynamic_pointer_cast<CrossCcyFixFloatSwap>(*self)->fairFixedRate();
-        }
-        QuantLib::Spread fairSpread() const {
-            return boost::dynamic_pointer_cast<CrossCcyFixFloatSwap>(*self)->fairSpread();
-        }
-    }
+    CrossCcyFixFloatSwap(CrossCcyFixFloatSwap::Type type,
+                         QuantLib::Real fixedNominal,
+                         const QuantLib::Currency& fixedCurrency,
+                         const QuantLib::Schedule& fixedSchedule,
+                         QuantLib::Rate fixedRate,
+                         const QuantLib::DayCounter& fixedDayCount,
+                         QuantLib::BusinessDayConvention fixedPaymentBdc,
+                         QuantLib::Natural fixedPaymentLag,
+                         const QuantLib::Calendar& fixedPaymentCalendar,
+                         QuantLib::Real floatNominal,
+                         const QuantLib::Currency& floatCurrency,
+                         const QuantLib::Schedule& floatSchedule,
+                         const boost::shared_ptr<IborIndex>& floatIndex,
+                         QuantLib::Spread floatSpread,
+                         QuantLib::BusinessDayConvention floatPaymentBdc,
+                         QuantLib::Natural floatPaymentLag,
+                         const QuantLib::Calendar& floatPaymentCalendar);
+    CrossCcyFixFloatSwap::Type type() const;
+    QuantLib::Real fixedNominal() const;
+    const QuantLib::Currency& fixedCurrency() const;
+    const QuantLib::Schedule& fixedSchedule() const;
+    QuantLib::Rate fixedRate() const;
+    const QuantLib::DayCounter& fixedDayCount() const;
+    QuantLib::BusinessDayConvention fixedPaymentBdc();
+    QuantLib::Natural fixedPaymentLag() const;
+    const QuantLib::Calendar& fixedPaymentCalendar() const;
+    QuantLib::Real floatNominal() const;
+    const QuantLib::Currency& floatCurrency() const;
+    const QuantLib::Schedule& floatSchedule() const;
+    QuantLib::Rate floatSpread() const;
+    QuantLib::BusinessDayConvention floatPaymentBdc();
+    QuantLib::Natural floatPaymentLag() const;
+    const QuantLib::Calendar& floatPaymentCalendar() const;
+    QuantLib::Rate fairFixedRate() const;
+    QuantLib::Spread fairSpread() const;
 };
 
 #endif

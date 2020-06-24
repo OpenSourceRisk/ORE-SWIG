@@ -26,7 +26,7 @@ get_library_name("QuantLib" QL_LIB_NAME)
 configure_msvc_runtime()
 
 # To build the module, we moreover need Boost, Swig, Python
-find_package(Boost COMPONENTS serialization date_time regex filesystem system REQUIRED)
+find_package(Boost COMPONENTS serialization date_time regex filesystem system timer REQUIRED)
 find_package(SWIG REQUIRED)
 find_package(PythonLibs)
 
@@ -54,7 +54,7 @@ link_directories(${ORE}/build/OREAnalytics/orea)
 # Tell SWIG to compile in C++ mode
 set_source_files_properties(${PROJECT_SOURCE_DIR}/../SWIG/oreanalytics.i PROPERTIES CPLUSPLUS ON)
 set_source_files_properties(${PROJECT_SOURCE_DIR}/../SWIG/oreanalytics.i PROPERTIES SWIG_FLAGS "-includeall")
-#set_source_files_properties(${PROJECT_SOURCE_DIR}/../SWIG/oreanalytics.i PROPERTIES SWIG_FLAGS "-modern")
+set_source_files_properties(${PROJECT_SOURCE_DIR}/../SWIG/oreanalytics.i PROPERTIES SWIG_FLAGS "-modern")
 #set_source_files_properties(${PROJECT_SOURCE_DIR}/../SWIG/oreanalytics.i PROPERTIES SWIG_FLAGS "-py3")
 
 # Tell SWIG to build a Python module, to be called "OREAnalytics"
