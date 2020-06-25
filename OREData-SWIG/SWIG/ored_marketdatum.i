@@ -104,7 +104,7 @@ class MoneyMarketQuote : public MarketDatum {
     const Period& fwdStart() const;
     const Period& term() const;
     %extend {
-      static const boost::shared_ptr<MoneyMarketQuote> getFullView(boost::shared_ptr<MarketDatum> baseInput) const {
+      static const boost::shared_ptr<MoneyMarketQuote> getFullView(boost::shared_ptr<MarketDatum> baseInput) {
         return boost::dynamic_pointer_cast<MoneyMarketQuote>(baseInput);
       }
     }
@@ -124,7 +124,7 @@ class FRAQuote : public MarketDatum {
     const Period& fwdStart() const;
     const Period& term() const;
     %extend {
-      static const boost::shared_ptr<FRAQuote> getFullView(boost::shared_ptr<MarketDatum> baseInput) const {
+      static const boost::shared_ptr<FRAQuote> getFullView(boost::shared_ptr<MarketDatum> baseInput) {
         return boost::dynamic_pointer_cast<FRAQuote>(baseInput);
       }
     }
@@ -143,7 +143,7 @@ class ImmFraQuote : public MarketDatum {
     const Size& imm1() const;
     const Size& imm2() const;
     %extend {
-      static const boost::shared_ptr<ImmFraQuote> getFullView(boost::shared_ptr<MarketDatum> baseInput) const {
+      static const boost::shared_ptr<ImmFraQuote> getFullView(boost::shared_ptr<MarketDatum> baseInput) {
         return boost::dynamic_pointer_cast<ImmFraQuote>(baseInput);
       }
     }
@@ -164,7 +164,7 @@ class SwapQuote : public MarketDatum {
     const Period& term() const;
     const Period& tenor() const;
     %extend {
-      static const boost::shared_ptr<SwapQuote> getFullView(boost::shared_ptr<MarketDatum> baseInput) const {
+      static const boost::shared_ptr<SwapQuote> getFullView(boost::shared_ptr<MarketDatum> baseInput) {
         return boost::dynamic_pointer_cast<SwapQuote>(baseInput);
       }
     }
@@ -186,7 +186,7 @@ class ZeroQuote : public MarketDatum {
     const Period& tenor() const;
     bool tenorBased() const;
     %extend {
-      static const boost::shared_ptr<ZeroQuote> getFullView(boost::shared_ptr<MarketDatum> baseInput) const {
+      static const boost::shared_ptr<ZeroQuote> getFullView(boost::shared_ptr<MarketDatum> baseInput) {
         return boost::dynamic_pointer_cast<ZeroQuote>(baseInput);
       }
     }
@@ -204,7 +204,7 @@ class DiscountQuote : public MarketDatum {
     const std::string& ccy() const;
     Date date() const;
     %extend {
-      static const boost::shared_ptr<DiscountQuote> getFullView(boost::shared_ptr<MarketDatum> baseInput) const {
+      static const boost::shared_ptr<DiscountQuote> getFullView(boost::shared_ptr<MarketDatum> baseInput) {
         return boost::dynamic_pointer_cast<DiscountQuote>(baseInput);
       }
     }
@@ -227,7 +227,7 @@ class MMFutureQuote : public MarketDatum {
     const std::string& contract() const;
     const Period& tenor() const;
     %extend {
-      static const boost::shared_ptr<MMFutureQuote> getFullView(boost::shared_ptr<MarketDatum> baseInput) const {
+      static const boost::shared_ptr<MMFutureQuote> getFullView(boost::shared_ptr<MarketDatum> baseInput) {
         return boost::dynamic_pointer_cast<MMFutureQuote>(baseInput);
       }
     }
@@ -248,7 +248,7 @@ class BasisSwapQuote : public MarketDatum {
     const std::string& ccy() const;
     const Period& maturity() const;
     %extend {
-      static const boost::shared_ptr<BasisSwapQuote> getFullView(boost::shared_ptr<MarketDatum> baseInput) const {
+      static const boost::shared_ptr<BasisSwapQuote> getFullView(boost::shared_ptr<MarketDatum> baseInput) {
         return boost::dynamic_pointer_cast<BasisSwapQuote>(baseInput);
       }
     }
@@ -268,7 +268,7 @@ class BMASwapQuote : public MarketDatum {
     const std::string& ccy() const;
     const Period& maturity() const;
     %extend {
-      static const boost::shared_ptr<BMASwapQuote> getFullView(boost::shared_ptr<MarketDatum> baseInput) const {
+      static const boost::shared_ptr<BMASwapQuote> getFullView(boost::shared_ptr<MarketDatum> baseInput) {
         return boost::dynamic_pointer_cast<BMASwapQuote>(baseInput);
       }
     }
@@ -290,7 +290,7 @@ class CrossCcyBasisSwapQuote : public MarketDatum {
     const Period& term() const;
     const Period& maturity() const;
     %extend {
-      static const boost::shared_ptr<CrossCcyBasisSwapQuote> getFullView(boost::shared_ptr<MarketDatum> baseInput) const {
+      static const boost::shared_ptr<CrossCcyBasisSwapQuote> getFullView(boost::shared_ptr<MarketDatum> baseInput) {
         return boost::dynamic_pointer_cast<CrossCcyBasisSwapQuote>(baseInput);
       }
     }
@@ -314,7 +314,7 @@ class CrossCcyFixFloatSwapQuote : public MarketDatum {
     const QuantLib::Period& fixedTenor() const;
     const QuantLib::Period& maturity() const;
     %extend {
-      static const boost::shared_ptr<CrossCcyFixFloatSwapQuote> getFullView(boost::shared_ptr<MarketDatum> baseInput) const {
+      static const boost::shared_ptr<CrossCcyFixFloatSwapQuote> getFullView(boost::shared_ptr<MarketDatum> baseInput) {
         return boost::dynamic_pointer_cast<CrossCcyFixFloatSwapQuote>(baseInput);
       }
     }
@@ -336,7 +336,7 @@ class CdsQuote : public MarketDatum {
     const std::string& underlyingName() const;
     const std::string& docClause() const;
     %extend {
-      static const boost::shared_ptr<CdsQuote> getFullView(boost::shared_ptr<MarketDatum> baseInput) const {
+      static const boost::shared_ptr<CdsQuote> getFullView(boost::shared_ptr<MarketDatum> baseInput) {
         return boost::dynamic_pointer_cast<CdsQuote>(baseInput);
       }
     }
@@ -357,7 +357,7 @@ class HazardRateQuote : public MarketDatum {
     const std::string& ccy() const;
     const std::string& underlyingName() const;
     %extend {
-      static const boost::shared_ptr<HazardRateQuote> getFullView(boost::shared_ptr<MarketDatum> baseInput) const {
+      static const boost::shared_ptr<HazardRateQuote> getFullView(boost::shared_ptr<MarketDatum> baseInput) {
         return boost::dynamic_pointer_cast<HazardRateQuote>(baseInput);
       }
     }
@@ -377,7 +377,7 @@ class RecoveryRateQuote : public MarketDatum {
     const std::string& ccy() const;
     const std::string& underlyingName() const;
     %extend {
-      static const boost::shared_ptr<ore::data::RecoveryRateQuote> getFullView(boost::shared_ptr<MarketDatum> baseInput) const {
+      static const boost::shared_ptr<ore::data::RecoveryRateQuote> getFullView(boost::shared_ptr<MarketDatum> baseInput) {
         return boost::dynamic_pointer_cast<ore::data::RecoveryRateQuote>(baseInput);
       }
     }
@@ -399,7 +399,7 @@ class SwaptionQuote : public MarketDatum {
     const std::string& dimension() const;
     Real strike();
     %extend {
-      static const boost::shared_ptr<SwaptionQuote> getFullView(boost::shared_ptr<MarketDatum> baseInput) const {
+      static const boost::shared_ptr<SwaptionQuote> getFullView(boost::shared_ptr<MarketDatum> baseInput) {
         return boost::dynamic_pointer_cast<SwaptionQuote>(baseInput);
       }
     }
@@ -417,7 +417,7 @@ class SwaptionShiftQuote : public MarketDatum {
     const std::string& ccy() const;
     const Period& term() const;
     %extend {
-      static const boost::shared_ptr<SwaptionShiftQuote> getFullView(boost::shared_ptr<MarketDatum> baseInput) const {
+      static const boost::shared_ptr<SwaptionShiftQuote> getFullView(boost::shared_ptr<MarketDatum> baseInput) {
         return boost::dynamic_pointer_cast<SwaptionShiftQuote>(baseInput);
       }
     }
@@ -440,7 +440,7 @@ class CapFloorQuote : public MarketDatum {
     bool relative() const;
     Real strike();
     %extend {
-      static const boost::shared_ptr<CapFloorQuote> getFullView(boost::shared_ptr<MarketDatum> baseInput) const {
+      static const boost::shared_ptr<CapFloorQuote> getFullView(boost::shared_ptr<MarketDatum> baseInput) {
         return boost::dynamic_pointer_cast<CapFloorQuote>(baseInput);
       }
     }
@@ -459,7 +459,7 @@ class CapFloorShiftQuote : public MarketDatum {
     const std::string& ccy() const;
     const Period& indexTenor() const;
     %extend {
-      static const boost::shared_ptr<CapFloorShiftQuote> getFullView(boost::shared_ptr<MarketDatum> baseInput) const {
+      static const boost::shared_ptr<CapFloorShiftQuote> getFullView(boost::shared_ptr<MarketDatum> baseInput) {
         return boost::dynamic_pointer_cast<CapFloorShiftQuote>(baseInput);
       }
     }
@@ -478,7 +478,7 @@ class FXSpotQuote : public MarketDatum {
     const std::string& unitCcy() const;
     const std::string& ccy() const;
     %extend {
-      static const boost::shared_ptr<FXSpotQuote> getFullView(boost::shared_ptr<MarketDatum> baseInput) const {
+      static const boost::shared_ptr<FXSpotQuote> getFullView(boost::shared_ptr<MarketDatum> baseInput) {
         return boost::dynamic_pointer_cast<FXSpotQuote>(baseInput);
       }
     }
@@ -500,7 +500,7 @@ class FXForwardQuote : public MarketDatum {
     const Period& term() const;
     Real conversionFactor() const;
     %extend {
-      static const boost::shared_ptr<FXForwardQuote> getFullView(boost::shared_ptr<MarketDatum> baseInput) const {
+      static const boost::shared_ptr<FXForwardQuote> getFullView(boost::shared_ptr<MarketDatum> baseInput) {
         return boost::dynamic_pointer_cast<FXForwardQuote>(baseInput);
       }
     }
@@ -522,7 +522,7 @@ class FXOptionQuote : public MarketDatum {
     const Period& expiry() const;
     const std::string& strike() const;
     %extend {
-      static const boost::shared_ptr<FXOptionQuote> getFullView(boost::shared_ptr<MarketDatum> baseInput) const {
+      static const boost::shared_ptr<FXOptionQuote> getFullView(boost::shared_ptr<MarketDatum> baseInput) {
         return boost::dynamic_pointer_cast<FXOptionQuote>(baseInput);
       }
     }
@@ -540,7 +540,7 @@ class ZcInflationSwapQuote : public MarketDatum {
     std::string index();
     Period term();
     %extend {
-      static const boost::shared_ptr<ZcInflationSwapQuote> getFullView(boost::shared_ptr<MarketDatum> baseInput) const {
+      static const boost::shared_ptr<ZcInflationSwapQuote> getFullView(boost::shared_ptr<MarketDatum> baseInput) {
         return boost::dynamic_pointer_cast<ZcInflationSwapQuote>(baseInput);
       }
     }
@@ -563,7 +563,7 @@ class InflationCapFloorQuote : public MarketDatum {
     bool isCap();
     std::string strike();
     %extend {
-      static const boost::shared_ptr<InflationCapFloorQuote> getFullView(boost::shared_ptr<MarketDatum> baseInput) const {
+      static const boost::shared_ptr<InflationCapFloorQuote> getFullView(boost::shared_ptr<MarketDatum> baseInput) {
         return boost::dynamic_pointer_cast<InflationCapFloorQuote>(baseInput);
       }
     }
@@ -585,7 +585,7 @@ class ZcInflationCapFloorQuote : public MarketDatum {
     bool isCap();
     std::string strike();
     %extend {
-      static const boost::shared_ptr<ZcInflationCapFloorQuote> getFullView(boost::shared_ptr<MarketDatum> baseInput) const {
+      static const boost::shared_ptr<ZcInflationCapFloorQuote> getFullView(boost::shared_ptr<MarketDatum> baseInput) {
         return boost::dynamic_pointer_cast<ZcInflationCapFloorQuote>(baseInput);
       }
     }
@@ -603,7 +603,7 @@ class YoYInflationSwapQuote : public MarketDatum {
     std::string index();
     Period term();
     %extend {
-      static const boost::shared_ptr<YoYInflationSwapQuote> getFullView(boost::shared_ptr<MarketDatum> baseInput) const {
+      static const boost::shared_ptr<YoYInflationSwapQuote> getFullView(boost::shared_ptr<MarketDatum> baseInput) {
         return boost::dynamic_pointer_cast<YoYInflationSwapQuote>(baseInput);
       }
     }
@@ -625,7 +625,7 @@ class YyInflationCapFloorQuote : public MarketDatum {
     bool isCap();
     std::string strike();
     %extend {
-      static const boost::shared_ptr<YyInflationCapFloorQuote> getFullView(boost::shared_ptr<MarketDatum> baseInput) const {
+      static const boost::shared_ptr<YyInflationCapFloorQuote> getFullView(boost::shared_ptr<MarketDatum> baseInput) {
         return boost::dynamic_pointer_cast<YyInflationCapFloorQuote>(baseInput);
       }
     }
@@ -646,7 +646,7 @@ class SeasonalityQuote : public MarketDatum {
     std::string month();
     QuantLib::Size applyMonth() const;
     %extend {
-      static const boost::shared_ptr<SeasonalityQuote> getFullView(boost::shared_ptr<MarketDatum> baseInput) const {
+      static const boost::shared_ptr<SeasonalityQuote> getFullView(boost::shared_ptr<MarketDatum> baseInput) {
         return boost::dynamic_pointer_cast<SeasonalityQuote>(baseInput);
       }
     }
@@ -665,7 +665,7 @@ class EquitySpotQuote : public MarketDatum {
     const std::string& eqName() const;
     const std::string& ccy() const;
     %extend {
-      static const boost::shared_ptr<EquitySpotQuote> getFullView(boost::shared_ptr<MarketDatum> baseInput) const {
+      static const boost::shared_ptr<EquitySpotQuote> getFullView(boost::shared_ptr<MarketDatum> baseInput) {
         return boost::dynamic_pointer_cast<EquitySpotQuote>(baseInput);
       }
     }
@@ -686,7 +686,7 @@ class EquityForwardQuote : public MarketDatum {
     const std::string& ccy() const;
     const Date& expiryDate() const;
     %extend {
-      static const boost::shared_ptr<EquityForwardQuote> getFullView(boost::shared_ptr<MarketDatum> baseInput) const {
+      static const boost::shared_ptr<EquityForwardQuote> getFullView(boost::shared_ptr<MarketDatum> baseInput) {
         return boost::dynamic_pointer_cast<EquityForwardQuote>(baseInput);
       }
     }
@@ -707,7 +707,7 @@ class EquityDividendYieldQuote : public MarketDatum {
     const std::string& ccy() const;
     const Date& tenorDate() const;
     %extend {
-      static const boost::shared_ptr<EquityDividendYieldQuote> getFullView(boost::shared_ptr<MarketDatum> baseInput) const {
+      static const boost::shared_ptr<EquityDividendYieldQuote> getFullView(boost::shared_ptr<MarketDatum> baseInput) {
         return boost::dynamic_pointer_cast<EquityDividendYieldQuote>(baseInput);
       }
     }
@@ -729,7 +729,7 @@ class EquityOptionQuote : public MarketDatum {
     const std::string& expiry() const;
     const std::string& strike() const;
     %extend {
-      static const boost::shared_ptr<EquityOptionQuote> getFullView(boost::shared_ptr<MarketDatum> baseInput) const {
+      static const boost::shared_ptr<EquityOptionQuote> getFullView(boost::shared_ptr<MarketDatum> baseInput) {
         return boost::dynamic_pointer_cast<EquityOptionQuote>(baseInput);
       }
     }
@@ -746,7 +746,7 @@ class SecuritySpreadQuote : public MarketDatum {
                         const std::string securityID);
     const std::string& securityID() const;
     %extend {
-      static const boost::shared_ptr<SecuritySpreadQuote> getFullView(boost::shared_ptr<MarketDatum> baseInput) const {
+      static const boost::shared_ptr<SecuritySpreadQuote> getFullView(boost::shared_ptr<MarketDatum> baseInput) {
         return boost::dynamic_pointer_cast<SecuritySpreadQuote>(baseInput);
       }
     }
@@ -767,7 +767,7 @@ class BaseCorrelationQuote : public MarketDatum {
     Real detachmentPoint() const;
     Period term() const;
     %extend {
-      static const boost::shared_ptr<BaseCorrelationQuote> getFullView(boost::shared_ptr<MarketDatum> baseInput) const {
+      static const boost::shared_ptr<BaseCorrelationQuote> getFullView(boost::shared_ptr<MarketDatum> baseInput) {
         return boost::dynamic_pointer_cast<BaseCorrelationQuote>(baseInput);
       }
     }
@@ -791,7 +791,7 @@ class IndexCDSOptionQuote : public MarketDatum {
     const std::string& indexTerm() const;
     const boost::shared_ptr<BaseStrike>& strike() const;
     %extend {
-      static const boost::shared_ptr<IndexCDSOptionQuote> getFullView(boost::shared_ptr<MarketDatum> baseInput) const {
+      static const boost::shared_ptr<IndexCDSOptionQuote> getFullView(boost::shared_ptr<MarketDatum> baseInput) {
         return boost::dynamic_pointer_cast<IndexCDSOptionQuote>(baseInput);
       }
     }
@@ -811,7 +811,7 @@ class CommoditySpotQuote : public MarketDatum {
     const std::string& commodityName() const;
     const std::string& quoteCurrency() const;
     %extend {
-      static const boost::shared_ptr<CommoditySpotQuote> getFullView(boost::shared_ptr<MarketDatum> baseInput) const {
+      static const boost::shared_ptr<CommoditySpotQuote> getFullView(boost::shared_ptr<MarketDatum> baseInput) {
         return boost::dynamic_pointer_cast<CommoditySpotQuote>(baseInput);
       }
     }
@@ -833,7 +833,7 @@ class CommodityForwardQuote : public MarketDatum {
     const std::string& quoteCurrency() const;
     const QuantLib::Date& expiryDate() const;
     %extend {
-      static const boost::shared_ptr<CommodityForwardQuote> getFullView(boost::shared_ptr<MarketDatum> baseInput) const {
+      static const boost::shared_ptr<CommodityForwardQuote> getFullView(boost::shared_ptr<MarketDatum> baseInput) {
         return boost::dynamic_pointer_cast<CommodityForwardQuote>(baseInput);
       }
     }
@@ -857,7 +857,7 @@ class CommodityOptionQuote : public MarketDatum {
     const boost::shared_ptr<Expiry>& expiry() const;
     const boost::shared_ptr<BaseStrike>& strike() const;
     %extend {
-      static const boost::shared_ptr<CommodityOptionQuote> getFullView(boost::shared_ptr<MarketDatum> baseInput) const {
+      static const boost::shared_ptr<CommodityOptionQuote> getFullView(boost::shared_ptr<MarketDatum> baseInput) {
         return boost::dynamic_pointer_cast<CommodityOptionQuote>(baseInput);
       }
     }
@@ -881,7 +881,7 @@ class CorrelationQuote : public MarketDatum {
     const std::string& expiry() const;
     const std::string& strike() const;
     %extend {
-      static const boost::shared_ptr<CorrelationQuote> getFullView(boost::shared_ptr<MarketDatum> baseInput) const {
+      static const boost::shared_ptr<CorrelationQuote> getFullView(boost::shared_ptr<MarketDatum> baseInput) {
         return boost::dynamic_pointer_cast<CorrelationQuote>(baseInput);
       }
     }
@@ -898,7 +898,7 @@ class CPRQuote : public MarketDatum {
              const std::string securityID);
     const std::string& securityID() const;
     %extend {
-      static const boost::shared_ptr<CPRQuote> getFullView(boost::shared_ptr<MarketDatum> baseInput) const {
+      static const boost::shared_ptr<CPRQuote> getFullView(boost::shared_ptr<MarketDatum> baseInput) {
         return boost::dynamic_pointer_cast<CPRQuote>(baseInput);
       }
     }

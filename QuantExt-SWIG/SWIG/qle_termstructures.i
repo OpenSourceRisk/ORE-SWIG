@@ -93,12 +93,16 @@ export_Interpolated_Price_Curve(CubicInterpolatedPriceCurve, Cubic);
 export_Interpolated_Price_Curve(SplineCubicInterpolatedPriceCurve, SplineCubic);
 export_Interpolated_Price_Curve(MonotonicCubicInterpolatedPriceCurve, MonotonicCubic);
 
+%shared_ptr(SwaptionVolatilityCube)
+class SwaptionVolatilityCube : public SwaptionVolatilityDiscrete {
+};
+
 %{
 using QLESwaptionVolCube2 = QuantExt::SwaptionVolCube2;
 %}
 
 %shared_ptr(QLESwaptionVolCube2)
-class QLESwaptionVolCube2 : public SwaptionVolatilityStructure {
+class QLESwaptionVolCube2 : public SwaptionVolatilityCube {
   public:
     QLESwaptionVolCube2(const QuantLib::Handle<QuantLib::SwaptionVolatilityStructure>& atmVolStructure,
                         const std::vector<QuantLib::Period>& optionTenors,
