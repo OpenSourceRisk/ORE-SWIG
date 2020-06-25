@@ -21,7 +21,7 @@ class DiscountingSwapEngineMultiCurveTest(unittest.TestCase):
         self.schedule = Schedule(self.settlement_date, self.maturity_date, self.tenor, self.calendar,
                                  self.bdc, self.bdc, DateGeneration.Forward, False)
         self.fixed_rate = 0.03
-        self.flat_forward_EUR = FlatForward(self.todays_date, 0.03, self.day_counter);
+        self.flat_forward_EUR = FlatForward(self.todays_date, 0.03, self.day_counter)
         self.discount_term_structure_EUR = RelinkableYieldTermStructureHandle(self.flat_forward_EUR)
         self.OIS_flat_forward = FlatForward(self.todays_date, 0.01, self.day_counter)
         self.OIS_term_structure = RelinkableYieldTermStructureHandle(self.OIS_flat_forward)
@@ -61,18 +61,21 @@ class CrossCcyBasisSwapTest(unittest.TestCase):
                                  self.bdc, self.bdc, DateGeneration.Forward, False)
         self.flat_forward_USD = FlatForward(self.todays_date, 0.005, self.day_counter)
         self.discount_term_structure_USD = RelinkableYieldTermStructureHandle(self.flat_forward_USD)
-        self.flat_forward_EUR = FlatForward(self.todays_date, 0.03, self.day_counter);
+        self.flat_forward_EUR = FlatForward(self.todays_date, 0.03, self.day_counter)
         self.discount_term_structure_EUR = RelinkableYieldTermStructureHandle(self.flat_forward_EUR)
         self.pay_spread = 0.0
         self.rec_spread = 0.0
+        self.pay_gearing = 1.0
+        self.rec_gearing = 1.0
         self.pay_index = USDLibor(Period(3, Months), self.discount_term_structure_USD)
         self.rec_index = Euribor3M(self.discount_term_structure_EUR)
         self.fxQuote = QuoteHandle(SimpleQuote(1/0.8))
-        self.swap = CrossCcyBasisSwap(self.pay_nominal, self.pay_currency, self.schedule, 
-                                      self.pay_index, self.pay_spread, self.rec_nominal, 
-                                      self.rec_currency, self.schedule, self.rec_index, self.rec_spread)
-        self.engine = CrossCcySwapEngine(self.pay_currency, self.discount_term_structure_USD, 
-                                         self.rec_currency, self.discount_term_structure_EUR, 
+        self.swap = CrossCcyBasisSwap(self.pay_nominal, self.pay_currency, self.schedule,
+                                      self.pay_index, self.pay_spread, self.pay_gearing,
+                                      self.rec_nominal, self.rec_currency, self.schedule,
+                                      self.rec_index, self.rec_spread, self.rec_gearing)
+        self.engine = CrossCcySwapEngine(self.pay_currency, self.discount_term_structure_USD,
+                                         self.rec_currency, self.discount_term_structure_EUR,
                                          self.fxQuote, False, self.settlement_date, self.todays_date)
         self.swap.setPricingEngine(self.engine)
         
@@ -95,15 +98,17 @@ class CrossCcyBasisSwapTest(unittest.TestCase):
         """ Test consistency of fair price and NPV() """
         tolerance = 1.0e-8
         fair_rec_spread = self.swap.fairPaySpread()
-        swap = CrossCcyBasisSwap(self.pay_nominal, self.pay_currency, self.schedule, 
-                                 self.pay_index, self.pay_spread, self.rec_nominal, 
-                                 self.rec_currency, self.schedule, self.rec_index, fair_rec_spread)
+        swap = CrossCcyBasisSwap(self.pay_nominal, self.pay_currency, self.schedule,
+                                 self.pay_index, self.pay_spread, self.pay_gearing,
+                                 self.rec_nominal, self.rec_currency, self.schedule,
+                                 self.rec_index, fair_rec_spread, self.rec_gearing)
         swap.setPricingEngine(self.engine)
         self.assertFalse(abs(swap.NPV()) > tolerance)
         fair_pay_spread = self.swap.fairPaySpread()
-        swap = CrossCcyBasisSwap(self.pay_nominal, self.pay_currency, self.schedule, 
-                                 self.pay_index, fair_pay_spread, self.rec_nominal, 
-                                 self.rec_currency, self.schedule, self.rec_index, self.rec_spread)
+        swap = CrossCcyBasisSwap(self.pay_nominal, self.pay_currency, self.schedule,
+                                 self.pay_index, fair_pay_spread, self.pay_gearing,
+                                 self.rec_nominal, self.rec_currency, self.schedule,
+                                 self.rec_index, self.rec_spread, self.rec_gearing)
         swap.setPricingEngine(self.engine)
         self.assertFalse(abs(swap.NPV()) > tolerance)
 
@@ -129,22 +134,22 @@ class CDSOptionTest(unittest.TestCase):
         self.upfront = 0
         self.recovery_rate = 0.4
         self.settles_accrual = True
-        self.pays_at_default = True
+        self.protection_payment_time = QLECreditDefaultSwap.atDefault
         self.discount_curve = YieldTermStructureHandle(FlatForward(self.todays_date, 0.01, self.day_counter))
         self.hazard_curve = FlatHazardRate(self.todays_date, QuoteHandle(SimpleQuote(0.02)), self.day_counter)
         self.probability_curve = DefaultProbabilityTermStructureHandle(self.hazard_curve)
         self.vol = 0.03
         self.volatility = BlackConstantVol(0, self.calendar, QuoteHandle(SimpleQuote(self.vol)), self.day_counter)
         self.volatility_curve = BlackVolTermStructureHandle(self.volatility)
-        self.cds = QLECreditDefaultSwap(self.side, self.notional, self.upfront, self.spread, 
-                                        self.schedule, self.bdc, self.day_counter, 
-                                        self.settles_accrual, self.pays_at_default, 
+        self.cds = QLECreditDefaultSwap(self.side, self.notional, self.upfront, self.spread,
+                                        self.schedule, self.bdc, self.day_counter,
+                                        self.settles_accrual, self.protection_payment_time,
                                         self.settlement_date)
         self.cds_engine = QLEMidPointCdsEngine(self.probability_curve, self.recovery_rate, self.discount_curve)
         self.cds.setPricingEngine(self.cds_engine)
-        self.cds_option = CdsOption(self.cds, self.exercise)
-        self.engine = BlackCdsOptionEngine(self.probability_curve, self.recovery_rate, 
-                                           self.discount_curve, self.volatility_curve)
+        self.cds_option = QLECdsOption(self.cds, self.exercise)
+        self.engine = QLEBlackCdsOptionEngine(self.probability_curve, self.recovery_rate,
+                                              self.discount_curve, self.volatility_curve)
         self.cds_option.setPricingEngine(self.engine)
         
     def testSimpleInspectors(self):
@@ -156,18 +161,18 @@ class CDSOptionTest(unittest.TestCase):
         """ Test consistency of fair price and NPV() """
         tolerance = 1.0e-8
         atm_rate = self.cds_option.atmRate()
-        buyer_cds = QLECreditDefaultSwap(Protection.Buyer, self.notional, self.upfront, atm_rate, 
-                                         self.schedule, self.bdc, self.day_counter, 
-                                         self.settles_accrual, self.pays_at_default, 
+        buyer_cds = QLECreditDefaultSwap(Protection.Buyer, self.notional, self.upfront, atm_rate,
+                                         self.schedule, self.bdc, self.day_counter,
+                                         self.settles_accrual, self.protection_payment_time,
                                          self.settlement_date)
-        seller_cds = QLECreditDefaultSwap(Protection.Seller, self.notional, self.upfront, atm_rate, 
-                                          self.schedule, self.bdc, self.day_counter, 
-                                          self.settles_accrual, self.pays_at_default, 
+        seller_cds = QLECreditDefaultSwap(Protection.Seller, self.notional, self.upfront, atm_rate,
+                                          self.schedule, self.bdc, self.day_counter,
+                                          self.settles_accrual, self.protection_payment_time,
                                           self.settlement_date)
         buyer_cds.setPricingEngine(self.cds_engine)
         seller_cds.setPricingEngine(self.cds_engine)
-        buyer_cds_option = CdsOption(buyer_cds, self.exercise)
-        seller_cds_option = CdsOption(seller_cds, self.exercise)
+        buyer_cds_option = QLECdsOption(buyer_cds, self.exercise)
+        seller_cds_option = QLECdsOption(seller_cds, self.exercise)
         buyer_cds_option.setPricingEngine(self.engine)
         seller_cds_option.setPricingEngine(self.engine)
         self.assertFalse(abs(buyer_cds_option.NPV() - seller_cds_option.NPV()) > tolerance)
@@ -196,15 +201,15 @@ class CreditDefaultSwapTest(unittest.TestCase):
         self.side = Protection.Buyer
         self.upfront = 0
         self.settles_accrual = True
-        self.pays_at_default = True
+        self.protection_payment_time = QLECreditDefaultSwap.atDefault
         self.discount_curve = YieldTermStructureHandle(FlatForward(self.todays_date, 0.01, self.day_counter))
         self.recovery_rate = 0.4
         self.hazard_rate = 0.015
         self.hazard_curve = FlatHazardRate(self.todays_date, QuoteHandle(SimpleQuote(self.hazard_rate)), self.day_counter)
         self.probability_curve = DefaultProbabilityTermStructureHandle(self.hazard_curve)
-        self.cds = QLECreditDefaultSwap(self.side, self.notional, self.upfront, self.spread, 
-                                        self.schedule, self.bdc, self.day_counter, 
-                                        self.settles_accrual, self.pays_at_default, 
+        self.cds = QLECreditDefaultSwap(self.side, self.notional, self.upfront, self.spread,
+                                        self.schedule, self.bdc, self.day_counter,
+                                        self.settles_accrual, self.protection_payment_time,
                                         self.settlement_date)
         self.engine = QLEMidPointCdsEngine(self.probability_curve, self.recovery_rate, self.discount_curve)
         self.cds.setPricingEngine(self.engine)
@@ -215,7 +220,7 @@ class CreditDefaultSwapTest(unittest.TestCase):
         self.assertEqual(self.cds.notional(), self.notional)
         self.assertEqual(self.cds.runningSpread(), self.spread)
         self.assertEqual(self.cds.settlesAccrual(), self.settles_accrual)
-        self.assertEqual(self.cds.paysAtDefaultTime(), self.pays_at_default)
+        self.assertEqual(self.cds.protectionPaymentTime(), self.protection_payment_time)
         self.assertEqual(self.cds.protectionStartDate(), self.settlement_date)
         self.assertEqual(self.cds.protectionEndDate(), self.maturity_date)
         
@@ -223,9 +228,9 @@ class CreditDefaultSwapTest(unittest.TestCase):
         """ Test consistency of fair price and NPV() """
         tolerance = 1.0e-8
         fair_spread = self.cds.fairSpread()
-        cds = QLECreditDefaultSwap(self.side, self.notional, self.upfront, fair_spread, 
-                                   self.schedule, self.bdc, self.day_counter, 
-                                   self.settles_accrual, self.pays_at_default, 
+        cds = QLECreditDefaultSwap(self.side, self.notional, self.upfront, fair_spread,
+                                   self.schedule, self.bdc, self.day_counter,
+                                   self.settles_accrual, self.protection_payment_time,
                                    self.settlement_date)
         cds.setPricingEngine(self.engine)
         self.assertFalse(abs(cds.NPV()) > tolerance)
@@ -450,7 +455,7 @@ class CrossCurrencyFixFloatSwapTest(unittest.TestCase):
                                  self.bdc, self.bdc, DateGeneration.Forward, False)
         self.flatForwardUSD = FlatForward(self.todayDate, 0.005, self.tsDayCounter)
         self.discountTermStructureUSD = RelinkableYieldTermStructureHandle(self.flatForwardUSD)
-        self.flatForwardEUR = FlatForward(self.todayDate, 0.03, self.tsDayCounter);
+        self.flatForwardEUR = FlatForward(self.todayDate, 0.03, self.tsDayCounter)
         self.discountTermStructureEUR = RelinkableYieldTermStructureHandle(self.flatForwardEUR)
         self.floatSpread = 0.0
         self.index = USDLibor(Period(3, Months), self.discountTermStructureUSD)
@@ -517,7 +522,7 @@ class CrossCurrencyFixFloatSwapTest(unittest.TestCase):
 class CommodityForwardTest(unittest.TestCase):
     def setUp(self):
         """ Set-up CommodityForward and engine """
-        self.todays_date = Date(4, October, 2018);
+        self.todays_date = Date(4, October, 2018)
         Settings.instance().evaluationDate = self.todays_date
         self.name = "Natural Gas"
         self.calendar = TARGET()
@@ -538,10 +543,10 @@ class CommodityForwardTest(unittest.TestCase):
                         QuoteHandle(SimpleQuote(101.25)), QuoteHandle(SimpleQuote(101.50)),
                         QuoteHandle(SimpleQuote(101.75)), QuoteHandle(SimpleQuote(102.0)),
                         QuoteHandle(SimpleQuote(102.25)) ]
-        self.price_curve = LinearInterpolatedPriceCurve(self.dates, self.quotes, self.day_counter)
-        self.price_curve.enableExtrapolation();
+        self.price_curve = LinearInterpolatedPriceCurve(self.todays_date, self.dates, self.quotes, self.day_counter, self.currency)
+        self.price_curve.enableExtrapolation()
         self.price_term_structure = RelinkablePriceTermStructureHandle(self.price_curve)
-        self.flat_forward = FlatForward(self.todays_date, 0.03, self.day_counter);
+        self.flat_forward = FlatForward(self.todays_date, 0.03, self.day_counter)
         self.discount_term_structure = RelinkableYieldTermStructureHandle(self.flat_forward)
         self.engine = DiscountingCommodityForwardEngine(self.price_term_structure, self.discount_term_structure)
         self.commodity_forward.setPricingEngine(self.engine)

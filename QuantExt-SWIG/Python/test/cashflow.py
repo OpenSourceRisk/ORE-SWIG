@@ -21,11 +21,10 @@ class FXLinkedCashFlowTest(unittest.TestCase):
         self.tsDayCounter=Actual360()
         self.flatForwardUSD=FlatForward(self.todayDate, 0.005, self.tsDayCounter)
         self.sourceYts=RelinkableYieldTermStructureHandle(self.flatForwardUSD)
-        self.flatForwardEUR=FlatForward(self.todayDate, 0.03, self.tsDayCounter);
+        self.flatForwardEUR=FlatForward(self.todayDate, 0.03, self.tsDayCounter)
         self.targetYts=RelinkableYieldTermStructureHandle(self.flatForwardEUR)
         self.fxindex=FxIndex(self.familyName,self.fixingDays,self.sourceCurrency,self.targetCurrency,self.fixingCalendar,self.sourceYts,self.targetYts)
-        self.invertIndex=False
-        self.fxlinkedcashflow=FXLinkedCashFlow(self.cashFlowDate,self.fixingDate,self.foreignAmount,self.fxindex,self.invertIndex)
+        self.fxlinkedcashflow=FXLinkedCashFlow(self.cashFlowDate,self.fixingDate,self.foreignAmount,self.fxindex)
         
     def testSimpleInspectors(self):
         """ Test FX Linked Cash simple inspectors. """
@@ -51,10 +50,9 @@ class FloatingRateFXLinkedNotionalCouponTest(unittest.TestCase):
         self.tsDayCounter=Actual360()
         self.flatForwardUSD=FlatForward(self.todayDate, 0.005, self.tsDayCounter)
         self.sourceYts=RelinkableYieldTermStructureHandle(self.flatForwardUSD)
-        self.flatForwardEUR=FlatForward(self.todayDate, 0.03, self.tsDayCounter);
+        self.flatForwardEUR=FlatForward(self.todayDate, 0.03, self.tsDayCounter)
         self.targetYts=RelinkableYieldTermStructureHandle(self.flatForwardEUR)
         self.fxindex=FxIndex(self.familyName,self.fixingDays,self.sourceCurrency,self.targetCurrency,self.fixingCalendar,self.sourceYts,self.targetYts)
-        self.invertFxIndex=False
         self.paymentDate=Date(1,November,2018)
         self.startDate=Date(1,October,2018)
         self.endDate=Date(1,November,2018)
@@ -70,7 +68,7 @@ class FloatingRateFXLinkedNotionalCouponTest(unittest.TestCase):
         self.currency=GBPCurrency()
         self.floatIndex=USDLibor(self.tenor,self.sourceYts)
         self.undCpn = IborCoupon(self.paymentDate,self.foreignAmount, self.startDate,self.endDate,self.fixingDays,self.floatIndex,self.gearing,self.spread,self.refPeriodStart,self.refPeriodEnd,self.dayCounter)
-        self.floatingratefxlinkednotionalcoupon=FloatingRateFXLinkedNotionalCoupon(self.fxFixingDate,self.foreignAmount,self.fxindex,self.invertFxIndex,self.undCpn)
+        self.floatingratefxlinkednotionalcoupon=FloatingRateFXLinkedNotionalCoupon(self.fxFixingDate,self.foreignAmount,self.fxindex,self.undCpn)
         
     def testSimpleInspectors(self):
         """ Test Floating Rate FX Linked Notional Coupon inspectors. """
