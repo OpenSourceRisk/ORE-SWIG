@@ -1,7 +1,19 @@
-
 /*
- Copyright (C) 2019 Quaternion Risk Management Ltd
+ Copyright (C) 2019, 2020 Quaternion Risk Management Ltd
  All rights reserved.
+
+ This file is part of ORE, a free-software/open-source library
+ for transparent pricing and risk analysis - http://opensourcerisk.org
+
+ ORE is free software: you can redistribute it and/or modify it
+ under the terms of the Modified BSD License.  You should have received a
+ copy of the license along with this program.
+ The license is also available online at <http://opensourcerisk.org>
+
+ This program is distributed on the basis that it will form a useful
+ contribution to risk analytics and model standardisation, but WITHOUT
+ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ FITNESS FOR A PARTICULAR PURPOSE. See the license for more details.
 */
 
 #ifndef ored_loader_i
@@ -14,9 +26,11 @@ using ore::data::Loader;
 using ore::data::Fixing;
 %}
 
-%ignore Loader;
+%shared_ptr(Loader)
 class Loader {
-public:
+  private:
+    Loader();
+  public:
     const std::vector<boost::shared_ptr<MarketDatum>>& loadQuotes(const QuantLib::Date&) const;
     const boost::shared_ptr<MarketDatum>& get(const std::string& name, const QuantLib::Date&) const;
     bool has(const std::string& name, const QuantLib::Date& d) const;
@@ -24,7 +38,6 @@ public:
     const std::vector<Fixing>& loadFixings() const;
     const std::vector<Fixing>& loadDividends() const;
 };
-%template(Loader) boost::shared_ptr<Loader>;
 %template(StringBoolPair) std::pair<std::string, bool>;
 %template(MarketDatumVector) std::vector<boost::shared_ptr<MarketDatum>>;
 
@@ -36,43 +49,27 @@ public:
 
 %{
 using ore::data::CSVLoader;
-typedef boost::shared_ptr<Loader> CSVLoaderPtr;
 %}
 
-%rename(CSVLoader) CSVLoaderPtr;
-class CSVLoaderPtr : public boost::shared_ptr<Loader> {
-public:
-  %extend {
-        CSVLoaderPtr(const std::string& marketFilename, const std::string& fixingFilename,
-                     bool implyTodaysFixings = false) {
-            return new CSVLoaderPtr(new CSVLoader(marketFilename, fixingFilename, implyTodaysFixings));
-        }
-        CSVLoaderPtr(const std::vector<std::string>& marketFiles, const std::vector<std::string>& fixingFiles,
-                     bool implyTodaysFixings = false) {
-            return new CSVLoaderPtr(new CSVLoader(marketFiles, fixingFiles, implyTodaysFixings));
-        }
-  }
+%shared_ptr(CSVLoader)
+class CSVLoader : public Loader {
+  public:
+    CSVLoader(const std::string& marketFilename, const std::string& fixingFilename,
+              bool implyTodaysFixings = false);
+    CSVLoader(const std::vector<std::string>& marketFiles, const std::vector<std::string>& fixingFiles,
+              bool implyTodaysFixings = false);
 };
 
 %{
 using ore::data::InMemoryLoader;
-typedef boost::shared_ptr<Loader> InMemoryLoaderPtr;
 %}
 
-%rename(InMemoryLoader) InMemoryLoaderPtr;
-class InMemoryLoaderPtr : public boost::shared_ptr<Loader> {
-public:
-  %extend {
-        InMemoryLoaderPtr() {
-            return new InMemoryLoaderPtr(new InMemoryLoader());
-        }
-        void add(QuantLib::Date date, const std::string& name, QuantLib::Real value) {
-            return boost::dynamic_pointer_cast<InMemoryLoader>(*self)->add(date, name, value);
-        }
-        void addFixing(QuantLib::Date date, const std::string& name, QuantLib::Real value) {
-            return boost::dynamic_pointer_cast<InMemoryLoader>(*self)->addFixing(date, name, value);
-        }
-  }
+%shared_ptr(InMemoryLoader)
+class InMemoryLoader : public Loader {
+  public:
+    InMemoryLoader();
+    void add(QuantLib::Date date, const std::string& name, QuantLib::Real value);
+    void addFixing(QuantLib::Date date, const std::string& name, QuantLib::Real value);
 };
 
 struct Fixing {
@@ -81,6 +78,5 @@ struct Fixing {
     QuantLib::Real fixing;
     Fixing(const QuantLib::Date& d, const std::string& s, const QuantLib::Real f);
 };
-
 
 #endif

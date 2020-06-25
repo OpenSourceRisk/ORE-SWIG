@@ -42,11 +42,22 @@ change to the build directory, and run
 		[-D PYTHON_LIBRARY=<Full name including path to the 'libpython*' library> ]	\
 		[-D PYTHON_INCLUDE_DIR=<Directory that contains Python.h> ] \
 		..
-
 	ninja
 
-Alternatively, change to a specific library/language subdirectory and follow
-the instructions in its README file.
+
+To build on Windows using CMake and an existing Visual Studio installation you can e.g. run
+this from the top-level oreswig directory
+
+	mkdir builddir
+	cmake -G "Visual Studio 15 2017" \
+	      -A x64 \
+	      -D SWIG_DIR=C:\dev\swigwin\Lib \
+	      -D SWIG_EXECUTABLE=C:\dev\swigwin\swig.exe \
+	      -D ORE:PATHNAME=C:\dev\ORE\master \
+	      -D BOOST_ROOT=C:\dev\boost \
+	      -S OREAnalytics-SWIG/Python \
+	      -B builddir
+	cmake --build builddir -v
 
 To try e.g. an OREAnalytics Python example, update your PYTHONPATH so
 that it includes the directory that contains the newly built python module and

@@ -15,7 +15,7 @@ class SwapConventionsTest(unittest.TestCase):
         self.calendar = TARGET()
         self.bdc = Following
         self.day_counter = Actual360()
-        self.flat_forward = FlatForward(self.todays_date, 0.03, self.day_counter);
+        self.flat_forward = FlatForward(self.todays_date, 0.03, self.day_counter)
         self.discount_term_structure = RelinkableYieldTermStructureHandle(self.flat_forward)
         self.index = Euribor3M(self.discount_term_structure)
         self.swap_convs = SwapConventions(self.settlement_days, self.tenor, self.calendar, self.bdc, self.day_counter, self.index)
@@ -102,12 +102,20 @@ class SwaptionVolCubeWithATMTest(unittest.TestCase):
         self.atmVolStructure=SwaptionVolatilityStructureHandle(ConstantSwaptionVolatility(self.today, UnitedStates(),Following,0.2, self.dayCounter))
         self.optionTenors=(Period(3,Months),Period(6,Months))
         self.swapTenors=(Period(9,Months),Period(12,Months))
-        self.strikeSpreads=(0.05,0.10)
-        self.volSpreads=((QuoteHandle(SimpleQuote(0.10)),QuoteHandle(SimpleQuote(0.15))),(QuoteHandle(SimpleQuote(0.20)),QuoteHandle(SimpleQuote(0.25))),(QuoteHandle(SimpleQuote(0.25)),QuoteHandle(SimpleQuote(0.30))),(QuoteHandle(SimpleQuote(0.30)),QuoteHandle(SimpleQuote(0.35))))
+        self.strikeSpreads=(0.0,0.05,0.10)
+        self.volSpreads=(
+            (QuoteHandle(SimpleQuote(0.05)),QuoteHandle(SimpleQuote(0.10)),QuoteHandle(SimpleQuote(0.15))),
+            (QuoteHandle(SimpleQuote(0.15)),QuoteHandle(SimpleQuote(0.20)),QuoteHandle(SimpleQuote(0.25))),
+            (QuoteHandle(SimpleQuote(0.20)),QuoteHandle(SimpleQuote(0.25)),QuoteHandle(SimpleQuote(0.30))),
+            (QuoteHandle(SimpleQuote(0.25)),QuoteHandle(SimpleQuote(0.30)),QuoteHandle(SimpleQuote(0.35)))
+        )
         self.swapIndexBase=EuriborSwapIsdaFixA(Period(10,Years),self.termStructure)
         self.shortSwapIndexBase=EuriborSwapIsdaFixA(Period(2,Years),self.termStructure)
         self.vegaWeightedSmileFit=False
-        self.swaptionVolatilityCube=SwaptionVolCube2(self.atmVolStructure,self.optionTenors,self.swapTenors,self.strikeSpreads,self.volSpreads,self.swapIndexBase,self.shortSwapIndexBase,self.vegaWeightedSmileFit)
+        self.flatExtrapolation=True
+        self.swaptionVolatilityCube=QLESwaptionVolCube2(self.atmVolStructure,self.optionTenors,self.swapTenors,self.strikeSpreads,
+                                                        self.volSpreads,self.swapIndexBase,self.shortSwapIndexBase,
+                                                        self.vegaWeightedSmileFit,self.flatExtrapolation)
         self.cube=SwaptionVolCubeWithATM(self.swaptionVolatilityCube)
         
     def testSimpleInspectors(self):

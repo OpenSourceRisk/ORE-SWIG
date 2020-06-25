@@ -17,7 +17,7 @@ from distutils import sysconfig
 
 class test(Command):
     # Original version of this class posted
-    # by Berthold Höllmann to distutils-sig@python.org
+    # by Berthold Hï¿½llmann to distutils-sig@python.org
     description = "test the distribution prior to install"
 
     user_options = [
@@ -247,7 +247,7 @@ framework for quantitative finance.
       """,
       author           = "Quaternion Risk Management",
       author_email     = "info@quaternion.com",
-      url              = "http://quternion.com",
+      url              = "http://quaternion.com",
       license          = codecs.open('../LICENSE.TXT','r+',
                                      encoding='utf8').read(),
       classifiers      = classifiers,
