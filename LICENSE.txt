@@ -1,6 +1,6 @@
 ORE-SWIG is
 
-Copyright (C) 2018 Quaternion Risk Management Ltd.
+Copyright (C) 2018-2020 Quaternion Risk Management Ltd.
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without

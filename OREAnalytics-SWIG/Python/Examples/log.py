@@ -27,7 +27,7 @@ mask = 255
 Log.instance().setMask(mask)
 msg_d = "This is a debug message."
 msg_w = "This is a warning message."
-msg_e = "This is a error message."
+msg_e = "This is an error message."
 DLOG(msg_d)
 WLOG(msg_w)
 ELOG(msg_e)
