@@ -74,6 +74,17 @@ You can also try the IPython example in the same directory: Launch
 wait for your browser to open, select ore.ipy from the list of files
 and then run all cells.
 
+Also note the test suite in ORE-SWIG/OREAnalytics-SWIG/Python/test:
+
+	python OREAnalyticsTestSuite.py
+
+When the QuantExt-SWIG and OREData-SWIG modules are built as well (edit top-level CMakeLists.txt)
+then similar test suites in ORE-SWIG/OREData-SWIG/Python/test and ORE-SWIG/QuantExt-SWIG/Python/test
+can be run
+
+	python OREDataTestSuite.py
+	python QuantExtTestSuite.py
+
 To try a simple OREAnalytics Java example, change to
 ORE-SWIG/OREAnalytics-SWIG/Java/Examples and run 
 
