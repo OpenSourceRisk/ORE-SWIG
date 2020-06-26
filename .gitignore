@@ -219,3 +219,7 @@ ipch/
 
 *log.txt
 *.dat
+CMakeFiles
+oreanalytics
+OREAnalyticsJava.dir
+builddir/
