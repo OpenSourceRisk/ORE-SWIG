@@ -259,7 +259,7 @@ framework for quantitative finance.
       author           = "Quaternion Risk Management",
       author_email     = "info@quaternion.com",
       url              = "http://quaternion.com",
-      license          = codecs.open('../LICENSE.TXT','r+',
+      license          = codecs.open('../../LICENSE.TXT','r+',
                                      encoding='utf8').read(),
       classifiers      = classifiers,
       py_modules       = ['OREAnalytics.__init__','OREAnalytics.OREAnalytics'],
