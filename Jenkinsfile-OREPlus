@@ -2,7 +2,7 @@ pipeline {
     agent any
     
     environment {
-        ORE = '/home/jenkins/workspace/ore_pipeline'
+        ORE = '/home/jenkins/workspace/ORE_pipeline'
         PYTHON_INCLUDE_DIR = "/opt/anaconda3/include/python3.6m"
         PYTHON_LIBRARY = "/opt/anaconda3/lib/libpython3.6m.so"
         BOOST_ROOT = "/home/shared/boost_1_63_0"
