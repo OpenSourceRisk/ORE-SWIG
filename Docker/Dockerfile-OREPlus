@@ -2,13 +2,9 @@ ARG ore_plus_version=latest
 
 FROM env_ore_plus:${ore_plus_version}
 
-# Install cmake from testing (cmake>=3.8)
-# Install dos2unix, SWIG and python3
-RUN echo deb http://deb.debian.org/debian testing main >> /etc/apt/sources.list \
-  && apt-get update \
-  && apt-get remove --purge -y cmake \
-  && apt-get -t testing install -y cmake \
-  && apt-get install -y swig3.0 python3-dev \
+# Install SWIG and python3
+RUN apt-get update && apt-get upgrade -y \
+  && apt-get install -f -y swig3.0 python3-dev \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
 
