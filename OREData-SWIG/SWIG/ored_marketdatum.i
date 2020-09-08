@@ -723,7 +723,7 @@ class EquityOptionQuote : public MarketDatum {
     EquityOptionQuote(Real value, Date asofDate, const std::string& name,
                       MarketDatum::QuoteType quoteType,
                       std::string equityName, std::string ccy,
-                      std::string expiry, std::string strike);
+                      std::string expiry, const boost::shared_ptr<BaseStrike>& strike, bool isCall = true);
     const std::string& eqName() const;
     const std::string& ccy() const;
     const std::string& expiry() const;
