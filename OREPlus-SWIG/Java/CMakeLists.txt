@@ -57,11 +57,11 @@ find_package (Boost COMPONENTS serialization date_time regex filesystem system R
 include_directories(${Boost_INCLUDE_DIRS})
 
 # specify library search path (update this when we build ORE with cmake)
-link_directories(${ORE}/build/QuantLib/ql)
-link_directories(${ORE}/build/QuantExt/qle)
-link_directories(${ORE}/build/OREData/ored)
-link_directories(${ORE}/build/OREAnalytics/orea)
-link_directories(${ORE}/build/OREPlus/App/orepapp)
+add_link_directory_if_exists(${ORE}/build/QuantLib/ql)
+add_link_directory_if_exists(${ORE}/build/QuantExt/qle)
+add_link_directory_if_exists(${ORE}/build/OREData/ored)
+add_link_directory_if_exists(${ORE}/build/OREAnalytics/orea)
+add_link_directory_if_exists(${ORE}/build/OREPlus/App/orepapp)
 
 # write the library here
 #set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_LIST_DIR}/lib")

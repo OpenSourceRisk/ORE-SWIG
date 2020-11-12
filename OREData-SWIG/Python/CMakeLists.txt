@@ -43,9 +43,9 @@ include_directories(${Boost_INCLUDE_DIRS})
 include_directories(${PYTHON_INCLUDE_PATH})
 
 # Add to the list of link directories
-link_directories(${ORE}/build/QuantLib/ql)
-link_directories(${ORE}/build/QuantExt/qle)
-link_directories(${ORE}/build/OREData/ored)
+add_link_directory_if_exists(${ORE}/build/QuantLib/ql)
+add_link_directory_if_exists(${ORE}/build/QuantExt/qle)
+add_link_directory_if_exists(${ORE}/build/OREData/ored)
 
 # Tell SWIG to compile in C++ mode
 set_source_files_properties(${PROJECT_SOURCE_DIR}/../SWIG/oredata.i PROPERTIES CPLUSPLUS ON)
