@@ -210,13 +210,13 @@ class DiscountingFxForwardEngine : public PricingEngine {
 %shared_ptr(CommodityForward)
 class CommodityForward : public Instrument {
 public:
-    CommodityForward(const std::string& name,
+    CommodityForward(const boost::shared_ptr<CommodityIndex>& index,
                      const QuantLib::Currency& currency,
                      QuantLib::Position::Type position,
                      QuantLib::Real quantity,
                      const QuantLib::Date& maturityDate,
                      QuantLib::Real strike);
-    const std::string& name() const;
+    const boost::shared_ptr<CommodityIndex>& index() const;
     const QuantLib::Currency& currency() const;
     QuantLib::Position::Type position() const;
     QuantLib::Real quantity() const;
@@ -227,8 +227,7 @@ public:
 %shared_ptr(DiscountingCommodityForwardEngine)
 class DiscountingCommodityForwardEngine : public PricingEngine {
 public:
-    DiscountingCommodityForwardEngine(const QuantLib::Handle<PriceTermStructure>& priceCurve,
-                                      const QuantLib::Handle<QuantLib::YieldTermStructure>& discountCurve,
+    DiscountingCommodityForwardEngine(const QuantLib::Handle<QuantLib::YieldTermStructure>& discountCurve,
                                       boost::optional<bool> includeSettlementDateFlows = boost::none,
                                       const QuantLib::Date& npvDate = QuantLib::Date());
 };

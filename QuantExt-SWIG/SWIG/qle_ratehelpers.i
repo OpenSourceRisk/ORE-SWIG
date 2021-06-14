@@ -56,7 +56,8 @@ class CrossCcyBasisMtMResetSwapHelper : public RateHelper {
                                         = Handle<YieldTermStructure>(),
                                     bool eom = false,
                                     bool spreadOnForeignCcy = true,
-                                    bool invertFxIndex = false);
+                                    boost::optional<QuantLib::Period> foreignTenor = boost::none,
+                                    boost::optional<QuantLib::Period> domesticTenor = boost::none);
     boost::shared_ptr<CrossCcyBasisMtMResetSwap> swap();
 };
 

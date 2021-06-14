@@ -30,6 +30,7 @@ using ore::data::YieldCurveType;
 using ore::data::TodaysMarketParameters;
 using ore::data::Loader;
 using ore::data::CurveConfigurations;
+using ore::IborFallbackConfig;
 %}
 
 // Market class passed around as pointer, no construction
@@ -182,13 +183,16 @@ class MarketImpl {
 class TodaysMarket : public MarketImpl {
  public:
     TodaysMarket(const Date& asof,
-                 const TodaysMarketParameters& params,
-                 const Loader& loader,
-                 const CurveConfigurations& curveConfigs,
-                 const Conventions& conventions,
-		 const bool continueOnError = false,
-		 bool loadFixings = true,
-		 const boost::shared_ptr<ore::data::ReferenceDataManager>& referenceData = nullptr);
+                 const boost::shared_ptr<TodaysMarketParameters>& params,
+                 const boost::shared_ptr<Loader>& loader,
+                 const boost::shared_ptr<CurveConfigurations>& curveConfigs,
+                 const boost::shared_ptr<Conventions>& conventions,
+                 const bool continueOnError = false,
+                 bool loadFixings = true,
+                 const bool lazyBuild = false,
+                 const boost::shared_ptr<ore::data::ReferenceDataManager>& referenceData = nullptr,
+                 const bool preserveQuoteLinkage = false,
+                 const IborFallbackConfig& iborFallbackConfig = IborFallbackConfig::defaultConfig());
 };
 
 #endif

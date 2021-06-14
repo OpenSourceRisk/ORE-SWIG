@@ -33,6 +33,9 @@
 using QuantExt::FxIndex;
 using QuantExt::BMAIndexWrapper;
 using QuantLib::BMAIndex;
+using QuantExt::CommodityIndex;
+using QuantExt::CommoditySpotIndex;
+using QuantExt::CommodityFuturesIndex;
 %}
 
 %shared_ptr(FxIndex)
@@ -65,6 +68,32 @@ class FxIndex : public Index {
     virtual QuantLib::Date valueDate(const QuantLib::Date& fixingDate) const;
     QuantLib::Real forecastFixing(const QuantLib::Date& fixingDate) const;
     QuantLib::Real pastFixing(const QuantLib::Date& fixingDate) const;
+};
+
+// QuantExt Commodity Spot Index
+%shared_ptr(CommoditySpotIndex)
+class CommoditySpotIndex : public CommodityIndex {
+  public:
+    CommoditySpotIndex(const std::string& underlyingName, const Calendar& fixingCalendar,
+                   const Handle<QuantExt::PriceTermStructure>& priceCurve = Handle<QuantExt::PriceTermStructure>());
+    boost::shared_ptr<CommodityIndex> clone(const QuantLib::Date& expiryDate = QuantLib::Date(),
+                                            const boost::optional<QuantLib::Handle<PriceTermStructure>>& ts = boost::none) const;
+};
+
+// QuantExt Commodity Futures Index
+%shared_ptr(CommodityFuturesIndex)
+class CommodityFuturesIndex : public CommodityIndex {
+public:
+    CommodityFuturesIndex(
+        const std::string& underlyingName, const Date& expiryDate, const Calendar& fixingCalendar,
+        const Handle<QuantExt::PriceTermStructure>& priceCurve = Handle<QuantExt::PriceTermStructure>());
+
+    CommodityFuturesIndex(
+        const std::string& underlyingName, const Date& expiryDate, const Calendar& fixingCalendar, bool keepDays,
+        const Handle<QuantExt::PriceTermStructure>& priceCurve = Handle<QuantExt::PriceTermStructure>());
+
+    boost::shared_ptr<CommodityIndex> clone(const QuantLib::Date& expiryDate = QuantLib::Date(),
+        const boost::optional<QuantLib::Handle<PriceTermStructure>>& ts = boost::none) const;
 };
 
 // QuantLib BMA Index (not yet wrapped in QL v1.14)

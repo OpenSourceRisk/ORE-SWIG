@@ -76,7 +76,7 @@ boost::shared_ptr<SwapIndex> parseSwapIndex(const std::string& s,
                                             boost::shared_ptr<IRSwapConvention> convention = boost::shared_ptr<IRSwapConvention>());
 
 boost::shared_ptr<Index> parseIndex(const std::string& s,
-                                    const Conventions& conventions = Conventions());
+                                    const boost::shared_ptr<Conventions>& conventions = nullptr);
     
 boost::shared_ptr<ZeroInflationIndex> parseZeroInflationIndex(const std::string& s, bool isInterpolated = false,
                                                               const Handle<ZeroInflationTermStructure>& h = Handle<ZeroInflationTermStructure>());
