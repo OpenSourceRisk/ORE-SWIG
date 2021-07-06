@@ -29,21 +29,21 @@
 
 %{
 using QuantExt::TenorBasisSwap;
-using QuantExt::SubPeriodsCoupon;
-using QuantExt::SubPeriodsCouponPricer;
+using QuantExt::QLESubPeriodsCoupon;
+using QuantExt::QLESubPeriodsCouponPricer;
 using QuantExt::SubPeriodsSwap;
 %}
 
-%shared_ptr(SubPeriodsCoupon)
-class SubPeriodsCoupon : public FloatingRateCoupon {
+%shared_ptr(QLESubPeriodsCoupon)
+class QLESubPeriodsCoupon : public FloatingRateCoupon {
   public:
     enum Type { Averaging, Compounding };
-    SubPeriodsCoupon(const QuantLib::Date& paymentDate,
+    QLESubPeriodsCoupon(const QuantLib::Date& paymentDate,
                      QuantLib::Real nominal,
                      const QuantLib::Date& startDate,
                      const QuantLib::Date& endDate,
                      const boost::shared_ptr<InterestRateIndex>& index,
-                     SubPeriodsCoupon::Type type,
+                     QuantExt::QLESubPeriodsCoupon::Type type,
                      QuantLib::BusinessDayConvention convention,
                      QuantLib::Spread spread = 0.0,
                      const QuantLib::DayCounter& dayCounter = QuantLib::DayCounter(),
@@ -57,10 +57,10 @@ class SubPeriodsCoupon : public FloatingRateCoupon {
     QuantLib::Spread spread();
 };
 
-%shared_ptr(SubPeriodsCouponPricer)
-class SubPeriodsCouponPricer : public FloatingRateCouponPricer {
+%shared_ptr(QLESubPeriodsCouponPricer)
+class QLESubPeriodsCouponPricer : public FloatingRateCouponPricer {
   private:
-    SubPeriodsCouponPricer();
+    QLESubPeriodsCouponPricer();
   public:
     QuantLib::Rate swapletRate() const;
 };
@@ -79,7 +79,7 @@ class TenorBasisSwap : public Swap {
                    const QuantLib::Period& shortPayTenor,
                    QuantLib::DateGeneration::Rule rule = QuantLib::DateGeneration::Backward,
                    bool includeSpread = false,
-                   SubPeriodsCoupon::Type type = SubPeriodsCoupon::Compounding);
+                   QuantExt::QLESubPeriodsCoupon::Type type = QuantExt::QLESubPeriodsCoupon::Compounding);
     TenorBasisSwap(QuantLib::Real nominal,
                    bool payLongIndex,
                    const QuantLib::Schedule& longSchedule,
@@ -89,7 +89,7 @@ class TenorBasisSwap : public Swap {
                    const boost::shared_ptr<IborIndex>& shortIndex,
                    QuantLib::Spread shortSpread,
                    bool includeSpread = false,
-                   SubPeriodsCoupon::Type type = SubPeriodsCoupon::Compounding);
+                   QuantExt::QLESubPeriodsCoupon::Type type = QuantExt::QLESubPeriodsCoupon::Compounding);
     QuantLib::Real nominal() const;
     bool payLongIndex();
     const QuantLib::Schedule& longSchedule() const;
@@ -100,7 +100,7 @@ class TenorBasisSwap : public Swap {
     const boost::shared_ptr<IborIndex> shortIndex() const;
     QuantLib::Spread shortSpread() const;
     const QuantLib::Leg& shortLeg() const;
-    SubPeriodsCoupon::Type type() const;
+    QuantExt::QLESubPeriodsCoupon::Type type() const;
     const QuantLib::Period& shortPayTenor() const;
     bool includeSpread() const;
     QuantLib::Real longLegBPS() const;
@@ -127,14 +127,14 @@ class SubPeriodsSwap : public Swap {
                    const boost::shared_ptr<IborIndex>& iborIndex,
                    const QuantLib::DayCounter& floatingDayCount,
                    QuantLib::DateGeneration::Rule rule = QuantLib::DateGeneration::Backward,
-                   SubPeriodsCoupon::Type type = SubPeriodsCoupon::Compounding);
+                   QuantExt::QLESubPeriodsCoupon::Type type = QuantExt::QLESubPeriodsCoupon::Compounding);
     QuantLib::Real nominal() const;
     bool isPayer() const;
     const QuantLib::Schedule& fixedSchedule() const;
     QuantLib::Rate fixedRate() const;
     const QuantLib::Leg& fixedLeg() const;
     const QuantLib::Schedule& floatSchedule() const;
-    SubPeriodsCoupon::Type type() const;
+    QuantExt::QLESubPeriodsCoupon::Type type() const;
     const QuantLib::Period& floatPayTenor() const;
     const QuantLib::Leg& floatLeg() const;
     QuantLib::Real fairRate() const;

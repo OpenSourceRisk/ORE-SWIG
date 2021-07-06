@@ -30,6 +30,7 @@ using QuantExt::CrossCcyBasisSwapHelper;
 using QuantExt::CrossCcyBasisMtMResetSwapHelper;
 using QuantExt::TenorBasisSwapHelper;
 using QuantExt::SubPeriodsSwapHelper;
+using QuantExt::QLESubPeriodsCoupon;
 using QuantExt::OICCBSHelper;
 using QuantExt::OIBSHelper;
 using QuantExt::BasisTwoSwapHelper;
@@ -91,7 +92,7 @@ class TenorBasisSwapHelper : public RateHelper {
                                 = QuantLib::Handle<QuantLib::YieldTermStructure>(),
                             bool spreadOnShort = true,
                             bool includeSpread = false,
-                            SubPeriodsCoupon::Type type = SubPeriodsCoupon::Compounding);
+                            QuantExt::QLESubPeriodsCoupon::Type type = QuantExt::QLESubPeriodsCoupon::Compounding);
     boost::shared_ptr<TenorBasisSwap> swap();
 };
 
@@ -109,7 +110,7 @@ class SubPeriodsSwapHelper : public RateHelper {
                          const QuantLib::DayCounter& floatDayCount,
                          const QuantLib::Handle<QuantLib::YieldTermStructure>& discountingCurve =
                              QuantLib::Handle<QuantLib::YieldTermStructure>(),
-                         SubPeriodsCoupon::Type type = SubPeriodsCoupon::Compounding);
+                         QuantExt::QLESubPeriodsCoupon::Type type = QuantExt::QLESubPeriodsCoupon::Compounding);
     boost::shared_ptr<SubPeriodsSwap> swap();
 };
 
