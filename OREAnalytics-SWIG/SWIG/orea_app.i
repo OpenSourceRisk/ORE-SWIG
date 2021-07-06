@@ -44,7 +44,8 @@ class Parameters {
 %shared_ptr(OREApp)
 class OREApp {
   public:
-    OREApp(const boost::shared_ptr<Parameters>& p, std::ostream& out = std::cout);
+    OREApp(boost::shared_ptr<Parameters> p);
+    OREApp(boost::shared_ptr<Parameters> p, std::ostream& out);
     void run();
     void buildMarket(const std::string& todaysMarketXML = "", const std::string& curveConfigXML = "",
                      const std::string& conventionsXML = "",
