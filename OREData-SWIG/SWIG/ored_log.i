@@ -33,16 +33,17 @@ using ore::data::Log;
 using ore::data::Logger;
 %}
 
+%shared_ptr(Log)
 class Log {
   private:
     Log();
   public:
     static Log& instance();
     %extend {
-        void registerLogger(const boost::shared_ptr<Logger>& logger) {
+        void registerLogger(const ext::shared_ptr<Logger>& logger) {
             self->registerLogger(logger);
         }
-        boost::shared_ptr<Logger>& logger(const std::string& name) {
+        ext::shared_ptr<Logger>& logger(const std::string& name) {
             return self->logger(name);
         }
         void removeLogger(const std::string& name) {
