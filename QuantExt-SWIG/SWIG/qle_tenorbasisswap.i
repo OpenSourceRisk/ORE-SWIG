@@ -29,29 +29,26 @@
 
 %{
 using QuantExt::TenorBasisSwap;
-//using QuantExt::SubPeriodsCoupon;
-//using QuantExt::SubPeriodsCouponPricer;
+using QuantExt::SubPeriodsCoupon1;
+using QuantExt::SubPeriodsCouponPricer1;
 using QuantExt::SubPeriodsSwap;
 %}
 
-// SubPeriodsCoupon is exported in QuantLib-SWIG now, so we have commmented out the following.
-// TODO: Merge QuantExt's SubPeriodsCoupon into QuantLib's
-/*
-%shared_ptr(SubPeriodsCoupon)
-class SubPeriodsCoupon : public FloatingRateCoupon {
+%shared_ptr(SubPeriodsCoupon1)
+class SubPeriodsCoupon1 : public FloatingRateCoupon {
   public:
     enum Type { Averaging, Compounding };
-    SubPeriodsCoupon(const QuantLib::Date& paymentDate,
-                     QuantLib::Real nominal,
-                     const QuantLib::Date& startDate,
-                     const QuantLib::Date& endDate,
-                     const boost::shared_ptr<InterestRateIndex>& index,
-                     QuantExt::SubPeriodsCoupon::Type type,
-                     QuantLib::BusinessDayConvention convention,
-                     QuantLib::Spread spread = 0.0,
-                     const QuantLib::DayCounter& dayCounter = QuantLib::DayCounter(),
-                     bool includeSpread = false,
-                     QuantLib::Real gearing = 1.0);
+    SubPeriodsCoupon1(const QuantLib::Date& paymentDate,
+                      QuantLib::Real nominal,
+                      const QuantLib::Date& startDate,
+                      const QuantLib::Date& endDate,
+                      const boost::shared_ptr<InterestRateIndex>& index,
+                      QuantExt::SubPeriodsCoupon1::Type type,
+                      QuantLib::BusinessDayConvention convention,
+                      QuantLib::Spread spread = 0.0,
+                      const QuantLib::DayCounter& dayCounter = QuantLib::DayCounter(),
+                      bool includeSpread = false,
+                      QuantLib::Real gearing = 1.0);
     const std::vector<QuantLib::Date>& fixingDates() const;
     const std::vector<QuantLib::Time>& accrualFractions() const;
     const std::vector<QuantLib::Rate>& indexFixings() const;
@@ -60,14 +57,13 @@ class SubPeriodsCoupon : public FloatingRateCoupon {
     QuantLib::Spread spread();
 };
 
-%shared_ptr(SubPeriodsCouponPricer)
-    class SubPeriodsCouponPricer : public QuantLib::FloatingRateCouponPricer {
+%shared_ptr(SubPeriodsCouponPricer1)
+    class SubPeriodsCouponPricer1 : public QuantLib::FloatingRateCouponPricer {
   private:
-    SubPeriodsCouponPricer();
+    SubPeriodsCouponPricer1();
   public:
     QuantLib::Rate swapletRate() const;
 };
-*/
 
 %shared_ptr(TenorBasisSwap)
 class TenorBasisSwap : public Swap {
@@ -83,7 +79,7 @@ class TenorBasisSwap : public Swap {
                    const QuantLib::Period& shortPayTenor,
                    QuantLib::DateGeneration::Rule rule = QuantLib::DateGeneration::Backward,
                    bool includeSpread = false,
-                   QuantExt::SubPeriodsCoupon::Type type = QuantExt::SubPeriodsCoupon::Compounding);
+                   QuantExt::SubPeriodsCoupon1::Type type = QuantExt::SubPeriodsCoupon1::Compounding);
     TenorBasisSwap(QuantLib::Real nominal,
                    bool payLongIndex,
                    const QuantLib::Schedule& longSchedule,
@@ -93,7 +89,7 @@ class TenorBasisSwap : public Swap {
                    const boost::shared_ptr<IborIndex>& shortIndex,
                    QuantLib::Spread shortSpread,
                    bool includeSpread = false,
-                   QuantExt::SubPeriodsCoupon::Type type = QuantExt::SubPeriodsCoupon::Compounding);
+                   QuantExt::SubPeriodsCoupon1::Type type = QuantExt::SubPeriodsCoupon1::Compounding);
     QuantLib::Real nominal() const;
     bool payLongIndex();
     const QuantLib::Schedule& longSchedule() const;
@@ -104,7 +100,7 @@ class TenorBasisSwap : public Swap {
     const boost::shared_ptr<IborIndex> shortIndex() const;
     QuantLib::Spread shortSpread() const;
     const QuantLib::Leg& shortLeg() const;
-    QuantExt::SubPeriodsCoupon::Type type() const;
+    QuantExt::SubPeriodsCoupon1::Type type() const;
     const QuantLib::Period& shortPayTenor() const;
     bool includeSpread() const;
     QuantLib::Real longLegBPS() const;
@@ -131,14 +127,14 @@ class SubPeriodsSwap : public Swap {
                    const boost::shared_ptr<IborIndex>& iborIndex,
                    const QuantLib::DayCounter& floatingDayCount,
                    QuantLib::DateGeneration::Rule rule = QuantLib::DateGeneration::Backward,
-                   QuantExt::SubPeriodsCoupon::Type type = QuantExt::SubPeriodsCoupon::Compounding);
+                   QuantExt::SubPeriodsCoupon1::Type type = QuantExt::SubPeriodsCoupon1::Compounding);
     QuantLib::Real nominal() const;
     bool isPayer() const;
     const QuantLib::Schedule& fixedSchedule() const;
     QuantLib::Rate fixedRate() const;
     const QuantLib::Leg& fixedLeg() const;
     const QuantLib::Schedule& floatSchedule() const;
-    QuantExt::SubPeriodsCoupon::Type type() const;
+    QuantExt::SubPeriodsCoupon1::Type type() const;
     const QuantLib::Period& floatPayTenor() const;
     const QuantLib::Leg& floatLeg() const;
     QuantLib::Real fairRate() const;

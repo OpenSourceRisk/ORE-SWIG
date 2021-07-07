@@ -53,7 +53,7 @@ using QuantLib::Natural;
 using QuantLib::BusinessDayConvention;
 using QuantLib::Size;
 using QuantLib::DateGeneration;
-//using QuantExt::SubPeriodsCoupon;
+using QuantExt::SubPeriodsCoupon1;
 using QuantExt::BMAIndexWrapper;
 %}
 
@@ -246,7 +246,7 @@ class IRSwapConvention : public Convention {
     const boost::shared_ptr<IborIndex> index() const;
     bool hasSubPeriod() const;
     Frequency floatFrequency() const;
-    QuantExt::SubPeriodsCoupon::Type subPeriodsCouponType() const;
+    QuantExt::SubPeriodsCoupon1::Type subPeriodsCouponType() const;
     %extend {
       static const boost::shared_ptr<IRSwapConvention> getFullView(boost::shared_ptr<Convention> baseInput) {
           return boost::dynamic_pointer_cast<ore::data::IRSwapConvention>(baseInput);
@@ -294,7 +294,7 @@ class TenorBasisSwapConvention : public Convention {
     const Period& shortPayTenor() const;
     bool spreadOnShort() const;
     bool includeSpread() const;
-    QuantExt::SubPeriodsCoupon::Type subPeriodsCouponType() const;
+    QuantExt::SubPeriodsCoupon1::Type subPeriodsCouponType() const;
     %extend {
       static const boost::shared_ptr<TenorBasisSwapConvention> getFullView(boost::shared_ptr<Convention> baseInput) {
           return boost::dynamic_pointer_cast<ore::data::TenorBasisSwapConvention>(baseInput);
