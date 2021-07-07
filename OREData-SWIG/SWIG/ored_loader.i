@@ -31,15 +31,15 @@ class Loader {
   private:
     Loader();
   public:
-    const std::vector<boost::shared_ptr<MarketDatum>>& loadQuotes(const QuantLib::Date&) const;
-    const boost::shared_ptr<MarketDatum>& get(const std::string& name, const QuantLib::Date&) const;
+    const std::vector<ext::shared_ptr<MarketDatum>>& loadQuotes(const QuantLib::Date&) const;
+    const ext::shared_ptr<MarketDatum>& get(const std::string& name, const QuantLib::Date&) const;
     bool has(const std::string& name, const QuantLib::Date& d) const;
-    boost::shared_ptr<MarketDatum> get(const std::pair<std::string, bool>& name, const QuantLib::Date& d) const;
+    ext::shared_ptr<MarketDatum> get(const std::pair<std::string, bool>& name, const QuantLib::Date& d) const;
     const std::vector<Fixing>& loadFixings() const;
     const std::vector<Fixing>& loadDividends() const;
 };
 %template(StringBoolPair) std::pair<std::string, bool>;
-%template(MarketDatumVector) std::vector<boost::shared_ptr<MarketDatum>>;
+%template(MarketDatumVector) std::vector<ext::shared_ptr<MarketDatum>>;
 
 // Fixing class has no default ctor, excluding some features of std::vector
 %ignore std::vector<Fixing>::pop;
