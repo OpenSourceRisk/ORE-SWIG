@@ -45,14 +45,20 @@ class Parameters {
 class OREApp {
   public:
     OREApp(const ext::shared_ptr<Parameters>& p, std::ostream& out = std::cout);
-    void run();
+
+    int run();
+
     void buildMarket(const std::string& todaysMarketXML = "", const std::string& curveConfigXML = "",
                      const std::string& conventionsXML = "",
                      const std::vector<std::string>& marketData = std::vector<std::string>(),
                      const std::vector<std::string>& fixingData = std::vector<std::string>());
+
     ext::shared_ptr<MarketImpl> getMarket() const;
+
     ext::shared_ptr<ore::data::EngineFactory> buildEngineFactoryFromXMLString(
-        const ext::shared_ptr<MarketImpl>& marketImpl, const std::string& pricingEngineXML);
+        const ext::shared_ptr<MarketImpl>& marketImpl,
+        const std::string& pricingEngineXML,
+        const bool generateAdditionalResults = false);
 };
 
 #endif
