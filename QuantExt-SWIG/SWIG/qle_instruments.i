@@ -210,13 +210,13 @@ class DiscountingFxForwardEngine : public PricingEngine {
 %shared_ptr(CommodityForward)
 class CommodityForward : public Instrument {
 public:
-    CommodityForward(const boost::shared_ptr<CommodityIndex>& index,
+    CommodityForward(const ext::shared_ptr<CommodityIndex>& index,
                      const QuantLib::Currency& currency,
                      QuantLib::Position::Type position,
                      QuantLib::Real quantity,
                      const QuantLib::Date& maturityDate,
                      QuantLib::Real strike);
-    const boost::shared_ptr<CommodityIndex>& index() const;
+    const ext::shared_ptr<CommodityIndex>& index() const;
     const QuantLib::Currency& currency() const;
     QuantLib::Position::Type position() const;
     QuantLib::Real quantity() const;

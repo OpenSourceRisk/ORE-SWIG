@@ -70,14 +70,21 @@ class FxIndex : public Index {
     QuantLib::Real pastFixing(const QuantLib::Date& fixingDate) const;
 };
 
+// QuantExt Commodity Index
+%shared_ptr(CommodityIndex)
+class CommodityIndex : public Index {
+  private:
+    CommodityIndex();
+};
+
 // QuantExt Commodity Spot Index
 %shared_ptr(CommoditySpotIndex)
 class CommoditySpotIndex : public CommodityIndex {
   public:
     CommoditySpotIndex(const std::string& underlyingName, const Calendar& fixingCalendar,
                    const Handle<QuantExt::PriceTermStructure>& priceCurve = Handle<QuantExt::PriceTermStructure>());
-    boost::shared_ptr<CommodityIndex> clone(const QuantLib::Date& expiryDate = QuantLib::Date(),
-                                            const boost::optional<QuantLib::Handle<PriceTermStructure>>& ts = boost::none) const;
+    ext::shared_ptr<CommodityIndex> clone(const QuantLib::Date& expiryDate = QuantLib::Date(),
+                                          const boost::optional<QuantLib::Handle<PriceTermStructure>>& ts = boost::none) const;
 };
 
 // QuantExt Commodity Futures Index
@@ -92,7 +99,7 @@ public:
         const std::string& underlyingName, const Date& expiryDate, const Calendar& fixingCalendar, bool keepDays,
         const Handle<QuantExt::PriceTermStructure>& priceCurve = Handle<QuantExt::PriceTermStructure>());
 
-    boost::shared_ptr<CommodityIndex> clone(const QuantLib::Date& expiryDate = QuantLib::Date(),
+    ext::shared_ptr<CommodityIndex> clone(const QuantLib::Date& expiryDate = QuantLib::Date(),
         const boost::optional<QuantLib::Handle<PriceTermStructure>>& ts = boost::none) const;
 };
 
