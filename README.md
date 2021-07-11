@@ -26,8 +26,8 @@ in the QuantLib-SWIG project by running
 	git submodule init
 	git submodule update
 
-Prerequisite for building the wrappers is building ORE (upcoming
-release 1.14) following the steps outlined in ORE's user guide, e.g. using CMake.
+Prerequisite for building the wrappers is building the latest ORE release
+following the steps outlined in ORE's user guide, e.g. using CMake.
 
 To build ORE-SWIG on Windows, macOS or Linux using CMake and
 Ninja: Edit the top level CMakeLists.txt to select/deselect
