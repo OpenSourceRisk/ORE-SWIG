@@ -37,8 +37,8 @@ using QuantLib::CashFlow;
 using namespace std;
 %}
 
-%template(TradeVector) std::vector<boost::shared_ptr<Trade>>;
-%template(LegVector) std::vector<std::vector<boost::shared_ptr<CashFlow> > >;
+%template(TradeVector) std::vector<ext::shared_ptr<Trade>>;
+//%template(LegVector) std::vector<std::vector<boost::shared_ptr<CashFlow> > >;
 %template(StringStringMap) std::map<std::string, std::string>;
 
 enum class MarketContext { irCalibration, fxCalibration, eqCalibration, pricing };
@@ -68,8 +68,8 @@ class EngineFactory {
     EngineFactory(const boost::shared_ptr<EngineData>& data,
                   const boost::shared_ptr<Market>& market,
                   const std::map<MarketContext, std::string>& configurations = std::map<MarketContext, std::string>(),
-                  const std::vector<boost::shared_ptr<EngineBuilder>> extraEngineBuilders = {},
-                  const std::vector<boost::shared_ptr<LegBuilder>> extraLegBuilders = {});
+                  const std::vector<ext::shared_ptr<EngineBuilder>> extraEngineBuilders = {},
+                  const std::vector<ext::shared_ptr<LegBuilder>> extraLegBuilders = {});
 };
 
 // TradeFactory just needed as a return type, no construction, no member functions.
@@ -93,7 +93,7 @@ class InstrumentWrapper {
     InstrumentWrapper();
   public:
     Real NPV() const;
-    boost::shared_ptr<QuantLib::Instrument> qlInstrument() const;
+    ext::shared_ptr<QuantLib::Instrument> qlInstrument() const;
 };
 
 // Trade pointer required as a return type only
@@ -104,8 +104,8 @@ class Trade {
   public:
     const std::string& id();
     const std::string& tradeType();
-    const boost::shared_ptr<InstrumentWrapper>& instrument();
-    std::vector<std::vector<boost::shared_ptr<QuantLib::CashFlow>>> legs();
+    const ext::shared_ptr<InstrumentWrapper>& instrument();
+    std::vector<std::vector<ext::shared_ptr<QuantLib::CashFlow>>> legs();
     const Envelope& envelope() const;
     const QuantLib::Date& maturity();
     Real notional();
@@ -119,13 +119,13 @@ class Portfolio {
     Portfolio();
     std::size_t size() const;
     std::vector<std::string> ids() const;
-    const std::vector<boost::shared_ptr<Trade>>& trades() const;
+    const std::vector<ext::shared_ptr<Trade>>& trades() const;
     bool remove(const std::string& tradeID);
     void load(const std::string& fileName,
-              const boost::shared_ptr<TradeFactory>& tf = boost::make_shared<TradeFactory>());
+              const ext::shared_ptr<TradeFactory>& tf = ext::make_shared<TradeFactory>());
     void loadFromXMLString(const std::string& xmlString,
-                           const boost::shared_ptr<ore::data::TradeFactory>& tf = boost::make_shared<TradeFactory>());
-    void build(const boost::shared_ptr<ore::data::EngineFactory>& factory);
+                           const ext::shared_ptr<ore::data::TradeFactory>& tf = ext::make_shared<TradeFactory>());
+    void build(const ext::shared_ptr<ore::data::EngineFactory>& factory);
 };
 
 #endif

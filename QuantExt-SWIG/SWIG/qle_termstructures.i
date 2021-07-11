@@ -93,6 +93,7 @@ export_Interpolated_Price_Curve(CubicInterpolatedPriceCurve, Cubic);
 export_Interpolated_Price_Curve(SplineCubicInterpolatedPriceCurve, SplineCubic);
 export_Interpolated_Price_Curve(MonotonicCubicInterpolatedPriceCurve, MonotonicCubic);
 
+
 %shared_ptr(SwaptionVolatilityCube)
 class SwaptionVolatilityCube : public SwaptionVolatilityDiscrete {
 };

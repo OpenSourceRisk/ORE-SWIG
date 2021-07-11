@@ -30,6 +30,7 @@ using ore::data::YieldCurveType;
 using ore::data::TodaysMarketParameters;
 using ore::data::Loader;
 using ore::data::CurveConfigurations;
+using ore::IborFallbackConfig;
 %}
 
 // Market class passed around as pointer, no construction
@@ -48,11 +49,11 @@ class MarketImpl {
                               const std::string& configuration = Market::defaultConfiguration) const;
     
     %extend {
-      boost::shared_ptr<IborIndex> iborIndex(const std::string& indexName,
+      ext::shared_ptr<IborIndex> iborIndex(const std::string& indexName,
                                              const std::string& configuration = Market::defaultConfiguration) const {
           return self->iborIndex(indexName, configuration).currentLink();
       }
-      boost::shared_ptr<SwapIndex> swapIndex(const std::string& indexName,
+      ext::shared_ptr<SwapIndex> swapIndex(const std::string& indexName,
                                              const std::string& configuration = Market::defaultConfiguration) const {
           return self->swapIndex(indexName, configuration).currentLink();
       }
@@ -105,12 +106,12 @@ class MarketImpl {
 
     // Inflation Indexes (Pointer rather than Handle)
     %extend {
-      boost::shared_ptr<ZeroInflationIndex> zeroInflationIndex(const std::string& indexName,
+      ext::shared_ptr<ZeroInflationIndex> zeroInflationIndex(const std::string& indexName,
                                                                const std::string& configuration =
                                                                  Market::defaultConfiguration) const {
           return self->zeroInflationIndex(indexName, configuration).currentLink();
       }
-      boost::shared_ptr<YoYInflationIndex> yoyInflationIndex(const std::string& indexName,
+      ext::shared_ptr<YoYInflationIndex> yoyInflationIndex(const std::string& indexName,
                                                              const std::string& configuration =
                                                                Market::defaultConfiguration) const {
           return self->yoyInflationIndex(indexName, configuration).currentLink();
@@ -126,7 +127,7 @@ class MarketImpl {
     Handle<Quote> equitySpot(const std::string& eqName,
                              const std::string& configuration = Market::defaultConfiguration) const;
     %extend {
-      boost::shared_ptr<QuantExt::EquityIndex> equityCurve(const std::string& indexName,
+      ext::shared_ptr<QuantExt::EquityIndex> equityCurve(const std::string& indexName,
                                                            const std::string& configuration =
 							   Market::defaultConfiguration) const {
           return self->equityCurve(indexName, configuration).currentLink();
@@ -182,13 +183,16 @@ class MarketImpl {
 class TodaysMarket : public MarketImpl {
  public:
     TodaysMarket(const Date& asof,
-                 const TodaysMarketParameters& params,
-                 const Loader& loader,
-                 const CurveConfigurations& curveConfigs,
-                 const Conventions& conventions,
-		 const bool continueOnError = false,
-		 bool loadFixings = true,
-		 const boost::shared_ptr<ore::data::ReferenceDataManager>& referenceData = nullptr);
+                 const ext::shared_ptr<TodaysMarketParameters>& params,
+                 const ext::shared_ptr<Loader>& loader,
+                 const ext::shared_ptr<CurveConfigurations>& curveConfigs,
+                 const ext::shared_ptr<Conventions>& conventions,
+                 const bool continueOnError = false,
+                 bool loadFixings = true,
+                 const bool lazyBuild = false,
+                 const ext::shared_ptr<ore::data::ReferenceDataManager>& referenceData = nullptr,
+                 const bool preserveQuoteLinkage = false,
+                 const IborFallbackConfig& iborFallbackConfig = IborFallbackConfig::defaultConfig());
 };
 
 #endif
