@@ -186,7 +186,6 @@ class TodaysMarket : public MarketImpl {
                  const ext::shared_ptr<TodaysMarketParameters>& params,
                  const ext::shared_ptr<Loader>& loader,
                  const ext::shared_ptr<CurveConfigurations>& curveConfigs,
-                 const ext::shared_ptr<Conventions>& conventions,
                  const bool continueOnError = false,
                  bool loadFixings = true,
                  const bool lazyBuild = false,

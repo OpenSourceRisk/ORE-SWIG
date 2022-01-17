@@ -200,7 +200,7 @@ using ore::data::DiscountQuote;
 class DiscountQuote : public MarketDatum {
   public:
     DiscountQuote(Real value, Date asofDate, const std::string& name,
-                  MarketDatum::QuoteType quoteType, std::string ccy, Date date);
+                  MarketDatum::QuoteType quoteType, std::string ccy, Date date, Period tenor);
     const std::string& ccy() const;
     Date date() const;
     %extend {

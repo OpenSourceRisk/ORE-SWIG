@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.8)
 
 project(OREAnalytics-Python)
 
-include(${ORE}/cmake/commonSettings.cmake)
+include(${PROJECT_SOURCE_DIR}/../../cmake/commonSettings.cmake)
 
 # Append /bigobj to compiler flags on Windows for this target
 if (MSVC)
