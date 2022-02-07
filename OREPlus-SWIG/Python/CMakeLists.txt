@@ -65,6 +65,7 @@ include_directories(${Boost_INCLUDE_DIRS})
 include_directories(${PYTHON_INCLUDE_PATH})
 
 # Add to the list of link directories
+add_link_directory_if_exists(${ORE}/QuantLib/build/ql)
 add_link_directory_if_exists(${ORE}/build/QuantLib/ql)
 add_link_directory_if_exists(${ORE}/build/QuantExt/qle)
 add_link_directory_if_exists(${ORE}/build/OREData/ored)
