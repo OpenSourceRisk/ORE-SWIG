@@ -70,8 +70,14 @@ class QLECreditDefaultSwap : public Instrument {
     const QuantLib::Leg& coupons() const;
     const QuantLib::Date& protectionStartDate() const;
     const QuantLib::Date& protectionEndDate() const;
+    const boost::shared_ptr<SimpleCashFlow>& upfrontPayment() const;
+    const boost::shared_ptr<SimpleCashFlow>& accrualRebate() const;
+    //const boost::shared_ptr<SimpleCashFlow>& accrualRebateCurrent() const;
+    const QuantLib::Date& tradeDate() const;
+    QuantLib::Natural cashSettlementDays() const;
     QuantLib::Rate fairUpfront() const;
-    QuantLib::Rate fairSpread() const;
+    QuantLib::Rate fairSpreadDirty() const;
+    QuantLib::Rate fairSpreadClean() const;
     QuantLib::Real couponLegBPS() const;
     QuantLib::Real upfrontBPS() const;
     QuantLib::Real couponLegNPV() const;
@@ -123,7 +129,7 @@ class QLEBlackCdsOptionEngine : public PricingEngine {
     QLEBlackCdsOptionEngine(const QuantLib::Handle<QuantLib::DefaultProbabilityTermStructure>& probability,
 			    QuantLib::Real recoveryRate,
 			    const QuantLib::Handle<QuantLib::YieldTermStructure>& termStructure,
-			    const QuantLib::Handle<QuantLib::BlackVolTermStructure>& vol);
+			    const QuantLib::Handle<QuantExt::CreditVolCurve>& vol);
 };
 
 #endif
