@@ -30,13 +30,16 @@ using QuantExt::InterpolatedPriceCurve;
 using QuantExt::FxBlackVannaVolgaVolatilitySurface;
 using QuantExt::BlackVarianceSurfaceMoneynessSpot;
 using QuantExt::BlackVarianceSurfaceMoneynessForward;
-//using QuantExt::SwaptionVolCube2;
+using QLESwaptionVolCube2 = QuantExt::SwaptionVolCube2;
 using QuantExt::SwaptionVolCubeWithATM;
 using QuantLib::SwaptionVolatilityCube;
 using QuantExt::SwaptionVolatilityConstantSpread;
 using QuantExt::SwapConventions;
 using QuantExt::SwaptionVolatilityConverter;
 using QuantExt::BlackVolatilityWithATM;
+using QuantExt::CreditCurve;
+using QuantExt::CreditVolCurve;
+using QuantExt::CreditVolCurveWrapper;
 %}
 
 %shared_ptr(PriceTermStructure)
@@ -98,10 +101,6 @@ export_Interpolated_Price_Curve(MonotonicCubicInterpolatedPriceCurve, MonotonicC
 class SwaptionVolatilityCube : public SwaptionVolatilityDiscrete {
 };
 
-%{
-using QLESwaptionVolCube2 = QuantExt::SwaptionVolCube2;
-%}
-
 %shared_ptr(QLESwaptionVolCube2)
 class QLESwaptionVolCube2 : public SwaptionVolatilityCube {
   public:
@@ -110,8 +109,8 @@ class QLESwaptionVolCube2 : public SwaptionVolatilityCube {
                         const std::vector<QuantLib::Period>& swapTenors,
                         const std::vector<QuantLib::Spread>& strikeSpreads,
                         const std::vector<std::vector<QuantLib::Handle<QuantLib::Quote>>>& volSpreads,
-                        const boost::shared_ptr<SwapIndex>& swapIndexBase,
-                        const boost::shared_ptr<SwapIndex>& shortSwapIndexBase,
+                        const ext::shared_ptr<SwapIndex>& swapIndexBase,
+                        const ext::shared_ptr<SwapIndex>& shortSwapIndexBase,
                         bool vegaWeightedSmileFit,
                         bool flatExtrapolation,
                         bool volsAreSpreads = true);
@@ -165,7 +164,7 @@ class BlackVarianceSurfaceMoneynessForward : public BlackVolTermStructure {
 %shared_ptr(SwaptionVolCubeWithATM)
 class SwaptionVolCubeWithATM : public SwaptionVolatilityStructure {
   public:
-    SwaptionVolCubeWithATM(const boost::shared_ptr<SwaptionVolatilityCube>& cube);
+    SwaptionVolCubeWithATM(const ext::shared_ptr<SwaptionVolatilityCube>& cube);
 };
 
 %shared_ptr(SwaptionVolatilityConstantSpread)
@@ -183,43 +182,120 @@ class SwapConventions {
     SwapConventions(QuantLib::Natural settlementDays, const QuantLib::Period& fixedTenor,
                     const QuantLib::Calendar& fixedCalendar, QuantLib::BusinessDayConvention fixedConvention,
                     const QuantLib::DayCounter& fixedDayCounter,
-                    const boost::shared_ptr<IborIndex> floatIndex);
+                    const ext::shared_ptr<IborIndex> floatIndex);
     QuantLib::Natural settlementDays() const;
     const QuantLib::Period& fixedTenor() const;
     const QuantLib::Calendar& fixedCalendar() const;
     QuantLib::BusinessDayConvention fixedConvention() const;
     const QuantLib::DayCounter& fixedDayCounter() const;
-    const boost::shared_ptr<IborIndex> floatIndex() const;
+    const ext::shared_ptr<IborIndex> floatIndex() const;
 };
 
 %shared_ptr(SwaptionVolatilityConverter)
 class SwaptionVolatilityConverter {
   public:
     SwaptionVolatilityConverter(const QuantLib::Date& asof,
-                                const boost::shared_ptr<QuantLib::SwaptionVolatilityStructure>& svsIn,
+                                const ext::shared_ptr<QuantLib::SwaptionVolatilityStructure>& svsIn,
                                 const QuantLib::Handle<QuantLib::YieldTermStructure>& discount,
                                 const QuantLib::Handle<QuantLib::YieldTermStructure>& shortDiscount,
-                                const boost::shared_ptr<SwapConventions>& conventions,
-                                const boost::shared_ptr<SwapConventions>& shortConventions,
+                                const ext::shared_ptr<SwapConventions>& conventions,
+                                const ext::shared_ptr<SwapConventions>& shortConventions,
                                 const QuantLib::Period& conventionsTenor,
                                 const QuantLib::Period& shortConventionsTenor,
                                 const QuantLib::VolatilityType targetType,
                                 const QuantLib::Matrix& targetShifts = QuantLib::Matrix());
     SwaptionVolatilityConverter(const QuantLib::Date& asof,
-                                const boost::shared_ptr<QuantLib::SwaptionVolatilityStructure>& svsIn,
-                                const boost::shared_ptr<QuantLib::SwapIndex>& swapIndex,
-                                const boost::shared_ptr<QuantLib::SwapIndex>& shortSwapIndex,
+                                const ext::shared_ptr<QuantLib::SwaptionVolatilityStructure>& svsIn,
+                                const ext::shared_ptr<QuantLib::SwapIndex>& swapIndex,
+                                const ext::shared_ptr<QuantLib::SwapIndex>& shortSwapIndex,
                                 const QuantLib::VolatilityType targetType,
                                 const QuantLib::Matrix& targetShifts = QuantLib::Matrix());
-    boost::shared_ptr<QuantLib::SwaptionVolatilityStructure> convert() const;
+    ext::shared_ptr<QuantLib::SwaptionVolatilityStructure> convert() const;
     QuantLib::Real& accuracy();
     QuantLib::Natural& maxEvaluations();
 };
 
+%shared_ptr(CreditCurve)
+class CreditCurve : public Observer {
+    public:
+        struct RefData {
+            RefData() {}
+            QuantLib::Date startDate = QuantLib::Null<QuantLib::Date>();
+            QuantLib::Period indexTerm = 0 * QuantLib::Days;
+            QuantLib::Period tenor = 3 * QuantLib::Months;
+            QuantLib::Calendar calendar = QuantLib::WeekendsOnly();
+            QuantLib::BusinessDayConvention convention = QuantLib::Following;
+            QuantLib::BusinessDayConvention termConvention = QuantLib::Following;
+            QuantLib::DateGeneration::Rule rule = QuantLib::DateGeneration::CDS2015;
+            bool endOfMonth = false;
+            QuantLib::Real runningSpread = QuantLib::Null<QuantLib::Real>();
+            QuantLib::BusinessDayConvention payConvention = QuantLib::Following;
+            QuantLib::DayCounter dayCounter = QuantLib::Actual360(false);
+            QuantLib::DayCounter lastPeriodDayCounter = QuantLib::Actual360(true);
+            QuantLib::Natural cashSettlementDays = 3;
+        };
+        CreditCurve(const QuantLib::Handle<QuantLib::DefaultProbabilityTermStructure>& curve,
+                         const QuantLib::Handle<QuantLib::YieldTermStructure>& rateCurve =
+                             QuantLib::Handle<QuantLib::YieldTermStructure>(),
+                         const QuantLib::Handle<QuantLib::Quote>& recovery = QuantLib::Handle<QuantLib::Quote>(),
+                         const RefData& refData = RefData());
+
+        const RefData& refData() const;
+        const QuantLib::Handle<QuantLib::DefaultProbabilityTermStructure>& curve() const;
+        const QuantLib::Handle<QuantLib::YieldTermStructure>& rateCurve() const;
+        const QuantLib::Handle<QuantLib::Quote>& recovery() const;
+};
+
+
+%shared_ptr(CreditVolCurve)
+class CreditVolCurve : public QuantLib::VolatilityTermStructure {
+    private:
+        CreditVolCurve();
+    public:
+        enum class Type { Price, Spread };
+        CreditVolCurve(QuantLib::BusinessDayConvention bdc, const QuantLib::DayCounter& dc,
+                       const std::vector<QuantLib::Period>& terms,
+                       const std::vector<QuantLib::Handle<CreditCurve>>& termCurves, const Type& type);
+        CreditVolCurve(const QuantLib::Natural settlementDays, const QuantLib::Calendar& cal,
+                       QuantLib::BusinessDayConvention bdc, const QuantLib::DayCounter& dc,
+                       const std::vector<QuantLib::Period>& terms,
+                       const std::vector<QuantLib::Handle<CreditCurve>>& termCurves, const Type& type);
+        CreditVolCurve(const QuantLib::Date& referenceDate, const QuantLib::Calendar& cal,
+                       QuantLib::BusinessDayConvention bdc, const QuantLib::DayCounter& dc,
+                       const std::vector<QuantLib::Period>& terms,
+                       const std::vector<QuantLib::Handle<CreditCurve>>& termCurves, const Type& type);
+
+        QuantLib::Real volatility(const QuantLib::Date& exerciseDate, const QuantLib::Period& underlyingTerm,
+                                  const QuantLib::Real strike, const Type& targetType) const;
+        QuantLib::Real volatility(const QuantLib::Date& exerciseDate, const QuantLib::Real underlyingLength,
+                                      const QuantLib::Real strike, const Type& targetType) const = 0;
+        QuantLib::Real volatility(const QuantLib::Real exerciseTime, const QuantLib::Real underlyingLength,
+                                  const QuantLib::Real strike, const Type& targetType) const;
+        const Type& type() const;
+
+        QuantLib::Real atmStrike(const QuantLib::Date& expiry, const QuantLib::Period& term) const;
+        QuantLib::Real atmStrike(const QuantLib::Date& expiry, const QuantLib::Real underlyingLength) const;
+
+        QuantLib::Real minStrike() const override;
+        QuantLib::Real maxStrike() const override;
+        QuantLib::Date maxDate() const override;
+};
+
+%shared_ptr(CreditVolCurveWrapper)
+class CreditVolCurveWrapper : public CreditVolCurve {
+    public:
+        CreditVolCurveWrapper(const QuantLib::Handle<QuantLib::BlackVolTermStructure>& vol);
+        QuantLib::Real volatility(const QuantLib::Date& exerciseDate, const QuantLib::Real underlyingLength,
+                                  const QuantLib::Real strike, const Type& targetType) const override;
+        const QuantLib::Date& referenceDate() const override;
+};
+%template(CreditVolCurveHandle) Handle<CreditVolCurve>;
+%template(RelinkableVolCreditCurveHandle) RelinkableHandle<CreditVolCurve>;
+
 %shared_ptr(BlackVolatilityWithATM)
 class BlackVolatilityWithATM : public BlackVolTermStructure {
   public:
-    BlackVolatilityWithATM(const boost::shared_ptr<QuantLib::BlackVolTermStructure>& surface,
+    BlackVolatilityWithATM(const ext::shared_ptr<QuantLib::BlackVolTermStructure>& surface,
                            const QuantLib::Handle<QuantLib::Quote>& spot,
                            const QuantLib::Handle<QuantLib::YieldTermStructure>& yield1,
                            const QuantLib::Handle<QuantLib::YieldTermStructure>& yield2);

@@ -46,7 +46,7 @@ class QLECreditDefaultSwap : public Instrument {
                          bool settlesAccrual = true,
 			 QLECreditDefaultSwap::ProtectionPaymentTime protectionPaymentTime = QLECreditDefaultSwap::atDefault,
                          const QuantLib::Date& protectionStart = QuantLib::Date(),
-                         const boost::shared_ptr<QuantLib::Claim>& claim = boost::shared_ptr<QuantLib::Claim>(),
+                         const ext::shared_ptr<QuantLib::Claim>& claim = ext::shared_ptr<QuantLib::Claim>(),
 			 const QuantLib::DayCounter& lastPeriodDayCounter = QuantLib::DayCounter());
 
     QLECreditDefaultSwap(QuantLib::Protection::Side side,
@@ -60,7 +60,7 @@ class QLECreditDefaultSwap : public Instrument {
                          QLECreditDefaultSwap::ProtectionPaymentTime protectionPaymentTime = QLECreditDefaultSwap::atDefault,
                          const QuantLib::Date& protectionStart = QuantLib::Date(),
                          const QuantLib::Date& upfrontDate = QuantLib::Date(),
-                         const boost::shared_ptr<QuantLib::Claim>& claim = boost::shared_ptr<QuantLib::Claim>(),
+                         const ext::shared_ptr<QuantLib::Claim>& claim = ext::shared_ptr<QuantLib::Claim>(),
 			 const QuantLib::DayCounter& lastPeriodDayCounter = QuantLib::DayCounter());
     QuantLib::Protection::Side side() const;
     QuantLib::Real notional() const;
@@ -70,9 +70,9 @@ class QLECreditDefaultSwap : public Instrument {
     const QuantLib::Leg& coupons() const;
     const QuantLib::Date& protectionStartDate() const;
     const QuantLib::Date& protectionEndDate() const;
-    const boost::shared_ptr<SimpleCashFlow>& upfrontPayment() const;
-    const boost::shared_ptr<SimpleCashFlow>& accrualRebate() const;
-    //const boost::shared_ptr<SimpleCashFlow>& accrualRebateCurrent() const;
+    const ext::shared_ptr<SimpleCashFlow>& upfrontPayment() const;
+    const ext::shared_ptr<SimpleCashFlow>& accrualRebate() const;
+    //const ext::shared_ptr<SimpleCashFlow>& accrualRebateCurrent() const;
     const QuantLib::Date& tradeDate() const;
     QuantLib::Natural cashSettlementDays() const;
     QuantLib::Rate fairUpfront() const;
@@ -107,10 +107,12 @@ class QLEMidPointCdsEngine : public PricingEngine {
 %shared_ptr(QLECdsOption)
 class QLECdsOption : public Instrument {
   public:
-    QLECdsOption(const boost::shared_ptr<QLECreditDefaultSwap> swap,
-		 const boost::shared_ptr<QuantLib::Exercise>& exercise,
-		 bool knocksOut = true);
-    const boost::shared_ptr<QLECreditDefaultSwap> underlyingSwap() const;
+    enum StrikeType { Price, Spread };
+    QLECdsOption(const ext::shared_ptr<QLECreditDefaultSwap> swap,
+		 const ext::shared_ptr<QuantLib::Exercise>& exercise,
+		 bool knocksOut = true, const QuantLib::Real strike = Null<Real>(),
+         const StrikeType strikeType = StrikeType::Spread);
+    const ext::shared_ptr<QLECreditDefaultSwap> underlyingSwap() const;
     QuantLib::Rate atmRate() const;
     QuantLib::Real riskyAnnuity() const;
     QuantLib::Volatility impliedVolatility(QuantLib::Real price,

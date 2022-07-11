@@ -44,7 +44,7 @@ while test $# -gt 0; do
       ;;
     --libs)
       #echo -L${exec_prefix}/lib  -lQuantLib  
-      echo -L${exec_prefix}/OREAnalytics/orea/.libs -OREAnalytics -L${exec_prefix}/OREData/ored/.libs -L${exec_prefix}/QuantExt/qle/.libs -lQuantExt -L${exec_prefix}/QuantLib/ql/.libs -lQuantLib -L${BOOST}/stage/lib -lboost_thread -lboost_system -lboost_serialization -lboost_date_time -lboost_regex -lboost_filesystem
+      echo -L${exec_prefix}/OREAnalytics/orea/.libs -OREAnalytics -L${exec_prefix}/OREData/ored/.libs -lOREData -L${exec_prefix}/QuantExt/qle/.libs -lQuantExt -L${exec_prefix}/QuantLib/ql/.libs -lQuantLib -L${BOOST}/stage/lib -lboost_thread -lboost_system -lboost_serialization -lboost_date_time -lboost_regex -lboost_filesystem
       ;;
     *)
       echo "${usage}" 1>&2

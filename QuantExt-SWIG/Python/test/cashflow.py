@@ -5,36 +5,48 @@
 
 from QuantExt import *
 import unittest
+import logging
 
 class FXLinkedCashFlowTest(unittest.TestCase):
     def setUp(self):
         """ Set-up FX Linked Cash Flow """
-        self.cashFlowDate=Date(1,October,2018)
-        self.fixingDate=Date(1,November,2018)
-        self.foreignAmount=1000.0
-        self.familyName="ECB"
-        self.fixingDays=2
+        self.cashFlowDate=Date(5,January,2015)
+        self.fixingDate=Date(5,January,2017)
+        self.foreignAmount=1000000.0
+        self.familyName="FX::USDJPY"
+        self.fixingDays=0
         self.sourceCurrency=USDCurrency()
-        self.targetCurrency=EURCurrency()
+        self.targetCurrency=JPYCurrency()
         self.fixingCalendar=UnitedStates()
-        self.todayDate=Date(11, November, 2018)
+        self.todayDate=Date(5, January, 2016)
         self.tsDayCounter=Actual360()
         self.flatForwardUSD=FlatForward(self.todayDate, 0.005, self.tsDayCounter)
         self.sourceYts=RelinkableYieldTermStructureHandle(self.flatForwardUSD)
-        self.flatForwardEUR=FlatForward(self.todayDate, 0.03, self.tsDayCounter)
-        self.targetYts=RelinkableYieldTermStructureHandle(self.flatForwardEUR)
-        self.fxindex=FxIndex(self.familyName,self.fixingDays,self.sourceCurrency,self.targetCurrency,self.fixingCalendar,self.sourceYts,self.targetYts)
+        self.flatForwardJPY=FlatForward(self.todayDate, 0.03, self.tsDayCounter)
+        self.targetYts=RelinkableYieldTermStructureHandle(self.flatForwardJPY)
+        self.quote = SimpleQuote(123.45)
+        self.fxspot = RelinkableQuoteHandle(self.quote)
+        self.fxindex=FxIndex(self.familyName,self.fixingDays,self.sourceCurrency,self.targetCurrency,self.fixingCalendar,self.fxspot, self.sourceYts,self.targetYts)
         self.fxlinkedcashflow=FXLinkedCashFlow(self.cashFlowDate,self.fixingDate,self.foreignAmount,self.fxindex)
-        
+        self.fxlinkedcashflow1=FXLinkedCashFlow(self.cashFlowDate,self.cashFlowDate,self.foreignAmount,self.fxindex)
+        self.fxlinkedcashflow2=FXLinkedCashFlow(self.todayDate, self.todayDate, self.foreignAmount, self.fxindex)
+        self.fxindex.addFixing(self.cashFlowDate, 112.0)
+        self.fxindex.addFixing(self.todayDate, self.quote.value())
+
+
     def testSimpleInspectors(self):
         """ Test FX Linked Cash simple inspectors. """
         self.assertEqual(self.fxlinkedcashflow.date(),self.cashFlowDate)
         self.assertEqual(self.fxlinkedcashflow.fxFixingDate(),self.fixingDate)
+        self.assertEqual(self.fxlinkedcashflow1.date(),self.cashFlowDate)
+        self.assertEqual(self.fxlinkedcashflow1.fxFixingDate(),self.cashFlowDate)
         
             
     def testConsistency(self):
         """ Test consistency of FX Linked Cash Flow fair price and NPV() """
-        #self.assertAlmostEqual(self.fxlinkedcashflow.amount(),0)
+        self.assertAlmostEqual(self.fxlinkedcashflow1.amount(), 112000000.0, None, "Historical Flow is Incorrect", 1e-10)
+        self.assertAlmostEqual(self.fxlinkedcashflow2.amount(), 123450000.0, None, "Todays Flow is Incorrect", 1e-10)
+        #self.assertAlmostEqual(self.fxlinkedcashflow.amount(), 0)
 
 class FloatingRateFXLinkedNotionalCouponTest(unittest.TestCase):
     def setUp(self):

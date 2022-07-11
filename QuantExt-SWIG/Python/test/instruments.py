@@ -141,6 +141,8 @@ class CDSOptionTest(unittest.TestCase):
         self.vol = 0.03
         self.volatility = BlackConstantVol(0, self.calendar, QuoteHandle(SimpleQuote(self.vol)), self.day_counter)
         self.volatility_curve = BlackVolTermStructureHandle(self.volatility)
+        self.creditVolWrap = CreditVolCurveWrapper(self.volatility_curve)
+        self.creditVolHandle = RelinkableVolCreditCurveHandle(self.creditVolWrap)
         self.cds = QLECreditDefaultSwap(self.side, self.notional, self.upfront, self.spread,
                                         self.schedule, self.bdc, self.day_counter,
                                         self.settles_accrual, self.protection_payment_time,
@@ -149,7 +151,7 @@ class CDSOptionTest(unittest.TestCase):
         self.cds.setPricingEngine(self.cds_engine)
         self.cds_option = QLECdsOption(self.cds, self.exercise)
         self.engine = QLEBlackCdsOptionEngine(self.probability_curve, self.recovery_rate,
-                                              self.discount_curve, self.volatility_curve)
+                                              self.discount_curve, self.creditVolHandle)
         self.cds_option.setPricingEngine(self.engine)
         
     def testSimpleInspectors(self):
@@ -227,7 +229,7 @@ class CreditDefaultSwapTest(unittest.TestCase):
     def testConsistency(self):
         """ Test consistency of fair price and NPV() """
         tolerance = 1.0e-8
-        fair_spread = self.cds.fairSpread()
+        fair_spread = self.cds.fairSpreadClean()
         cds = QLECreditDefaultSwap(self.side, self.notional, self.upfront, fair_spread,
                                    self.schedule, self.bdc, self.day_counter,
                                    self.settles_accrual, self.protection_payment_time,
@@ -522,7 +524,7 @@ class CrossCurrencyFixFloatSwapTest(unittest.TestCase):
 class CommodityForwardTest(unittest.TestCase):
     def setUp(self):
         """ Set-up CommodityForward and engine """
-        self.todays_date = Date(4, October, 2018)
+        self.todays_date = Date(4, October, 2022)
         Settings.instance().evaluationDate = self.todays_date
         self.name = "Natural Gas"
         self.calendar = TARGET()
@@ -532,9 +534,6 @@ class CommodityForwardTest(unittest.TestCase):
         self.position = Position.Long
         self.maturity_date = Date(4, October, 2022)
         self.day_counter = Actual365Fixed()
-        self.commodity_forward = CommodityForward(self.name, self.currency, 
-                                                  self.position, self.quantity, 
-                                                  self.maturity_date, self.strike)
         self.dates = [ Date(20,12,2018), Date(20, 3,2019), Date(19, 6,2019),
                        Date(18, 9,2019), Date(18,12,2019), Date(19, 3,2020),
                        Date(18, 6,2020), Date(17, 9,2020), Date(17,12,2020) ]
@@ -546,14 +545,18 @@ class CommodityForwardTest(unittest.TestCase):
         self.price_curve = LinearInterpolatedPriceCurve(self.todays_date, self.dates, self.quotes, self.day_counter, self.currency)
         self.price_curve.enableExtrapolation()
         self.price_term_structure = RelinkablePriceTermStructureHandle(self.price_curve)
+        self.index = CommoditySpotIndex(self.name, self.calendar, self.price_term_structure)
+        self.commodity_forward = CommodityForward(self.index, self.currency, 
+                                                  self.position, self.quantity, 
+                                                  self.maturity_date, self.strike)
         self.flat_forward = FlatForward(self.todays_date, 0.03, self.day_counter)
         self.discount_term_structure = RelinkableYieldTermStructureHandle(self.flat_forward)
-        self.engine = DiscountingCommodityForwardEngine(self.price_term_structure, self.discount_term_structure)
+        self.engine = DiscountingCommodityForwardEngine(self.discount_term_structure)
         self.commodity_forward.setPricingEngine(self.engine)
   
     def testSimpleInspectors(self):
         """ Test CommodityForward simple inspectors. """
-        self.assertEqual(self.commodity_forward.name(), self.name)
+        self.assertEqual(self.commodity_forward.index().name(), self.index.name())
         self.assertEqual(self.commodity_forward.currency(), self.currency)
         self.assertEqual(self.commodity_forward.position(), self.position)
         self.assertEqual(self.commodity_forward.quantity(), self.quantity)
@@ -573,7 +576,7 @@ class SubPeriodsSwapTest(unittest.TestCase):
         self.settlement_date = Date(6, October, 2018)
         self.is_payer = True
         self.fixed_rate = 0.02
-        self.sub_periods_type = SubPeriodsCoupon.Compounding
+        self.sub_periods_type = SubPeriodsCoupon1.Compounding
         self.calendar = TARGET()
         self.swap_tenor = Period(10, Years)
         self.maturity_date = self.calendar.advance(self.settlement_date, self.swap_tenor)
@@ -647,7 +650,7 @@ class TenorBasisSwapTest(unittest.TestCase):
         self.date_generation = DateGeneration.Forward
         self.end_of_month = False
         self.include_spread = False
-        self.sub_periods_type = SubPeriodsCoupon.Compounding
+        self.sub_periods_type = SubPeriodsCoupon1.Compounding
         self.ois_term_structure = RelinkableYieldTermStructureHandle()
         self.short_index_term_structure = RelinkableYieldTermStructureHandle()
         self.long_index_term_structure = RelinkableYieldTermStructureHandle()
@@ -855,6 +858,7 @@ class PaymentTest(unittest.TestCase):
                                                self.settlementDate,
                                                self.todays_date)
         self.payment.setPricingEngine(self.engine)
+
         
     def testSimpleInspectors(self):
         """ Test Payment simple inspectors. """

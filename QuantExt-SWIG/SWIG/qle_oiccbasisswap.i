@@ -34,12 +34,12 @@ class OvernightIndexedCrossCcyBasisSwap : public Instrument {
     OvernightIndexedCrossCcyBasisSwap(QuantLib::Real payNominal,
                                       QuantLib::Currency payCurrency,
                                       const QuantLib::Schedule& paySchedule,
-                                      const boost::shared_ptr<OvernightIndex>& payIndex,
+                                      const ext::shared_ptr<OvernightIndex>& payIndex,
                                       QuantLib::Real paySpread,
                                       QuantLib::Real recNominal,
                                       QuantLib::Currency recCurrency,
                                       const QuantLib::Schedule& recSchedule,
-                                      const boost::shared_ptr<OvernightIndex>& recIndex,
+                                      const ext::shared_ptr<OvernightIndex>& recIndex,
                                       QuantLib::Real recSpread);
     /*Name Inspectors*/
     /*Pay Leg*/

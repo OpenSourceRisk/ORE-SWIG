@@ -68,13 +68,26 @@ class FxIndex : public Index {
     virtual QuantLib::Date valueDate(const QuantLib::Date& fixingDate) const;
     QuantLib::Real forecastFixing(const QuantLib::Date& fixingDate) const;
     QuantLib::Real pastFixing(const QuantLib::Date& fixingDate) const;
+    QuantLib::Real fixing(const Date& fixingDate, bool forecastTodaysFixing = false) const override;
 };
 
 // QuantExt Commodity Index
 %shared_ptr(CommodityIndex)
 class CommodityIndex : public Index {
-  private:
-    CommodityIndex();
+    private:
+      CommodityIndex();
+    public:
+        CommodityIndex(const std::string& underlyingName, const QuantLib::Date& expiryDate, const Calendar& fixingCalendar,
+                       const Handle<QuantExt::PriceTermStructure>& priceCurve = Handle<QuantExt::PriceTermStructure>());
+        CommodityIndex(const std::string& underlyingName, const QuantLib::Date& expiryDate, const Calendar& fixingCalendar,
+            bool keepDays, const Handle<QuantExt::PriceTermStructure>& priceCurve = Handle<QuantExt::PriceTermStructure>());
+        std::string underlyingName() const;
+        const Handle<QuantExt::PriceTermStructure>& priceCurve() const;
+        QuantLib::Real fixing(const Date& fixingDate, bool forecastTodaysFixing = false) const;
+        //virtual Real forecastFixing(const QuantLib::Date& fixingDate) const;
+        //virtual Real pastFixing(const QuantLib::Date& fixingDate) const;
+        ext::shared_ptr<CommodityIndex> clone(const QuantLib::Date& expireDate = QuantLib::Date(),
+                                              const boost::optional<QuantLib::Handle<PriceTermStructure>>& ts = boost::mpme) const = 0;
 };
 
 // QuantExt Commodity Spot Index
@@ -119,13 +132,13 @@ class BMAIndex : public InterestRateIndex {
 %shared_ptr(BMAIndexWrapper)
 class BMAIndexWrapper : public IborIndex {
   public:
-    BMAIndexWrapper(const boost::shared_ptr<BMAIndex> bma);
+    BMAIndexWrapper(const ext::shared_ptr<BMAIndex> bma);
     std::string name() const;
     bool isValidFixingDate(const Date& fixingDate) const;
     QuantLib::Handle<QuantLib::YieldTermStructure> forwardingTermStructure() const;
     QuantLib::Date maturityDate(const Date& valueDate) const;
     QuantLib::Schedule fixingSchedule(const QuantLib::Date& start, const QuantLib::Date& end);
-    boost::shared_ptr<BMAIndex> bma() const;
+    ext::shared_ptr<BMAIndex> bma() const;
 };
 
 
