@@ -124,7 +124,7 @@ class my_build_ext(build_ext):
         if compiler == 'msvc':
             try:
                 BOOST_DIR = os.environ['BOOST_ROOT']
-                BOOST_LIB = os.environ['BOOST_LIBRARYDIR']
+                BOOST_LIB = os.environ['BOOST_LIB']
                 ORE_INSTALL_DIR = os.environ['ORE_DIR']
 
                 # ADD INCLUDE DIRECTORIES

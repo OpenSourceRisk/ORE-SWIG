@@ -77,6 +77,8 @@ class my_wrap(Command):
         else:
             os.system('swig -python -c++ -modern ' +
                       '-I%s ' % swig_dir +
+                      '-I%s ' % ql_swig_dir +
+                      '-I%s ' % qle_swig_dir +
                       '-outdir OREData -o OREData/oredata_wrap.cpp ' +
                       'oredata.i')
 
@@ -166,10 +168,11 @@ class my_build_ext(build_ext):
                     extra_compile_args.append('/MD')
 
         elif compiler == 'unix':
+            os.chdir('..')
             ql_compile_args = \
-                os.popen('oredata-config --cflags').read()[:-1].split()
+                os.popen('. ./oredata-config --cflags').read()[:-1].split()
             ql_link_args = \
-                os.popen('oredata-config --libs').read()[:-1].split()
+                os.popen('. ./oredata-config --libs').read()[:-1].split()
 
             self.define += [ (arg[2:],None) for arg in ql_compile_args
                              if arg.startswith('-D') ]
