@@ -1,4 +1,4 @@
-ARG ore_version=latest
+ARG ore_version
 
 FROM env_ore:${ore_version}
 
