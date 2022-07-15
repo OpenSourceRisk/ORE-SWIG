@@ -1,8 +1,11 @@
 version: '3'
 
 services:
-  env_ore_swig:
-    image: env_ore_swig
+  ore_swig:
+    image: ore_swig:${ORE_TAG}
     build:
       context: ../
       dockerfile: Docker/Dockerfile-ORE
+      args:
+        - ore_version=${ORE_TAG}
+
