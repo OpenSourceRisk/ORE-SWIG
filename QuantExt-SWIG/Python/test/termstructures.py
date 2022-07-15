@@ -113,9 +113,10 @@ class SwaptionVolCubeWithATMTest(unittest.TestCase):
         self.shortSwapIndexBase=EuriborSwapIsdaFixA(Period(2,Years),self.termStructure)
         self.vegaWeightedSmileFit=False
         self.flatExtrapolation=True
+        self.volsAreSpreads=True
         self.swaptionVolatilityCube=QLESwaptionVolCube2(self.atmVolStructure,self.optionTenors,self.swapTenors,self.strikeSpreads,
                                                         self.volSpreads,self.swapIndexBase,self.shortSwapIndexBase,
-                                                        self.vegaWeightedSmileFit,self.flatExtrapolation)
+                                                        self.vegaWeightedSmileFit,self.flatExtrapolation, self.volsAreSpreads)
         self.cube=SwaptionVolCubeWithATM(self.swaptionVolatilityCube)
         
     def testSimpleInspectors(self):

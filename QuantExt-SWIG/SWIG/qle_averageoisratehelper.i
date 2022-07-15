@@ -41,13 +41,13 @@ public:
                          const QuantLib::Calendar& fixedCalendar,
                          QuantLib::BusinessDayConvention fixedConvention,
                          QuantLib::BusinessDayConvention fixedPaymentAdjustment,
-                         boost::shared_ptr<OvernightIndex>& overnightIndex,
+                         ext::shared_ptr<OvernightIndex>& overnightIndex,
                          const QuantLib::Period& onTenor,
                          const QuantLib::Handle<QuantLib::Quote>& onSpread,
                          QuantLib::Natural rateCutoff,
                          const QuantLib::Handle<QuantLib::YieldTermStructure>& discountCurve = QuantLib::Handle<QuantLib::YieldTermStructure>());
     QuantLib::Real onSpread() const;
-    boost::shared_ptr<AverageOIS> averageOIS() const;
+    ext::shared_ptr<AverageOIS> averageOIS() const;
 };
 
 #endif

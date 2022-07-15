@@ -6,13 +6,15 @@
 
 from OREData import *
 import unittest
+import os
 
 class LoaderTest(unittest.TestCase):
 
     def setUp(self):
         self.asofDate = Date(5, February, 2016)
-        self.marketfile = "Input/market_20160205.txt"
-        self.fixingfile = "Input/fixings_20160205.txt"
+        print(os.path.dirname(__file__))
+        self.marketfile = os.path.join(os.path.dirname(__file__), "Input/market_20160205.txt")
+        self.fixingfile = os.path.join(os.path.dirname(__file__), "Input/fixings_20160205.txt")
         marketdata = []
         fixingdata = []
         import csv

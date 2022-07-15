@@ -19,11 +19,13 @@
 #ifndef qle_instruments_i
 #define qle_instruments_i
 
+%include common.i
+%include cashflows.i
 %include instruments.i
 %include termstructures.i
-%include cashflows.i
 %include timebasket.i
 %include indexes.i
+%include currencies.i
 %include qle_ccyswap.i
 %include qle_indexes.i
 %include qle_termstructures.i
@@ -43,19 +45,20 @@ using QuantExt::DepositEngine;
 using QuantExt::DiscountingSwapEngineMultiCurve;
 %}
 
+
 %shared_ptr(CrossCcyBasisSwap)
 class CrossCcyBasisSwap : public CrossCcySwap {
   public:
     CrossCcyBasisSwap(QuantLib::Real payNominal,
                       const QuantLib::Currency& payCurrency,
                       const QuantLib::Schedule& paySchedule,
-                      const boost::shared_ptr<IborIndex>& payIndex,
+                      const ext::shared_ptr<IborIndex>& payIndex,
                       QuantLib::Spread paySpread,
 		      QuantLib::Real payGearing,
                       QuantLib::Real recNominal,
                       const QuantLib::Currency& recCurrency,
                       const QuantLib::Schedule& recSchedule,
-                      const boost::shared_ptr<IborIndex>& recIndex,
+                      const ext::shared_ptr<IborIndex>& recIndex,
                       QuantLib::Spread recSpread,
 		      QuantLib::Real recGearing);
     QuantLib::Real payNominal() const;
@@ -79,13 +82,13 @@ class CrossCcyBasisMtMResetSwap : public CrossCcySwap {
     CrossCcyBasisMtMResetSwap(Real foreignNominal,
                               const Currency& foreignCurrency,
                               const Schedule& foreignSchedule,
-                              const boost::shared_ptr<IborIndex>& foreignIndex,
+                              const ext::shared_ptr<IborIndex>& foreignIndex,
                               Spread foreignSpread,
                               const Currency& domesticCurrency,
                               const Schedule& domesticSchedule,
-                              const boost::shared_ptr<IborIndex>& domesticIndex,
+                              const ext::shared_ptr<IborIndex>& domesticIndex,
                               Spread domesticSpread,
-                              const boost::shared_ptr<FxIndex>& fxIdx,
+                              const ext::shared_ptr<FxIndex>& fxIdx,
                               bool receiveDomestic = true);
     Spread fairForeignSpread() const;
     Spread fairDomesticSpread() const;
@@ -129,9 +132,9 @@ class OvernightIndexedBasisSwap : public Swap {
     OvernightIndexedBasisSwap(OvernightIndexedBasisSwap::Type type,
                                     QuantLib::Real nominal,
                                     const QuantLib::Schedule& oisSchedule,
-                                    const boost::shared_ptr<OvernightIndex>& overnightIndex,
+                                    const ext::shared_ptr<OvernightIndex>& overnightIndex,
                                     const QuantLib::Schedule& iborSchedule,
-                                    const boost::shared_ptr<IborIndex>& iborIndex,
+                                    const ext::shared_ptr<IborIndex>& iborIndex,
                                     QuantLib::Spread oisSpread = 0.0,
                                     QuantLib::Spread iborSpread = 0.0);
     QuantLib::Real nominal() const ;
@@ -156,8 +159,8 @@ class Payment : public Instrument {
     Payment(const QuantLib::Real amount,
             const QuantLib::Currency& currency,
             const QuantLib::Date& date);
+    const ext::shared_ptr<SimpleCashFlow>& cashFlow() const;
     QuantLib::Currency currency() const;
-    boost::shared_ptr<SimpleCashFlow> cashFlow() const;
 };
 
 

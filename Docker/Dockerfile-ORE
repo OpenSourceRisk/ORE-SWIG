@@ -4,7 +4,7 @@ FROM env_ore:${ore_version}
 
 # Install SWIG and python3
 RUN apt-get update && apt-get upgrade -y \
-  && apt-get install -f -y swig3.0 python3-dev \
+  && apt-get install -f -y swig python3-dev \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
 

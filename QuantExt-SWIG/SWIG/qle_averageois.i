@@ -43,22 +43,22 @@ class AverageOIS : public Swap {
                QuantLib::BusinessDayConvention fixedPaymentAdjustment,
                const QuantLib::Calendar& fixedPaymentCalendar,
                const QuantLib::Schedule& onSchedule,
-               const boost::shared_ptr<OvernightIndex>& overnightIndex,
+               const ext::shared_ptr<OvernightIndex>& overnightIndex,
                QuantLib::BusinessDayConvention onPaymentAdjustment,
                const QuantLib::Calendar& onPaymentCalendar,
                QuantLib::Natural rateCutoff = 0,
                QuantLib::Spread onSpread = 0.0,
                QuantLib::Real onGearing = 1.0,
                const QuantLib::DayCounter& onDayCounter = QuantLib::DayCounter(),
-               const boost::shared_ptr<AverageONIndexedCouponPricer>& onCouponPricer
-               = boost::shared_ptr<AverageONIndexedCouponPricer>());
+               const ext::shared_ptr<AverageONIndexedCouponPricer>& onCouponPricer
+               = ext::shared_ptr<AverageONIndexedCouponPricer>());
     AverageOIS::Type type();
     QuantLib::Real nominal();
     const std::vector<QuantLib::Real>& nominals();
     QuantLib::Rate fixedRate();
     const std::vector<QuantLib::Rate>& fixedRates();
     const QuantLib::DayCounter& fixedDayCounter();
-    const boost::shared_ptr<OvernightIndex> overnightIndex();
+    const ext::shared_ptr<OvernightIndex> overnightIndex();
     QuantLib::Natural rateCutoff();
     QuantLib::Spread onSpread();
     const std::vector<QuantLib::Spread>& onSpreads();

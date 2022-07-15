@@ -26,7 +26,7 @@ endif
 
 OREAnalytics/oreanalytics_wrap.cpp OREAnalytics/OREAnalytics.py: ../SWIG/*.i
 	$(SWIG) -python -c++ -modern -outdir OREAnalytics \
-            -o OREAnalytics/oreanalytics_wrap.cpp -I../../QuantLib-SWIG/SWIG -I../../QuantExt-SWIG/SWIG ../SWIG/oreanalytics.i 
+            -o OREAnalytics/oreanalytics_wrap.cpp -I../../QuantLib-SWIG/SWIG -I../../QuantExt-SWIG/SWIG -I../../OREData-SWIG/SWIG ../SWIG/oreanalytics.i 
 
 dist-hook:
 	mkdir -p $(distdir)/examples

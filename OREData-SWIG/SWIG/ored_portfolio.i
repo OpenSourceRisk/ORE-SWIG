@@ -38,7 +38,7 @@ using namespace std;
 %}
 
 %template(TradeVector) std::vector<ext::shared_ptr<Trade>>;
-//%template(LegVector) std::vector<std::vector<boost::shared_ptr<CashFlow> > >;
+//%template(LegVector) std::vector<std::vector<ext::shared_ptr<CashFlow> > >;
 %template(StringStringMap) std::map<std::string, std::string>;
 
 enum class MarketContext { irCalibration, fxCalibration, eqCalibration, pricing };
@@ -65,8 +65,8 @@ class EngineBuilder {
 %shared_ptr(EngineFactory)
 class EngineFactory {
   public:
-    EngineFactory(const boost::shared_ptr<EngineData>& data,
-                  const boost::shared_ptr<Market>& market,
+    EngineFactory(const ext::shared_ptr<EngineData>& data,
+                  const ext::shared_ptr<Market>& market,
                   const std::map<MarketContext, std::string>& configurations = std::map<MarketContext, std::string>(),
                   const std::vector<ext::shared_ptr<EngineBuilder>> extraEngineBuilders = {},
                   const std::vector<ext::shared_ptr<LegBuilder>> extraLegBuilders = {});
