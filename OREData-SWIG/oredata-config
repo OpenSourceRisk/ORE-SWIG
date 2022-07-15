@@ -1,11 +1,11 @@
 #!/bin/sh
 
-prefix=/Users/roland/Development/oremaster
+prefix=/Users/roland/Development/oremaster/OREData
 exec_prefix=${prefix}
 exec_prefix_set=no
 
 usage="\
-Usage: quantlib-config [--prefix[=DIR]] [--exec-prefix[=DIR]] [--version] [--libs] [--cflags]"
+Usage: oredata-config [--prefix[=DIR]] [--exec-prefix[=DIR]] [--version] [--libs] [--cflags]"
 
 if test $# -eq 0; then
       echo "${usage}" 1>&2
