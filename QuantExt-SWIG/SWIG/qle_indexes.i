@@ -30,13 +30,120 @@
 %include currencies.i
 
 %{
+using QuantExt::BEHICP;
+using QuantExt::BondIndex;
+using QuantExt::BondFuturesIndex;
+using QuantExt::ConstantMaturityBondIndex;
+using QuantExt::EquityIndex;
 using QuantExt::FxIndex;
 using QuantExt::BMAIndexWrapper;
 using QuantLib::BMAIndex;
+using QuantExt::GenericIborIndex;
 using QuantExt::CommodityIndex;
 using QuantExt::CommoditySpotIndex;
 using QuantExt::CommodityFuturesIndex;
 %}
+
+%shared_ptr(BEHICP)
+class BEHICP : public QuantLib::ZeroInflationIndex {
+    public:
+        BEHICP(bool interpolated, const QuantLib::Handle<QuantLib::ZeroInflationTermStructure>& ts =
+                                  QuantLib::Handle<QuantLib::ZeroInflationTermStructure>());
+};
+
+%shared_ptr(BondIndex)
+class BondIndex : public Index {
+    public:
+        BondIndex(const std::string& securityName, const bool dirty = false, const bool relative = true,
+              const Calendar& fixingCalendar = NullCalendar(), const ext::shared_ptr<QuantLib::Bond>& bond = nullptr,
+              const Handle<YieldTermStructure>& discountCurve = Handle<YieldTermStructure>(),
+              const Handle<DefaultProbabilityTermStructure>& defaultCurve = Handle<DefaultProbabilityTermStructure>(),
+              const Handle<Quote>& recoveryRate = Handle<Quote>(),
+              const Handle<Quote>& securitySpread = Handle<Quote>(),
+              const Handle<YieldTermStructure>& incomeCurve = Handle<YieldTermStructure>(),
+              const bool conditionalOnSurvival = true, const bool isInflationLinked = false,
+              const double bidAskAdjustment = 0.0);
+        const std::string& securityName() const;
+        bool dirty() const;
+        bool relative() const;
+        ext::shared_ptr<QuantLib::Bond> bond() const;
+        Handle<YieldTermStructure> discountCurve() const;
+        Handle<DefaultProbabilityTermStructure> defaultCurve() const;
+        Handle<Quote> recoveryRate() const;
+        Handle<Quote> securitySpread() const;
+        Handle<YieldTermStructure> incomeCurve() const;
+        bool conditionalOnSurvival() const;
+        virtual Rate forecastFixing(const Date& fixingDate) const;
+        Rate pastFixing(const Date& fixingDate) const;
+};
+
+%shared_ptr(BondFuturesIndex)
+class BondFuturesIndex : public BondIndex {
+    public:
+        BondFuturesIndex(
+            const QuantLib::Date& expiryDate, const std::string& securityName, const bool dirty = false,
+            const bool relative = true, const Calendar& fixingCalendar = NullCalendar(),
+            const ext::shared_ptr<QuantLib::Bond>& bond = nullptr,
+            const Handle<YieldTermStructure>& discountCurve = Handle<YieldTermStructure>(),
+            const Handle<DefaultProbabilityTermStructure>& defaultCurve = Handle<DefaultProbabilityTermStructure>(),
+            const Handle<Quote>& recoveryRate = Handle<Quote>(), const Handle<Quote>& securitySpread = Handle<Quote>(),
+            const Handle<YieldTermStructure>& incomeCurve = Handle<YieldTermStructure>(),
+            const bool conditionalOnSurvival = true);
+        std::string name() const;
+        Rate forecastFixing(const Date& fixingDate) const;
+        const QuantLib::Date& expiryDate() const;
+};
+
+%shared_ptr(ConstantMaturityBondIndex)
+class ConstantMaturityBondIndex : public InterestRateIndex {
+    public:
+        ConstantMaturityBondIndex(
+			const std::string& familyName,
+			const Period& tenor,
+			Natural settlementDays = 0,
+			Currency currency = Currency(),
+			Calendar fixingCalendar = NullCalendar(),
+			DayCounter dayCounter = SimpleDayCounter(),
+            BusinessDayConvention convention = Following,
+			bool endOfMonth = false,
+            ext::shared_ptr<Bond> bond = nullptr,
+            Compounding compounding = Compounded,
+			Frequency frequency = Annual,
+			Real accuracy = 1.0e-8,
+			Size maxEvaluations = 100,
+			Real guess = 0.05,
+			QuantLib::Bond::Price::Type priceType = QuantLib::Bond::Price::Clean);
+        Date maturityDate(const Date& valueDate) const;
+        Rate forecastFixing(const Date& fixingDate) const;
+        BusinessDayConvention convention() const;
+        bool endOfMonth() const;
+        const ext::shared_ptr<Bond>& bond() const;
+};
+
+%shared_ptr(EquityIndex)
+class EquityIndex : public Index {
+    public:
+        EquityIndex(const std::string& familyName, const Calendar& fixingCalendar, const Currency& currency,
+                const Handle<Quote> spotQuote = Handle<Quote>(),
+                const Handle<YieldTermStructure>& rate = Handle<YieldTermStructure>(),
+                const Handle<YieldTermStructure>& dividend = Handle<YieldTermStructure>());
+        void resetName();
+        std::string dividendName() const;
+        Currency currency() const;
+        std::string familyName() const;
+        const Handle<Quote>& equitySpot() const;
+        const Handle<YieldTermStructure>& equityForecastCurve() const;
+        const Handle<YieldTermStructure>& equityDividendCurve() const;
+        Real forecastFixing(const Date& fixingDate) const;
+        Real forecastFixing(const Time& fixingTime) const override;
+        Real forecastFixing(const Date& fixingDate, bool incDividend) const;
+        Real forecastFixing(const Time& fixingTime, bool incDividend) const;
+        Real pastFixing(const Date& fixingDate) const override;
+        ext::shared_ptr<EquityIndex> clone(const Handle<Quote> spotQuote, const Handle<YieldTermStructure>& rate,
+                                                 const Handle<YieldTermStructure>& dividend) const;
+
+
+};
 
 %shared_ptr(FxIndex)
 class FxIndex : public Index {
