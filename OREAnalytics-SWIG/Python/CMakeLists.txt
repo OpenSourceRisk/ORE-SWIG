@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.8)
 
 project(OREAnalytics-Python)
 
-include(${ORE}/cmake/commonSettings.cmake)
+include(${PROJECT_SOURCE_DIR}/../../cmake/commonSettings.cmake)
 
 # Append /bigobj to compiler flags on Windows for this target
 if (MSVC)
@@ -26,7 +26,7 @@ get_library_name("QuantLib" QL_LIB_NAME)
 configure_msvc_runtime()
 
 # To build the module, we moreover need Boost, Swig, Python
-find_package(Boost COMPONENTS serialization date_time regex filesystem system timer REQUIRED)
+find_package(Boost COMPONENTS serialization date_time regex filesystem system timer thread REQUIRED)
 find_package(SWIG REQUIRED)
 find_package(PythonLibs)
 
@@ -46,15 +46,15 @@ include_directories(${Boost_INCLUDE_DIRS})
 include_directories(${PYTHON_INCLUDE_PATH})
 
 # Add to the list of link directories
-link_directories(${ORE}/build/QuantLib/ql)
-link_directories(${ORE}/build/QuantExt/qle)
-link_directories(${ORE}/build/OREData/ored)
-link_directories(${ORE}/build/OREAnalytics/orea)
+add_link_directory_if_exists(${ORE}/QuantLib/build/ql)
+add_link_directory_if_exists(${ORE}/build/QuantLib/ql)
+add_link_directory_if_exists(${ORE}/build/QuantExt/qle)
+add_link_directory_if_exists(${ORE}/build/OREData/ored)
+add_link_directory_if_exists(${ORE}/build/OREAnalytics/orea)
 
 # Tell SWIG to compile in C++ mode
 set_source_files_properties(${PROJECT_SOURCE_DIR}/../SWIG/oreanalytics.i PROPERTIES CPLUSPLUS ON)
 set_source_files_properties(${PROJECT_SOURCE_DIR}/../SWIG/oreanalytics.i PROPERTIES SWIG_FLAGS "-includeall")
-set_source_files_properties(${PROJECT_SOURCE_DIR}/../SWIG/oreanalytics.i PROPERTIES SWIG_FLAGS "-modern")
 #set_source_files_properties(${PROJECT_SOURCE_DIR}/../SWIG/oreanalytics.i PROPERTIES SWIG_FLAGS "-py3")
 
 # Tell SWIG to build a Python module, to be called "OREAnalytics"

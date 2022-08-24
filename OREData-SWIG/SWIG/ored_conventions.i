@@ -261,7 +261,7 @@ class AverageOisConvention : public Convention {
     AverageOisConvention();
     AverageOisConvention(const std::string& id,const std::string& spotLag, const std::string& fixedTenor,
                          const std::string& fixedDayCounter, const std::string& fixedCalendar,
-                         const std::string& fixedConvention, const std::string& fixedPaymentConvention,
+                         const std::string& fixedConvention, const std::string& fixedPaymentConvention, const std::string& fixedFrequency,
                          const std::string& index, const std::string& onTenor, const std::string& rateCutoff);
     Natural spotLag() const;
     const Period& fixedTenor() const;
@@ -269,6 +269,7 @@ class AverageOisConvention : public Convention {
     const Calendar& fixedCalendar() const;
     BusinessDayConvention fixedConvention() const;
     BusinessDayConvention fixedPaymentConvention() const;
+    Frequency fixedFrequency() const;
     const std::string& indexName() const;
     const ext::shared_ptr<OvernightIndex> index() const;
     const Period& onTenor() const;

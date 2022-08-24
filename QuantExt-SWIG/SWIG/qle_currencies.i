@@ -44,6 +44,13 @@ namespace QuantExt {
 	//American currencies
 	class MXVCurrency: public Currency {};
 	class CLFCurrency: public Currency {};
+
+	//Metals
+	class XAUCurrency : public Currency {};
+	class XAGCurrency : public Currency {};
+	class XPTCurrency : public Currency {};
+	class XPDCurrency : public Currency {};
+
 }
 
 #endif

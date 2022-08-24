@@ -24,6 +24,7 @@
 %{
 using ore::data::Loader;
 using ore::data::Fixing;
+using ore::data::Wildcard;
 %}
 
 %shared_ptr(Loader)
@@ -31,12 +32,15 @@ class Loader {
   private:
     Loader();
   public:
-    const std::vector<ext::shared_ptr<MarketDatum>>& loadQuotes(const QuantLib::Date&) const;
-    const ext::shared_ptr<MarketDatum>& get(const std::string& name, const QuantLib::Date&) const;
+    std::vector<ext::shared_ptr<MarketDatum>> loadQuotes(const QuantLib::Date&) const;
+    ext::shared_ptr<MarketDatum> get(const std::string& name, const QuantLib::Date&) const;
     bool has(const std::string& name, const QuantLib::Date& d) const;
-    ext::shared_ptr<MarketDatum> get(const std::pair<std::string, bool>& name, const QuantLib::Date& d) const;
-    const std::vector<Fixing>& loadFixings() const;
-    const std::vector<Fixing>& loadDividends() const;
+    bool hasQuotes(const QuantLib::Date& d) const;
+    // std::set<ext::shared_ptr<MarketDatum>> get(const std::set<std::string>& names, const QuantLib::Date& asof) const;
+    // std::set<ext::shared_ptr<MarketDatum>> get(const Wildcard& wildcard, const QuantLib::Date& asof) const;
+    // ext::shared_ptr<MarketDatum> get(const std::pair<std::string, bool>& name, const QuantLib::Date& d) const;
+    std::set<Fixing> loadFixings() const;
+    std::set<Fixing> loadDividends() const;
 };
 %template(StringBoolPair) std::pair<std::string, bool>;
 %template(MarketDatumVector) std::vector<ext::shared_ptr<MarketDatum>>;

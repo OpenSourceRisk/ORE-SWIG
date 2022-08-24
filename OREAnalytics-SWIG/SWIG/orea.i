@@ -29,7 +29,6 @@
 #include <string>
 #include <map>
 #include <vector>
-
 #include <ql/errors.hpp>
 
 #include <orea/orea.hpp>
@@ -49,7 +48,7 @@
 #endif
 
 %}
-
+%include <windows.i>
 %include orea_app.i
 
 #endif

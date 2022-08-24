@@ -72,11 +72,9 @@ ext::shared_ptr<IborIndex> parseIborIndex(const std::string& s,
     
 ext::shared_ptr<SwapIndex> parseSwapIndex(const std::string& s,
                                           const Handle<YieldTermStructure>& forwarding = Handle<YieldTermStructure>(),
-                                          const Handle<YieldTermStructure>& discounting = Handle<YieldTermStructure>(),
-                                          ext::shared_ptr<IRSwapConvention> convention = ext::shared_ptr<IRSwapConvention>());
+                                          const Handle<YieldTermStructure>& discounting = Handle<YieldTermStructure>());
 
-ext::shared_ptr<Index> parseIndex(const std::string& s,
-                                  const ext::shared_ptr<Conventions>& conventions = nullptr);
+ext::shared_ptr<Index> parseIndex(const std::string& s);
     
 ext::shared_ptr<ZeroInflationIndex> parseZeroInflationIndex(const std::string& s, bool isInterpolated = false,
                                                             const Handle<ZeroInflationTermStructure>& h = Handle<ZeroInflationTermStructure>());

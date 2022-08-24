@@ -87,7 +87,7 @@ class TenorBasisSwapHelperTest(unittest.TestCase):
         self.discountingCurve=RelinkableYieldTermStructureHandle(self.flat_forward)
         self.spreadOnShort = True
         self.includeSpread = False
-        self.type = SubPeriodsCoupon.Compounding
+        self.type = SubPeriodsCoupon1.Compounding
         self.tenorbasisswaphelper=TenorBasisSwapHelper(self.spread,self.swapTenor,self.longIbor,self.shortIbor,self.shortPayTenor,self.discountingCurve,self.spreadOnShort,self.includeSpread,self.type)
         
 
@@ -112,7 +112,7 @@ class SubPeriodsSwapHelperTest(unittest.TestCase):
         self.floatDayCount=Actual360()
         self.flat_forward=FlatForward(self.todays_date, 0.03, self.floatDayCount)
         self.discountingCurve=RelinkableYieldTermStructureHandle(self.flat_forward)
-        self.type=SubPeriodsCoupon.Compounding
+        self.type=SubPeriodsCoupon1.Compounding
         self.subperiodsswaphelper=SubPeriodsSwapHelper(self.spread,self.swapTenor,self.fixedTenor,self.fixedCalendar,self.fixedDayCount,self.fixedConvention,self.floatPayTenor,self.floatIndex,self.floatDayCount,self.discountingCurve,self.type)
         
     def testSimpleInspectors(self):
@@ -175,7 +175,7 @@ class OICCBSHelperTest(unittest.TestCase):
         Settings.instance().setEvaluationDate(self.todays_date)
         self.settlementDays=2
         self.term=Period(6,Months)
-        self.payFloat=Eonia()
+        self.payFloat=Sonia()
         self.payTenor=Period(6,Months)
         self.recFloat=Sonia()
         self.recTenor=Period(6,Months)
