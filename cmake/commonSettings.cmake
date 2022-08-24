@@ -1,3 +1,5 @@
+# Todo: Consolidate this as far as possible with the equivalent file in the ORE repo 
+
 include(CheckCXXCompilerFlag)
 
 # add compiler flag, if not already present

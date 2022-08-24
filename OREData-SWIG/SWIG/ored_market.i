@@ -175,7 +175,6 @@ class MarketImpl {
 };
 
 
-%template(YoYOptionletVolatilitySurfaceHandle) Handle<QuantExt::YoYOptionletVolatilitySurface>;
 %template(CPICapFloorTermPriceSurfaceHandle) Handle<QuantLib::CPICapFloorTermPriceSurface>;
 %template(YoYCapFloorTermPriceSurfaceHandle) Handle<QuantLib::YoYCapFloorTermPriceSurface>;
 

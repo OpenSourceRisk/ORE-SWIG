@@ -1,6 +1,8 @@
 
 cmake_minimum_required(VERSION 3.8)
 
+project(ORE-SWIG)
+
 # Generate a Python wrapper that covers QuantLib and QuantExt
 #add_subdirectory(QuantExt-SWIG/Python) 
 

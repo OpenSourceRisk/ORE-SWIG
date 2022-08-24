@@ -1,6 +1,6 @@
 #!/bin/sh
 
-prefix=/Users/roland/Development/oremaster/QuantExt
+prefix=${ORESWIG}/QuantExt-SWIG/Python
 exec_prefix=${prefix}
 exec_prefix_set=no
 
@@ -36,15 +36,13 @@ while test $# -gt 0; do
       echo $exec_prefix
       ;;
     --version)
-      echo 1.13
+      echo 1.8.6
       ;;
     --cflags)
-      #echo -I${prefix}/include  
-      echo -I${prefix}  -I${prefix}/../QuantLib
+      echo -I${PWD} -I${ORE}/QuantExt  -I${ORE}/QuantLib  -std=c++11 
       ;;
     --libs)
-      #echo -L${exec_prefix}/lib  -lQuantLib  
-      echo -L${exec_prefix}/qle/.libs  -lQuantExt -L${exec_prefix}/../QuantLib/ql/.libs -lQuantLib
+      echo -L${ORE}/build/QuantExt/qle  -lQuantExt -L${ORE}/build/QuantLib/ql -lQuantLib
       ;;
     *)
       echo "${usage}" 1>&2
