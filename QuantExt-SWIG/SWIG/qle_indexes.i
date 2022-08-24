@@ -28,6 +28,7 @@
 %include calendars.i
 %include daycounters.i
 %include currencies.i
+%include inflation.i
 
 %{
 using QuantExt::BEHICP;
@@ -42,10 +43,11 @@ using QuantExt::GenericIborIndex;
 using QuantExt::CommodityIndex;
 using QuantExt::CommoditySpotIndex;
 using QuantExt::CommodityFuturesIndex;
+using QuantLib::ZeroInflationIndex;
 %}
 
 %shared_ptr(BEHICP)
-class BEHICP : public QuantLib::ZeroInflationIndex {
+class BEHICP : public ZeroInflationIndex {
     public:
         BEHICP(bool interpolated, const QuantLib::Handle<QuantLib::ZeroInflationTermStructure>& ts =
                                   QuantLib::Handle<QuantLib::ZeroInflationTermStructure>());
