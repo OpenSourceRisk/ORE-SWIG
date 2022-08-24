@@ -38,10 +38,12 @@ def check_data(loader):
     assert quote.instrumentType() == quote2.instrumentType()
     assert quote.quoteType() == quote2.quoteType()
 
-    fixing = loader.loadFixings()[3]
-    assert fixing.date == fix_date
-    assert fixing.name == fix_name
-    assert fixing.fixing == fix_value
+    fixing = loader.loadFixings()
+    for f in fixing:
+        if f.name == fix_name:
+            print ("date", f.date, "index", f.name, "fixing", f.fixing)
+        if f.name == fix_name and f.date == fix_date:
+            assert f.fixing == fix_value
     
 
 csv_loader = CSVLoader("Input/market_20160205.txt", "Input/fixings_20160205.txt", True)
