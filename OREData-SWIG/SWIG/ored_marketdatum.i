@@ -34,6 +34,7 @@ public:
         DISCOUNT,
         MM,
         MM_FUTURE,
+        OI_FUTURE,
         FRA,
         IMM_FRA,
         IR_SWAP,
@@ -60,6 +61,7 @@ public:
         EQUITY_DIVIDEND,
         EQUITY_OPTION,
         BOND,
+        BOND_OPTION,
         INDEX_CDS_OPTION,
         COMMODITY_SPOT,
         COMMODITY_FWD,
@@ -71,6 +73,7 @@ public:
     enum class QuoteType {
         BASIS_SPREAD,
         CREDIT_SPREAD,
+        CONV_CREDIT_SPREAD,
         YIELD_SPREAD,
         HAZARD_RATE,
         RATE,
@@ -80,7 +83,8 @@ public:
         RATE_NVOL,
         RATE_SLNVOL,
         BASE_CORRELATION,
-        SHIFT
+        SHIFT,
+        NONE
     };
     MarketDatum(Real value, Date asofDate, const std::string& name, QuoteType quoteType, InstrumentType instrumentType);
     const std::string& name() const;
@@ -99,7 +103,7 @@ class MoneyMarketQuote : public MarketDatum {
   public:
     MoneyMarketQuote(Real value, Date asofDate, const std::string& name,
                      MarketDatum::QuoteType quoteType, std::string ccy,
-                     Period fwdStart, Period term);
+                     Period fwdStart, Period term, const std::string& indexName = "");
     const std::string& ccy() const;
     const Period& fwdStart() const;
     const Period& term() const;
@@ -158,7 +162,7 @@ class SwapQuote : public MarketDatum {
   public:
     SwapQuote(Real value, Date asofDate, const std::string& name,
               MarketDatum::QuoteType quoteType, std::string ccy,
-              Period fwdStart, Period term, Period tenor);
+              Period fwdStart, Period term, Period tenor, const std::string& indexName = "");
     const std::string& ccy() const;
     const Period& fwdStart() const;
     const Period& term() const;
@@ -200,7 +204,7 @@ using ore::data::DiscountQuote;
 class DiscountQuote : public MarketDatum {
   public:
     DiscountQuote(Real value, Date asofDate, const std::string& name,
-                  MarketDatum::QuoteType quoteType, std::string ccy, Date date);
+                  MarketDatum::QuoteType quoteType, std::string ccy, Date date, Period tenor);
     const std::string& ccy() const;
     Date date() const;
     %extend {
@@ -232,6 +236,30 @@ class MMFutureQuote : public MarketDatum {
       }
     }
 };
+
+%{
+using ore::data::OIFutureQuote;
+%}
+
+%shared_ptr(OIFutureQuote)
+class OIFutureQuote : public MarketDatum {
+    public:
+        OIFutureQuote(Real value, Date asofDate, const std::string& name,
+        MarketDatum::QuoteType quoteType, std::string ccy, std::string expiry,
+        std::string contract="", Period tenor = 3 * Months);
+    const std::string& ccy() const;
+    const std::string expiry() const;
+    Natural expiryYear() const;
+    Month expiryMonth() const;
+    const std::string& contract() const;
+    const Period& tenor() const;
+    %extend {
+      static const ext::shared_ptr<OIFutureQuote> getFullView(ext::shared_ptr<MarketDatum> baseInput) {
+        return ext::dynamic_pointer_cast<OIFutureQuote>(baseInput);
+      }
+    }
+};
+
 
 %{
 using ore::data::BasisSwapQuote;
@@ -329,12 +357,14 @@ class CdsQuote : public MarketDatum {
   public:
     CdsQuote(Real value, Date asofDate, const std::string& name, MarketDatum::QuoteType quoteType,
 	     const std::string& underlyingName, const std::string& seniority,
-	     const std::string& ccy, Period term, const std::string& docClause = "");
+	     const std::string& ccy, Period term, const std::string& docClause = "",
+         Real runningSpread = Null<Real>());
     const Period& term() const;
     const std::string& seniority() const;
     const std::string& ccy() const;
     const std::string& underlyingName() const;
     const std::string& docClause() const;
+    Real runningSpread() const;
     %extend {
       static const ext::shared_ptr<CdsQuote> getFullView(ext::shared_ptr<MarketDatum> baseInput) {
         return ext::dynamic_pointer_cast<CdsQuote>(baseInput);
@@ -351,11 +381,12 @@ class HazardRateQuote : public MarketDatum {
   public:
     HazardRateQuote(Real value, Date asofDate, const std::string& name,
                     const std::string& underlyingName, const std::string& seniority,
-                    const std::string& ccy, Period term);
+                    const std::string& ccy, Period term, const string& docClause = "");
     const Period& term() const;
     const std::string& seniority() const;
     const std::string& ccy() const;
     const std::string& underlyingName() const;
+    const std::string& docClause() const;
     %extend {
       static const ext::shared_ptr<HazardRateQuote> getFullView(ext::shared_ptr<MarketDatum> baseInput) {
         return ext::dynamic_pointer_cast<HazardRateQuote>(baseInput);
@@ -372,10 +403,11 @@ class RecoveryRateQuote : public MarketDatum {
   public:
     RecoveryRateQuote(Real value, Date asofDate, const std::string& name,
                       const std::string& underlyingName, const std::string& seniority,
-                      const std::string& ccy);
+                      const std::string& ccy, const string& docClause = "");
     const std::string& seniority() const;
     const std::string& ccy() const;
     const std::string& underlyingName() const;
+    const std::string& docClause() const;
     %extend {
       static const ext::shared_ptr<ore::data::RecoveryRateQuote> getFullView(ext::shared_ptr<MarketDatum> baseInput) {
         return ext::dynamic_pointer_cast<ore::data::RecoveryRateQuote>(baseInput);
@@ -392,12 +424,14 @@ class SwaptionQuote : public MarketDatum {
   public:
     SwaptionQuote(Real value, Date asofDate, const std::string& name,
                   MarketDatum::QuoteType quoteType, std::string ccy, Period expiry,
-                  Period term, std::string dimension, Real strike = 0.0);
+                  Period term, std::string dimension, Real strike = 0.0,
+                  const std::string& quoteTag = std::string());
     const std::string& ccy() const;
     const Period& expiry() const;
     const Period& term() const;
     const std::string& dimension() const;
     Real strike();
+    const std::string& quoteTag() const;
     %extend {
       static const ext::shared_ptr<SwaptionQuote> getFullView(ext::shared_ptr<MarketDatum> baseInput) {
         return ext::dynamic_pointer_cast<SwaptionQuote>(baseInput);
@@ -413,14 +447,45 @@ using ore::data::SwaptionShiftQuote;
 class SwaptionShiftQuote : public MarketDatum {
   public:
     SwaptionShiftQuote(Real value, Date asofDate, const std::string& name,
-                       MarketDatum::QuoteType quoteType, std::string ccy, Period term);
+                       MarketDatum::QuoteType quoteType, std::string ccy, Period term,
+                       const std::string& quoteTag = std::string());
     const std::string& ccy() const;
     const Period& term() const;
+    const std::string& quoteTag() const;
     %extend {
       static const ext::shared_ptr<SwaptionShiftQuote> getFullView(ext::shared_ptr<MarketDatum> baseInput) {
         return ext::dynamic_pointer_cast<SwaptionShiftQuote>(baseInput);
       }
     }
+};
+
+%{
+using ore::data::BondOptionQuote;
+%}
+
+%shared_ptr(BondOptionQuote)
+class BondOptionQuote : public MarketDatum {
+    public:
+        BondOptionQuote(Real value, Date asofDate, const std::string& name,
+                        MarketDatum::QuoteType quoteType, std::string qualifier,
+                        Period expiry, Period term);
+        const std::string& qualifier() const;
+        const Period& expiry() const;
+        const Period& term() const;
+};
+
+%{
+using ore::data::BondOptionShiftQuote;
+%}
+
+%shared_ptr(BondOptionShiftQuote)
+class BondOptionShiftQuote : public MarketDatum {
+    public:
+        BondOptionShiftQuote(Real value, Date asofDate, const std::string& name,
+                             MarketDatum::QuoteType quoteType, std::string& qualifier,
+                             Period term);
+        const std::string& qualifier() const;
+        const Period& term() const;
 };
 
 %{
@@ -432,13 +497,15 @@ class CapFloorQuote : public MarketDatum {
   public:
     CapFloorQuote(Real value, Date asofDate, const std::string& name,
                   MarketDatum::QuoteType quoteType, std::string ccy, Period term,
-                  Period underlying, bool atm, bool relative, Real strike = 0.0);
+                  Period underlying, bool atm, bool relative, Real strike = 0.0,
+                  const std::string& indexName = std::string());
     const std::string& ccy() const;
     const Period& term() const;
     const Period& underlying() const;
     bool atm() const;
     bool relative() const;
     Real strike();
+    const std::string& indexName() const;
     %extend {
       static const ext::shared_ptr<CapFloorQuote> getFullView(ext::shared_ptr<MarketDatum> baseInput) {
         return ext::dynamic_pointer_cast<CapFloorQuote>(baseInput);
@@ -455,9 +522,10 @@ class CapFloorShiftQuote : public MarketDatum {
   public:
     CapFloorShiftQuote(Real value, Date asofDate, const std::string& name,
                        MarketDatum::QuoteType quoteType, std::string ccy,
-                       const Period& indexTenor);
+                       const Period& indexTenor, const std::string& indexName = std::string());
     const std::string& ccy() const;
     const Period& indexTenor() const;
+    const std::string& indexName() const;
     %extend {
       static const ext::shared_ptr<CapFloorShiftQuote> getFullView(ext::shared_ptr<MarketDatum> baseInput) {
         return ext::dynamic_pointer_cast<CapFloorShiftQuote>(baseInput);
@@ -829,9 +897,17 @@ class CommodityForwardQuote : public MarketDatum {
                           const std::string commodityName,
                           const std::string quoteCurrency,
                           const QuantLib::Date& expiryDate);
+    CommodityForwardQuote(Real value, const Date& asofDate, const std::string& name, 
+                          MarketDatum::QuoteType quoteType, const std::string& commodityName,
+                          const std::string& quoteCurrency, const Period& tenor, 
+                          boost::optional<QuantLib::Period> startTenor = boost::none);
+
     const std::string& commodityName() const;
     const std::string& quoteCurrency() const;
-    const QuantLib::Date& expiryDate() const;
+    const Date& expiryDate() const;
+    const Period& tenor() const;
+    const boost::optional<QuantLib::Period>& startTenor() const;
+    bool tenorBased() const;
     %extend {
       static const ext::shared_ptr<CommodityForwardQuote> getFullView(ext::shared_ptr<MarketDatum> baseInput) {
         return ext::dynamic_pointer_cast<CommodityForwardQuote>(baseInput);
@@ -851,11 +927,13 @@ class CommodityOptionQuote : public MarketDatum {
                          const std::string commodityName,
                          const std::string quoteCurrency,
                          const ext::shared_ptr<Expiry>& expiry,
-			 const ext::shared_ptr<BaseStrike>& strike);
+                         const ext::shared_ptr<BaseStrike>& strike,
+                         QuantLib::Option::Type optionType = QuantLib::Option::Call);
     const std::string& commodityName() const;
     const std::string& quoteCurrency() const;
     const ext::shared_ptr<Expiry>& expiry() const;
     const ext::shared_ptr<BaseStrike>& strike() const;
+    QuantLib::Option::Type optionType() const;
     %extend {
       static const ext::shared_ptr<CommodityOptionQuote> getFullView(ext::shared_ptr<MarketDatum> baseInput) {
         return ext::dynamic_pointer_cast<CommodityOptionQuote>(baseInput);
@@ -902,6 +980,23 @@ class CPRQuote : public MarketDatum {
         return ext::dynamic_pointer_cast<CPRQuote>(baseInput);
       }
     }
+};
+
+%{
+using ore::data::BondPriceQuote;
+%}
+
+%shared_ptr(BondPriceQuote)
+class BondPriceQuote : public MarketDatum {
+    public:
+        BondPriceQuote(Real value, Date asofDate, const std::string& name, const std::string& securityId);
+        const std::string& securityID() const;
+
+         %extend {
+          static const ext::shared_ptr<BondPriceQuote> getFullView(ext::shared_ptr<MarketDatum> baseInput) {
+            return ext::dynamic_pointer_cast<BondPriceQuote>(baseInput);
+          }
+        }
 };
 
 #endif

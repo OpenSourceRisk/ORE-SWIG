@@ -31,9 +31,25 @@
 %include qle_indexes.i
 
 %{
+//using QuantExt::FXLinked;
 using QuantExt::FXLinkedCashFlow;
 using QuantExt::FloatingRateFXLinkedNotionalCoupon;
 %}
+
+//%shared_ptr(FXLinked)
+//class FXLinked {
+// private:
+    // FXLinked();
+  //  public:
+    //    FXLinked(const QuantLib::Date& fixingDate, 
+      //           QuantLib::Real foreignAmount,
+        //         ext::shared_ptr<FxIndex> fxIndex);
+   //     QuantLib::Date fxFixingDate() const;
+   //     const ext::shared_ptr<FxIndex>& fxIndex() const;
+   //     QuantLib::Real foreignAmount() const;
+   //     QuantLib::Real fxRate() const;
+   //     ext::shared_ptr<FXLinked> clone(ext::shared_ptr<FxIndex> fxIndex) = 0;
+//};
 
 %shared_ptr(FXLinkedCashFlow)
 class FXLinkedCashFlow : public CashFlow {
@@ -41,9 +57,12 @@ class FXLinkedCashFlow : public CashFlow {
     FXLinkedCashFlow(const QuantLib::Date& cashFlowDate,
                      const QuantLib::Date& fixingDate,
                      QuantLib::Real foreignAmount,
-                     boost::shared_ptr<FxIndex> fxIndex);
+                     ext::shared_ptr<FxIndex> fxIndex);
+    QuantLib::Date date() const;
     QuantLib::Date fxFixingDate() const;
-    const boost::shared_ptr<FxIndex> fxIndex() const;
+    const ext::shared_ptr<FxIndex> fxIndex() const;
+    QuantLib::Real amount() const override;
+    QuantLib::Real foreignAmount() const;
     QuantLib::Real fxRate() const;
 };
 
@@ -52,12 +71,12 @@ class FloatingRateFXLinkedNotionalCoupon : public FloatingRateCoupon {
   public:
     FloatingRateFXLinkedNotionalCoupon(const QuantLib::Date& fxFixingDate,
                                        QuantLib::Real foreignAmount,
-                                       boost::shared_ptr<FxIndex> fxIndex,
-                                       const boost::shared_ptr<FloatingRateCoupon> underlying);
+                                       ext::shared_ptr<FxIndex> fxIndex,
+                                       const ext::shared_ptr<FloatingRateCoupon> underlying);
     Real nominal() const;
     Rate rate() const;
     Rate indexFixing() const;
-    void setPricer(const boost::shared_ptr<FloatingRateCouponPricer>& p);
+    void setPricer(const ext::shared_ptr<FloatingRateCouponPricer>& p);
 };
 
 #endif

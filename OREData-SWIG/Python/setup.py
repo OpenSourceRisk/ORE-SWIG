@@ -1,24 +1,23 @@
-# -*- coding: iso-8859-1 -*-
+﻿
 """
- Copyright (C) 2018, 2022 Quaternion Risk Management Ltd
+ Copyright (C) 2018 Quaternion Risk Management Ltd
  All rights reserved.
 """
 
 import os, sys, math, codecs
-try:
-    from setuptools import setup, Extension
-    from setuptools import Command
-except:
-    from distutils.core import setup, Extension
-    from distutils.cmd import Command
+from distutils.cmd import Command
 from distutils.command.build_ext import build_ext
 from distutils.command.build import build
 from distutils.ccompiler import get_default_compiler
+try:
+    from setuptools import setup, Extension
+except:
+    from distutils.core import setup, Extension
 from distutils import sysconfig
 
 class test(Command):
     # Original version of this class posted
-    # by Berthold Hoellmann to distutils-sig@python.org
+    # by Berthold H�llmann to distutils-sig@python.org
     description = "test the distribution prior to install"
 
     user_options = [
@@ -46,7 +45,7 @@ class test(Command):
         sys.path.insert(0, self.test_dir)
 
         # import and run test-suite
-        module = __import__('QuantExtTestSuite', globals(), locals(), [''])
+        module = __import__('OREDataTestSuite', globals(), locals(), [''])
         module.test()
 
         # restore sys.path
@@ -58,27 +57,30 @@ class my_wrap(Command):
     def initialize_options(self): pass
     def finalize_options(self): pass
     def run(self):
-        print('Generating Python bindings for QuantExt...')
+        print('Generating Python bindings for OREData...')
         swig_version = os.popen("swig -version").read().split()[2]
         major_swig_version = swig_version[0]
-        if major_swig_version < '4':
-           print('Warning: You have SWIG {} installed, but at least SWIG 4.0.1'
+        if major_swig_version < '3':
+           print('Warning: You have SWIG {} installed, but at least SWIG 3.0.1'
                  ' is recommended. \nSome features may not work.'
                  .format(swig_version))
         swig_dir = os.path.join("..","SWIG")
         ql_swig_dir = os.path.join("..","..","QuantLib-SWIG","SWIG")
+        qle_swig_dir = os.path.join("..","..","QuantExt-SWIG","SWIG")
         if sys.version_info.major >= 3:
-            os.system('swig -python -py3 -c++ ' +
+            os.system('swig -python -py3 -c++ -modern ' +
                       '-I%s ' % swig_dir +
                       '-I%s ' % ql_swig_dir +
-                      '-outdir QuantExt -o QuantExt/quantext_wrap.cpp ' +
-                      'quantext.i')
+                      '-I%s ' % qle_swig_dir +
+                      '-outdir OREData -o OREData/oredata_wrap.cpp ' +
+                      'oredata.i')
         else:
             os.system('swig -python -c++ -modern ' +
                       '-I%s ' % swig_dir +
                       '-I%s ' % ql_swig_dir +
-                      '-outdir QuantExt -o QuantExt/quantext_wrap.cpp ' +
-                      'quantext.i')
+                      '-I%s ' % qle_swig_dir +
+                      '-outdir OREData -o OREData/oredata_wrap.cpp ' +
+                      'oredata.i')
 
 class my_build(build):
     user_options = build.user_options + [
@@ -126,18 +128,20 @@ class my_build_ext(build_ext):
                 self.include_dirs += [BOOST_DIR]
                 self.include_dirs += [os.path.join(ORE_INSTALL_DIR,'QuantLib')]
                 self.include_dirs += [os.path.join(ORE_INSTALL_DIR,'QuantExt')]
+                self.include_dirs += [os.path.join(ORE_INSTALL_DIR,'OREData')]
 
-		# ADD LIBRARY DIRECTORIES
+				# ADD LIBRARY DIRECTORIES
                 self.library_dirs += [BOOST_LIB]
                 self.library_dirs += [os.path.join(ORE_INSTALL_DIR,'QuantLib','lib')]
                 self.library_dirs += [os.path.join(ORE_INSTALL_DIR,'QuantExt','lib')]
+                self.library_dirs += [os.path.join(ORE_INSTALL_DIR,'OREData','lib')]
 
             except KeyError:
-                print('warning: unable to detect BOOST/ORE installation')
+                print('warning: unable to detect OREData installation')
 
-#            if 'INCLUDE' in os.environ:
-#                dirs = [dir for dir in os.environ['INCLUDE'].split(';')]
-#                self.include_dirs += [ d for d in dirs if d.strip() ]
+            if 'INCLUDE' in os.environ:
+                dirs = [dir for dir in os.environ['INCLUDE'].split(';')]
+                self.include_dirs += [ d for d in dirs if d.strip() ]
 #            if 'LIB' in os.environ:
 #                dirs = [dir for dir in os.environ['LIB'].split(';')]
 #                self.library_dirs += [ d for d in dirs if d.strip() ]
@@ -166,9 +170,9 @@ class my_build_ext(build_ext):
         elif compiler == 'unix':
             os.chdir('..')
             ql_compile_args = \
-                os.popen('. ./quantext-config --cflags').read()[:-1].split()
+                os.popen('. ./oredata-config --cflags').read()[:-1].split()
             ql_link_args = \
-                os.popen('. ./quantext-config --libs').read()[:-1].split()
+                os.popen('. ./oredata-config --libs').read()[:-1].split()
 
             self.define += [ (arg[2:],None) for arg in ql_compile_args
                              if arg.startswith('-D') ]
@@ -235,20 +239,15 @@ classifiers = [
     'Intended Audience :: End Users/Desktop',
     'License :: OSI Approved :: BSD License',
     'Natural Language :: English',
-    'Operating System :: Microsoft :: Windows',
-    'Operating System :: POSIX',
-    'Operating System :: Unix',
-    'Operating System :: MacOS',
-    'Programming Language :: C++',
+    'Operating System :: OS Independent',
     'Programming Language :: Python',
     'Topic :: Scientific/Engineering',
 ]
 
-setup(name             = "QuantExt-Python",
-      version          = "1.8.7",
-      description      = "Python bindings for the QuantExt library",
+setup(name             = "OREData-Python",
+      description      = "Python bindings for the OREData library",
       long_description = """
-QuantExt (http://opensourcerisk.org/) is a C++ library for financial quantitative
+OREAnalytics (http://opensourcerisk.org/) is a C++ library for financial quantitative
 analysts and developers, aimed at providing a comprehensive software
 framework for quantitative finance.
       """,
@@ -258,9 +257,9 @@ framework for quantitative finance.
       license          = codecs.open('../LICENSE.TXT','r+',
                                      encoding='utf8').read(),
       classifiers      = classifiers,
-      py_modules       = ['QuantExt.__init__','QuantExt.QuantExt'],
-      ext_modules      = [Extension("QuantExt._QuantExt",
-                                    ["QuantExt/quantext_wrap.cpp"])
+      py_modules       = ['OREData.__init__','OREData.OREData'],
+      ext_modules      = [Extension("OREData._OREData",
+                                    ["OREData/oredata_wrap.cpp"])
                          ],
       data_files       = datafiles,
       cmdclass         = {'test': test,

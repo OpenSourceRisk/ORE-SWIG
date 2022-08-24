@@ -79,14 +79,14 @@ class MarketImpl {
                                         const std::string& configuration = Market::defaultConfiguration) const;
 
     // Default Curves and Recovery Rates
-    Handle<DefaultProbabilityTermStructure>
+    Handle<QuantExt::CreditCurve>
       defaultCurve(const std::string& name,
                    const std::string& configuration = Market::defaultConfiguration) const;
     Handle<Quote> recoveryRate(const std::string& name,
                                const std::string& configuration = Market::defaultConfiguration) const;
 
     // CDS Option volatilities
-    Handle<BlackVolTermStructure> cdsVol(const std::string& name,
+    Handle<QuantExt::CreditVolCurve> cdsVol(const std::string& name,
                                          const std::string& configuration = Market::defaultConfiguration) const;
 
     // Base correlation structures
@@ -186,7 +186,6 @@ class TodaysMarket : public MarketImpl {
                  const ext::shared_ptr<TodaysMarketParameters>& params,
                  const ext::shared_ptr<Loader>& loader,
                  const ext::shared_ptr<CurveConfigurations>& curveConfigs,
-                 const ext::shared_ptr<Conventions>& conventions,
                  const bool continueOnError = false,
                  bool loadFixings = true,
                  const bool lazyBuild = false,

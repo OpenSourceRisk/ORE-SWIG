@@ -124,7 +124,7 @@ class my_build_ext(build_ext):
         if compiler == 'msvc':
             try:
                 BOOST_DIR = os.environ['BOOST_ROOT']
-                BOOST_LIB = os.environ['BOOST_LIBRARYDIR']
+                BOOST_LIB = os.environ['BOOST_LIB']
                 ORE_INSTALL_DIR = os.environ['ORE_DIR']
 
                 # ADD INCLUDE DIRECTORIES
@@ -173,10 +173,11 @@ class my_build_ext(build_ext):
                     extra_compile_args.append('/MD')
 
         elif compiler == 'unix':
+            os.chdir('..')
             ql_compile_args = \
-                os.popen('oreanalytics-config --cflags').read()[:-1].split()
+                os.popen('. ./oreanalytics-config --cflags').read()[:-1].split()
             ql_link_args = \
-                os.popen('oreanalytics-config --libs').read()[:-1].split()
+                os.popen('. ./oreanalytics-config --libs').read()[:-1].split()
 
             self.define += [ (arg[2:],None) for arg in ql_compile_args
                              if arg.startswith('-D') ]
