@@ -37,7 +37,7 @@ class Loader {
     ext::shared_ptr<MarketDatum> get(const std::string& name, const QuantLib::Date&) const;
     ext::shared_ptr<MarketDatum> get(const std::pair<std::string, bool>& name, const QuantLib::Date& d) const;
     std::set<ext::shared_ptr<MarketDatum>> get(const std::set<std::string>& names, const QuantLib::Date& asof) const;
-    //std::set<ext::shared_ptr<MarketDatum>> get(const Wildcard& wildcard, const QuantLib::Date& asof) const;
+    std::set<ext::shared_ptr<MarketDatum>> get(const Wildcard& wildcard, const QuantLib::Date& asof) const;
     bool has(const std::string& name, const QuantLib::Date& d) const;
     bool hasQuotes(const QuantLib::Date& d) const;
     std::set<Fixing> loadFixings() const;
