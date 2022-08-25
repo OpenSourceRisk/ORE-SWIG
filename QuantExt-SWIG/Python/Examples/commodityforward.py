@@ -21,8 +21,6 @@ quantity = 1.0;
 position = Position.Long;
 
 maturityDate = Date(4, October, 2022);
- 
-instrument = CommodityForward(name, currency, position, quantity, maturityDate, strikePrice);
 
 # market
 dates = [ Date(20,12,2018),
@@ -48,7 +46,7 @@ quotes = [ QuoteHandle(SimpleQuote(100.0)),
 tsDayCounter = Actual365Fixed()
 
 # price curve
-priceCurve = LinearInterpolatedPriceCurve(dates, quotes, tsDayCounter);
+priceCurve = LinearInterpolatedPriceCurve(todaysDate, dates, quotes, tsDayCounter, currency);
 priceCurve.enableExtrapolation();
 priceTermStructure = RelinkablePriceTermStructureHandle();
 priceTermStructure.linkTo(priceCurve)
@@ -58,8 +56,12 @@ flatForward = FlatForward(todaysDate, 0.03, tsDayCounter);
 discountTermStructure = RelinkableYieldTermStructureHandle()
 discountTermStructure.linkTo(flatForward)
 
-engine = DiscountingCommodityForwardEngine(priceTermStructure, discountTermStructure)
+engine = DiscountingCommodityForwardEngine(discountTermStructure)
+
+index = CommoditySpotIndex(name, calendar, priceTermStructure);
+
+instrument = CommodityForward(index, currency, position, quantity, maturityDate, strikePrice);
 
 instrument.setPricingEngine(engine)
 
-print("Commodity Forward, Name='" + instrument.name() + "', NPV=" + formatPrice(instrument.NPV()) + " " + instrument.currency().code())
+print("Commodity Forward, Name='" + instrument.index().underlyingName() + "', NPV=" + formatPrice(instrument.NPV()) + " " + instrument.currency().code())
