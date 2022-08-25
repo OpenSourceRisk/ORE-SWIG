@@ -40,40 +40,47 @@ class LoaderTest(unittest.TestCase):
                 })
         self.marketdata = marketdata
         self.fixingdata = fixingdata
-
+                
     def testSimpleInspectors(self):
         """ Test Loader simple inspectors. """
-        self.assertEqual(len(self.maketdata_loader), len(self.marketdata))
-        self.assertEqual(len(self.fixingdata_loader), len(self.fixingdata))
+        self.assertEqual(len(self.marketdata_loader), len(self.marketdata))
+        # fixing data loader returns a set now, not  a vector any more (with duplicates), hence skip the following assert
+        # cat Input/fixings_20160205.txt| grep -v "#"| wc -l => 8691 in fixingdata
+        # cat Input/fixings_20160205.txt| grep -v "#"| cut -f1,2 -d" "|sort -u| wc -l => 5435 in fixingdata_loader
+        #self.assertEqual(len(self.fixingdata_loader), len(self.fixingdata))
 
-        for i in range(len(self.maketdata_loader)):
-            self.assertEqual(self.maketdata_loader[i].asofDate(), self.marketdata[i]['Date'])
-            self.assertEqual(self.maketdata_loader[i].name(), self.marketdata[i]['Name'])
-            self.assertAlmostEqual(self.maketdata_loader[i].quote().value(), self.marketdata[i]['Value'])
+        # market data is internally held in the loader in a map of sets, and due to the set it is ordered differently
+        # to the market data vector. The following tests will therefore fail after the loader's redesign.
+        #for i in range(len(self.marketdata)):
+        #    self.assertEqual(self.marketdata_loader[i].asofDate(), self.marketdata[i]['Date'])
+        #    self.assertEqual(self.marketdata_loader[i].name(), self.marketdata[i]['Name'])
+        #    self.assertAlmostEqual(self.marketdata_loader[i].quote().value(), self.marketdata[i]['Value'])
 
-        for i in range(len(self.maketdata_loader)):
+        for i in range(len(self.marketdata)):
             self.assertTrue(self.loader.has(self.marketdata[i]['Name'], self.marketdata[i]['Date']))
             quote = self.loader.get(self.marketdata[i]['Name'], self.marketdata[i]['Date'])
             self.assertEqual(quote.asofDate(), self.marketdata[i]['Date'])
             self.assertEqual(quote.name(), self.marketdata[i]['Name'])
             self.assertAlmostEqual(quote.quote().value(), self.marketdata[i]['Value'])
 
-        for i in range(len(self.maketdata_loader)):
+        for i in range(len(self.marketdata)):
             quote = self.loader.get(StringBoolPair(self.marketdata[i]['Name'], True), self.marketdata[i]['Date'])
             self.assertEqual(quote.asofDate(), self.marketdata[i]['Date'])
             self.assertEqual(quote.name(), self.marketdata[i]['Name'])
             self.assertAlmostEqual(quote.quote().value(), self.marketdata[i]['Value'])
 
-        for i in range(len(self.maketdata_loader)):
+        for i in range(len(self.marketdata)):
             quote = self.loader.get(StringBoolPair(self.marketdata[i]['Name'], False), self.marketdata[i]['Date'])
             self.assertEqual(quote.asofDate(), self.marketdata[i]['Date'])
             self.assertEqual(quote.name(), self.marketdata[i]['Name'])
             self.assertAlmostEqual(quote.quote().value(), self.marketdata[i]['Value'])
 
-        for i in range(len(self.fixingdata_loader)):
-            self.assertEqual(self.fixingdata_loader[i].date, self.fixingdata[i]['Date'])
-            self.assertEqual(self.fixingdata_loader[i].name, self.fixingdata[i]['Name'])
-            self.assertAlmostEqual(self.fixingdata_loader[i].fixing, self.fixingdata[i]['Value'])
+# Comparison between fixing data (vector) to ficingdata_loader (set) fails because of different ordering.
+# since the loader has been redesigned to hold data in sets rather than vectors
+#        for i in range(len(self.fixingdata_loader)):
+#            self.assertEqual(self.fixingdata_loader[i].date, self.fixingdata[i]['Date'])
+#            self.assertEqual(self.fixingdata_loader[i].name, self.fixingdata[i]['Name'])
+#            self.assertAlmostEqual(self.fixingdata_loader[i].fixing, self.fixingdata[i]['Value'])
 
 
 class CSVLoaderTest(LoaderTest):
@@ -82,7 +89,7 @@ class CSVLoaderTest(LoaderTest):
         """ Set-up CSV Loader """
         super(CSVLoaderTest, self).setUp()
         self.loader = CSVLoader(self.marketfile, self.fixingfile, True)
-        self.maketdata_loader = self.loader.loadQuotes(self.asofDate)
+        self.marketdata_loader = self.loader.loadQuotes(self.asofDate)
         self.fixingdata_loader = self.loader.loadFixings()
 
     def testSimpleInspectors(self):
@@ -105,7 +112,8 @@ class InMemoryLoaderTest(LoaderTest):
             self.loader.add(data['Date'], data['Name'], data['Value'])
         for data in self.fixingdata:
             self.loader.addFixing(data['Date'], data['Name'], data['Value'])
-        self.maketdata_loader = self.loader.loadQuotes(self.asofDate)
+        self.marketdata_loader = self.loader.loadQuotes(self.asofDate)
+        print("market data/loader size ", len(self.marketdata_loader), len(self.marketdata));
         self.fixingdata_loader = self.loader.loadFixings()
 
     def testSimpleInspectors(self):
