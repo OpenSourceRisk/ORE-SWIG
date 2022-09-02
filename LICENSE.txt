@@ -1,7 +1,7 @@
 ORE-SWIG is
 
 Copyright (C) 2018-2020 Quaternion Risk Management Ltd.
-Copyright (C) 2021 Acadia Inc.
+Copyright (C) 2021-2022 Acadia Inc.
 
 All rights reserved.
 

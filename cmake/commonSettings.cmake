@@ -82,27 +82,6 @@ get_filename_component(OREANALYTICS_SOURCE_DIR "${CMAKE_CURRENT_LIST_DIR}/../ORE
 get_filename_component(ORETEST_SOURCE_DIR "${CMAKE_CURRENT_LIST_DIR}/../ORETest" ABSOLUTE)
 get_filename_component(RAPIDXML_SOURCE_DIR "${CMAKE_CURRENT_LIST_DIR}/../ThirdPartyLibs/rapidxml-1.13" ABSOLUTE)
 
-get_filename_component(OPENSSL_SOURCE_DIR "${CMAKE_CURRENT_LIST_DIR}/../OREPlus/openssl" ABSOLUTE)
-#get_filename_component(OREPLUSLICENSE_SOURCE_DIR "${CMAKE_CURRENT_LIST_DIR}/../OREPlus/License" ABSOLUTE)
-#get_filename_component(OREPLUSBASE_SOURCE_DIR "${CMAKE_CURRENT_LIST_DIR}/../OREPlus/Base" ABSOLUTE)
-#get_filename_component(OREPLUSRATES_SOURCE_DIR "${CMAKE_CURRENT_LIST_DIR}/../OREPlus/Rates" ABSOLUTE)
-#get_filename_component(OREPLUSEQUITYFX_SOURCE_DIR "${CMAKE_CURRENT_LIST_DIR}/../OREPlus/EquityFX" ABSOLUTE)
-#get_filename_component(OREPLUSCREDIT_SOURCE_DIR "${CMAKE_CURRENT_LIST_DIR}/../OREPlus/Credit" ABSOLUTE)
-#get_filename_component(OREPLUSCOMMODITY_SOURCE_DIR "${CMAKE_CURRENT_LIST_DIR}/../OREPlus/Commodity" ABSOLUTE)
-#get_filename_component(OREPLUSFRTB_SOURCE_DIR "${CMAKE_CURRENT_LIST_DIR}/../OREPlus/FRTB" ABSOLUTE)
-#get_filename_component(OREPLUSHYBRID_SOURCE_DIR "${CMAKE_CURRENT_LIST_DIR}/../OREPlus/Hybrid" ABSOLUTE)
-#get_filename_component(OREPLUSSCRIPTEDTRADE_SOURCE_DIR "${CMAKE_CURRENT_LIST_DIR}/../OREPlus/ScriptedTrade" ABSOLUTE)
-#get_filename_component(OREPLUSPROXY_SOURCE_DIR "${CMAKE_CURRENT_LIST_DIR}/../OREPlus/Proxy" ABSOLUTE)
-#get_filename_component(OREPLUSAMC_SOURCE_DIR "${CMAKE_CURRENT_LIST_DIR}/../OREPlus/AMC" ABSOLUTE)
-#get_filename_component(OREPLUSSENSITIVITY_SOURCE_DIR "${CMAKE_CURRENT_LIST_DIR}/../OREPlus/Sensitivity" ABSOLUTE)
-#get_filename_component(OREPLUSMARKETRISK_SOURCE_DIR "${CMAKE_CURRENT_LIST_DIR}/../OREPlus/MarketRisk" ABSOLUTE)
-#get_filename_component(OREPLUSSIMM_SOURCE_DIR "${CMAKE_CURRENT_LIST_DIR}/../OREPlus/SIMM" ABSOLUTE)
-#get_filename_component(OREPLUSCREDITRISK_SOURCE_DIR "${CMAKE_CURRENT_LIST_DIR}/../OREPlus/CreditRisk" ABSOLUTE)
-#get_filename_component(OREPLUSCAPITAL_SOURCE_DIR "${CMAKE_CURRENT_LIST_DIR}/../OREPlus/Capital" ABSOLUTE)
-#get_filename_component(OREPLUSANALYTICS_SOURCE_DIR "${CMAKE_CURRENT_LIST_DIR}/../OREPlus/Analytics" ABSOLUTE)
-
-#option(OREPLUS_LICENSE "Enable ORE+ Licensing" OFF)
-
 # convenience function that adds a link directory dir, but only if it exists
 function(add_link_directory_if_exists dir)
   if(EXISTS "${dir}")
