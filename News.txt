@@ -1,8 +1,9 @@
-Changes for the 5th ORE release (1.8.5.0):
+Changes for the 7th ORE release (1.8.7.0):
 ==========================================
 
-Update almost all interface files to work with QuantLib-SWIG 1.18
-and to use the SWIG wrapper of boost::shared_ptr.
+Updates to work with QuantLib-SWIG 1.27
+Pythgon test cases fixed, thanks to Farah Khashman
+Various additional ORE classes wrapped, thanks to Farah Khashman 
 
 
 Changes for the 6th ORE release (1.8.6.0):
@@ -11,9 +12,10 @@ Changes for the 6th ORE release (1.8.6.0):
 Updates to work with QuantLib-SWIG 1.22
 
 
-Changes for the 6th ORE release (1.8.7.0):
+Changes for the 5th ORE release (1.8.5.0):
 ==========================================
 
-Updates to work with QuantLib-SWIG 1.27
-Pythgon test cases fixed, thanks to Farah Khashman
-Various additional ORE classes wrapped, thanks to Farah Khashman 
+Update almost all interface files to work with QuantLib-SWIG 1.18
+and to use the SWIG wrapper of boost::shared_ptr.
+
+
