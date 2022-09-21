@@ -27,12 +27,13 @@
 %include creditdefaultswap.i
 
 %{
-using QLECreditDefaultSwap = QuantExt::CreditDefaultSwap;
-using QLEMidPointCdsEngine = QuantExt::MidPointCdsEngine;
+  //using QLECreditDefaultSwap = QuantExt::CreditDefaultSwap;
+  //using QLEMidPointCdsEngine = QuantExt::MidPointCdsEngine;
 using QLECdsOption = QuantExt::CdsOption;
 using QLEBlackCdsOptionEngine = QuantExt::BlackCdsOptionEngine;
 %}
 
+/*
 %shared_ptr(QLECreditDefaultSwap)
 class QLECreditDefaultSwap : public Instrument {
   public:
@@ -102,17 +103,17 @@ class QLEMidPointCdsEngine : public PricingEngine {
                          QuantLib::Real recoveryRate,
                          const QuantLib::Handle<QuantLib::YieldTermStructure>& discountCurve);
 };
-
+*/
 
 %shared_ptr(QLECdsOption)
 class QLECdsOption : public Instrument {
   public:
     enum StrikeType { Price, Spread };
-    QLECdsOption(const ext::shared_ptr<QLECreditDefaultSwap> swap,
+    QLECdsOption(const ext::shared_ptr<CreditDefaultSwap> swap,
 		 const ext::shared_ptr<QuantLib::Exercise>& exercise,
 		 bool knocksOut = true, const QuantLib::Real strike = Null<Real>(),
          const StrikeType strikeType = StrikeType::Spread);
-    const ext::shared_ptr<QLECreditDefaultSwap> underlyingSwap() const;
+    const ext::shared_ptr<CreditDefaultSwap> underlyingSwap() const;
     QuantLib::Rate atmRate() const;
     QuantLib::Real riskyAnnuity() const;
     QuantLib::Volatility impliedVolatility(QuantLib::Real price,
