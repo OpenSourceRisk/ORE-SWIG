@@ -1,3 +1,3 @@
 [submodule "QuantLib-SWIG"]
 	path = QuantLib-SWIG
-	url = git@github.com:OpenSourceRisk/QuantLib-SWIG.git
+	url = https://github.com/OpenSourceRisk/QuantLib-SWIG.git
