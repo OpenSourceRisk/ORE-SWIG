@@ -90,7 +90,7 @@ class MarketImpl {
                                          const std::string& configuration = Market::defaultConfiguration) const;
 
     // Base correlation structures
-    Handle<QuantLib::BaseCorrelationTermStructure<QuantLib::BilinearInterpolation>>
+    Handle<QuantExt::BaseCorrelationTermStructure>
       baseCorrelation(const std::string& name,
                       const std::string& configuration = Market::defaultConfiguration) const;
 

@@ -10,7 +10,7 @@ macro(add_compiler_flag flag supportsFlag)
     endif()
 endmacro()
 
-# use CXX 11 and std::unique_ptr in QuantLib (instead of std::auto_ptr, which is deprecated in C++11)
+# use CXX 17 and std::unique_ptr in QuantLib (instead of std::auto_ptr, which is deprecated in C++11)
 set(CMAKE_CXX_STANDARD 17)
 add_compiler_flag("-D QL_USE_STD_UNIQUE_PTR" supports_D_QL_USE_STD_UNIQUE_PTR)
 
