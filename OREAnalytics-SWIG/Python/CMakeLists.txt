@@ -52,6 +52,11 @@ add_link_directory_if_exists(${ORE}/build/QuantExt/qle)
 add_link_directory_if_exists(${ORE}/build/OREData/ored)
 add_link_directory_if_exists(${ORE}/build/OREAnalytics/orea)
 
+add_link_directory_if_exists(${ORE}/../build/ore/QuantLib/ql)
+add_link_directory_if_exists(${ORE}/../build/ore/QuantExt/qle)
+add_link_directory_if_exists(${ORE}/../build/ore/OREData/ored)
+add_link_directory_if_exists(${ORE}/../build/ore/OREAnalytics/orea)
+
 # Tell SWIG to compile in C++ mode
 set_source_files_properties(${PROJECT_SOURCE_DIR}/../SWIG/oreanalytics.i PROPERTIES CPLUSPLUS ON)
 set_source_files_properties(${PROJECT_SOURCE_DIR}/../SWIG/oreanalytics.i PROPERTIES SWIG_FLAGS "-includeall")

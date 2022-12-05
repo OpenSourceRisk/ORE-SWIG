@@ -37,7 +37,7 @@ using ore::IborFallbackConfig;
 %shared_ptr(MarketImpl)
 class MarketImpl {
   public:
-    MarketImpl();
+    MarketImpl(const bool handlePseudoCurrencies);
     Date asofDate() const;
 
     // Yield curves
