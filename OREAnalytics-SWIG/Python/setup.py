@@ -69,7 +69,7 @@ class my_wrap(Command):
         qle_swig_dir = os.path.join("..","..","QuantExt-SWIG","SWIG")
         oredata_swig_dir = os.path.join("..","..","OREData-SWIG","SWIG")
         if sys.version_info.major >= 3:
-            os.system('swig -python -py3 -c++ -modern ' +
+            os.system('swig -python -c++ ' +
                       '-I%s ' % swig_dir +
                       '-I%s ' % ql_swig_dir +
                       '-I%s ' % qle_swig_dir +
@@ -77,7 +77,7 @@ class my_wrap(Command):
                       '-outdir OREAnalytics -o OREAnalytics/oreanalytics_wrap.cpp ' +
                       'oreanalytics.i')
         else:
-            os.system('swig -python -c++ -modern ' +
+            os.system('swig -python -c++ ' +
                       '-I%s ' % swig_dir +
                       '-I%s ' % ql_swig_dir +
                       '-I%s ' % qle_swig_dir +
@@ -97,7 +97,6 @@ class my_build(build):
     def finalize_options(self):
         build.finalize_options(self)
 
-
 class my_build_ext(build_ext):
     user_options = build_ext.user_options + [
         ('static', None,
@@ -107,6 +106,16 @@ class my_build_ext(build_ext):
     def initialize_options(self):
         build_ext.initialize_options(self)
         self.static = None
+    def get_var(self, v):
+        if v in os.environ:
+            return os.getenv(v)
+        else:
+            raise Error("Environment variable {} not set".format(v))
+    def validate_path(self, p):
+        if os.path.exists(p):
+            return p
+        else:
+            raise Error("Invalid path: {}".format(p))
     def finalize_options(self):
         build_ext.finalize_options(self)
         self.set_undefined_options('build', ('static','static'))
@@ -122,34 +131,30 @@ class my_build_ext(build_ext):
         compiler = self.compiler or get_default_compiler()
 
         if compiler == 'msvc':
-            try:
-                BOOST_DIR = os.environ['BOOST_ROOT']
-                BOOST_LIB = os.environ['BOOST_LIB']
-                ORE_INSTALL_DIR = os.environ['ORE_DIR']
+            BOOST_DIR = self.get_var('BOOST_ROOT')
+            BOOST_LIB = self.get_var('BOOST_LIB')
+            ORE_DIR = self.get_var('ORE_DIR')
 
-                # ADD INCLUDE DIRECTORIES
-                self.include_dirs += [BOOST_DIR]
-                self.include_dirs += [os.path.join(ORE_INSTALL_DIR,'QuantLib')]
-                self.include_dirs += [os.path.join(ORE_INSTALL_DIR,'QuantExt')]
-                self.include_dirs += [os.path.join(ORE_INSTALL_DIR,'OREData')]
-                self.include_dirs += [os.path.join(ORE_INSTALL_DIR,'OREAnalytics')]
+            # ADD INCLUDE DIRECTORIES
+            self.include_dirs.append(self.validate_path(BOOST_DIR))
+            self.include_dirs.append(self.validate_path(os.path.join(ORE_DIR, 'QuantLib')))
+            self.include_dirs.append(self.validate_path(os.path.join(ORE_DIR, 'QuantExt')))
+            self.include_dirs.append(self.validate_path(os.path.join(ORE_DIR, 'OREData')))
+            self.include_dirs.append(self.validate_path(os.path.join(ORE_DIR, 'OREAnalytics')))
 
-				# ADD LIBRARY DIRECTORIES
-                self.library_dirs += [BOOST_LIB]
-                self.library_dirs += [os.path.join(ORE_INSTALL_DIR,'QuantLib','lib')]
-                self.library_dirs += [os.path.join(ORE_INSTALL_DIR,'QuantExt','lib')]
-                self.library_dirs += [os.path.join(ORE_INSTALL_DIR,'OREData','lib')]
-                self.library_dirs += [os.path.join(ORE_INSTALL_DIR,'OREAnalytics','lib')]
+            # ADD LIBRARY DIRECTORIES
+            self.library_dirs.append(self.validate_path(BOOST_LIB))
+            self.library_dirs.append(self.validate_path(os.path.join(ORE_DIR, 'QuantLib', 'lib')))
+            self.library_dirs.append(self.validate_path(os.path.join(ORE_DIR, 'QuantExt', 'lib')))
+            self.library_dirs.append(self.validate_path(os.path.join(ORE_DIR, 'OREData', 'lib')))
+            self.library_dirs.append(self.validate_path(os.path.join(ORE_DIR, 'OREAnalytics', 'lib')))
 
-            except KeyError:
-                print('warning: unable to detect BOOST/ORE installation')
-
-#            if 'INCLUDE' in os.environ:
-#                dirs = [dir for dir in os.environ['INCLUDE'].split(';')]
-#                self.include_dirs += [ d for d in dirs if d.strip() ]
-#            if 'LIB' in os.environ:
-#                dirs = [dir for dir in os.environ['LIB'].split(';')]
-#                self.library_dirs += [ d for d in dirs if d.strip() ]
+            #if 'INCLUDE' in os.environ:
+            #    dirs = [dir for dir in os.environ['INCLUDE'].split(';')]
+            #    self.include_dirs += [ d for d in dirs if d.strip() ]
+            #if 'LIB' in os.environ:
+            #    dirs = [dir for dir in os.environ['LIB'].split(';')]
+            #    self.library_dirs += [ d for d in dirs if d.strip() ]
             dbit = round(math.log(sys.maxsize, 2) + 1)
             if dbit == 64:
                 machinetype = '/machine:x64'
@@ -158,8 +163,9 @@ class my_build_ext(build_ext):
             self.define += [('__WIN32__', None), ('WIN32', None),
                             ('NDEBUG', None), ('_WINDOWS', None),
                             ('NOMINMAX', None)]
-            extra_compile_args = ['/GR', '/FD', '/Zm250', '/EHsc', '/bigobj' ]
+            extra_compile_args = ['/GR', '/FD', '/Zm250', '/EHsc', '/bigobj', '/std:c++17', '/wd4996' ]
             extra_link_args = ['/subsystem:windows', machinetype]
+            self.libraries = [ 'advapi32' ]
 
             if self.debug:
                 if self.static:
@@ -244,7 +250,11 @@ classifiers = [
     'Intended Audience :: End Users/Desktop',
     'License :: OSI Approved :: BSD License',
     'Natural Language :: English',
-    'Operating System :: OS Independent',
+    'Operating System :: Microsoft :: Windows',
+    'Operating System :: POSIX',
+    'Operating System :: Unix',
+    'Operating System :: MacOS',
+    'Programming Language :: C++',
     'Programming Language :: Python',
     'Topic :: Scientific/Engineering',
 ]

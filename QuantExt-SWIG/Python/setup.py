@@ -119,7 +119,7 @@ class my_build_ext(build_ext):
         if compiler == 'msvc':
             try:
                 BOOST_DIR = os.environ['BOOST_ROOT']
-                BOOST_LIB = os.environ['BOOST_LIBRARYDIR']
+                BOOST_LIB = os.environ['BOOST_LIB']
                 ORE_INSTALL_DIR = os.environ['ORE_DIR']
 
                 # ADD INCLUDE DIRECTORIES
@@ -127,7 +127,7 @@ class my_build_ext(build_ext):
                 self.include_dirs += [os.path.join(ORE_INSTALL_DIR,'QuantLib')]
                 self.include_dirs += [os.path.join(ORE_INSTALL_DIR,'QuantExt')]
 
-		# ADD LIBRARY DIRECTORIES
+                # ADD LIBRARY DIRECTORIES
                 self.library_dirs += [BOOST_LIB]
                 self.library_dirs += [os.path.join(ORE_INSTALL_DIR,'QuantLib','lib')]
                 self.library_dirs += [os.path.join(ORE_INSTALL_DIR,'QuantExt','lib')]

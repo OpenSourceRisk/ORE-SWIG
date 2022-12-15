@@ -30,7 +30,7 @@ find_package(Boost COMPONENTS serialization date_time regex filesystem system ti
 find_package(SWIG REQUIRED)
 find_package(PythonLibs)
 
-# What does this mean?
+# Load the UseSWIG module from the cmake installation
 include(${SWIG_USE_FILE})
 
 # Add to the list of include directories
