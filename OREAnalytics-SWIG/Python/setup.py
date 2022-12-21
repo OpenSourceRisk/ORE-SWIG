@@ -69,7 +69,7 @@ class my_wrap(Command):
         qle_swig_dir = os.path.join("..","..","QuantExt-SWIG","SWIG")
         oredata_swig_dir = os.path.join("..","..","OREData-SWIG","SWIG")
         if sys.version_info.major >= 3:
-            os.system('swig -python -py3 -c++ -modern ' +
+            os.system('swig -python -c++ ' +
                       '-I%s ' % swig_dir +
                       '-I%s ' % ql_swig_dir +
                       '-I%s ' % qle_swig_dir +
@@ -77,7 +77,7 @@ class my_wrap(Command):
                       '-outdir OREAnalytics -o OREAnalytics/oreanalytics_wrap.cpp ' +
                       'oreanalytics.i')
         else:
-            os.system('swig -python -c++ -modern ' +
+            os.system('swig -python -c++ ' +
                       '-I%s ' % swig_dir +
                       '-I%s ' % ql_swig_dir +
                       '-I%s ' % qle_swig_dir +
@@ -158,8 +158,9 @@ class my_build_ext(build_ext):
             self.define += [('__WIN32__', None), ('WIN32', None),
                             ('NDEBUG', None), ('_WINDOWS', None),
                             ('NOMINMAX', None)]
-            extra_compile_args = ['/GR', '/FD', '/Zm250', '/EHsc', '/bigobj' ]
+            extra_compile_args = ['/GR', '/FD', '/Zm250', '/EHsc', '/bigobj', '/std:c++17', '/wd4996' ]
             extra_link_args = ['/subsystem:windows', machinetype]
+            self.libraries = [ 'advapi32' ]
 
             if self.debug:
                 if self.static:
