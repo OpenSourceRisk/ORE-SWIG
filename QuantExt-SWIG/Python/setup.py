@@ -164,11 +164,12 @@ class my_build_ext(build_ext):
                     extra_compile_args.append('/MD')
 
         elif compiler == 'unix':
-            os.chdir('..')
+            #import pdb; pdb.set_trace()
+            #os.chdir('..')
             ql_compile_args = \
-                os.popen('. ./quantext-config --cflags').read()[:-1].split()
+                os.popen('../quantext-config --cflags').read()[:-1].split()
             ql_link_args = \
-                os.popen('. ./quantext-config --libs').read()[:-1].split()
+                os.popen('../quantext-config --libs').read()[:-1].split()
 
             self.define += [ (arg[2:],None) for arg in ql_compile_args
                              if arg.startswith('-D') ]
@@ -255,7 +256,7 @@ framework for quantitative finance.
       author           = "Quaternion Risk Management",
       author_email     = "info@quaternion.com",
       url              = "http://quaternion.com",
-      license          = codecs.open('../../LICENSE.TXT','r+',
+      license          = codecs.open('../../LICENSE.txt','r+',
                                      encoding='utf8').read(),
       classifiers      = classifiers,
       py_modules       = ['QuantExt.__init__','QuantExt.QuantExt'],

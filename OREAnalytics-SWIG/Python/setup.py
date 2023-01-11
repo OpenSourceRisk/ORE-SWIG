@@ -17,7 +17,7 @@ from distutils import sysconfig
 
 class test(Command):
     # Original version of this class posted
-    # by Berthold H�llmann to distutils-sig@python.org
+    # by Berthold Hoellmann to distutils-sig@python.org
     description = "test the distribution prior to install"
 
     user_options = [
@@ -179,11 +179,12 @@ class my_build_ext(build_ext):
                     extra_compile_args.append('/MD')
 
         elif compiler == 'unix':
-            os.chdir('..')
+            #import pdb; pdb.set_trace()
+            #os.chdir('..')
             ql_compile_args = \
-                os.popen('. ./oreanalytics-config --cflags').read()[:-1].split()
+                os.popen('../oreanalytics-config --cflags').read()[:-1].split()
             ql_link_args = \
-                os.popen('. ./oreanalytics-config --libs').read()[:-1].split()
+                os.popen('../oreanalytics-config --libs').read()[:-1].split()
 
             self.define += [ (arg[2:],None) for arg in ql_compile_args
                              if arg.startswith('-D') ]
