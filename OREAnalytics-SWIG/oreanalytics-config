@@ -39,12 +39,10 @@ while test $# -gt 0; do
       echo 1.13
       ;;
     --cflags)
-      #echo -I${prefix}/include  
-      echo -I${prefix}/OREAnalytics -I${prefix}/OREData -I${prefix}/QuantExt -I${prefix}/QuantLib -I${BOOST}
+      echo -I${ORE}/OREAnalytics -I${ORE}/OREData -I${ORE}/QuantExt -I${ORE}/QuantLib -I${BOOST}
       ;;
     --libs)
-      #echo -L${exec_prefix}/lib  -lQuantLib  
-      echo -L${exec_prefix}/OREAnalytics/orea/.libs -OREAnalytics -L${exec_prefix}/OREData/ored/.libs -lOREData -L${exec_prefix}/QuantExt/qle/.libs -lQuantExt -L${exec_prefix}/QuantLib/ql/.libs -lQuantLib -L${BOOST}/stage/lib -lboost_thread -lboost_system -lboost_serialization -lboost_date_time -lboost_regex -lboost_filesystem
+      echo -L${ORE}/build/OREAnalytics/orea -lOREAnalytics -L${ORE}/build/OREData/ored -lOREData -L${ORE}/build/QuantExt/qle -lQuantExt -L${ORE}/build/QuantLib/ql -lQuantLib -L${BOOST}/stage/lib -lboost_thread -lboost_system -lboost_serialization -lboost_date_time -lboost_regex -lboost_filesystem
       ;;
     *)
       echo "${usage}" 1>&2

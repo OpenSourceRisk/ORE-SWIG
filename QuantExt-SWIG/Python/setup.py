@@ -192,6 +192,7 @@ class my_build_ext(build_ext):
                                 if not arg.startswith('-l') ]
             if 'LDFLAGS' in os.environ:
                 extra_link_args += os.environ['LDFLAGS'].split()
+            extra_link_args += [ '-fPIC', '-DNDEBUG' ]
 
         else:
             pass
