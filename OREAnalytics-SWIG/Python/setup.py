@@ -218,22 +218,22 @@ class my_build_ext(build_ext):
             ext.extra_link_args = ext.extra_link_args or []
             ext.extra_link_args += extra_link_args
 
-if os.name == 'posix':
-    # changes the compiler from gcc to g++
-    save_init_posix = sysconfig._init_posix
-    def my_init_posix():
-        save_init_posix()
-        g = sysconfig._config_vars
-        if 'CXX' in os.environ:
-            g['CC'] = os.environ['CXX']
-        else:
-            g['CC'] = 'g++'
-        if sys.platform.startswith("darwin"):
-            g['LDSHARED'] = g['CC'] + \
-                            ' -bundle -flat_namespace -undefined suppress'
-        else:
-            g['LDSHARED'] = g['CC'] + ' -shared'
-    sysconfig._init_posix = my_init_posix
+#if os.name == 'posix':
+#    # changes the compiler from gcc to g++
+#    save_init_posix = sysconfig._init_posix
+#    def my_init_posix():
+#        save_init_posix()
+#        g = sysconfig._config_vars
+#        if 'CXX' in os.environ:
+#            g['CC'] = os.environ['CXX']
+#        else:
+#            g['CC'] = 'g++'
+#        if sys.platform.startswith("darwin"):
+#            g['LDSHARED'] = g['CC'] + \
+#                            ' -bundle -flat_namespace -undefined suppress'
+#        else:
+#            g['LDSHARED'] = g['CC'] + ' -shared'
+#    sysconfig._init_posix = my_init_posix
 
 datafiles  = []
 

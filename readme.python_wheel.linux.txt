@@ -197,21 +197,24 @@ python3 swap.py -> segmentation fault
 
 7.3.1 Build the wheel
 
-cd $DEMO_ORE_SWIG_DIR\OREAnalytics-SWIG\Python
-set BOOST_ROOT=$DEMO_BOOST_DIR
-set BOOST_LIB=$DEMO_BOOST_DIR\lib\x64\lib
-set ORE_DIR=$DEMO_ORE_DIR
-set PATH=$PATH;$DEMO_SWIG_DIR
-set PATH=C:\Users\eric.ehlers\AppData\Local\Programs\Python\Python310\Scripts;$PATH
-python -m build --wheel
+sudo apt install python3.10-venv
+sudo apt install python3-pip
+pip install build
+cd $DEMO_ORE_SWIG_DIR/OREAnalytics-SWIG/Python
+#export BOOST_ROOT=$DEMO_BOOST_DIR
+#export BOOST_LIB=$DEMO_BOOST_DIR\lib\x64\lib
+export ORE=$DEMO_ORE_DIR
+#export PATH=$PATH;$DEMO_SWIG_DIR
+#export PATH=C:\Users\eric.ehlers\AppData\Local\Programs\Python\Python310\Scripts;$PATH
+python3 -m build --wheel
 -> $DEMO_ORE_SWIG_DIR\OREAnalytics-SWIG\Python\dist\OREAnalytics_Python-1.8.3.2-cp310-cp310-win_amd64.whl
 
 7.3.2 Use the wheel
 
-python -m venv env1
-.\env1\Scripts\activate.bat
-pip install $DEMO_ORE_SWIG_DIR\OREAnalytics-SWIG\Python\dist\OREAnalytics_Python-1.8.3.2-cp310-cp310-win_amd64.whl
-python $DEMO_ORE_SWIG_DIR\OREAnalytics-SWIG\Python\Examples\commodityforward.py
+python3 -m venv env1
+. ./env1/bin/activate
+pip install $DEMO_ORE_SWIG_DIR/OREAnalytics-SWIG/Python/dist/OREAnalytics_Python-1.8.3.2-cp310-cp310-linux_x86_64.whl
+python $DEMO_ORE_SWIG_DIR/OREAnalytics-SWIG/Python/Examples/commodityforward.py
 
 TODO
 ====
