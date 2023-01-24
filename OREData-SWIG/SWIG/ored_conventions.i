@@ -196,11 +196,11 @@ class FraConvention : public Convention {
 class OisConvention : public Convention {
   public:
     OisConvention();
-    OisConvention(const std::string& id, const std::string& spotLag, const std::string& index,
-                  const std::string& fixedDayCounter, const std::string& paymentLag = "",
-                  const std::string& eom = "", const std::string& fixedFrequency = "",
-                  const std::string& fixedConvention = "", const std::string& fixedPaymentConvention = "",
-                  const std::string& rule = "", const std::string& paymentCalendar = "");
+    OisConvention(const std::string& id, const std::string& spotLag, const std::string& index, const std::string& fixedDayCounter,
+                  const std::string& fixedCalendar, const std::string& paymentLag = "", const std::string& eom = "",
+                  const std::string& fixedFrequency = "", const std::string& fixedConvention = "",
+                  const std::string& fixedPaymentConvention = "", const std::string& rule = "",
+                  const std::string& paymentCalendar = "");
     Natural spotLag() const;
     const std::string& indexName();
     const ext::shared_ptr<OvernightIndex> index();

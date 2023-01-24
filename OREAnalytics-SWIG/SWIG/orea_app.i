@@ -20,10 +20,13 @@
 #define orea_app_i
 
 %include ored_market.i
+%include ored_reports.i
+%include std_map.i
 
 %{
 using ore::analytics::Parameters;
 using ore::analytics::OREApp;
+using ore::data::PlainInMemoryReport;
 %}
 
 // ORE Analytics
@@ -41,12 +44,14 @@ class Parameters {
     //void add(const std::string& groupName, const std::string& paramName, const std::string& paramValue);
 };
 
+
 %shared_ptr(OREApp)
 class OREApp {
   public:
+
     OREApp(const ext::shared_ptr<Parameters>& p, std::ostream& out = std::cout);
 
-    int run();
+    int run(bool useAnalytics = false);
 
     void buildMarket(const std::string& todaysMarketXML = "", const std::string& curveConfigXML = "",
                      const std::string& conventionsXML = "",
@@ -59,6 +64,11 @@ class OREApp {
         const ext::shared_ptr<MarketImpl>& marketImpl,
         const std::string& pricingEngineXML,
         const bool generateAdditionalResults = false);
+
+    std::vector<std::string> getReportNames();
+    ext::shared_ptr<ore::data::PlainInMemoryReport> getReport(std::string reportName);
+
+    //std::map<std::string, std::map<std::string, ext::shared_ptr<ore::analytics::NPVCube>>> npvCubes();
 };
 
 #endif
