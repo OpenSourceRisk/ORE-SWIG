@@ -27,6 +27,7 @@
 using ore::analytics::Parameters;
 using ore::analytics::OREApp;
 using ore::data::PlainInMemoryReport;
+using ore::analytics::NPVCube;
 %}
 
 // ORE Analytics
@@ -43,7 +44,6 @@ class Parameters {
     //TODO: add this function to ORE, then add here
     //void add(const std::string& groupName, const std::string& paramName, const std::string& paramValue);
 };
-
 
 %shared_ptr(OREApp)
 class OREApp {
@@ -66,9 +66,10 @@ class OREApp {
         const bool generateAdditionalResults = false);
 
     std::vector<std::string> getReportNames();
-    ext::shared_ptr<ore::data::PlainInMemoryReport> getReport(std::string reportName);
+    ext::shared_ptr<PlainInMemoryReport> getReport(std::string reportName);
 
-    //std::map<std::string, std::map<std::string, ext::shared_ptr<ore::analytics::NPVCube>>> npvCubes();
+    std::vector<std::string> getCubeNames();
+    ext::shared_ptr<NPVCube> getCube(std::string cubeName);
 };
 
 #endif

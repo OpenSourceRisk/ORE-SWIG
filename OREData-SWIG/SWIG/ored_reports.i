@@ -26,15 +26,6 @@ using ore::data::InMemoryReport;
 using ore::data::PlainInMemoryReport;
 %}
 
-%shared_ptr(InMemoryReport)
-class InMemoryReport {
-public:
-    Size columns() const;
-    Size rows() const;
-    const std::string& header(Size i) const;
-    Size columnPrecision(Size i) const;
-};
-
 %shared_ptr(PlainInMemoryReport)
 class PlainInMemoryReport {
 public:

@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2018, 2020 Quaternion Risk Management Ltd
+ Copyright (C) 2023 Quaternion Risk Management Ltd
  All rights reserved.
 
  This file is part of ORE, a free-software/open-source library
