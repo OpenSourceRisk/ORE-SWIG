@@ -27,91 +27,20 @@
 %include creditdefaultswap.i
 
 %{
-using QLECreditDefaultSwap = QuantExt::CreditDefaultSwap;
-using QLEMidPointCdsEngine = QuantExt::MidPointCdsEngine;
 using QLECdsOption = QuantExt::CdsOption;
 using QLEBlackCdsOptionEngine = QuantExt::BlackCdsOptionEngine;
 %}
 
-%shared_ptr(QLECreditDefaultSwap)
-class QLECreditDefaultSwap : public Instrument {
-  public:
-    enum ProtectionPaymentTime { atDefault, atPeriodEnd, atMaturity };
-    QLECreditDefaultSwap(QuantLib::Protection::Side side,
-                         QuantLib::Real notional,
-                         QuantLib::Rate spread,
-                         const QuantLib::Schedule& schedule,
-                         QuantLib::BusinessDayConvention paymentConvention,
-                         const QuantLib::DayCounter& dayCounter,
-                         bool settlesAccrual = true,
-			 QLECreditDefaultSwap::ProtectionPaymentTime protectionPaymentTime = QLECreditDefaultSwap::atDefault,
-                         const QuantLib::Date& protectionStart = QuantLib::Date(),
-                         const ext::shared_ptr<QuantLib::Claim>& claim = ext::shared_ptr<QuantLib::Claim>(),
-			 const QuantLib::DayCounter& lastPeriodDayCounter = QuantLib::DayCounter());
-
-    QLECreditDefaultSwap(QuantLib::Protection::Side side,
-                         QuantLib::Real notional,
-                         QuantLib::Rate upfront,
-                         QuantLib::Rate spread,
-                         const QuantLib::Schedule& schedule,
-                         QuantLib::BusinessDayConvention paymentConvention,
-                         const QuantLib::DayCounter& dayCounter,
-                         bool settlesAccrual = true,
-                         QLECreditDefaultSwap::ProtectionPaymentTime protectionPaymentTime = QLECreditDefaultSwap::atDefault,
-                         const QuantLib::Date& protectionStart = QuantLib::Date(),
-                         const QuantLib::Date& upfrontDate = QuantLib::Date(),
-                         const ext::shared_ptr<QuantLib::Claim>& claim = ext::shared_ptr<QuantLib::Claim>(),
-			 const QuantLib::DayCounter& lastPeriodDayCounter = QuantLib::DayCounter());
-    QuantLib::Protection::Side side() const;
-    QuantLib::Real notional() const;
-    QuantLib::Rate runningSpread() const;
-    bool settlesAccrual() const;
-    QLECreditDefaultSwap::ProtectionPaymentTime protectionPaymentTime() const;
-    const QuantLib::Leg& coupons() const;
-    const QuantLib::Date& protectionStartDate() const;
-    const QuantLib::Date& protectionEndDate() const;
-    const ext::shared_ptr<SimpleCashFlow>& upfrontPayment() const;
-    const ext::shared_ptr<SimpleCashFlow>& accrualRebate() const;
-    //const ext::shared_ptr<SimpleCashFlow>& accrualRebateCurrent() const;
-    const QuantLib::Date& tradeDate() const;
-    QuantLib::Natural cashSettlementDays() const;
-    QuantLib::Rate fairUpfront() const;
-    QuantLib::Rate fairSpreadDirty() const;
-    QuantLib::Rate fairSpreadClean() const;
-    QuantLib::Real couponLegBPS() const;
-    QuantLib::Real upfrontBPS() const;
-    QuantLib::Real couponLegNPV() const;
-    QuantLib::Real defaultLegNPV() const;
-    QuantLib::Real upfrontNPV() const;
-    QuantLib::Real accrualRebateNPV() const;
-    QuantLib::Date maturity() const;
-    QuantLib::Rate impliedHazardRate(QuantLib::Real targetNPV,
-                                     const QuantLib::Handle<QuantLib::YieldTermStructure>& discountCurve,
-                                     const QuantLib::DayCounter& dayCounter,
-                                     QuantLib::Real recoveryRate = 0.4,
-                                     QuantLib::Real accuracy = 1.0e-6) const;
-    QuantLib::Rate conventionalSpread(QuantLib::Real conventionalRecovery,
-                                      const QuantLib::Handle<QuantLib::YieldTermStructure>& discountCurve,
-                                      const QuantLib::DayCounter& dayCounter) const;
-};
-
-%shared_ptr(QLEMidPointCdsEngine)
-class QLEMidPointCdsEngine : public PricingEngine {
-  public:
-    QLEMidPointCdsEngine(const QuantLib::Handle<QuantLib::DefaultProbabilityTermStructure>& probability,
-                         QuantLib::Real recoveryRate,
-                         const QuantLib::Handle<QuantLib::YieldTermStructure>& discountCurve);
-};
-
+*/
 
 %shared_ptr(QLECdsOption)
 class QLECdsOption : public Instrument {
   public:
-    enum StrikeType { Price, Spread };
+    QLECdsOption(const ext::shared_ptr<CreditDefaultSwap> swap,
     QLECdsOption(const ext::shared_ptr<QLECreditDefaultSwap> swap,
 		 const ext::shared_ptr<QuantLib::Exercise>& exercise,
 		 bool knocksOut = true, const QuantLib::Real strike = Null<Real>(),
-         const StrikeType strikeType = StrikeType::Spread);
+    const ext::shared_ptr<CreditDefaultSwap> underlyingSwap() const;
     const ext::shared_ptr<QLECreditDefaultSwap> underlyingSwap() const;
     QuantLib::Rate atmRate() const;
     QuantLib::Real riskyAnnuity() const;
