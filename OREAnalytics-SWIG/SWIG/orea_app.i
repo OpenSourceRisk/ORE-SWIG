@@ -22,6 +22,7 @@
 %include ored_market.i
 %include ored_reports.i
 %include std_map.i
+%include std_set.i
 
 %{
 using ore::analytics::Parameters;

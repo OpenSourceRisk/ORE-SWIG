@@ -83,7 +83,7 @@ class Envelope {
 public:
     const std::string& counterparty() const;
     const std::string& nettingSetId() const;
-    const std::map<std::string, std::string>& additionalFields() const;
+    const std::map<std::string, std::string> additionalFields() const;
 };
 
 // InstrumentWrapper pointer required as a return type only
