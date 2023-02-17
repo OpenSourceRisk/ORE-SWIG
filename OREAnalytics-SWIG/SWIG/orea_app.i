@@ -65,10 +65,10 @@ class OREApp {
         const std::string& pricingEngineXML,
         const bool generateAdditionalResults = false);
 
-    std::vector<std::string> getReportNames();
+    std::set<std::string> getReportNames();
     ext::shared_ptr<PlainInMemoryReport> getReport(std::string reportName);
 
-    std::vector<std::string> getCubeNames();
+    std::set<std::string> getCubeNames();
     ext::shared_ptr<NPVCube> getCube(std::string cubeName);
 };
 

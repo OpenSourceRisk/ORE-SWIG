@@ -32,8 +32,8 @@ class NPVCube {
     virtual Size samples() const = 0;
     virtual Size depth() const = 0;
 
-    //! Get the vector of ids for this cube
-    virtual const std::vector<std::string>& ids() const = 0;
+    //! Get a set of all ids in the cube
+    const std::set<std::string> ids() const;
     //! Get the vector of dates for this cube
     virtual const std::vector<QuantLib::Date>& dates() const = 0;
 
