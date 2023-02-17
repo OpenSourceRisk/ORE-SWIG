@@ -26,6 +26,7 @@
 %{
 using ore::analytics::Parameters;
 using ore::analytics::OREApp;
+using ore::analytics::Analytic;
 using ore::data::PlainInMemoryReport;
 using ore::analytics::NPVCube;
 %}
@@ -51,7 +52,7 @@ class OREApp {
 
     OREApp(const ext::shared_ptr<Parameters>& p, std::ostream& out = std::cout);
 
-    int run(bool useAnalytics = false);
+    int run(bool useAnalytics = true);
 
     void buildMarket(const std::string& todaysMarketXML = "", const std::string& curveConfigXML = "",
                      const std::string& conventionsXML = "",
@@ -65,6 +66,9 @@ class OREApp {
         const std::string& pricingEngineXML,
         const bool generateAdditionalResults = false);
 
+    std::set<std::string> getAnalyticTypes();
+    const ext::shared_ptr<Analytic>& getAnalytic(std::string type); 
+
     std::set<std::string> getReportNames();
     ext::shared_ptr<PlainInMemoryReport> getReport(std::string reportName);
 
@@ -72,4 +76,12 @@ class OREApp {
     ext::shared_ptr<NPVCube> getCube(std::string cubeName);
 };
 
+%shared_ptr(Analytic)
+class Analytic {
+ public:
+    
+    const ext::shared_ptr<ore::data::Market>& market() const;
+    const ext::shared_ptr<ore::data::Portfolio>& portfolio() const;
+};
+    
 #endif
