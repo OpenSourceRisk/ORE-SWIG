@@ -32,6 +32,14 @@ using ore::data::PlainInMemoryReport;
 using ore::analytics::NPVCube;
 %}
 
+namespace std {
+
+    %template(StringSet) set<string>;
+    %template(IntSet) set<int>;
+    %template(UnsignedIntSet) set<unsigned int>;
+
+}
+
 // ORE Analytics
 
 %shared_ptr(Parameters)
@@ -68,6 +76,7 @@ class OREApp {
         const bool generateAdditionalResults = false);
 
     std::set<std::string> getAnalyticTypes();
+    std::set<std::string> getSupportedAnalyticTypes();
     const ext::shared_ptr<Analytic>& getAnalytic(std::string type); 
 
     std::set<std::string> getReportNames();
