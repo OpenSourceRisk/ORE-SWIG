@@ -119,7 +119,8 @@ class Portfolio {
     Portfolio();
     std::size_t size() const;
     std::set<std::string> ids() const;
-    const std::map<std::string, boost::shared_ptr<Trade>>& trades() const;
+    ext::shared_ptr<Trade> get(const std::string& id) const;
+    const std::map<std::string, ext::shared_ptr<Trade>>& trades() const;
     bool remove(const std::string& tradeID);
     void load(const std::string& fileName,
               const ext::shared_ptr<TradeFactory>& tf = ext::make_shared<TradeFactory>());

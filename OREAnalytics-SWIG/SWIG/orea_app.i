@@ -28,6 +28,8 @@
 using ore::analytics::Parameters;
 using ore::analytics::OREApp;
 using ore::analytics::Analytic;
+using ore::data::Portfolio;
+using ore::data::MarketImpl;
 using ore::data::PlainInMemoryReport;
 using ore::analytics::NPVCube;
 %}
@@ -90,8 +92,8 @@ class OREApp {
 class Analytic {
  public:
     
-    const ext::shared_ptr<ore::data::Market>& market() const;
-    const ext::shared_ptr<ore::data::Portfolio>& portfolio() const;
+    ext::shared_ptr<MarketImpl> getMarket() const;
+    const ext::shared_ptr<Portfolio>& portfolio() const;
 };
     
 #endif
