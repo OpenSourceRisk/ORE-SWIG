@@ -16,19 +16,20 @@
 import sys, time
 from OREAnalytics import *
 
-##################################
-# Read inputs and kick off ORE run
+#############################################
+# Read inputs from files and kick off ORE run
 
 print ("Loading parameters...")
 params = Parameters()
 params.fromFile("Input/ore.xml")
-print ("setup/asofdate = " + params.get("setup","asofDate"))
 
-print ("Building OREApp...")
+print ("Creating OREApp...")
 ore = OREApp(params)
 
 print ("Running ORE process...");
 ore.run()
+
+print ("Running ORE process done");
 
 ###########################################
 # Check the analytics we have requested/run

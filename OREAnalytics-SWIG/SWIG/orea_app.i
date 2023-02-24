@@ -28,18 +28,21 @@
 using ore::analytics::Parameters;
 using ore::analytics::OREApp;
 using ore::analytics::Analytic;
+using ore::analytics::AnalyticsManager;
+using ore::analytics::InputParameters;
+using ore::analytics::NPVCube;
+using ore::analytics::MarketDataLoader;
+using ore::analytics::MarketDataInMemoryLoader;
+using ore::analytics::MarketCalibrationReport;
 using ore::data::Portfolio;
 using ore::data::MarketImpl;
 using ore::data::PlainInMemoryReport;
-using ore::analytics::NPVCube;
 %}
 
 namespace std {
-
     %template(StringSet) set<string>;
     %template(IntSet) set<int>;
     %template(UnsignedIntSet) set<unsigned int>;
-
 }
 
 // ORE Analytics
@@ -57,18 +60,182 @@ class Parameters {
     //void add(const std::string& groupName, const std::string& paramName, const std::string& paramValue);
 };
 
+%shared_ptr(InputParameters)
+class InputParameters {
+public:
+    void setAsOfDate(const std::string& s); 
+    void setResultsPath(const std::string& s);
+    void setBaseCurrency(const std::string& s);
+    void setContinueOnError(bool b);
+    void setLazyMarketBuilding(bool b);
+    void setBuildFailedTrades(bool b);
+    void setObservationModel(const std::string& s);
+    void setImplyTodaysFixings(bool b);
+    void setMarketConfig(const std::string& config, const std::string& context);
+    void setRefDataManager(const std::string& xml);
+    void setConventions(const std::string& xml);
+    void setIborFallbackConfig(const std::string& xml);
+    void setCurveConfigs(const std::string& xml);
+    void setPricingEngine(const std::string& xml);
+    void setTodaysMarketParams(const std::string& xml);
+    void setPortfolio(const std::string& xml); 
+    void setThreads(int i);
+    void setEntireMarket(bool b);
+    void setAllFixings(bool b);
+    void setEomInflationFixings(bool b);
+    void setUseMarketDataFixings(bool b);
+    void setIborFallbackOverride(bool b);
+    void setReportNaString(const std::string& s);
+    void setCsvQuoteChar(const char& c);
+    void setCsvSeparator(const char& c);
+    void setCsvCommentCharacter(const char& c);
+    void setDryRun(bool b);
+    void setMporDays(Size s);
+    void setMporCalendar(const std::string& s); 
+    void setMporForward(bool b);
+    void setIncludeMporExpired(bool b);
+    // Setters for npv analytics
+    void setOutputAdditionalResults(bool b);
+    // Setters for cashflows
+    void setIncludePastCashflows(bool b);
+    // Setters for curves/markets
+    void setOutputCurves(bool b);
+    void setOutputTodaysMarketCalibration(bool b);
+    void setCurvesMarketConfig(const std::string& s);
+    void setCurvesGrid(const std::string& s);
+    // Setters for sensi analytics
+    void setXbsParConversion(bool b);
+    void setAnalyticFxSensis(bool b);
+    void setParSensi(bool b);
+    void setAlignPillars(bool b);
+    void setOutputJacobi(bool b);
+    void setUseSensiSpreadedTermStructures(bool b);
+    void setSensiThreshold(Real r);
+    void setSensiSimMarketParams(const std::string& xml);
+    void setSensiScenarioData(const std::string& xml);
+    void setSensiPricingEngine(const std::string& xml);
+    // Setters for stress testing
+    void setStressThreshold(Real r);
+    void setStressSimMarketParams(const std::string& xml); 
+    void setStressScenarioData(const std::string& xml); 
+    void setStressPricingEngine(const std::string& xml); 
+    // Setters for VaR
+    void setSalvageCovariance(bool b);
+    void setVarQuantiles(const std::string& s); // parse to vector<Real>
+    void setVarBreakDown(bool b);
+    void setPortfolioFilter(const std::string& s);
+    void setVarMethod(const std::string& s);
+    void setMcVarSamples(Size s);
+    void setMcVarSeed(long l);
+    // TODO: API for setting covariance data 
+    // const std::map<std::pair<RiskFactorKey, RiskFactorKey>, Real>& covarianceData();
+    // TODO: API for setting a sensitivity stream
+    // const boost::shared_ptr<SensitivityStream>& sensitivityStream();
+    // Setters for exposure simulation 
+    void setAmc(bool b);
+    void setAmcTradeTypes(const std::string& s); // todo: parse to set<string>
+    void setExposureBaseCurrency(const std::string& s);
+    void setExposureObservationModel(const std::string& s);
+    void setNettingSetId(const std::string& s);
+    void setScenarioGenType(const std::string& s);
+    void setStoreFlows(bool b);
+    void setStoreSurvivalProbabilities(bool b);
+    void setWriteCube(bool b);
+    void setWriteScenarios(bool b);
+    void setExposureSimMarketParams(const std::string& xml);
+    void setScenarioGeneratorData(const std::string& xml);
+    void setCrossAssetModelData(const std::string& xml);
+    void setSimulationPricingEngine(const std::string& xml);
+    void setAmcPricingEngine(const std::string& xml);
+    void setNettingSetManager(const std::string& xml);
+    // TODO: load from XML
+    // void setCounterpartyManager(const std::string& xml);
+    // TODO: load from XML
+    // void setCollateralBalances(const std::string& xml); // todo: load from XML
+    // Setters for xva
+    void setXvaBaseCurrency(const std::string& s) { xvaBaseCurrency_ = s; }
+    void setLoadCube(bool b) { loadCube_ = b; }
+    // TODO: API for setting NPV and market cubes
+    // boost::shared_ptr<NPVCube> cube();
+    // boost::shared_ptr<NPVCube> nettingSetCube();
+    // boost::shared_ptr<NPVCube> cptyCube();
+    // boost::shared_ptr<AggregationScenarioData> mktCube();
+    void setFlipViewXVA(bool b);
+    void setFullInitialCollateralisation(bool b);
+    void setExposureProfiles(bool b);
+    void setExposureProfilesByTrade(bool b);
+    void setPfeQuantile(Real r);
+    void setCollateralCalculationType(const std::string& s);
+    void setExposureAllocationMethod(const std::string& s);
+    void setMarginalAllocationLimit(Real r);
+    void setExerciseNextBreak(bool b);
+    void setCvaAnalytic(bool b);
+    void setDvaAnalytic(bool b);
+    void setFvaAnalytic(bool b);
+    void setColvaAnalytic(bool b);
+    void setCollateralFloorAnalytic(bool b);
+    void setDimAnalytic(bool b);
+    void setMvaAnalytic(bool b);
+    void setKvaAnalytic(bool b);
+    void setDynamicCredit(bool b);
+    void setCvaSensi(bool b);
+    void setCvaSensiGrid(const std::string& s); // todo: parse to vector<Period>
+    void setCvaSensiShiftSize(Real r);
+    void setDvaName(const std::string& s);
+    void setRawCubeOutput(bool b);
+    void setNetCubeOutput(bool b);
+    // FIXME: remove this from the base class?
+    void setRawCubeOutputFile(const std::string& s);
+    void setNetCubeOutputFile(const std::string& s);
+    // funding value adjustment details
+    void setFvaBorrowingCurve(const std::string& s);
+    void setFvaLendingCurve(const std::string& s);
+    void setFlipViewBorrowingCurvePostfix(const std::string& s);
+    void setFlipViewLendingCurvePostfix(const std::string& s);
+    // dynamic initial margin details
+    void setDimQuantile(Real r);
+    void setDimHorizonCalendarDays(Size s);
+    void setDimRegressionOrder(Size s);
+    void setDimRegressors(const std::string& s); 
+    void setDimOutputGridPoints(const std::string& s); 
+    void setDimOutputNettingSet(const std::string& s);
+    void setDimLocalRegressionEvaluations(Size s);
+    void setDimLocalRegressionBandwidth(Real r);
+    // capital value adjustment details
+    void setKvaCapitalDiscountRate(Real r);
+    void setKvaAlpha(Real r);
+    void setKvaRegAdjustment(Real r);
+    void setKvaCapitalHurdle(Real r);
+    void setKvaOurPdFloor(Real r);
+    void setKvaTheirPdFloor(Real r);
+    void setKvaOurCvaRiskWeight(Real r);
+    void setKvaTheirCvaRiskWeight(Real r);
+    // Setters for cashflow npv and dynamic backtesting
+    void setCashflowHorizon(const std::string& s); 
+    void setPortfolioFilterDate(const std::string& s); 
+    // Set list of analytics that shall be run
+    void setAnalytics(const std::string& s); 
+};
+
 %shared_ptr(OREApp)
 class OREApp {
   public:
 
     OREApp(const ext::shared_ptr<Parameters>& p, std::ostream& out = std::cout);
 
+    OREApp(const ext::shared_ptr<InputParameters>& inputs,
+           const std::string& logFile, Size logMask = 15, ostream& out = std::cout);
+    
     int run(bool useAnalytics = true);
+
+    void run(const std::vector<std::string>& marketData,
+             const std::vector<std::string>& fixingData);
 
     void buildMarket(const std::string& todaysMarketXML = "", const std::string& curveConfigXML = "",
                      const std::string& conventionsXML = "",
                      const std::vector<std::string>& marketData = std::vector<std::string>(),
                      const std::vector<std::string>& fixingData = std::vector<std::string>());
+
 
     ext::shared_ptr<MarketImpl> getMarket() const;
 
@@ -91,9 +258,26 @@ class OREApp {
 %shared_ptr(Analytic)
 class Analytic {
  public:
-    
     ext::shared_ptr<MarketImpl> getMarket() const;
     const ext::shared_ptr<Portfolio>& portfolio() const;
 };
-    
+
+%shared_ptr(AnalyticsManager)
+class AnalyticsManager {
+public:
+    AnalyticsManager(const ext::shared_ptr<InputParameters>& inputs,
+                     const ext::shared_ptr<MarketDataLoader>& marketDataLoader,
+                     std::ostream& out = std::cout);
+    void runAnalytics(const std::set<std::string>& analyticTypes,
+                      const ext::shared_ptr<MarketCalibrationReport>& marketCalibrationReport = nullptr);
+};
+
+%shared_ptr(MarketDataInMemoryLoader)
+class MarketDataInMemoryLoader : public MarketDataLoader {
+public: 
+    MarketDataInMemoryLoader(const ext::shared_ptr<InputParameters>& inputs,
+                             const std::vector<std::string>& marketData,
+                             const std::vector<std::string>& fixingData);
+};
+
 #endif
