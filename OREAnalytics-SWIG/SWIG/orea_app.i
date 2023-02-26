@@ -224,7 +224,8 @@ class OREApp {
     OREApp(const ext::shared_ptr<Parameters>& p, std::ostream& out = std::cout);
 
     OREApp(const ext::shared_ptr<InputParameters>& inputs,
-           const std::string& logFile, Size logMask = 15, ostream& out = std::cout);
+           const std::string& logFile, Size logLevel = 31, Size bufferLogLevel = 15,
+           ostream& out = std::cout);
     
     int run(bool useAnalytics = true);
 
@@ -253,6 +254,8 @@ class OREApp {
 
     std::set<std::string> getCubeNames();
     ext::shared_ptr<NPVCube> getCube(std::string cubeName);
+
+    std::vector<std::string> getErrors();
 };
 
 %shared_ptr(Analytic)

@@ -870,7 +870,8 @@ fixingData = [
 asof = "2016-02-05"
 outputPath = "Output"
 logFile = "log.txt"
-logMask = 15
+logLevel = 31
+bufferLogLevel = 15
 
 print ("Build input parameters...")
 
@@ -887,7 +888,6 @@ inputs.setPortfolio(portfolioXML)
 inputs.setThreads(1)
 inputs.setEntireMarket(True)
 inputs.setAllFixings(True)
-
 inputs.setAmc(False)
 inputs.setExposureBaseCurrency("EUR")
 inputs.setExposureSimMarketParams(simMarketXML)
@@ -902,15 +902,25 @@ inputs.setExposureProfiles(True)
 inputs.setExposureProfilesByTrade(False)
 inputs.setCvaAnalytic(True)
 
-inputs.setAnalytics("NPV,CASHFLOW,XVA,EXPOSURE")
+inputs.setAnalytics("NPV,XVA,EXPOSURE")
 
 print ("Initialise ORE...")
-ore = OREApp(inputs, logFile, logMask);
+ore = OREApp(inputs, logFile, logLevel);
 
 print ("Running ORE process...");
 ore.run(marketData, fixingData)
 
-print ("Running ORE process done");
+errors = ore.getErrors()
+print ("Running ORE process completed with", len(errors), "errors/warnings")
+
+print("\npress <enter> ...")
+sys.stdin.readline()
+
+for e in errors:
+    print(e)
+    
+print("\npress <enter> ...")
+sys.stdin.readline()
 
 ############################################################
 # Alternatively, read inputs from files and kick off ORE run
