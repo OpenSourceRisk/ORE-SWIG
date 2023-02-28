@@ -221,16 +221,17 @@ public:
 class OREApp {
   public:
 
-    OREApp(const ext::shared_ptr<Parameters>& p, std::ostream& out = std::cout);
+    OREApp(ext::shared_ptr<Parameters> params,
+           bool console = true, Size width = 50, Size progressBarWidth = 22);
 
     OREApp(const ext::shared_ptr<InputParameters>& inputs,
            const std::string& logFile, Size logLevel = 31, Size bufferLogLevel = 15,
-           ostream& out = std::cout);
+           bool console = false, Size width = 50, Size progressBarWidth = 22);
     
     int run(bool useAnalytics = true);
 
-    void run(const std::vector<std::string>& marketData,
-             const std::vector<std::string>& fixingData);
+    int run(const std::vector<std::string>& marketData,
+            const std::vector<std::string>& fixingData);
 
     void buildMarket(const std::string& todaysMarketXML = "", const std::string& curveConfigXML = "",
                      const std::string& conventionsXML = "",
@@ -269,8 +270,7 @@ class Analytic {
 class AnalyticsManager {
 public:
     AnalyticsManager(const ext::shared_ptr<InputParameters>& inputs,
-                     const ext::shared_ptr<MarketDataLoader>& marketDataLoader,
-                     std::ostream& out = std::cout);
+                     const ext::shared_ptr<MarketDataLoader>& marketDataLoader);
     void runAnalytics(const std::set<std::string>& analyticTypes,
                       const ext::shared_ptr<MarketCalibrationReport>& marketCalibrationReport = nullptr);
 };

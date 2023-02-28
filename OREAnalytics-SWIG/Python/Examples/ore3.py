@@ -872,6 +872,7 @@ outputPath = "Output"
 logFile = "log.txt"
 logLevel = 31
 bufferLogLevel = 15
+consoleLog = True
 
 print ("Build input parameters...")
 
@@ -905,13 +906,13 @@ inputs.setCvaAnalytic(True)
 inputs.setAnalytics("NPV,XVA,EXPOSURE")
 
 print ("Initialise ORE...")
-ore = OREApp(inputs, logFile, logLevel);
+ore = OREApp(inputs, logFile, logLevel, bufferLogLevel, consoleLog);
 
 print ("Running ORE process...");
 ore.run(marketData, fixingData)
 
 errors = ore.getErrors()
-print ("Running ORE process completed with", len(errors), "errors/warnings")
+print ("ORE process completed with", len(errors), "errors/warnings")
 
 print("\npress <enter> ...")
 sys.stdin.readline()
