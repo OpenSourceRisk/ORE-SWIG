@@ -221,12 +221,11 @@ public:
 class OREApp {
   public:
 
-    OREApp(ext::shared_ptr<Parameters> params,
-           bool console = true, Size width = 50, Size progressBarWidth = 22);
+    OREApp(ext::shared_ptr<Parameters> params, bool console = true);
 
     OREApp(const ext::shared_ptr<InputParameters>& inputs,
-           const std::string& logFile, Size logLevel = 31, Size bufferLogLevel = 15,
-           bool console = false, Size width = 50, Size progressBarWidth = 22);
+           const std::string& logFile, Size logLevel = 31,
+           bool console = false);
     
     int run(bool useAnalytics = true);
 

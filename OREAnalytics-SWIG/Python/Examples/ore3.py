@@ -94,6 +94,77 @@ portfolioXML =\
 "      </LegData>"\
 "    </SwapData>"\
 "  </Trade>"\
+"  <Trade id='Swap_10y'>"\
+"    <TradeType>Swap</TradeType>"\
+"    <Envelope>"\
+"      <CounterParty>CPTY_A</CounterParty>"\
+"      <NettingSetId>CPTY_A</NettingSetId>"\
+"      <AdditionalFields/>"\
+"    </Envelope>"\
+"    <SwapData>"\
+"      <LegData>"\
+"        <LegType>Fixed</LegType>"\
+"        <Payer>false</Payer>"\
+"        <Currency>EUR</Currency>"\
+"        <Notionals>"\
+"          <Notional>10000000.0</Notional>"\
+"        </Notionals>"\
+"        <DayCounter>30/360</DayCounter>"\
+"        <PaymentConvention>F</PaymentConvention>"\
+"        <FixedLegData>"\
+"          <Rates>"\
+"            <Rate>0.02</Rate>"\
+"          </Rates>"\
+"        </FixedLegData>"\
+"        <ScheduleData>"\
+"          <Rules>"\
+"            <StartDate>20160301</StartDate>"\
+"            <EndDate>20260301</EndDate>"\
+"            <Tenor>1Y</Tenor>"\
+"            <Calendar>TARGET</Calendar>"\
+"            <Convention>F</Convention>"\
+"            <TermConvention>F</TermConvention>"\
+"            <Rule>Forward</Rule>"\
+"            <EndOfMonth/>"\
+"            <FirstDate/>"\
+"            <LastDate/>"\
+"          </Rules>"\
+"        </ScheduleData>"\
+"      </LegData>"\
+"      <LegData>"\
+"        <LegType>Floating</LegType>"\
+"        <Payer>true</Payer>"\
+"        <Currency>EUR</Currency>"\
+"        <Notionals>"\
+"          <Notional>10000000.0</Notional>"\
+"        </Notionals>"\
+"        <DayCounter>A360</DayCounter>"\
+"        <PaymentConvention>MF</PaymentConvention>"\
+"        <FloatingLegData>"\
+"          <Index>EUR-EURIBOR-6M</Index>"\
+"          <Spreads>"\
+"            <Spread>0.000000</Spread>"\
+"          </Spreads>"\
+"          <IsInArrears>false</IsInArrears>"\
+"          <FixingDays>2</FixingDays>"\
+"        </FloatingLegData>"\
+"        <ScheduleData>"\
+"          <Rules>"\
+"            <StartDate>20160301</StartDate>"\
+"            <EndDate>20260301</EndDate>"\
+"            <Tenor>6M</Tenor>"\
+"            <Calendar>TARGET</Calendar>"\
+"            <Convention>MF</Convention>"\
+"            <TermConvention>MF</TermConvention>"\
+"            <Rule>Forward</Rule>"\
+"            <EndOfMonth/>"\
+"            <FirstDate/>"\
+"            <LastDate/>"\
+"          </Rules>"\
+"        </ScheduleData>"\
+"      </LegData>"\
+"    </SwapData>"\
+"  </Trade>"\
 "</Portfolio>"
 
 refDataXML = "<ReferenceData></ReferenceData>"
@@ -871,7 +942,6 @@ asof = "2016-02-05"
 outputPath = "Output"
 logFile = "log.txt"
 logLevel = 31
-bufferLogLevel = 15
 consoleLog = True
 
 print ("Build input parameters...")
@@ -906,7 +976,7 @@ inputs.setCvaAnalytic(True)
 inputs.setAnalytics("NPV,XVA,EXPOSURE")
 
 print ("Initialise ORE...")
-ore = OREApp(inputs, logFile, logLevel, bufferLogLevel, consoleLog);
+ore = OREApp(inputs, logFile, logLevel, consoleLog);
 
 print ("Running ORE process...");
 ore.run(marketData, fixingData)
@@ -917,11 +987,11 @@ print ("ORE process completed with", len(errors), "errors/warnings")
 print("\npress <enter> ...")
 sys.stdin.readline()
 
-for e in errors:
-    print(e)
-    
-print("\npress <enter> ...")
-sys.stdin.readline()
+if len(errors) > 0:
+    for e in errors:
+        print(e)
+    print("\npress <enter> ...")
+    sys.stdin.readline()
 
 ############################################################
 # Alternatively, read inputs from files and kick off ORE run
