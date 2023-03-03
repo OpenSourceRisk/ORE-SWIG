@@ -17,7 +17,7 @@ from distutils import sysconfig
 
 class test(Command):
     # Original version of this class posted
-    # by Berthold H�llmann to distutils-sig@python.org
+    # by Berthold Hoellmann to distutils-sig@python.org
     description = "test the distribution prior to install"
 
     user_options = [
@@ -97,7 +97,6 @@ class my_build(build):
     def finalize_options(self):
         build.finalize_options(self)
 
-
 class my_build_ext(build_ext):
     user_options = build_ext.user_options + [
         ('static', None,
@@ -107,6 +106,16 @@ class my_build_ext(build_ext):
     def initialize_options(self):
         build_ext.initialize_options(self)
         self.static = None
+    def get_var(self, v):
+        if v in os.environ:
+            return os.getenv(v)
+        else:
+            raise Exception("Environment variable {} not set".format(v))
+    def validate_path(self, p):
+        if os.path.exists(p):
+            return p
+        else:
+            raise Exception("Invalid path: {}".format(p))
     def finalize_options(self):
         build_ext.finalize_options(self)
         self.set_undefined_options('build', ('static','static'))
@@ -122,34 +131,30 @@ class my_build_ext(build_ext):
         compiler = self.compiler or get_default_compiler()
 
         if compiler == 'msvc':
-            try:
-                BOOST_DIR = os.environ['BOOST_ROOT']
-                BOOST_LIB = os.environ['BOOST_LIB']
-                ORE_INSTALL_DIR = os.environ['ORE_DIR']
+            BOOST_DIR = self.get_var('BOOST_ROOT')
+            BOOST_LIB = self.get_var('BOOST_LIB')
+            ORE_DIR = self.get_var('ORE_DIR')
 
-                # ADD INCLUDE DIRECTORIES
-                self.include_dirs += [BOOST_DIR]
-                self.include_dirs += [os.path.join(ORE_INSTALL_DIR,'QuantLib')]
-                self.include_dirs += [os.path.join(ORE_INSTALL_DIR,'QuantExt')]
-                self.include_dirs += [os.path.join(ORE_INSTALL_DIR,'OREData')]
-                self.include_dirs += [os.path.join(ORE_INSTALL_DIR,'OREAnalytics')]
+            # ADD INCLUDE DIRECTORIES
+            self.include_dirs.append(self.validate_path(BOOST_DIR))
+            self.include_dirs.append(self.validate_path(os.path.join(ORE_DIR, 'QuantLib')))
+            self.include_dirs.append(self.validate_path(os.path.join(ORE_DIR, 'QuantExt')))
+            self.include_dirs.append(self.validate_path(os.path.join(ORE_DIR, 'OREData')))
+            self.include_dirs.append(self.validate_path(os.path.join(ORE_DIR, 'OREAnalytics')))
 
-				# ADD LIBRARY DIRECTORIES
-                self.library_dirs += [BOOST_LIB]
-                self.library_dirs += [os.path.join(ORE_INSTALL_DIR,'QuantLib','lib')]
-                self.library_dirs += [os.path.join(ORE_INSTALL_DIR,'QuantExt','lib')]
-                self.library_dirs += [os.path.join(ORE_INSTALL_DIR,'OREData','lib')]
-                self.library_dirs += [os.path.join(ORE_INSTALL_DIR,'OREAnalytics','lib')]
+            # ADD LIBRARY DIRECTORIES
+            self.library_dirs.append(self.validate_path(BOOST_LIB))
+            self.library_dirs.append(self.validate_path(os.path.join(ORE_DIR, 'build', 'QuantLib', 'ql', 'Release')))
+            self.library_dirs.append(self.validate_path(os.path.join(ORE_DIR, 'build', 'QuantExt', 'qle', 'Release')))
+            self.library_dirs.append(self.validate_path(os.path.join(ORE_DIR, 'build', 'OREData', 'ored', 'Release')))
+            self.library_dirs.append(self.validate_path(os.path.join(ORE_DIR, 'build', 'OREAnalytics', 'orea', 'Release')))
 
-            except KeyError:
-                print('warning: unable to detect BOOST/ORE installation')
-
-#            if 'INCLUDE' in os.environ:
-#                dirs = [dir for dir in os.environ['INCLUDE'].split(';')]
-#                self.include_dirs += [ d for d in dirs if d.strip() ]
-#            if 'LIB' in os.environ:
-#                dirs = [dir for dir in os.environ['LIB'].split(';')]
-#                self.library_dirs += [ d for d in dirs if d.strip() ]
+            #if 'INCLUDE' in os.environ:
+            #    dirs = [dir for dir in os.environ['INCLUDE'].split(';')]
+            #    self.include_dirs += [ d for d in dirs if d.strip() ]
+            #if 'LIB' in os.environ:
+            #    dirs = [dir for dir in os.environ['LIB'].split(';')]
+            #    self.library_dirs += [ d for d in dirs if d.strip() ]
             dbit = round(math.log(sys.maxsize, 2) + 1)
             if dbit == 64:
                 machinetype = '/machine:x64'
@@ -163,22 +168,23 @@ class my_build_ext(build_ext):
             self.libraries = [ 'advapi32' ]
 
             if self.debug:
-                if self.static:
+                if self.static or 'ORE_STATIC_RUNTIME' in os.environ:
                     extra_compile_args.append('/MTd')
                 else:
                     extra_compile_args.append('/MDd')
             else:
-                if self.static:
+                if self.static or 'ORE_STATIC_RUNTIME' in os.environ:
                     extra_compile_args.append('/MT')
                 else:
                     extra_compile_args.append('/MD')
 
         elif compiler == 'unix':
-            os.chdir('..')
+            #import pdb; pdb.set_trace()
+            #os.chdir('..')
             ql_compile_args = \
-                os.popen('. ./oreanalytics-config --cflags').read()[:-1].split()
+                os.popen('../oreanalytics-config --cflags').read()[:-1].split()
             ql_link_args = \
-                os.popen('. ./oreanalytics-config --libs').read()[:-1].split()
+                os.popen('../oreanalytics-config --libs').read()[:-1].split()
 
             self.define += [ (arg[2:],None) for arg in ql_compile_args
                              if arg.startswith('-D') ]
@@ -212,22 +218,22 @@ class my_build_ext(build_ext):
             ext.extra_link_args = ext.extra_link_args or []
             ext.extra_link_args += extra_link_args
 
-if os.name == 'posix':
-    # changes the compiler from gcc to g++
-    save_init_posix = sysconfig._init_posix
-    def my_init_posix():
-        save_init_posix()
-        g = sysconfig._config_vars
-        if 'CXX' in os.environ:
-            g['CC'] = os.environ['CXX']
-        else:
-            g['CC'] = 'g++'
-        if sys.platform.startswith("darwin"):
-            g['LDSHARED'] = g['CC'] + \
-                            ' -bundle -flat_namespace -undefined suppress'
-        else:
-            g['LDSHARED'] = g['CC'] + ' -shared'
-    sysconfig._init_posix = my_init_posix
+#if os.name == 'posix':
+#    # changes the compiler from gcc to g++
+#    save_init_posix = sysconfig._init_posix
+#    def my_init_posix():
+#        save_init_posix()
+#        g = sysconfig._config_vars
+#        if 'CXX' in os.environ:
+#            g['CC'] = os.environ['CXX']
+#        else:
+#            g['CC'] = 'g++'
+#        if sys.platform.startswith("darwin"):
+#            g['LDSHARED'] = g['CC'] + \
+#                            ' -bundle -flat_namespace -undefined suppress'
+#        else:
+#            g['LDSHARED'] = g['CC'] + ' -shared'
+#    sysconfig._init_posix = my_init_posix
 
 datafiles  = []
 
@@ -245,12 +251,16 @@ classifiers = [
     'Intended Audience :: End Users/Desktop',
     'License :: OSI Approved :: BSD License',
     'Natural Language :: English',
-    'Operating System :: OS Independent',
+    'Operating System :: Microsoft :: Windows',
+    'Operating System :: POSIX',
+    'Operating System :: Unix',
+    'Operating System :: MacOS',
+    'Programming Language :: C++',
     'Programming Language :: Python',
     'Topic :: Scientific/Engineering',
 ]
 
-setup(name             = "OREAnalytics-Python",
+setup(name             = "osre",
       version          = "1.8.3.2",
       description      = "Python bindings for the OREAnalytics library",
       long_description = """
@@ -261,7 +271,7 @@ framework for quantitative finance.
       author           = "Quaternion Risk Management",
       author_email     = "info@quaternion.com",
       url              = "http://quaternion.com",
-      license          = codecs.open('../../LICENSE.TXT','r+',
+      license          = codecs.open('../../LICENSE.txt','r+',
                                      encoding='utf8').read(),
       classifiers      = classifiers,
       py_modules       = ['OREAnalytics.__init__','OREAnalytics.OREAnalytics'],
@@ -275,4 +285,3 @@ framework for quantitative finance.
                           'build_ext': my_build_ext
                           }
       )
-
