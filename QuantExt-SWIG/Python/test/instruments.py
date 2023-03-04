@@ -134,7 +134,7 @@ class CDSOptionTest(unittest.TestCase):
         self.upfront = 0
         self.recovery_rate = 0.4
         self.settles_accrual = True
-        self.protection_payment_time = QLECreditDefaultSwap.atDefault
+        self.protection_payment_time = True
         self.discount_curve = YieldTermStructureHandle(FlatForward(self.todays_date, 0.01, self.day_counter))
         self.hazard_curve = FlatHazardRate(self.todays_date, QuoteHandle(SimpleQuote(0.02)), self.day_counter)
         self.probability_curve = DefaultProbabilityTermStructureHandle(self.hazard_curve)
@@ -143,11 +143,11 @@ class CDSOptionTest(unittest.TestCase):
         self.volatility_curve = BlackVolTermStructureHandle(self.volatility)
         self.creditVolWrap = CreditVolCurveWrapper(self.volatility_curve)
         self.creditVolHandle = RelinkableVolCreditCurveHandle(self.creditVolWrap)
-        self.cds = QLECreditDefaultSwap(self.side, self.notional, self.upfront, self.spread,
+        self.cds = CreditDefaultSwap(self.side, self.notional, self.upfront, self.spread,
                                         self.schedule, self.bdc, self.day_counter,
                                         self.settles_accrual, self.protection_payment_time,
                                         self.settlement_date)
-        self.cds_engine = QLEMidPointCdsEngine(self.probability_curve, self.recovery_rate, self.discount_curve)
+        self.cds_engine = MidPointCdsEngine(self.probability_curve, self.recovery_rate, self.discount_curve)
         self.cds.setPricingEngine(self.cds_engine)
         self.cds_option = QLECdsOption(self.cds, self.exercise)
         self.engine = QLEBlackCdsOptionEngine(self.probability_curve, self.recovery_rate,
@@ -163,11 +163,11 @@ class CDSOptionTest(unittest.TestCase):
         """ Test consistency of fair price and NPV() """
         tolerance = 1.0e-8
         atm_rate = self.cds_option.atmRate()
-        buyer_cds = QLECreditDefaultSwap(Protection.Buyer, self.notional, self.upfront, atm_rate,
+        buyer_cds = CreditDefaultSwap(Protection.Buyer, self.notional, self.upfront, atm_rate,
                                          self.schedule, self.bdc, self.day_counter,
                                          self.settles_accrual, self.protection_payment_time,
                                          self.settlement_date)
-        seller_cds = QLECreditDefaultSwap(Protection.Seller, self.notional, self.upfront, atm_rate,
+        seller_cds = CreditDefaultSwap(Protection.Seller, self.notional, self.upfront, atm_rate,
                                           self.schedule, self.bdc, self.day_counter,
                                           self.settles_accrual, self.protection_payment_time,
                                           self.settlement_date)
@@ -203,17 +203,17 @@ class CreditDefaultSwapTest(unittest.TestCase):
         self.side = Protection.Buyer
         self.upfront = 0
         self.settles_accrual = True
-        self.protection_payment_time = QLECreditDefaultSwap.atDefault
+        self.protection_payment_time = True
         self.discount_curve = YieldTermStructureHandle(FlatForward(self.todays_date, 0.01, self.day_counter))
         self.recovery_rate = 0.4
         self.hazard_rate = 0.015
         self.hazard_curve = FlatHazardRate(self.todays_date, QuoteHandle(SimpleQuote(self.hazard_rate)), self.day_counter)
         self.probability_curve = DefaultProbabilityTermStructureHandle(self.hazard_curve)
-        self.cds = QLECreditDefaultSwap(self.side, self.notional, self.upfront, self.spread,
+        self.cds = CreditDefaultSwap(self.side, self.notional, self.upfront, self.spread,
                                         self.schedule, self.bdc, self.day_counter,
                                         self.settles_accrual, self.protection_payment_time,
                                         self.settlement_date)
-        self.engine = QLEMidPointCdsEngine(self.probability_curve, self.recovery_rate, self.discount_curve)
+        self.engine = MidPointCdsEngine(self.probability_curve, self.recovery_rate, self.discount_curve)
         self.cds.setPricingEngine(self.engine)
         
     def testSimpleInspectors(self):
@@ -222,15 +222,15 @@ class CreditDefaultSwapTest(unittest.TestCase):
         self.assertEqual(self.cds.notional(), self.notional)
         self.assertEqual(self.cds.runningSpread(), self.spread)
         self.assertEqual(self.cds.settlesAccrual(), self.settles_accrual)
-        self.assertEqual(self.cds.protectionPaymentTime(), self.protection_payment_time)
+        self.assertEqual(self.cds.paysAtDefaultTime(), self.protection_payment_time)
         self.assertEqual(self.cds.protectionStartDate(), self.settlement_date)
         self.assertEqual(self.cds.protectionEndDate(), self.maturity_date)
         
     def testConsistency(self):
         """ Test consistency of fair price and NPV() """
         tolerance = 1.0e-8
-        fair_spread = self.cds.fairSpreadClean()
-        cds = QLECreditDefaultSwap(self.side, self.notional, self.upfront, fair_spread,
+        fair_spread = self.cds.fairSpread()
+        cds = CreditDefaultSwap(self.side, self.notional, self.upfront, fair_spread,
                                    self.schedule, self.bdc, self.day_counter,
                                    self.settles_accrual, self.protection_payment_time,
                                    self.settlement_date)
