@@ -31,17 +31,15 @@ using QLECdsOption = QuantExt::CdsOption;
 using QLEBlackCdsOptionEngine = QuantExt::BlackCdsOptionEngine;
 %}
 
-*/
-
 %shared_ptr(QLECdsOption)
 class QLECdsOption : public Instrument {
   public:
+    enum StrikeType { Price, Spread };
     QLECdsOption(const ext::shared_ptr<CreditDefaultSwap> swap,
-    QLECdsOption(const ext::shared_ptr<QLECreditDefaultSwap> swap,
 		 const ext::shared_ptr<QuantLib::Exercise>& exercise,
 		 bool knocksOut = true, const QuantLib::Real strike = Null<Real>(),
+         const StrikeType strikeType = StrikeType::Spread);
     const ext::shared_ptr<CreditDefaultSwap> underlyingSwap() const;
-    const ext::shared_ptr<QLECreditDefaultSwap> underlyingSwap() const;
     QuantLib::Rate atmRate() const;
     QuantLib::Real riskyAnnuity() const;
     QuantLib::Volatility impliedVolatility(QuantLib::Real price,

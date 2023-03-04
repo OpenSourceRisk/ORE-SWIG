@@ -26,9 +26,11 @@ using ore::data::Portfolio;
 using ore::data::Envelope;
 using ore::data::MarketContext;
 using ore::data::EngineData;
+using ore::data::ReferenceDataManager;
 using ore::data::LegBuilder;
 using ore::data::EngineBuilder;
 using ore::data::EngineFactory;
+using ore::data::IborFallbackConfig;
 using ore::data::Trade;
 using ore::data::TradeFactory;
 using ore::data::InstrumentWrapper;
@@ -68,8 +70,10 @@ class EngineFactory {
     EngineFactory(const ext::shared_ptr<EngineData>& data,
                   const ext::shared_ptr<Market>& market,
                   const std::map<MarketContext, std::string>& configurations = std::map<MarketContext, std::string>(),
+                  const ext::shared_ptr<ReferenceDataManager>& referenceData = nullptr,
+                  const IborFallbackConfig& iborFallbackConfig = IborFallbackConfig::defaultConfig(),
                   const std::vector<ext::shared_ptr<EngineBuilder>> extraEngineBuilders = {},
-                  const std::vector<ext::shared_ptr<LegBuilder>> extraLegBuilders = {});
+                  const bool allowOverwrite = false);
 };
 
 // TradeFactory just needed as a return type, no construction, no member functions.
@@ -83,7 +87,7 @@ class Envelope {
 public:
     const std::string& counterparty() const;
     const std::string& nettingSetId() const;
-    const std::map<std::string, std::string>& additionalFields() const;
+    const std::map<std::string, std::string> additionalFields() const;
 };
 
 // InstrumentWrapper pointer required as a return type only
@@ -116,16 +120,17 @@ class Trade {
 %shared_ptr(Portfolio)
 class Portfolio {
   public:
-    Portfolio();
+    Portfolio(bool buildFailedTrades = true);
     std::size_t size() const;
-    std::vector<std::string> ids() const;
-    const std::vector<ext::shared_ptr<Trade>>& trades() const;
+    std::set<std::string> ids() const;
+    ext::shared_ptr<Trade> get(const std::string& id) const;
+    const std::map<std::string, ext::shared_ptr<Trade>>& trades() const;
     bool remove(const std::string& tradeID);
-    void load(const std::string& fileName,
-              const ext::shared_ptr<TradeFactory>& tf = ext::make_shared<TradeFactory>());
-    void loadFromXMLString(const std::string& xmlString,
-                           const ext::shared_ptr<ore::data::TradeFactory>& tf = ext::make_shared<TradeFactory>());
-    void build(const ext::shared_ptr<ore::data::EngineFactory>& factory);
+    void fromFile(const std::string& fileName);
+    void fromXMLString(const std::string& xmlString);
+    void build(const ext::shared_ptr<EngineFactory>& factory,
+               const std::string& context = "unspecified",
+               const bool emitStructuredError = true);
 };
 
 #endif

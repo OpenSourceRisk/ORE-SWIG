@@ -14,7 +14,7 @@
 # ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
 # FOR A PARTICULAR PURPOSE.  See the license for more details.
 
-from OREAnalytics import *
+from QuantExt import *
 
 # global data
 calendar = TARGET()

@@ -47,5 +47,6 @@
 %include ored_log.i
 %include ored_loader.i
 %include ored_marketdatum.i
+%include ored_reports.i
 
 #endif

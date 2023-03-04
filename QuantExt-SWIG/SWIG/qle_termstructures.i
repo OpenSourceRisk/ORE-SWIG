@@ -23,6 +23,7 @@
 %include volatilities.i
 %include indexes.i
 %include currencies.i
+%include observer.i
 
 %{
 using QuantExt::PriceTermStructure;
@@ -40,6 +41,8 @@ using QuantExt::BlackVolatilityWithATM;
 using QuantExt::CreditCurve;
 using QuantExt::CreditVolCurve;
 using QuantExt::CreditVolCurveWrapper;
+using QuantLib::Observer;
+using QuantLib::VolatilityTermStructure;
 %}
 
 %shared_ptr(PriceTermStructure)
@@ -96,10 +99,6 @@ export_Interpolated_Price_Curve(CubicInterpolatedPriceCurve, Cubic);
 export_Interpolated_Price_Curve(SplineCubicInterpolatedPriceCurve, SplineCubic);
 export_Interpolated_Price_Curve(MonotonicCubicInterpolatedPriceCurve, MonotonicCubic);
 
-
-%shared_ptr(SwaptionVolatilityCube)
-class SwaptionVolatilityCube : public SwaptionVolatilityDiscrete {
-};
 
 %shared_ptr(QLESwaptionVolCube2)
 class QLESwaptionVolCube2 : public SwaptionVolatilityCube {
@@ -248,7 +247,7 @@ class CreditCurve : public Observer {
 
 
 %shared_ptr(CreditVolCurve)
-class CreditVolCurve : public QuantLib::VolatilityTermStructure {
+class CreditVolCurve : public VolatilityTermStructure {
     private:
         CreditVolCurve();
     public:

@@ -1,23 +1,24 @@
 # -*- coding: iso-8859-1 -*-
 """
- Copyright (C) 2018 Quaternion Risk Management Ltd
+ Copyright (C) 2018, 2022 Quaternion Risk Management Ltd
  All rights reserved.
 """
 
 import os, sys, math, codecs
-from distutils.cmd import Command
+try:
+    from setuptools import setup, Extension
+    from setuptools import Command
+except:
+    from distutils.core import setup, Extension
+    from distutils.cmd import Command
 from distutils.command.build_ext import build_ext
 from distutils.command.build import build
 from distutils.ccompiler import get_default_compiler
-try:
-    from setuptools import setup, Extension
-except:
-    from distutils.core import setup, Extension
 from distutils import sysconfig
 
 class test(Command):
     # Original version of this class posted
-    # by Berthold H�llmann to distutils-sig@python.org
+    # by Berthold Hoellmann to distutils-sig@python.org
     description = "test the distribution prior to install"
 
     user_options = [
@@ -60,14 +61,14 @@ class my_wrap(Command):
         print('Generating Python bindings for QuantExt...')
         swig_version = os.popen("swig -version").read().split()[2]
         major_swig_version = swig_version[0]
-        if major_swig_version < '3':
-           print('Warning: You have SWIG {} installed, but at least SWIG 3.0.1'
+        if major_swig_version < '4':
+           print('Warning: You have SWIG {} installed, but at least SWIG 4.0.1'
                  ' is recommended. \nSome features may not work.'
                  .format(swig_version))
         swig_dir = os.path.join("..","SWIG")
         ql_swig_dir = os.path.join("..","..","QuantLib-SWIG","SWIG")
         if sys.version_info.major >= 3:
-            os.system('swig -python -py3 -c++ -modern ' +
+            os.system('swig -python -py3 -c++ ' +
                       '-I%s ' % swig_dir +
                       '-I%s ' % ql_swig_dir +
                       '-outdir QuantExt -o QuantExt/quantext_wrap.cpp ' +
@@ -126,7 +127,7 @@ class my_build_ext(build_ext):
                 self.include_dirs += [os.path.join(ORE_INSTALL_DIR,'QuantLib')]
                 self.include_dirs += [os.path.join(ORE_INSTALL_DIR,'QuantExt')]
 
-				# ADD LIBRARY DIRECTORIES
+		# ADD LIBRARY DIRECTORIES
                 self.library_dirs += [BOOST_LIB]
                 self.library_dirs += [os.path.join(ORE_INSTALL_DIR,'QuantLib','lib')]
                 self.library_dirs += [os.path.join(ORE_INSTALL_DIR,'QuantExt','lib')]
@@ -234,13 +235,17 @@ classifiers = [
     'Intended Audience :: End Users/Desktop',
     'License :: OSI Approved :: BSD License',
     'Natural Language :: English',
-    'Operating System :: OS Independent',
+    'Operating System :: Microsoft :: Windows',
+    'Operating System :: POSIX',
+    'Operating System :: Unix',
+    'Operating System :: MacOS',
+    'Programming Language :: C++',
     'Programming Language :: Python',
     'Topic :: Scientific/Engineering',
 ]
 
 setup(name             = "QuantExt-Python",
-      version          = "1.8.3.2",
+      version          = "1.8.7",
       description      = "Python bindings for the QuantExt library",
       long_description = """
 QuantExt (http://opensourcerisk.org/) is a C++ library for financial quantitative
@@ -250,7 +255,7 @@ framework for quantitative finance.
       author           = "Quaternion Risk Management",
       author_email     = "info@quaternion.com",
       url              = "http://quaternion.com",
-      license          = codecs.open('../LICENSE.TXT','r+',
+      license          = codecs.open('../../LICENSE.TXT','r+',
                                      encoding='utf8').read(),
       classifiers      = classifiers,
       py_modules       = ['QuantExt.__init__','QuantExt.QuantExt'],

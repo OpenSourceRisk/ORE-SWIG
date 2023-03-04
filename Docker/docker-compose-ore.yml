@@ -8,4 +8,5 @@ services:
       dockerfile: Docker/Dockerfile-ORE
       args:
         - ore_version=${ORE_TAG}
+        - num_cores=${NUM_CORES}
 

@@ -28,6 +28,7 @@
 %include calendars.i
 %include daycounters.i
 %include currencies.i
+%include inflation.i
 
 %{
 using QuantExt::BEHICP;
@@ -42,10 +43,11 @@ using QuantExt::GenericIborIndex;
 using QuantExt::CommodityIndex;
 using QuantExt::CommoditySpotIndex;
 using QuantExt::CommodityFuturesIndex;
+using QuantLib::ZeroInflationIndex;
 %}
 
 %shared_ptr(BEHICP)
-class BEHICP : public QuantLib::ZeroInflationIndex {
+class BEHICP : public ZeroInflationIndex {
     public:
         BEHICP(bool interpolated, const QuantLib::Handle<QuantLib::ZeroInflationTermStructure>& ts =
                                   QuantLib::Handle<QuantLib::ZeroInflationTermStructure>());
@@ -61,7 +63,10 @@ class BondIndex : public Index {
               const Handle<Quote>& recoveryRate = Handle<Quote>(),
               const Handle<Quote>& securitySpread = Handle<Quote>(),
               const Handle<YieldTermStructure>& incomeCurve = Handle<YieldTermStructure>(),
-              const bool conditionalOnSurvival = true, const bool isInflationLinked = false,
+              const bool conditionalOnSurvival = true,
+	      const QuantExt::BondIndex::PriceQuoteMethod priceQuoteMethod = QuantExt::BondIndex::PriceQuoteMethod::PercentageOfPar,
+	      const double priceQuoteBaseValue = 1.0,
+	      const bool isInflationLinked = false,
               const double bidAskAdjustment = 0.0);
         const std::string& securityName() const;
         bool dirty() const;
@@ -87,8 +92,10 @@ class BondFuturesIndex : public BondIndex {
             const Handle<YieldTermStructure>& discountCurve = Handle<YieldTermStructure>(),
             const Handle<DefaultProbabilityTermStructure>& defaultCurve = Handle<DefaultProbabilityTermStructure>(),
             const Handle<Quote>& recoveryRate = Handle<Quote>(), const Handle<Quote>& securitySpread = Handle<Quote>(),
-            const Handle<YieldTermStructure>& incomeCurve = Handle<YieldTermStructure>(),
-            const bool conditionalOnSurvival = true);
+            const Handle<YieldTermStructure>& incomeCurve = Handle<YieldTermStructure>(), 
+	    const bool conditionalOnSurvival = true,
+            const QuantExt::BondIndex::PriceQuoteMethod priceQuoteMethod = QuantExt::BondIndex::PriceQuoteMethod::PercentageOfPar,
+            const double priceQuoteBaseValue = 1.0);
         std::string name() const;
         Rate forecastFixing(const Date& fixingDate) const;
         const QuantLib::Date& expiryDate() const;

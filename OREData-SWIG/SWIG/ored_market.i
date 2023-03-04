@@ -37,7 +37,7 @@ using ore::IborFallbackConfig;
 %shared_ptr(MarketImpl)
 class MarketImpl {
   public:
-    MarketImpl();
+    MarketImpl(const bool handlePseudoCurrencies);
     Date asofDate() const;
 
     // Yield curves
@@ -90,7 +90,7 @@ class MarketImpl {
                                          const std::string& configuration = Market::defaultConfiguration) const;
 
     // Base correlation structures
-    Handle<QuantLib::BaseCorrelationTermStructure<QuantLib::BilinearInterpolation>>
+    Handle<QuantExt::BaseCorrelationTermStructure>
       baseCorrelation(const std::string& name,
                       const std::string& configuration = Market::defaultConfiguration) const;
 
@@ -175,7 +175,6 @@ class MarketImpl {
 };
 
 
-%template(YoYOptionletVolatilitySurfaceHandle) Handle<QuantExt::YoYOptionletVolatilitySurface>;
 %template(CPICapFloorTermPriceSurfaceHandle) Handle<QuantLib::CPICapFloorTermPriceSurface>;
 %template(YoYCapFloorTermPriceSurfaceHandle) Handle<QuantLib::YoYCapFloorTermPriceSurface>;
 
