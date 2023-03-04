@@ -33,7 +33,7 @@ pfolio = Portfolio()
 pfolioFile = os.path.join("Input","portfolio.xml")
 pfolioXml = ET.parse(pfolioFile).getroot()
 pfolioXmlStr = ET.tostring(pfolioXml,encoding="unicode")
-pfolio.loadFromXMLString(pfolioXmlStr)
+pfolio.fromXMLString(pfolioXmlStr)
 print("loaded pfolio from xml string (not built yet)")
 engineFact = ore.buildEngineFactoryFromXMLString(market, "")
 pfolio.build(engineFact)
@@ -43,10 +43,10 @@ print("   full portfolio is of type", type(pfolio))
 pfolioSize = pfolio.size()
 print("...pfolio.size() is of type", type(pfolioSize))
 print("... pfolio size = ", str(pfolioSize))
-tradesVec = pfolio.trades()
-print("trade vec is of type ", type(tradesVec))
-for trn in tradesVec:
-    print(trn)
+ids = pfolio.ids();
+for id in ids:
+    print(id)
+    trn = pfolio.get(id)
     print(" trn is of type ", type(trn))
     print(" trade id = ", trn.id())
     print(" trade type is ", trn.tradeType())
@@ -68,4 +68,4 @@ for trn in tradesVec:
         for flow in leg:
             print("          flow as of ", flow.date(), " is ", flow.amount())
 
-#pg end
+print("Done.")

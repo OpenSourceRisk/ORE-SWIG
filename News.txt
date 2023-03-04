@@ -1,8 +1,21 @@
+Changes for the 9th ORE release (1.8.9.0):
+==========================================
+
+Extended the interface so that we can build all ORE inputs in memory
+and run ORE without loading from files
+
+
+Changes for the 8th ORE release (1.8.8.0):
+==========================================
+
+Updates to work with QuantLib-SWIG 1.28
+
+
 Changes for the 7th ORE release (1.8.7.0):
 ==========================================
 
 Updates to work with QuantLib-SWIG 1.27
-Pythgon test cases fixed, thanks to Farah Khashman
+Python test cases fixed, thanks to Farah Khashman
 Various additional ORE classes wrapped, thanks to Farah Khashman 
 
 

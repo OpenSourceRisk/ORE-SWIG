@@ -299,6 +299,10 @@ print(swaps[(5, ql.Years)].value())
 # %%
 def show(swap):
     print("NPV         = %.2f" % swap.NPV())
+    #print("fixedRate   = %.6f" % swap.fixedRate())
+    #print("spread      = %.6f" % swap.spread())
+    #print("fixedLegBPS = %.6f" % swap.fixedLegBPS())
+    #print("floatLegBPS = %.6f" % swap.floatingLegBPS())
     print("Fair spread = %.4f %%" % (swap.fairSpread()*100))
     print("Fair rate   =  %.4f %%" % (swap.fairRate()*100))
 

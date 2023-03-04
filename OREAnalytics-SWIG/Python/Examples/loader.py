@@ -31,12 +31,16 @@ def check_data(loader):
     assert quote.instrumentType() == quote2.instrumentType()
     assert quote.quoteType() == quote2.quoteType()
 
-    quote2 = loader.loadQuotes(date)[19]
-    assert quote.name() == quote2.name()
-    assert quote.quote().value() == quote2.quote().value()
-    assert quote.asofDate() == quote2.asofDate()
-    assert quote.instrumentType() == quote2.instrumentType()
-    assert quote.quoteType() == quote2.quoteType()
+    # the followign comparison, looking for position 19, does not make sense any more
+    # because the loader represents data as sets internally and converts to vector for
+    # the following call which leads to alphabetical order of quotes
+    #    quote2 = loader.loadQuotes(date)[19]
+    #    print("assert 2:", quote.name(), quote2.name())
+    #    assert quote.name() == quote2.name()
+    #    assert quote.quote().value() == quote2.quote().value()
+    #    assert quote.asofDate() == quote2.asofDate()
+    #    assert quote.instrumentType() == quote2.instrumentType()
+    #    assert quote.quoteType() == quote2.quoteType()
 
     fixing = loader.loadFixings()
     for f in fixing:

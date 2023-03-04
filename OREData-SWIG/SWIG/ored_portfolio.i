@@ -40,8 +40,8 @@ using namespace std;
 %}
 
 %template(TradeVector) std::vector<ext::shared_ptr<Trade>>;
-//%template(LegVector) std::vector<std::vector<ext::shared_ptr<CashFlow> > >;
 %template(StringStringMap) std::map<std::string, std::string>;
+%template(StringTradeMap) std::map<std::string, ext::shared_ptr<Trade>>;
 
 enum class MarketContext { irCalibration, fxCalibration, eqCalibration, pricing };
 
@@ -128,7 +128,7 @@ class Portfolio {
     bool remove(const std::string& tradeID);
     void fromFile(const std::string& fileName);
     void fromXMLString(const std::string& xmlString);
-    void build(const ext::shared_ptr<EngineFactory>& factory,
+    void build(const ext::shared_ptr<ore::data::EngineFactory>& factory,
                const std::string& context = "unspecified",
                const bool emitStructuredError = true);
 };
