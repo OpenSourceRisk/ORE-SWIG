@@ -240,7 +240,7 @@ class OREApp {
 
     ext::shared_ptr<MarketImpl> getMarket() const;
 
-    ext::shared_ptr<ore::data::EngineFactory> buildEngineFactoryFromXMLString(
+    ext::shared_ptr<EngineFactory> buildEngineFactoryFromXMLString(
         const ext::shared_ptr<MarketImpl>& marketImpl,
         const std::string& pricingEngineXML,
         const bool generateAdditionalResults = false);
