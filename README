@@ -37,10 +37,10 @@ Build using CMake on Mac OS
     cmake -D PYTHON_LIBRARY=/Users/roland/anaconda/lib/libpython3.5m.dylib \
     	  -D PYTHON_INCLUDE_DIR=/Users/roland/anaconda/include/python3.5m \
 	  -D BOOST_ROOT=/Users/roland/Development/boost/boost_1_65_1 \
-	  -D BOOST_LIBRARYDIR=/Users/roland/Development/boost/boost_1_65_1/stage/lib \
+	  -D BOOST_LIB=/Users/roland/Development/boost/boost_1_65_1/stage/lib \
 	  -D ORE=/Users/roland/Development/oremaster ..    
 
-    PYTHON_LIBRARY, PYTHON_INCLUDE_DIR, BOOST_ROOT and BOOST_LIBRARYDIR can also be set as environemnt variable,
+    PYTHON_LIBRARY, PYTHON_INCLUDE_DIR, BOOST_ROOT and BOOST_LIB can also be set as environemnt variable,
     and need not be passed with the -D option in that case.
     
 (5) Build (generates Python and Java wrappers so far):

@@ -102,6 +102,16 @@ class my_build_ext(build_ext):
     def initialize_options(self):
         build_ext.initialize_options(self)
         self.static = None
+    def get_var(self, v):
+        if v in os.environ:
+            return os.getenv(v)
+        else:
+            raise Error("Environment variable {} not set".format(v))
+    def validate_path(self, p):
+        if os.path.exists(p):
+            return p
+        else:
+            raise Error("Invalid path: {}".format(p))
     def finalize_options(self):
         build_ext.finalize_options(self)
         self.set_undefined_options('build', ('static','static'))
@@ -117,30 +127,26 @@ class my_build_ext(build_ext):
         compiler = self.compiler or get_default_compiler()
 
         if compiler == 'msvc':
-            try:
-                BOOST_DIR = os.environ['BOOST_ROOT']
-                BOOST_LIB = os.environ['BOOST_LIBRARYDIR']
-                ORE_INSTALL_DIR = os.environ['ORE_DIR']
+            BOOST_DIR = self.get_var('BOOST_ROOT')
+            BOOST_LIB = self.get_var('BOOST_LIB')
+            ORE_DIR = self.get_var('ORE_DIR')
 
-                # ADD INCLUDE DIRECTORIES
-                self.include_dirs += [BOOST_DIR]
-                self.include_dirs += [os.path.join(ORE_INSTALL_DIR,'QuantLib')]
-                self.include_dirs += [os.path.join(ORE_INSTALL_DIR,'QuantExt')]
+            # ADD INCLUDE DIRECTORIES
+            self.include_dirs.append(self.validate_path(BOOST_DIR))
+            self.include_dirs.append(self.validate_path(os.path.join(ORE_DIR, 'QuantLib')))
+            self.include_dirs.append(self.validate_path(os.path.join(ORE_DIR, 'QuantExt')))
 
-		# ADD LIBRARY DIRECTORIES
-                self.library_dirs += [BOOST_LIB]
-                self.library_dirs += [os.path.join(ORE_INSTALL_DIR,'QuantLib','lib')]
-                self.library_dirs += [os.path.join(ORE_INSTALL_DIR,'QuantExt','lib')]
+            # ADD LIBRARY DIRECTORIES
+            self.library_dirs.append(self.validate_path(BOOST_LIB))
+            self.library_dirs.append(self.validate_path(os.path.join(ORE_DIR, 'QuantLib', 'lib')))
+            self.library_dirs.append(self.validate_path(os.path.join(ORE_DIR, 'QuantExt', 'lib')))
 
-            except KeyError:
-                print('warning: unable to detect BOOST/ORE installation')
-
-#            if 'INCLUDE' in os.environ:
-#                dirs = [dir for dir in os.environ['INCLUDE'].split(';')]
-#                self.include_dirs += [ d for d in dirs if d.strip() ]
-#            if 'LIB' in os.environ:
-#                dirs = [dir for dir in os.environ['LIB'].split(';')]
-#                self.library_dirs += [ d for d in dirs if d.strip() ]
+            #if 'INCLUDE' in os.environ:
+            #    dirs = [dir for dir in os.environ['INCLUDE'].split(';')]
+            #    self.include_dirs += [ d for d in dirs if d.strip() ]
+            #if 'LIB' in os.environ:
+            #    dirs = [dir for dir in os.environ['LIB'].split(';')]
+            #    self.library_dirs += [ d for d in dirs if d.strip() ]
             dbit = round(math.log(sys.maxsize, 2) + 1)
             if dbit == 64:
                 machinetype = '/machine:x64'

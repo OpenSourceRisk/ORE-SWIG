@@ -38,7 +38,7 @@ change to the build directory, and run
 		-G Ninja \
 		-D ORE=<ORE Root Directory> \
 		[-D BOOST_ROOT=<Top level boost include directory> ] \
-		[-D BOOST_LIBRARYDIR=<Location of the compiled boost libraries> ] \ 
+		[-D BOOST_LIB=<Location of the compiled boost libraries> ] \ 
 		[-D PYTHON_LIBRARY=<Full name including path to the 'libpython*' library> ]	\
 		[-D PYTHON_INCLUDE_DIR=<Directory that contains Python.h> ] \
 		..
@@ -106,9 +106,9 @@ bindings using the provided setup.py script:
 	   set PYTHON_INCLUDE="C:\Users\Name\AppData\Local\Continuum\anaconda3\include"
 	   set PYTHON_LIB="C:\Users\Name\AppData\Local\Continuum\anaconda3\libs"
    
-	3. Add BOOST_ROOT and BOOST_LIBRARYDIR variables to the system environment, e.g. 
+	3. Add BOOST_ROOT and BOOST_LIB variables to the system environment, e.g. 
 	   set BOOST_ROOT=C:\repos\boost_1_65_1
-	   set BOOST_LIBRARYDIR=C:\repos\boost_1_65_1\lib\x64\lib\lib
+	   set BOOST_LIB=C:\repos\boost_1_65_1\lib\x64\lib\lib
    
 	4. Add ORE_DIR and QL_DIR variables to the system environment, e.g.
 	   set ORE_DIR=C:\dev\ORE

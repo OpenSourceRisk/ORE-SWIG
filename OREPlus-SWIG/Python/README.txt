@@ -24,7 +24,7 @@ headers and libraries can be found by the compiler.
 On Unix-like platforms, this requires that an `ore-config` script
 (an extended version of quantlib-config) is in your path.
 On the Windows platform, instead, it requires you to define the
-`ORE_DIR`, `BOOST_ROOT`, `BOOST_LIBRARYDIR`, `PYTHON_INCLUDE` and `PYTHON_LIB`
+`ORE_DIR`, `BOOST_ROOT`, `BOOST_LIB`, `PYTHON_INCLUDE` and `PYTHON_LIB`
 environment variables pointing to your ORE root directory
 (e.g. `C:\Dev\ORE`) etc.
 
