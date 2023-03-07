@@ -13,7 +13,7 @@ if (MSVC)
    foreach (cfg "DEBUG" "RELEASE" "MINSIZEREL" "RELWITHDEBINFO")
       foreach (flag "CXX" "C")
          set (CMAKE_${flag}_FLAGS_${cfg} "${CMAKE_${flag}_FLAGS_${cfg}} /bigobj") 
-	 message(STATUS CMAKE_${flag}_FLAGS_${cfg} "=" "${CMAKE_${flag}_FLAGS_${cfg}}")
+         message(STATUS CMAKE_${flag}_FLAGS_${cfg} "=" "${CMAKE_${flag}_FLAGS_${cfg}}")
       endforeach ()
    endforeach ()
 endif()
@@ -28,7 +28,7 @@ find_package(Boost COMPONENTS serialization date_time regex filesystem system ti
 find_package(SWIG REQUIRED)
 find_package(PythonLibs)
 
-# What does this mean?
+# Load the UseSWIG module from the cmake installation
 include(${SWIG_USE_FILE})
 
 # Add to the list of include directories
