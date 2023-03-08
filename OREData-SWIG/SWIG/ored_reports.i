@@ -26,6 +26,12 @@ using ore::data::InMemoryReport;
 using ore::data::PlainInMemoryReport;
 %}
 
+namespace std {
+    %template(UnsignedIntVector) vector<unsigned int>;
+    %template(IntVector) vector<int>;
+    %template(SizeVector) vector<Size>;
+}
+
 %shared_ptr(PlainInMemoryReport)
 class PlainInMemoryReport {
 public:
