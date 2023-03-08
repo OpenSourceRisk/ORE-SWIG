@@ -48,7 +48,13 @@
 #endif
 
 %}
+
+%init %{
+    ore::analytics::initBuilders();
+%}
+
 %include <windows.i>
+
 %include orea_app.i
 %include orea_cube.i
 
