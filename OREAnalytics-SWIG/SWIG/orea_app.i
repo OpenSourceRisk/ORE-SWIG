@@ -63,6 +63,11 @@ class Parameters {
 %shared_ptr(InputParameters)
 class InputParameters {
 public:
+
+    // Getters, to be continued
+    const QuantLib::Date& asof();
+    
+    // and Setters
     void setAsOfDate(const std::string& s); 
     void setResultsPath(const std::string& s);
     void setBaseCurrency(const std::string& s);
@@ -237,6 +242,7 @@ class OREApp {
                      const std::vector<std::string>& marketData = std::vector<std::string>(),
                      const std::vector<std::string>& fixingData = std::vector<std::string>());
 
+    const ext::shared_ptr<InputParameters>& getInputs();
 
     ext::shared_ptr<MarketImpl> getMarket() const;
 

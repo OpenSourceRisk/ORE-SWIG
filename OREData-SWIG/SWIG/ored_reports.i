@@ -27,8 +27,6 @@ using ore::data::PlainInMemoryReport;
 %}
 
 namespace std {
-    %template(UnsignedIntVector) vector<unsigned int>;
-    %template(IntVector) vector<int>;
     %template(SizeVector) vector<Size>;
 }
 
