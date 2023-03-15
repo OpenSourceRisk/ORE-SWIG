@@ -128,9 +128,10 @@ class Portfolio {
     bool remove(const std::string& tradeID);
     void fromFile(const std::string& fileName);
     void fromXMLString(const std::string& xmlString);
+    std::string toXMLString();
     void build(const ext::shared_ptr<EngineFactory>& factory,
                const std::string& context = "unspecified",
                const bool emitStructuredError = true);
-};
+ };
 
 #endif

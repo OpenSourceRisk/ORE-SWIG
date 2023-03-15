@@ -26,10 +26,6 @@ using ore::data::InMemoryReport;
 using ore::data::PlainInMemoryReport;
 %}
 
-namespace std {
-    %template(SizeVector) vector<Size>;
-}
-
 %shared_ptr(PlainInMemoryReport)
 class PlainInMemoryReport {
 public:
@@ -37,13 +33,13 @@ public:
     Size columns() const;
     std::string header(Size i);
     Size columnType(Size i) const;
-    std::vector<Size> dataAsSize(Size i) const;
+    std::vector<int> dataAsSize(Size i) const;
     std::vector<Real> dataAsReal(Size i) const;
     std::vector<std::string> dataAsString(Size i) const;
     std::vector<QuantLib::Date> dataAsDate(Size i) const;
     std::vector<QuantLib::Period> dataAsPeriod(Size i) const;
     Size rows() const;
-    Size dataAsSize(Size j, Size i) const;
+    int dataAsSize(Size j, Size i) const;
     Real dataAsReal(Size j, Size i) const;
     std::string dataAsString(Size j, Size i) const;
     QuantLib::Date dataAsDate(Size j, Size i) const;

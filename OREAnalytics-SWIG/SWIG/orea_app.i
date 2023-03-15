@@ -66,6 +66,7 @@ public:
 
     // Getters, to be continued
     const QuantLib::Date& asof();
+    const ext::shared_ptr<Portfolio>& portfolio();
     
     // and Setters
     void setAsOfDate(const std::string& s); 
@@ -220,6 +221,7 @@ public:
     void setPortfolioFilterDate(const std::string& s); 
     // Set list of analytics that shall be run
     void setAnalytics(const std::string& s); 
+    void insertAnalytic(const std::string& s); 
 };
 
 %shared_ptr(OREApp)
@@ -232,17 +234,17 @@ class OREApp {
            const std::string& logFile, Size logLevel = 31,
            bool console = false);
     
-    int run(bool useAnalytics = true);
+    void run(bool useAnalytics = true);
 
-    int run(const std::vector<std::string>& marketData,
-            const std::vector<std::string>& fixingData);
+    void run(const std::vector<std::string>& marketData,
+             const std::vector<std::string>& fixingData);
 
     void buildMarket(const std::string& todaysMarketXML = "", const std::string& curveConfigXML = "",
                      const std::string& conventionsXML = "",
                      const std::vector<std::string>& marketData = std::vector<std::string>(),
                      const std::vector<std::string>& fixingData = std::vector<std::string>());
 
-    const ext::shared_ptr<InputParameters>& getInputs();
+    ext::shared_ptr<InputParameters> getInputs();
 
     ext::shared_ptr<MarketImpl> getMarket() const;
 
