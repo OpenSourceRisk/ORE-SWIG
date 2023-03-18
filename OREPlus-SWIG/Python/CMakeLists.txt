@@ -1,0 +1,133 @@
+cmake_minimum_required(VERSION 3.8)
+
+project(OREPlus-Python)
+
+include(${PROJECT_SOURCE_DIR}/../../cmake/commonSettings.cmake)
+
+# Append /bigobj to compiler flags on Windows for this target
+if (MSVC)
+   # FIXME: Add the other compiler flags from QuantLib-SWIG/Python/setup.py (/GR /FD /Zm250 /EHsc)?
+   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /bigobj")
+   message(STATUS CMAKE_CXX_FLAGS "=" "${CMAKE_CXX_FLAGS}")
+
+   foreach (cfg "DEBUG" "RELEASE" "MINSIZEREL" "RELWITHDEBINFO")
+      foreach (flag "CXX" "C")
+         set (CMAKE_${flag}_FLAGS_${cfg} "${CMAKE_${flag}_FLAGS_${cfg}} /bigobj") 
+         message(STATUS CMAKE_${flag}_FLAGS_${cfg} "=" "${CMAKE_${flag}_FLAGS_${cfg}}")
+      endforeach ()
+   endforeach ()
+endif()
+
+# The module depends on a number of libraries in the ORE project: determine their exact names
+get_library_name("QuantLib" QL_LIB_NAME)
+get_library_name("QuantExt" QLE_LIB_NAME)
+get_library_name("OREData" ORED_LIB_NAME)
+get_library_name("OREAnalytics" OREA_LIB_NAME)
+get_library_name("OREPlusRates" OREPRATES_LIB_NAME)
+get_library_name("OREPlusMarketRisk" OREPMR_LIB_NAME)
+get_library_name("OREPlusSIMM" OREPSIMM_LIB_NAME)
+get_library_name("OREPlusCapital" OREPCAPITAL_LIB_NAME)
+get_library_name("OREPlusBase" OREPBASE_LIB_NAME)
+get_library_name("OREPlusCreditRisk" OREPCR_LIB_NAME)
+get_library_name("OREPlusFRTB" OREPFRTB_LIB_NAME)
+get_library_name("OREPlusCredit" OREPCREDIT_LIB_NAME)
+get_library_name("OREPlusCommodity" OREPCOMMODITY_LIB_NAME)
+get_library_name("OREPlusEquityFX" OREPEQUITYFX_LIB_NAME)
+get_library_name("OREPlusHybrid" OREPHYBRID_LIB_NAME)
+get_library_name("OREPlusProxy" OREPPROXY_LIB_NAME)
+get_library_name("OREPlusScriptedTrade" OREPSCRIPTEDTRADE_LIB_NAME)
+get_library_name("OREPlusAnalytics" OREPANALYTICS_LIB_NAME)
+configure_msvc_runtime()
+
+# To build the module, we moreover need Boost, Swig, Python
+find_package(Boost COMPONENTS serialization date_time regex filesystem system timer thread REQUIRED)
+find_package(SWIG REQUIRED)
+find_package(PythonLibs)
+
+# Load the UseSWIG module from the cmake installation
+include(${SWIG_USE_FILE})
+
+# Add to the list of include directories
+include_directories(${PROJECT_SOURCE_DIR}/../SWIG)
+include_directories(${PROJECT_SOURCE_DIR}/../../QuantLib-SWIG/SWIG)
+include_directories(${PROJECT_SOURCE_DIR}/../../QuantExt-SWIG/SWIG)
+include_directories(${PROJECT_SOURCE_DIR}/../../OREData-SWIG/SWIG)
+include_directories(${PROJECT_SOURCE_DIR}/../../OREAnalytics-SWIG/SWIG)
+include_directories(${ORE}/QuantLib)
+include_directories(${ORE}/QuantExt)
+include_directories(${ORE}/OREData)
+include_directories(${ORE}/OREAnalytics)
+
+include_directories(${ORE}/../Modules/Analytics)
+include_directories(${ORE}/../Modules/Base)
+include_directories(${ORE}/../Modules/Capital)
+include_directories(${ORE}/../Modules/Commodity)
+include_directories(${ORE}/../Modules/Credit)
+include_directories(${ORE}/../Modules/CreditRisk)
+include_directories(${ORE}/../Modules/EquityFX)
+include_directories(${ORE}/../Modules/FRTB)
+include_directories(${ORE}/../Modules/Hybrid)
+include_directories(${ORE}/../Modules/MarketRisk)
+include_directories(${ORE}/../Modules/Proxy)
+include_directories(${ORE}/../Modules/Rates)
+include_directories(${ORE}/../Modules/SIMM)
+include_directories(${ORE}/../Modules/ScriptedTrade)
+include_directories(${ORE}/../Modules/Sensitivity)
+
+include_directories(${Boost_INCLUDE_DIRS})
+include_directories(${PYTHON_INCLUDE_PATH})
+
+# Add to the list of link directories
+add_link_directory_if_exists(${ORE}/QuantLib/build/ql)
+add_link_directory_if_exists(${ORE}/build/QuantLib/ql)
+add_link_directory_if_exists(${ORE}/build/QuantExt/qle)
+add_link_directory_if_exists(${ORE}/build/OREData/ored)
+add_link_directory_if_exists(${ORE}/build/OREAnalytics/orea)
+
+add_link_directory_if_exists(${ORE}/../build/ore/QuantLib/ql)
+add_link_directory_if_exists(${ORE}/../build/ore/QuantExt/qle)
+add_link_directory_if_exists(${ORE}/../build/ore/OREData/ored)
+add_link_directory_if_exists(${ORE}/../build/ore/OREAnalytics/orea)
+add_link_directory_if_exists(${ORE}/../build/Modules/Analytics/oreap)
+add_link_directory_if_exists(${ORE}/../build/Modules/Base/orepbase)
+add_link_directory_if_exists(${ORE}/../build/Modules/Capital/orepcapital)
+add_link_directory_if_exists(${ORE}/../build/Modules/Commodity/orepcommodity)
+add_link_directory_if_exists(${ORE}/../build/Modules/Credit/orepcredit)
+add_link_directory_if_exists(${ORE}/../build/Modules/CreditRisk/orepcr)
+add_link_directory_if_exists(${ORE}/../build/Modules/EquityFX/orepequityfx)
+add_link_directory_if_exists(${ORE}/../build/Modules/FRTB/orepfrtb)
+add_link_directory_if_exists(${ORE}/../build/Modules/Hybrid/orephybrid)
+add_link_directory_if_exists(${ORE}/../build/Modules/MarketRisk/orepmr)
+add_link_directory_if_exists(${ORE}/../build/Modules/Proxy/orepproxy)
+add_link_directory_if_exists(${ORE}/../build/Modules/Rates/oreprates)
+add_link_directory_if_exists(${ORE}/../build/Modules/SIMM/orepsimm)
+add_link_directory_if_exists(${ORE}/../build/Modules/ScriptedTrade/orepscriptedtrade)
+
+# Tell SWIG to compile in C++ mode
+set_source_files_properties(${PROJECT_SOURCE_DIR}/../SWIG/oreplus.i PROPERTIES CPLUSPLUS ON)
+set_source_files_properties(${PROJECT_SOURCE_DIR}/../SWIG/oreplus.i PROPERTIES SWIG_FLAGS "-includeall")
+
+# Tell SWIG to build a Python module, to be called "OREPlus"
+swig_add_library(OREPlus TYPE MODULE LANGUAGE python SOURCES ${PROJECT_SOURCE_DIR}/../SWIG/oreplus.i)
+
+# Add all libraries to link with
+swig_link_libraries(OREPlus ${PYTHON_LIBRARIES})
+swig_link_libraries(OREPlus ${Boost_LIBRARIES})
+swig_link_libraries(OREPlus ${QL_LIB_NAME})
+swig_link_libraries(OREPlus ${QLE_LIB_NAME})
+swig_link_libraries(OREPlus ${ORED_LIB_NAME})
+swig_link_libraries(OREPlus ${OREA_LIB_NAME})
+swig_link_libraries(OREPlus ${OREPBASE_LIB_NAME})
+swig_link_libraries(OREPlus ${OREPCREDIT_LIB_NAME})
+swig_link_libraries(OREPlus ${OREPCOMMODITY_LIB_NAME})
+swig_link_libraries(OREPlus ${OREPEQUITYFX_LIB_NAME})
+swig_link_libraries(OREPlus ${OREPRATES_LIB_NAME})
+swig_link_libraries(OREPlus ${OREPHYBRID_LIB_NAME})
+swig_link_libraries(OREPlus ${OREPPROXY_LIB_NAME})
+swig_link_libraries(OREPlus ${OREPSCRIPTEDTRADE_LIB_NAME})
+swig_link_libraries(OREPlus ${OREPMR_LIB_NAME})
+swig_link_libraries(OREPlus ${OREPCR_LIB_NAME})
+swig_link_libraries(OREPlus ${OREPSIMM_LIB_NAME})
+swig_link_libraries(OREPlus ${OREPCAPITAL_LIB_NAME})
+swig_link_libraries(OREPlus ${OREPFRTB_LIB_NAME})
+swig_link_libraries(OREPlus ${OREPANALYTICS_LIB_NAME})
