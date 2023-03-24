@@ -199,6 +199,7 @@ public:
     void setFlipViewBorrowingCurvePostfix(const std::string& s);
     void setFlipViewLendingCurvePostfix(const std::string& s);
     // dynamic initial margin details
+    void setDeterministicInitialMargin(const std::string& nettingSet, TimeSeries<Real> timeSeries);
     void setDimQuantile(Real r);
     void setDimHorizonCalendarDays(Size s);
     void setDimRegressionOrder(Size s);

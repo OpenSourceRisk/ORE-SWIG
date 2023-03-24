@@ -12,8 +12,8 @@
     <Samples>1000</Samples>
     <!--<CloseOutLag>2W</CloseOutLag>-->
     <CloseOutLag>0D</CloseOutLag>
-    <!--<MporMode>StickyDate</MporMode>-->
-    <MporMode>ActualDate</MporMode>
+    <!--<MporMode>ActualDate</MporMode>-->
+    <MporMode>StickyDate</MporMode>
   </Parameters>
 
   <CrossAssetModel>

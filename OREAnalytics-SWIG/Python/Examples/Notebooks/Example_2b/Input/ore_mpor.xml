@@ -68,8 +68,6 @@
       <Parameter name="fvaLendingCurve">BANK_EUR_LEND</Parameter>
       <Parameter name="colva">N</Parameter>
       <Parameter name="collateralFloor">N</Parameter>
-      <!--<Parameter name="rawCubeOutputFile">rawcube.csv</Parameter>-->
-      <!--<Parameter name="netCubeOutputFile">netcube.csv</Parameter>-->
     </Analytic>
   </Analytics>
 </ORE>

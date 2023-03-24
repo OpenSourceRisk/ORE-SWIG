@@ -4,7 +4,7 @@
     <Parameter name="asofDate">2016-02-05</Parameter>
     <Parameter name="inputPath">Input</Parameter>
     <Parameter name="outputPath">Output</Parameter>
-    <Parameter name="logFile">log_mta.txt</Parameter>
+    <Parameter name="logFile">log_dim.txt</Parameter>
     <Parameter name="logMask">31</Parameter>
     <Parameter name="marketDataFile">market.txt</Parameter>
     <Parameter name="fixingDataFile">fixings.txt</Parameter>
@@ -18,9 +18,9 @@
   </Setup>
   <Markets>
     <Parameter name="lgmcalibration">collateral_inccy</Parameter>
-    <Parameter name="fxcalibration">collateral_eur</Parameter>
-    <Parameter name="pricing">collateral_eur</Parameter>
-    <Parameter name="simulation">collateral_eur</Parameter>
+    <Parameter name="fxcalibration">collateral_inccy</Parameter>
+    <Parameter name="pricing">collateral_inccy</Parameter>
+    <Parameter name="simulation">collateral_inccy</Parameter>
   </Markets>
   <Analytics>
     <Analytic type="npv">
@@ -43,13 +43,10 @@
       <Parameter name="simulationConfigFile">simulation.xml</Parameter>
       <Parameter name="pricingEnginesFile">pricingengine.xml</Parameter>
       <Parameter name="baseCurrency">EUR</Parameter>
-      <!--<Parameter name="scenariodump">scenariodump.csv</Parameter> -->
-      <!--<Parameter name="cubeFile">cube.csv.gz</Parameter>-->
-      <!--<Parameter name="aggregationScenarioDataFileName">scenariodata.csv.gz</Parameter>-->
     </Analytic>
     <Analytic type="xva">
       <Parameter name="active">Y</Parameter>
-      <Parameter name="csaFile">netting_mta.xml</Parameter>
+      <Parameter name="csaFile">netting_dim.xml</Parameter>
       <Parameter name="cubeFile">cube.csv.gz</Parameter>
       <Parameter name="scenarioFile">scenariodata.csv.gz</Parameter>
       <Parameter name="baseCurrency">EUR</Parameter>
@@ -57,21 +54,21 @@
       <Parameter name="exposureProfilesByTrade">Y</Parameter>
       <Parameter name="quantile">0.95</Parameter>
       <Parameter name="calculationType">NoLag</Parameter>
-      <Parameter name="allocationMethod">RelativeXVA</Parameter>
+      <Parameter name="allocationMethod">Marginal</Parameter>
       <Parameter name="marginalAllocationLimit">1.0</Parameter>
       <Parameter name="exerciseNextBreak">N</Parameter>
       <Parameter name="cva">Y</Parameter>
       <Parameter name="dva">N</Parameter>
       <Parameter name="dvaName">BANK</Parameter>
-      <Parameter name="fva">N</Parameter>
+      <Parameter name="fva">Y</Parameter>
       <Parameter name="fvaBorrowingCurve">BANK_EUR_BORROW</Parameter>
       <Parameter name="fvaLendingCurve">BANK_EUR_LEND</Parameter>
-      <Parameter name="colva">N</Parameter>
-      <Parameter name="collateralFloor">N</Parameter>
+      <Parameter name="colva">Y</Parameter>
+      <Parameter name="collateralFloor">Y</Parameter>
+      <Parameter name="dim">Y</Parameter>
+      <Parameter name="mva">Y</Parameter>
+      <Parameter name="deterministicInitialMarginFile">dim_evolution.csv</Parameter>
     </Analytic>
-    <Analytic type="initialMargin">
-      <Parameter name="active">N</Parameter>
-      <Parameter name="method"/>
-    </Analytic>
+    
   </Analytics>
 </ORE>
