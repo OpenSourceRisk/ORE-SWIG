@@ -978,6 +978,15 @@ inputs.setAnalytics("NPV,XVA,EXPOSURE")
 print ("Initialise ORE...")
 ore = OREApp(inputs, logFile, logLevel, consoleLog);
 
+portfolio = ore.getInputs().portfolio()
+print("Portfolio size = ", portfolio.size())
+for id in portfolio.ids():
+    trade = portfolio.get(id)
+    print("Trade id =", id)
+    print("Trade type =", trade.tradeType())
+portfolioXML = portfolio.toXMLString()
+print(portfolioXML)
+
 print ("Running ORE process...");
 ore.run(marketData, fixingData)
 
@@ -1042,7 +1051,7 @@ reportName = "exposure_nettingset_CPTY_A"
 print ("Load report", reportName)
 report = ore.getReport(reportName)
 
-# see PlainInMemoryReport
+# See PlainInMemoryReport
 columnTypes = { 0: "Size",
                 1: "Real",
                 2: "string",
