@@ -235,24 +235,12 @@ class OREApp {
            const std::string& logFile, Size logLevel = 31,
            bool console = false);
     
-    void run(bool useAnalytics = true);
+    void run();
 
     void run(const std::vector<std::string>& marketData,
              const std::vector<std::string>& fixingData);
 
-    void buildMarket(const std::string& todaysMarketXML = "", const std::string& curveConfigXML = "",
-                     const std::string& conventionsXML = "",
-                     const std::vector<std::string>& marketData = std::vector<std::string>(),
-                     const std::vector<std::string>& fixingData = std::vector<std::string>());
-
     ext::shared_ptr<InputParameters> getInputs();
-
-    ext::shared_ptr<MarketImpl> getMarket() const;
-
-    ext::shared_ptr<EngineFactory> buildEngineFactoryFromXMLString(
-        const ext::shared_ptr<MarketImpl>& marketImpl,
-        const std::string& pricingEngineXML,
-        const bool generateAdditionalResults = false);
 
     std::set<std::string> getAnalyticTypes();
     std::set<std::string> getSupportedAnalyticTypes();
