@@ -1,24 +1,27 @@
 <?xml version="1.0"?>
 <Simulation>
+  
   <Parameters>
     <Discretization>Exact</Discretization>
     <Grid>290,2W</Grid>
-    <!--<Grid>580,1W</Grid>-->
+    <!--<Grid>2W,1M,2M,3M,4M,5M,6M,7M,8M,9M,10M,11M,1Y,1Y3M,1Y6M,1Y9M,2Y,3Y,4Y,5Y,6Y,7Y,8Y,9Y,10Y,11Y,12Y</Grid>-->
     <Calendar>EUR,USD,GBP,CHF</Calendar>
     <Sequence>SobolBrownianBridge</Sequence>
     <Scenario>Simple</Scenario>
     <Seed>42</Seed>
-    <!--<Samples>5000</Samples>-->
     <Samples>1000</Samples>
+    <!--<CloseOutLag>2W</CloseOutLag>-->
+    <CloseOutLag>0D</CloseOutLag>
+    <!--<MporMode>StickyDate</MporMode>-->
+    <MporMode>ActualDate</MporMode>
   </Parameters>
+
   <CrossAssetModel>
     <DomesticCcy>EUR</DomesticCcy>
     <Currencies>
       <Currency>EUR</Currency>
       <Currency>USD</Currency>
       <Currency>GBP</Currency>
-      <Currency>CHF</Currency>
-      <Currency>JPY</Currency>
     </Currencies>
     <BootstrapTolerance>0.0001</BootstrapTolerance>
     <InterestRateModels>
@@ -56,32 +59,6 @@
         </ParameterTransformation>
       </LGM>
       <LGM ccy="EUR">
-        <CalibrationType>Bootstrap</CalibrationType>
-        <Volatility>
-          <Calibrate>Y</Calibrate>
-          <VolatilityType>Hagan</VolatilityType>
-          <ParamType>Piecewise</ParamType>
-          <TimeGrid>1.0, 2.0, 3.0, 4.0, 5.0, 7.0, 10.0</TimeGrid>
-          <InitialValue>0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01</InitialValue>
-        </Volatility>
-        <Reversion>
-          <Calibrate>N</Calibrate>
-          <ReversionType>HullWhite</ReversionType>
-          <ParamType>Constant</ParamType>
-          <TimeGrid/>
-          <InitialValue>0.03</InitialValue>
-        </Reversion>
-        <CalibrationSwaptions>
-          <Expiries> 1Y,2Y,3Y,4Y,5Y,7Y,10Y,12Y,15Y,20Y,25Y</Expiries>
-          <Terms>   29Y,28Y,27Y,26Y,25Y,23Y,20Y,18Y,15Y,10Y,5Y</Terms>
-          <Strikes/>
-        </CalibrationSwaptions>
-        <ParameterTransformation>
-          <ShiftHorizon>0.0</ShiftHorizon>
-          <Scaling>1.0</Scaling>
-        </ParameterTransformation>
-      </LGM>
-      <LGM ccy="CHF">
         <CalibrationType>Bootstrap</CalibrationType>
         <Volatility>
           <Calibrate>Y</Calibrate>
@@ -181,8 +158,6 @@
       <Currency>EUR</Currency>
       <Currency>USD</Currency>
       <Currency>GBP</Currency>
-      <Currency>CHF</Currency>
-      <Currency>JPY</Currency>
     </Currencies>
     <YieldCurves>
       <Configuration>
@@ -199,8 +174,6 @@
       <Index>USD-LIBOR-3M</Index>
       <Index>GBP-LIBOR-6M</Index>
       <Index>GBP-LIBOR-3M</Index>
-      <Index>CHF-LIBOR-6M</Index>
-      <Index>JPY-LIBOR-6M</Index>
     </Indices>
     <SwapIndices>
       <SwapIndex>
@@ -223,13 +196,11 @@
       <Simulate>false</Simulate>
       <ReactionToTimeDecay>ForwardVariance</ReactionToTimeDecay>
       <!-- Alternative: ConstantVariance -->
-      <Currencies>
-        <Currency>EUR</Currency>
-        <Currency>USD</Currency>
-        <Currency>GBP</Currency>
-        <Currency>CHF</Currency>
-        <Currency>JPY</Currency>
-      </Currencies>
+      <Keys>
+        <Key>EUR</Key>
+        <Key>USD</Key>
+        <Key>GBP</Key>
+      </Keys>
       <Expiries>6M,1Y,2Y,3Y,5Y,10Y,12Y,15Y,20Y</Expiries>
       <Terms>1Y,2Y,3Y,4Y,5Y,7Y,10Y,15Y,20Y,30Y</Terms>
     </SwaptionVolatilities>
@@ -240,7 +211,6 @@
       <CurrencyPairs>
         <CurrencyPair>USDEUR</CurrencyPair>
         <CurrencyPair>GBPEUR</CurrencyPair>
-        <CurrencyPair>JPYEUR</CurrencyPair>
       </CurrencyPairs>
       <Expiries>6M,1Y,2Y,3Y,4Y,5Y,7Y,10Y</Expiries>
     </FxVolatilities>

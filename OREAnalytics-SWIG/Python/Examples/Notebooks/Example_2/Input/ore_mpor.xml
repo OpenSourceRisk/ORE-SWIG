@@ -56,7 +56,7 @@
       <Parameter name="exposureProfiles">Y</Parameter>
       <Parameter name="exposureProfilesByTrade">Y</Parameter>
       <Parameter name="quantile">0.95</Parameter>
-      <Parameter name="calculationType">Symmetric</Parameter>
+      <Parameter name="calculationType">NoLag</Parameter>
       <Parameter name="allocationMethod">Marginal</Parameter>
       <Parameter name="marginalAllocationLimit">1.0</Parameter>
       <Parameter name="exerciseNextBreak">N</Parameter>
@@ -68,8 +68,6 @@
       <Parameter name="fvaLendingCurve">BANK_EUR_LEND</Parameter>
       <Parameter name="colva">N</Parameter>
       <Parameter name="collateralFloor">N</Parameter>
-      <!--<Parameter name="rawCubeOutputFile">rawcube.csv</Parameter>-->
-      <!--<Parameter name="netCubeOutputFile">netcube.csv</Parameter>-->
     </Analytic>
   </Analytics>
 </ORE>

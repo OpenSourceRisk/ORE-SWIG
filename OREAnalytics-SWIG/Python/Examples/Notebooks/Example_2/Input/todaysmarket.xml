@@ -53,31 +53,23 @@
     <DiscountingCurve currency="EUR">Yield/EUR/EUR6M</DiscountingCurve>
     <DiscountingCurve currency="USD">Yield/USD/USD3M</DiscountingCurve>
     <DiscountingCurve currency="GBP">Yield/GBP/GBP6M</DiscountingCurve>
-    <DiscountingCurve currency="CHF">Yield/CHF/CHF6M</DiscountingCurve>
-    <DiscountingCurve currency="JPY">Yield/JPY/JPY6M</DiscountingCurve>
   </DiscountingCurves>
   <!-- discounting curve definition (in ccy ois discounting) -->
   <DiscountingCurves id="ois">
     <DiscountingCurve currency="EUR">Yield/EUR/EUR1D</DiscountingCurve>
     <DiscountingCurve currency="USD">Yield/USD/USD1D</DiscountingCurve>
     <DiscountingCurve currency="GBP">Yield/GBP/GBP1D</DiscountingCurve>
-    <DiscountingCurve currency="CHF">Yield/CHF/CHF1D</DiscountingCurve>
-    <DiscountingCurve currency="JPY">Yield/JPY/JPY1D</DiscountingCurve>
   </DiscountingCurves>
   <!-- discounting curve definition (xois discounting w.r.t. EUR collateral) -->
   <DiscountingCurves id="xois_eur">
     <DiscountingCurve currency="EUR">Yield/EUR/EUR1D</DiscountingCurve>
     <DiscountingCurve currency="USD">Yield/USD/USD-IN-EUR</DiscountingCurve>
     <DiscountingCurve currency="GBP">Yield/GBP/GBP-IN-EUR</DiscountingCurve>
-    <DiscountingCurve currency="CHF">Yield/CHF/CHF-IN-EUR</DiscountingCurve>
-    <DiscountingCurve currency="JPY">Yield/JPY/JPY6M</DiscountingCurve>
   </DiscountingCurves>
   <DiscountingCurves id="xois_usd">
     <DiscountingCurve currency="EUR">Yield/EUR/EUR-IN-USD</DiscountingCurve>
     <DiscountingCurve currency="USD">Yield/USD/USD1D</DiscountingCurve>
     <DiscountingCurve currency="GBP">Yield/GBP/GBP-IN-USD</DiscountingCurve>
-    <DiscountingCurve currency="CHF">Yield/CHF/CHF-IN-USD</DiscountingCurve>
-    <DiscountingCurve currency="JPY">Yield/JPY/JPY6M</DiscountingCurve>
   </DiscountingCurves>
   
   <!-- index forwarding curve definition -->
@@ -92,12 +84,7 @@
     <Index name="USD-LIBOR-6M">Yield/USD/USD6M</Index>
     <Index name="GBP-SONIA">Yield/GBP/GBP1D</Index>
     <Index name="GBP-LIBOR-3M">Yield/GBP/GBP3M</Index>
-    <Index name="CHF-TOIS">Yield/CHF/CHF1D</Index>
     <Index name="GBP-LIBOR-6M">Yield/GBP/GBP6M</Index>
-    <Index name="CHF-LIBOR-3M">Yield/CHF/CHF3M</Index>
-    <Index name="CHF-LIBOR-6M">Yield/CHF/CHF6M</Index>
-    <Index name="JPY-LIBOR-6M">Yield/JPY/JPY6M</Index>
-    <Index name="JPY-TONAR">Yield/JPY/JPY1D</Index>
     <Index name="USD-SIFMA">Yield/USD/USDBMA</Index>
     </IndexForwardingCurves>
   <SwapIndexCurves id="default">
@@ -125,28 +112,14 @@
     <SwapIndex name="GBP-CMS-30Y">
       <Discounting>GBP-SONIA</Discounting>
     </SwapIndex>
-    <SwapIndex name="CHF-CMS-1Y">
-      <Discounting>CHF-TOIS</Discounting>
-    </SwapIndex>
-    <SwapIndex name="CHF-CMS-30Y">
-      <Discounting>CHF-TOIS</Discounting>
-    </SwapIndex>
-    <SwapIndex name="JPY-CMS-1Y">
-      <Discounting>JPY-TONAR</Discounting>
-    </SwapIndex>
-    <SwapIndex name="JPY-CMS-30Y">
-      <Discounting>JPY-TONAR</Discounting>
-    </SwapIndex>
   </SwapIndexCurves>
   <!-- inflation index definition -->
   <ZeroInflationIndexCurves id="default">
-      <!--<InflationIndexCurve name="AUCPI">Inflation/AUCPI/AUCPI_ZC_Swaps</InflationIndexCurve> -->
       <ZeroInflationIndexCurve name="EUHICP">Inflation/EUHICP/EUHICP_ZC_Swaps</ZeroInflationIndexCurve>
       <ZeroInflationIndexCurve name="EUHICPXT">Inflation/EUHICPXT/EUHICPXT_ZC_Swaps</ZeroInflationIndexCurve>
       <ZeroInflationIndexCurve name="FRHICP">Inflation/FRHICP/FRHICP_ZC_Swaps</ZeroInflationIndexCurve>
       <ZeroInflationIndexCurve name="UKRPI">Inflation/UKRPI/UKRPI_ZC_Swaps</ZeroInflationIndexCurve>
       <ZeroInflationIndexCurve name="USCPI">Inflation/USCPI/USCPI_ZC_Swaps</ZeroInflationIndexCurve>
-      <ZeroInflationIndexCurve name="ZACPI">Inflation/ZACPI/ZACPI_ZC_Swaps</ZeroInflationIndexCurve>
   </ZeroInflationIndexCurves>
   <YYInflationIndexCurves id="default">
       <YYInflationIndexCurve name="EUHICPXT">Inflation/EUHICPXT/EUHICPXT_YY_Swaps</YYInflationIndexCurve>
@@ -155,17 +128,12 @@
   <FxSpots id="default">
     <FxSpot pair="EURUSD">FX/EUR/USD</FxSpot>
     <FxSpot pair="EURGBP">FX/EUR/GBP</FxSpot>
-    <FxSpot pair="EURCHF">FX/EUR/CHF</FxSpot>
-    <FxSpot pair="EURJPY">FX/EUR/JPY</FxSpot>
     <FxSpot pair="GBPUSD">FX/GBP/USD</FxSpot>
-    <FxSpot pair="USDCHF">FX/USD/CHF</FxSpot>
   </FxSpots>
   <!-- fx volatility definition -->
   <FxVolatilities id="default">
     <FxVolatility pair="EURUSD">FXVolatility/EUR/USD/EURUSD</FxVolatility>
     <FxVolatility pair="EURGBP">FXVolatility/EUR/GBP/EURGBP</FxVolatility>
-    <FxVolatility pair="EURCHF">FXVolatility/EUR/CHF/EURCHF</FxVolatility>
-    <FxVolatility pair="EURJPY">FXVolatility/EUR/JPY/EURJPY</FxVolatility>
     <FxVolatility pair="GBPUSD">FXVolatility/GBP/USD/GBPUSD</FxVolatility>
   </FxVolatilities>
   <!-- swaption volatility definition -->
@@ -173,8 +141,6 @@
     <SwaptionVolatility currency="EUR">SwaptionVolatility/EUR/EUR_SW_N</SwaptionVolatility>
     <SwaptionVolatility currency="USD">SwaptionVolatility/USD/USD_SW_N</SwaptionVolatility>
     <SwaptionVolatility currency="GBP">SwaptionVolatility/GBP/GBP_SW_N</SwaptionVolatility>
-    <SwaptionVolatility currency="CHF">SwaptionVolatility/CHF/CHF_SW_N</SwaptionVolatility>
-    <SwaptionVolatility currency="JPY">SwaptionVolatility/CHF/CHF_SW_N</SwaptionVolatility>
   </SwaptionVolatilities>
   <!-- cap volatility definition -->
   <CapFloorVolatilities id="default">
@@ -202,11 +168,6 @@
     <DefaultCurve name="CPTY_B">Default/USD/CPTY_A_SR_USD</DefaultCurve>
     <DefaultCurve name="CPTY_C">Default/EUR/CPTY_C_SR_EUR</DefaultCurve>
     <DefaultCurve name="BOND_YIELD_EUR_OVER_OIS">Default/EUR/BOND_YIELD_EUR_OVER_OIS</DefaultCurve>
-    <!--
-    <DefaultCurve name="CPTY_1">Default/EUR/CPTY_1_SR_EUR</DefaultCurve>
-    <DefaultCurve name="CPTY_2">Default/EUR/CPTY_2_SR_EUR</DefaultCurve>
-    <DefaultCurve name="CPTY_3">Default/EUR/CPTY_3_SR_EUR</DefaultCurve>
-    -->
   </DefaultCurves>
   <!-- inflation volatility curves definition -->
   <YYInflationCapFloorVolatilities id="default">

@@ -1,12 +1,11 @@
 import sys
 
-def writeReportList(reportList):
+def writeList(lst):
     print()
-    print("Result reports:")
-    for r in reportList:
+    for r in lst:
         print("-", r)
         
-def checkReportStructure(report):
+def checkReportStructure(name, report):
     # These are the column types values and meaning, see PlainInMemoryReport definition 
     columnTypes = { 0: "Size",
                     1: "Real",
@@ -14,10 +13,10 @@ def checkReportStructure(report):
                     3: "Date",
                     4: "Period" }
 
+    print("Report: ", name)
+    print("columns:", report.columns())
+    print("rows:   ", report.rows())
     print()
-    print ("columns:", report.columns())
-    print ("rows: %d\n" % report.rows())
-
     print ("%-6s %-20s %-8s %-10s" % ("Column", "Header", "Type", "TypeString"))
     for i in range(0, report.columns()):
         print("%-6d %-20s %-8s %-10s" % (i,
@@ -60,9 +59,9 @@ def writeReport(report, columnNumbers):
             else:
                 eol = ""
             if typ == 0:
-                print ("%17d  " % column[c][i], end=eol)
+                print ("%-17d  " % column[c][i], end=eol)
             elif typ == 1:
-                print ("%17.2f  " % column[c][i], end=eol)
+                print ("%-17.2f  " % column[c][i], end=eol)
             elif typ == 2:
                 print ("%-17s  " % column[c][i], end=eol)
             elif typ == 3:
