@@ -254,7 +254,7 @@ class OREApp {
 
     std::vector<std::string> getErrors();
 
-    std::string getRunTime();
+    Real getRunTime();
  };
 
 %shared_ptr(Analytic)
