@@ -67,6 +67,7 @@ public:
     // Getters, to be continued
     const QuantLib::Date& asof();
     const ext::shared_ptr<Portfolio>& portfolio();
+    Size nThreads();
     
     // and Setters
     void setAsOfDate(const std::string& s); 

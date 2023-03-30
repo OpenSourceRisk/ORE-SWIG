@@ -1,5 +1,13 @@
 import sys
 
+def checkErrorsAndRunTime(app):
+    errors = app.getErrors()
+    print ("Completed with", len(errors), "errors/warnings")
+    if len(errors) > 0:
+        for e in errors:
+            print(e)        
+    print ("Run time: %.4f sec" % app.getRunTime())       
+
 def writeList(lst):
     print()
     for r in lst:

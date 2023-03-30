@@ -49,12 +49,12 @@
           <InitialValue>0.03</InitialValue>
         </Reversion>
         <CalibrationSwaptions>
-          <Expiries> 1Y,2Y,3Y,4Y,5Y,7Y,10Y,12Y,15Y,20Y,25Y</Expiries>
-          <Terms>   29Y,28Y,27Y,26Y,25Y,23Y,20Y,18Y,15Y,10Y,5Y</Terms>
+          <Expiries> 1Y,  2Y,  4Y,  6Y,  8Y, 10Y, 12Y, 14Y, 16Y, 18Y, 19Y</Expiries>
+          <Terms>   19Y, 18Y, 16Y, 14Y, 12Y, 10Y,  8Y,  6Y,  4Y,  2Y,  1Y</Terms>
           <Strikes/>
         </CalibrationSwaptions>
         <ParameterTransformation>
-          <ShiftHorizon>0.0</ShiftHorizon>
+          <ShiftHorizon>20.0</ShiftHorizon>
           <Scaling>1.0</Scaling>
         </ParameterTransformation>
       </LGM>
@@ -75,12 +75,12 @@
           <InitialValue>0.03</InitialValue>
         </Reversion>
         <CalibrationSwaptions>
-          <Expiries> 1Y,2Y,3Y,4Y,5Y,7Y,10Y,12Y,15Y,20Y,25Y</Expiries>
-          <Terms>   29Y,28Y,27Y,26Y,25Y,23Y,20Y,18Y,15Y,10Y,5Y</Terms>
+          <Expiries> 1Y,  2Y,  4Y,  6Y,  8Y, 10Y, 12Y, 14Y, 16Y, 18Y, 19Y</Expiries>
+          <Terms>   19Y, 18Y, 16Y, 14Y, 12Y, 10Y,  8Y,  6Y,  4Y,  2Y,  1Y</Terms>
           <Strikes/>
         </CalibrationSwaptions>
         <ParameterTransformation>
-          <ShiftHorizon>0.0</ShiftHorizon>
+          <ShiftHorizon>20.0</ShiftHorizon>
           <Scaling>1.0</Scaling>
         </ParameterTransformation>
       </LGM>
