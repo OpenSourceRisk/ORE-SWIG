@@ -253,7 +253,9 @@ class OREApp {
     ext::shared_ptr<NPVCube> getCube(std::string cubeName);
 
     std::vector<std::string> getErrors();
-};
+
+    std::string getRunTime();
+ };
 
 %shared_ptr(Analytic)
 class Analytic {
