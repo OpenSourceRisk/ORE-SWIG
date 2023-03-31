@@ -96,7 +96,7 @@ set(CMAKE_DEBUG_POSTFIX ${TEMP_CMAKE_DEBUG_POSTFIX})
 # Add all libraries to link with
 # Do not tell the build which python libs to use.  It automatically looks for python release libs,
 # even in debug, and uncommenting the line below breaks the debug build.
-#target_link_libraries(OREAnalytics ${Python_LIBRARIES})
+target_link_libraries(OREAnalyticsPython ${Python_LIBRARIES})
 target_link_libraries(OREAnalyticsPython ${Boost_LIBRARIES})
 target_link_libraries(OREAnalyticsPython ${QL_LIB_NAME})
 target_link_libraries(OREAnalyticsPython ${QLE_LIB_NAME})
