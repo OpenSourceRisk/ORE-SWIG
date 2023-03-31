@@ -6,66 +6,58 @@ from OREAnalytics import *
 import xml.etree.ElementTree as ET
 import os
 
-print ("Loading parameters...")
+orexml = "Input/ore_market.xml"
+print ("Load parameters from", orexml)
 params = Parameters()
-print ("   params is of type", type(params))
-params.fromFile("Input/ore.xml")
-print ("   setup/asofdate = " + params.get("setup","asofDate"))
+params.fromFile(orexml)
 
-print ("Building ORE App...")
+print ("Build ORE App...")
 ore = OREApp(params)
-print ("   ore is of type", type(ore))
+inputs = ore.getInputs()
 
-print ("Running ORE process...");
-# Run it all 
-# ore.run()
-# Run bootstraps only (conventions, curve configuration, construction)
-ore.buildMarket()
+print ("Get the  portfolio from xml...")
+portfolioFile = os.path.join("Input","portfolio.xml")
+portfolioXml = ET.parse(portfolioFile).getroot()
+portfolioXmlStr = ET.tostring(portfolioXml,encoding="unicode")
 
-print ("Retrieve market object from ORE...");
-market = ore.getMarket()
-print ("   retrieved market is of type", type(market))
-asof = market.asofDate();
-print ("   retrieved market's asof date is", asof)
+print ("Add the portfolio and request NPV...")
+inputs.setPortfolio(portfolioXmlStr)
+inputs.insertAnalytic("NPV")
 
+print ("Run ORE process...")
+ore.run()
 
-pfolio = Portfolio()
-pfolioFile = os.path.join("Input","portfolio.xml")
-pfolioXml = ET.parse(pfolioFile).getroot()
-pfolioXmlStr = ET.tostring(pfolioXml,encoding="unicode")
-pfolio.fromXMLString(pfolioXmlStr)
-print("loaded pfolio from xml string (not built yet)")
-engineFact = ore.buildEngineFactoryFromXMLString(market, "")
-pfolio.build(engineFact)
-print("build portfolio using engine factory")
+print ("Get NPV analytic...")
+analytic = ore.getAnalytic("NPV")
+print("Get the built portfolio from the NPV analytic")
+portfolio = analytic.portfolio();
 
-print("   full portfolio is of type", type(pfolio))
-pfolioSize = pfolio.size()
-print("...pfolio.size() is of type", type(pfolioSize))
-print("... pfolio size = ", str(pfolioSize))
-ids = pfolio.ids();
+portfolioSize = portfolio.size()
+#print("...portfolio.size() is of type", type(portfolioSize))
+print("... portfolio size = ", str(portfolioSize))
+ids = portfolio.ids();
 for id in ids:
     print(id)
-    trn = pfolio.get(id)
-    print(" trn is of type ", type(trn))
+    trn = portfolio.get(id)
+    #print(" trn is of type ", type(trn))
     print(" trade id = ", trn.id())
     print(" trade type is ", trn.tradeType())
     print(" trade notional is ", trn.notional())
     pgInst = trn.instrument()
-    print(" inst type is ", type(pgInst))
+    #print(" inst type is ", type(pgInst))
     trnPv = pgInst.NPV()
     print(" instWrap pv = ", str(trnPv))
     qlInst = pgInst.qlInstrument()
-    print(" qlInst is of type ", type(qlInst))
+    #print(" qlInst is of type ", type(qlInst))
     qlPv = qlInst.NPV()
     print(" qlInst pv = ", str(qlPv))
     isExp = qlInst.isExpired()
     print(" is expired? = ", isExp)
     legPg = trn.legs()
-    print(" legsVec is of type ", type(legPg))
+    #print(" legsVec is of type ", type(legPg))
     for leg in legPg:
-        print("     leg is of type ", type(leg))
+        #print("     leg is of type ", type(leg))
         for flow in leg:
-            print("          flow as of ", flow.date(), " is ", flow.amount())
+            print("          flow as of ", flow.date().ISO(), " is ", flow.amount())
 
 print("Done.")

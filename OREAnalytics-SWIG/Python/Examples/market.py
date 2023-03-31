@@ -4,27 +4,23 @@
 
 from OREAnalytics import *
 
-print ("Loading parameters...")
+orexml = "Input/ore_market.xml"
+print ("Run ORE using", orexml)
 params = Parameters()
-print ("   params is of type", type(params))
-params.fromFile("Input/ore.xml")
-print ("   setup/asofdate = " + params.get("setup","asofDate"))
-
-print ("Building ORE App...")
+params.fromFile(orexml)
 ore = OREApp(params)
-print ("   ore is of type", type(ore))
+ore.run()
 
-print ("Running ORE process...");
-# Run it all 
-# ore.run()
-# Run bootstraps only (conventions, curve configuration, construction)
-ore.buildMarket()
+# Get first analytic, there should be just one (MARKETDATA)
+for a in ore.getAnalyticTypes():
+    print ("Get analytic", a)
+    analytic = ore.getAnalytic(a)
+    print("Get market object from analytic", a)    
+    market  = analytic.getMarket()
+    break
 
-print ("Retrieve market object from ORE...");
-market = ore.getMarket()
-print ("   retrieved market is of type", type(market))
 asof = market.asofDate();
-print ("   retrieved market's asof date is", asof)
+print ("Market asof date", asof)
 
 ccy = "EUR"
 index = "EUR-EURIBOR-6M"

@@ -1,11 +1,12 @@
 #!/bin/sh
 
-prefix=/Users/roland/Development/oremaster
-exec_prefix=${prefix}
-exec_prefix_set=no
+# On your system, the boost_thread lib may have a nonstandard name, e.g. boost_thread-mt.
+# If that is the case then set the BOOST_THREAD variable before calling this script, e.g:
+# export BOOST_THREAD=boost_thread-mt
+BOOST_THREAD="${BOOST_THREAD:=boost_thread}"
 
 usage="\
-Usage: oreanalytics-config [--prefix[=DIR]] [--exec-prefix[=DIR]] [--version] [--libs] [--cflags]"
+Usage: oreanalytics-config [--libs] [--cflags]"
 
 if test $# -eq 0; then
       echo "${usage}" 1>&2
@@ -19,32 +20,11 @@ while test $# -gt 0; do
   esac
 
   case $1 in
-    --prefix=*)
-      prefix=$optarg
-      if test $exec_prefix_set = no ; then
-        exec_prefix=$optarg
-      fi
-      ;;
-    --prefix)
-      echo $prefix
-      ;;
-    --exec-prefix=*)
-      exec_prefix=$optarg
-      exec_prefix_set=yes
-      ;;
-    --exec-prefix)
-      echo $exec_prefix
-      ;;
-    --version)
-      echo 1.13
-      ;;
     --cflags)
-      #echo -I${prefix}/include  
-      echo -I${prefix}/OREAnalytics -I${prefix}/OREData -I${prefix}/QuantExt -I${prefix}/QuantLib -I${BOOST}
+      echo -I${ORE}/OREAnalytics -I${ORE}/OREData -I${ORE}/QuantExt -I${ORE}/QuantLib -I${BOOST_INC} -std=c++1z
       ;;
     --libs)
-      #echo -L${exec_prefix}/lib  -lQuantLib  
-      echo -L${exec_prefix}/OREAnalytics/orea/.libs -OREAnalytics -L${exec_prefix}/OREData/ored/.libs -lOREData -L${exec_prefix}/QuantExt/qle/.libs -lQuantExt -L${exec_prefix}/QuantLib/ql/.libs -lQuantLib -L${BOOST}/stage/lib -lboost_thread -lboost_system -lboost_serialization -lboost_date_time -lboost_regex -lboost_filesystem
+      echo -L${ORE}/build/OREAnalytics/orea -lOREAnalytics -L${ORE}/build/OREData/ored -lOREData -L${ORE}/build/QuantExt/qle -lQuantExt -L${ORE}/build/QuantLib/ql -lQuantLib -L${BOOST_LIB} -l${BOOST_THREAD} -lboost_system -lboost_serialization -lboost_date_time -lboost_regex -lboost_filesystem -std=c++1z
       ;;
     *)
       echo "${usage}" 1>&2
