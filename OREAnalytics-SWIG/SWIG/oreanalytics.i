@@ -28,7 +28,7 @@
 #elif defined(SWIGJAVA)
 %module(directors="1") OREAnalytics
 #else
-%module OREAnalytics
+%module OREAnalyticsPython
 #endif
 
 %include exception.i

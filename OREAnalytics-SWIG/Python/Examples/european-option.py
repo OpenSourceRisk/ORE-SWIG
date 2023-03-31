@@ -31,7 +31,7 @@
 # FOR A PARTICULAR PURPOSE.  See the license for more details.
 
 # %%
-import OREAnalytics as ql
+import OREAnalyticsPython as ql
 import pandas as pd
 
 # %% [markdown]

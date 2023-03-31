@@ -32,7 +32,7 @@
 # FOR A PARTICULAR PURPOSE.  See the license for more details.
 
 # %%
-import OREAnalytics as ql
+import OREAnalyticsPython as ql
 
 # %% [markdown]
 # ### Global data
