@@ -2,7 +2,7 @@
 # Copyright (C) 2019 Quaternion Risk Manaement Ltd
 # All rights reserved.
 
-from OREAnalytics import *
+from OREAnalyticsPython import *
 
 #20160205 CC_BASIS_SWAP/BASIS_SPREAD/USD/3M/CHF/3M/4Y -0.008303
 date = Date(5, February, 2016)

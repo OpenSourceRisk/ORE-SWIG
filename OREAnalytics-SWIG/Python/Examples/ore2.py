@@ -2,7 +2,7 @@
 # Copyright (C) 2018 Quaternion Risk Manaement Ltd
 # All rights reserved.
 
-from OREAnalytics import *
+from OREAnalyticsPython import *
 
 print ("Loading parameters...")
 params = Parameters()
