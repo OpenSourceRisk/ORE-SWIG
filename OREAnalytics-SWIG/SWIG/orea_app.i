@@ -230,9 +230,9 @@ public:
 class OREApp {
   public:
 
-    OREApp(boost::shared_ptr<Parameters> params, bool console = false, bool allowSpecialCharacters = false);
+    OREApp(ext::shared_ptr<Parameters> params, bool console = false, bool allowSpecialCharacters = false);
 
-    OREApp(const boost::shared_ptr<InputParameters>& inputs, const std::string& logFile, Size logLevel = 31,
+    OREApp(const ext::shared_ptr<InputParameters>& inputs, const std::string& logFile, Size logLevel = 31,
            bool console = false, bool allowSpecialCharacters = false);
     
     void run();
