@@ -31,7 +31,7 @@ using oreplus::analytics::OREAppPlus;
 class OREAppPlus : public OREApp {
   public:
     OREAppPlus(ext::shared_ptr<Parameters>& p);
-    void run(bool useAnalytics = true);
+    void run();
 };
 
 #endif
