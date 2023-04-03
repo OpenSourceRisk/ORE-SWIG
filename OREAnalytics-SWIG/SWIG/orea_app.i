@@ -230,10 +230,10 @@ public:
 class OREApp {
   public:
 
-    OREApp(ext::shared_ptr<Parameters> params, bool console = false, bool allowSpecialCharacters = false);
+    OREApp(ext::shared_ptr<Parameters> params, bool console = false);
 
     OREApp(const ext::shared_ptr<InputParameters>& inputs, const std::string& logFile, Size logLevel = 31,
-           bool console = false, bool allowSpecialCharacters = false);
+           bool console = false);
     
     void run();
 
