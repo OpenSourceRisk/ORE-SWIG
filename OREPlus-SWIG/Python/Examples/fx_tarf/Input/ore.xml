@@ -5,7 +5,7 @@
     <Parameter name="inputPath">Input</Parameter>
     <Parameter name="outputPath">Output</Parameter>
     <Parameter name="logFile">log.txt</Parameter>
-    <Parameter name="logMask">31</Parameter>
+    <Parameter name="logMask">255</Parameter>
     <Parameter name="marketDataFile">market.txt</Parameter>
     <Parameter name="fixingDataFile">fixings.txt</Parameter>
     <Parameter name="implyTodaysFixings">N</Parameter>
@@ -47,7 +47,7 @@
     <Analytic type="simulation">
       <Parameter name="active">Y</Parameter>
       <Parameter name="amc">Y</Parameter>
-      <Parameter name="amcTradeTypes">FxTaRF</Parameter>
+      <Parameter name="amcTradeTypes">ScriptedTrade</Parameter>
       <Parameter name="simulationConfigFile">simulation.xml</Parameter>
       <Parameter name="pricingEnginesFile">pricingengine.xml</Parameter>
       <Parameter name="amcPricingEnginesFile">pricingengine.xml</Parameter>
@@ -56,11 +56,6 @@
       <Parameter name="cubeFile">cube.dat</Parameter>
       <Parameter name="aggregationScenarioDataFileName">scenariodata.dat</Parameter>
       <Parameter name="aggregationScenarioDataDump">scenariodata.csv</Parameter>
-    </Analytic>
-    <Analytic type="amc">
-      <Parameter name="active">Y</Parameter>
-      <Parameter name="pricingEnginesFile">pricingengine.xml</Parameter>
-      <Parameter name="amcTradeTypes">FxTaRF</Parameter>
     </Analytic>
     <Analytic type="xva">
       <Parameter name="active">Y</Parameter>
