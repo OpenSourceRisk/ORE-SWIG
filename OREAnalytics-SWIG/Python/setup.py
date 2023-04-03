@@ -57,7 +57,7 @@ class my_wrap(Command):
     def initialize_options(self): pass
     def finalize_options(self): pass
     def run(self):
-        print('Generating Python bindings for OREAnalytics...')
+        print('Generating Python bindings for OREAnalyticsPython...')
         swig_version = os.popen("swig -version").read().split()[2]
         major_swig_version = swig_version[0]
         if major_swig_version < '3':
@@ -74,7 +74,7 @@ class my_wrap(Command):
                       '-I%s ' % ql_swig_dir +
                       '-I%s ' % qle_swig_dir +
                       '-I%s ' % oredata_swig_dir +
-                      '-outdir OREAnalytics -o OREAnalytics/oreanalytics_wrap.cpp ' +
+                      '-outdir OREAnalyticsPython -o OREAnalyticsPython/oreanalytics_wrap.cpp ' +
                       'oreanalytics.i')
         else:
             os.system('swig -python -c++ ' +
@@ -82,7 +82,7 @@ class my_wrap(Command):
                       '-I%s ' % ql_swig_dir +
                       '-I%s ' % qle_swig_dir +
                       '-I%s ' % oredata_swig_dir +
-                      '-outdir OREAnalytics -o OREAnalytics/oreanalytics_wrap.cpp ' +
+                      '-outdir OREAnalyticsPython -o OREAnalyticsPython/oreanalytics_wrap.cpp ' +
                       'oreanalytics.i')
 
 class my_build(build):
@@ -261,7 +261,7 @@ classifiers = [
 ]
 
 setup(name             = "osre",
-      version          = "1.8.3.2",
+      version          = "1.8.9.1",
       description      = "Python bindings for the OREAnalytics library",
       long_description = """
 OREAnalytics (http://opensourcerisk.org/) is a C++ library for financial quantitative
@@ -274,9 +274,9 @@ framework for quantitative finance.
       license          = codecs.open('../../LICENSE.txt','r+',
                                      encoding='utf8').read(),
       classifiers      = classifiers,
-      py_modules       = ['OREAnalytics.__init__','OREAnalytics.OREAnalytics'],
-      ext_modules      = [Extension("OREAnalytics._OREAnalytics",
-                                    ["OREAnalytics/oreanalytics_wrap.cpp"])
+      py_modules       = ['OREAnalyticsPython.__init__','OREAnalyticsPython.OREAnalyticsPython'],
+      ext_modules      = [Extension("OREAnalyticsPython._OREAnalyticsPython",
+                                    ["OREAnalyticsPython/oreanalytics_wrap.cpp"])
                          ],
       data_files       = datafiles,
       cmdclass         = {'test': test,
