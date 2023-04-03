@@ -35,7 +35,7 @@
 # ### Setup
 
 # %%
-import OREAnalyticsPython as ql
+import ORE as ql
 import pandas as pd
 
 # %%
