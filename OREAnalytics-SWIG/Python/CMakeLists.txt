@@ -90,18 +90,18 @@ set_source_files_properties(${PROJECT_SOURCE_DIR}/../SWIG/oreanalytics.i PROPERT
 # Then restore the variable after because it is required by the calls to target_link_libraries() below.
 set(TEMP_CMAKE_DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX})
 unset(CMAKE_DEBUG_POSTFIX)
-swig_add_library(OREAnalyticsPython TYPE MODULE LANGUAGE python SOURCES ${PROJECT_SOURCE_DIR}/../SWIG/oreanalytics.i)
+swig_add_library(ORE TYPE MODULE LANGUAGE python SOURCES ${PROJECT_SOURCE_DIR}/../SWIG/oreanalytics.i)
 set(CMAKE_DEBUG_POSTFIX ${TEMP_CMAKE_DEBUG_POSTFIX})
 
 # Add all libraries to link with
-target_link_libraries(OREAnalyticsPython ${Boost_LIBRARIES})
-target_link_libraries(OREAnalyticsPython ${QL_LIB_NAME})
-target_link_libraries(OREAnalyticsPython ${QLE_LIB_NAME})
-target_link_libraries(OREAnalyticsPython ${ORED_LIB_NAME})
-target_link_libraries(OREAnalyticsPython ${OREA_LIB_NAME})
+target_link_libraries(ORE ${Boost_LIBRARIES})
+target_link_libraries(ORE ${QL_LIB_NAME})
+target_link_libraries(ORE ${QLE_LIB_NAME})
+target_link_libraries(ORE ${ORED_LIB_NAME})
+target_link_libraries(ORE ${OREA_LIB_NAME})
 # On windows, do not tell the build which python libs to use.  It automatically
 # looks for python release libs, even in debug, and invoking the line below
 # breaks the debug build.
 if(NOT MSVC)
-    target_link_libraries(OREAnalyticsPython ${Python_LIBRARIES})
+    target_link_libraries(ORE ${Python_LIBRARIES})
 endif()
