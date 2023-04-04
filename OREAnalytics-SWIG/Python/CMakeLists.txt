@@ -6,6 +6,8 @@ cmake_policy(SET CMP0086 NEW)
 
 project(OREAnalytics-Python)
 
+option(ORE_USE_ZLIB "Use compression for boost::iostreams" ON)
+
 include(${PROJECT_SOURCE_DIR}/../../cmake/commonSettings.cmake)
 
 # Append /bigobj to compiler flags on Windows for this target
@@ -30,9 +32,19 @@ get_library_name("QuantLib" QL_LIB_NAME)
 configure_msvc_runtime()
 
 # To build the module, we moreover need Boost, Swig, Python
-find_package(Boost COMPONENTS serialization date_time regex filesystem system timer thread REQUIRED)
+SET(COMPONENT_LIST serialization date_time regex filesystem system timer thread)
+if(ORE_USE_ZLIB)
+    LIST(APPEND COMPONENT_LIST iostreams)
+    if(MSVC)
+        LIST(APPEND COMPONENT_LIST zlib)
+    endif()
+endif()
+find_package(Boost REQUIRED COMPONENTS ${COMPONENT_LIST})
 find_package(SWIG REQUIRED)
 find_package(Python REQUIRED COMPONENTS Development)
+if(ORE_USE_ZLIB)
+    find_package(ZLIB REQUIRED)
+endif()
 
 # Load the UseSWIG module from the cmake installation
 include(${SWIG_USE_FILE})
@@ -99,6 +111,9 @@ target_link_libraries(ORE ${QL_LIB_NAME})
 target_link_libraries(ORE ${QLE_LIB_NAME})
 target_link_libraries(ORE ${ORED_LIB_NAME})
 target_link_libraries(ORE ${OREA_LIB_NAME})
+if(ORE_USE_ZLIB)
+    target_link_libraries(ORE ${ZLIB_LIBRARIES})
+endif()
 # On windows, do not tell the build which python libs to use.  It automatically
 # looks for python release libs, even in debug, and invoking the line below
 # breaks the debug build.
