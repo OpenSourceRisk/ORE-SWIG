@@ -2,7 +2,7 @@
 # Copyright (C) 2019 Quaternion Risk Manaement Ltd
 # All rights reserved.
 
-from OREAnalytics import *
+from ORE import *
 
 fileLogger = FileLogger("log.txt")
 Log.instance().registerLogger(fileLogger)

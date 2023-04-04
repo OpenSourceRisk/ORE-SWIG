@@ -41,7 +41,6 @@ class Loader {
     bool has(const std::string& name, const QuantLib::Date& d) const;
     bool hasQuotes(const QuantLib::Date& d) const;
     std::set<Fixing> loadFixings() const;
-    std::set<Fixing> loadDividends() const;
 };
 %template(StringBoolPair) std::pair<std::string, bool>;
 %template(MarketDatumVector) std::vector<ext::shared_ptr<MarketDatum>>;

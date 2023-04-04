@@ -2,7 +2,7 @@
 # Copyright (C) 2018 Quaternion Risk Manaement Ltd
 # All rights reserved.
 
-from OREAnalytics import *
+from ORE import *
 import xml.etree.ElementTree as ET
 import os
 

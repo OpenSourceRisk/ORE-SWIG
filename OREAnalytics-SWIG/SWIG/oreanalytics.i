@@ -16,19 +16,18 @@
  FITNESS FOR A PARTICULAR PURPOSE. See the license for more details.
 */
 
-// UNCOMMENT THE BELOW IF YOU WISH TO BUILD THE C++ CODE IN DEBUG MODE
-//%begin %{
-//#ifdef _MSC_VER
-//#define SWIG_PYTHON_INTERPRETER_NO_DEBUG
-//#endif
-//%}
+%begin %{
+#ifdef _MSC_VER
+#define SWIG_PYTHON_INTERPRETER_NO_DEBUG
+#endif
+%}
 
 #if defined(SWIGCSHARP)
 %module(directors="1") NOREAnalyticsc
 #elif defined(SWIGJAVA)
 %module(directors="1") OREAnalytics
 #else
-%module OREAnalytics
+%module ORE
 #endif
 
 %include exception.i

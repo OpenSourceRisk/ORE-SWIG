@@ -14,7 +14,7 @@
 '''
 
 import sys, time
-from OREAnalytics import *
+from ORE import *
 
 ###################################
 # Build inputs step by step via API

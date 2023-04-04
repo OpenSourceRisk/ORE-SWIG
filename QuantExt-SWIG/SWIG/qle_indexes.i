@@ -134,9 +134,12 @@ class EquityIndex : public Index {
                 const Handle<Quote> spotQuote = Handle<Quote>(),
                 const Handle<YieldTermStructure>& rate = Handle<YieldTermStructure>(),
                 const Handle<YieldTermStructure>& dividend = Handle<YieldTermStructure>());
-        void resetName();
-        std::string dividendName() const;
+        void name();
         Currency currency() const;
+        Calendar fixingCalendar() const override;
+        bool isValidFixingDate(const Date& fixingDate) const override;
+        Real fixing(const Date& fixingDate, bool forecastTodaysFixing = false) const override;
+        Real fixing(const Date& fixingDate, bool forecastTodaysFixing, bool incDividend) const;
         std::string familyName() const;
         const Handle<Quote>& equitySpot() const;
         const Handle<YieldTermStructure>& equityForecastCurve() const;
