@@ -29,6 +29,7 @@
       <Parameter name="active">Y</Parameter>
       <Parameter name="baseCurrency">USD</Parameter>
       <Parameter name="outputFileName">npv.csv</Parameter>
+      <Parameter name="additionalResults">true</Parameter>
     </Analytic>
     <Analytic type="additionalResults">
       <Parameter name="active">Y</Parameter>
