@@ -24,7 +24,7 @@ params = Parameters()
 params.fromFile("Input/ore.xml")
 
 print ("Creating OREApp...")
-ore = OREApp(params)
+ore = OREApp(params, True)
 
 print ("Running ORE process...");
 ore.run()
