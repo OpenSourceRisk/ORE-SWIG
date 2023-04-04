@@ -144,7 +144,7 @@
         <Number>
           <Name>RangeUpperBounds</Name>
           <Values>
-            <Value>1.05</Value>
+            <Value>1.01</Value>
             <Value>999999.9</Value>
           </Values>
         </Number>
@@ -158,8 +158,8 @@
         <Number>
           <Name>RangeStrikes</Name>
           <Values>
-            <Value>1.03</Value>
-            <Value>1.03</Value>
+            <Value>1.01</Value>
+            <Value>1.1</Value>
           </Values>
         </Number>
         <Number>
