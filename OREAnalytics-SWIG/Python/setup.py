@@ -260,7 +260,7 @@ classifiers = [
     'Topic :: Scientific/Engineering',
 ]
 
-setup(name             = "osre",
+setup(name             = "open-source-risk-engine",
       version          = "1.8.9.1",
       description      = "Python bindings for the OREAnalytics library",
       long_description = """
