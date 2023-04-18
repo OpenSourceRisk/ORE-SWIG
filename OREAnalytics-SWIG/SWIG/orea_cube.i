@@ -21,6 +21,8 @@
 
 %{
 using ore::analytics::NPVCube;
+using ore::analytics::AggregationScenarioData;
+using ore::analytics::AggregationScenarioDataType;
 %}
 
 %shared_ptr(NPVCube)
@@ -47,6 +49,36 @@ class NPVCube {
     virtual Real get(Size id, Size date, Size sample, Size depth = 0) const = 0;
     //! Get a value from the cube using trade id and date
     virtual Real get(const std::string& id, const QuantLib::Date& date, Size sample, Size depth = 0) const;
+};
+
+enum class AggregationScenarioDataType : unsigned int { IndexFixing = 0, FXSpot = 1, Numeraire = 2, Generic = 3 };
+
+%shared_ptr(AggregationScenarioData)
+class AggregationScenarioData {
+public:
+    //! Return the length of each dimension
+    virtual Size dimDates() const = 0;
+    virtual Size dimSamples() const = 0;
+
+    //! Check whether data is available for the given type
+    virtual bool has(const AggregationScenarioDataType& type, const string& qualifier = "") const = 0;
+
+    //! Get a value from the cube
+    virtual Real get(Size dateIndex, Size sampleIndex, const AggregationScenarioDataType& type,
+                     const string& qualifier = "") const = 0;
+
+    // Get available keys (type, qualifier)
+    virtual std::vector<std::pair<AggregationScenarioDataType, std::string>> keys() const = 0;
+
+    //! Go to the next point on the cube
+    /*! Go to the next point on the cube, assumes we do date, then samples
+     */
+    virtual void next() {
+        if (++dIndex_ == dimDates()) {
+            dIndex_ = 0;
+            sIndex_++;
+        }
+    }
 };
 
 #endif

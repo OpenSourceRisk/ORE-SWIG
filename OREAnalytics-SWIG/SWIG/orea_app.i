@@ -31,6 +31,7 @@ using ore::analytics::Analytic;
 using ore::analytics::AnalyticsManager;
 using ore::analytics::InputParameters;
 using ore::analytics::NPVCube;
+using ore::analytics::AggregationScenarioData;
 using ore::analytics::MarketDataLoader;
 using ore::analytics::MarketDataInMemoryLoader;
 using ore::analytics::MarketCalibrationReport;
@@ -251,6 +252,9 @@ class OREApp {
 
     std::set<std::string> getCubeNames();
     ext::shared_ptr<NPVCube> getCube(std::string cubeName);
+
+    std::set<std::string> getMarketCubeNames();
+    ext::shared_ptr<AggregationScenarioData> getMarketCube(std::string cubeName);
 
     std::vector<std::string> getErrors();
 
