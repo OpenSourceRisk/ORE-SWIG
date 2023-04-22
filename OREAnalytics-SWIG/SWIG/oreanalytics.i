@@ -18,7 +18,13 @@
 
 %begin %{
 #ifdef _MSC_VER
-#define SWIG_PYTHON_INTERPRETER_NO_DEBUG
+# define SWIG_PYTHON_INTERPRETER_NO_DEBUG
+# ifdef ORE_USE_ZLIB
+#  define BOOST_LIB_NAME boost_iostreams
+#  include "boost/config/auto_link.hpp"
+#  define BOOST_LIB_NAME boost_zlib
+#  include "boost/config/auto_link.hpp"
+# endif
 #endif
 %}
 

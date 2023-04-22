@@ -163,6 +163,8 @@ class my_build_ext(build_ext):
             self.define += [('__WIN32__', None), ('WIN32', None),
                             ('NDEBUG', None), ('_WINDOWS', None),
                             ('NOMINMAX', None)]
+            if 'ORE_USE_ZLIB' in os.environ:
+                self.define += [('ORE_USE_ZLIB', None)]
             extra_compile_args = ['/GR', '/FD', '/Zm250', '/EHsc', '/bigobj', '/std:c++17', '/wd4996' ]
             extra_link_args = ['/subsystem:windows', machinetype]
             self.libraries = [ 'advapi32' ]
@@ -179,8 +181,6 @@ class my_build_ext(build_ext):
                     extra_compile_args.append('/MD')
 
         elif compiler == 'unix':
-            #import pdb; pdb.set_trace()
-            #os.chdir('..')
             ql_compile_args = \
                 os.popen('../oreanalytics-config --cflags').read()[:-1].split()
             ql_link_args = \
@@ -261,7 +261,7 @@ classifiers = [
 ]
 
 setup(name             = "open-source-risk-engine",
-      version          = "1.8.9.1",
+      version          = "1.8.9.2",
       description      = "Python bindings for the OREAnalytics library",
       long_description = """
 OREAnalytics (http://opensourcerisk.org/) is a C++ library for financial quantitative
