@@ -24,7 +24,7 @@ Build using CMake on Mac OS
 (1) Fetch ORE (branch origin/ore_swig_cmake) and build with CMake
     See user guide on that branch (Docs/UserGuide/userguide.pdf), new section on page 16.
 
-(2) cd ORESWIG projekt directory and pull down QuantLib-SWIG:
+(2) cd ORESWIG project directory and pull down QuantLib-SWIG:
     git submodule init
     git submodule update
 
@@ -35,16 +35,16 @@ Build using CMake on Mac OS
     For example:
 
     cmake -D PYTHON_LIBRARY=/Users/roland/anaconda/lib/libpython3.5m.dylib \
-    	  -D PYTHON_INCLUDE_DIR=/Users/roland/anaconda/include/python3.5m \
-	  -D BOOST_ROOT=/Users/roland/Development/boost/boost_1_65_1 \
-	  -D BOOST_LIB=/Users/roland/Development/boost/boost_1_65_1/stage/lib \
-	  -D ORE=/Users/roland/Development/oremaster ..    
+      -D PYTHON_INCLUDE_DIR=/Users/roland/anaconda/include/python3.5m \
+      -D BOOST_ROOT=/Users/roland/Development/boost/boost_1_65_1 \
+      -D BOOST_LIB=/Users/roland/Development/boost/boost_1_65_1/stage/lib \
+      -D ORE=/Users/roland/Development/oremaster ..
 
-    PYTHON_LIBRARY, PYTHON_INCLUDE_DIR, BOOST_ROOT and BOOST_LIB can also be set as environemnt variable,
+    PYTHON_LIBRARY, PYTHON_INCLUDE_DIR, BOOST_ROOT and BOOST_LIB can also be set as environment variables,
     and need not be passed with the -D option in that case.
-    
+
 (5) Build (generates Python and Java wrappers so far):
-    make 
+    make
 
 (6) Run Python example:
     - Update PYTHONPATH, so that Python scripts will find the new Python modules
@@ -60,14 +60,14 @@ Build using CMake on Windows
 ============================
 
 (1) - (3) See above
-    
+
 (4) Configuration assuming that Ninja build system is available (equivalent to make), and Python and Boost locations are
     found automatically. This is the command line that works on dev104:
 
     cmake -D ORE=C:/dev/roland/ore \
-    	  -D CMAKE_BUILD_TYPE=Release \
-	  -D MSVC_RUNTIME=static  \
-	  -G Ninja ..
+      -D CMAKE_BUILD_TYPE=Release \
+      -D MSVC_RUNTIME=static \
+      -G Ninja ..
 
 (5) Build:
     ninja
