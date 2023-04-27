@@ -26,8 +26,8 @@ of `boost::iostreams` is zlib-enabled.  The instructions for compiling
 
 You need to grab the source code for ORE and ORESWIG, e.g:
 
-    git clone --recurse-submodules https://github.com/OpenSourceRisk/Engine.git
-    git clone --recurse-submodules https://github.com/OpenSourceRisk/ORE-SWIG.git
+    git clone --recurse-submodules https://github.com/OpenSourceRisk/Engine.git ore
+    git clone --recurse-submodules https://github.com/OpenSourceRisk/ORE-SWIG.git oreswig
 
 # Environment Variables
 
@@ -101,6 +101,11 @@ Below are the commands to build ORESWIG.
     export PYTHONPATH=$DEMO_ORE_SWIG_DIR/OREAnalytics-SWIG/Python/build
     export LD_LIBRARY_PATH=$DEMO_ORE_DIR/build/OREAnalytics/orea:$DEMO_ORE_DIR/build/OREData/ored:$DEMO_ORE_DIR/build/QuantExt/qle:$DEMO_ORE_DIR/build/QuantLib/ql:$DEMO_BOOST_LIB
     python3 swap.py
+
+When you run example script `ore.py`, it writes to directory `Output` a number
+of output files, including `cube.dat`.  If you have compression enabled, as
+described above, then `cube.dat` is generated in compressed format (.tar.gz).
+If not then `cube.dat` is generated as a flat (plain text) file.
 
 ## Build ORESWIG Using setup.py
 

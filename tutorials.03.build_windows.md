@@ -34,8 +34,8 @@ in your boost lib directory.
 
 You need to grab the source code for ORE and ORESWIG, e.g:
 
-    git clone --recurse-submodules https://github.com/OpenSourceRisk/Engine.git
-    git clone --recurse-submodules https://github.com/OpenSourceRisk/ORE-SWIG.git
+    git clone --recurse-submodules https://github.com/OpenSourceRisk/Engine.git ore
+    git clone --recurse-submodules https://github.com/OpenSourceRisk/ORE-SWIG.git oreswig
 
 # Environment Variables
 
@@ -110,6 +110,11 @@ Below are the commands to build ORESWIG.
     cd %DEMO_ORE_SWIG_DIR%\OREAnalytics-SWIG\Python\Examples
     SET PYTHONPATH=%DEMO_ORE_SWIG_DIR%\OREAnalytics-SWIG\Python\build;%DEMO_ORE_SWIG_DIR%\OREAnalytics-SWIG\Python\build\Release
     python swap.py
+
+When you run example script `ore.py`, it writes to directory `Output` a number
+of output files, including `cube.dat`.  If you have compression enabled, as
+described above, then `cube.dat` is generated in compressed format (zip).  If
+not then `cube.dat` is generated as a flat (plain text) file.
 
 ## Build ORESWIG Using setup.py
 
