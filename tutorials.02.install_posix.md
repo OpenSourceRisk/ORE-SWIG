@@ -48,7 +48,7 @@ you have the latest version:
 You probably want a copy of the example Python scripts from the ORE project.
 So point your browser at the git repo...
 
-https://gitlab.acadiasoft.net/qs/oreswig
+https://github.com/OpenSourceRisk/ORE-SWIG
 
 ...and click on the download button.  Download a zip file of the repo and
 uncompress it somewhere on your hard drive.
