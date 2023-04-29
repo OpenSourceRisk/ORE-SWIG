@@ -101,7 +101,6 @@ public:
     void setMporDays(Size s);
     void setMporCalendar(const std::string& s); 
     void setMporForward(bool b);
-    void setIncludeMporExpired(bool b);
     // Setters for npv analytics
     void setOutputAdditionalResults(bool b);
     // Setters for cashflows
