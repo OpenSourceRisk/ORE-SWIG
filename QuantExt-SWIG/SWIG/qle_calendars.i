@@ -22,53 +22,40 @@
 %include calendars.i
 
 %{
-using QuantExt::Austria;
 using QuantExt::Belgium;
 using QuantExt::CME;
 using QuantExt::Colombia;
 using QuantExt::Cyprus;
-using QuantExt::France;
 using QuantExt::Greece;
 using QuantExt::ICE;
 using QuantExt::Ireland;
 using QuantExt::IslamicWeekendsOnly;
-using QuantExt::Israel;
 using QuantExt::Luxembourg;
 using QuantExt::Malaysia;
 using QuantExt::Netherlands;
 using QuantExt::Peru;
 using QuantExt::Philippines;
 using QuantExt::RussiaModified;
-using QuantExt::Switzerland;
+using QuantExt::Spain;
 using QuantExt::Wmr;
 using QuantExt::LargeJointCalendar;
 %}
 
-%shared_ptr(Austria)
-class Austria : public Calendar {
-	public:
-		enum Market {Settlement};
-		Austria(Market m = Settlement);
-};
-
-%shared_ptr(Belgium)
 class Belgium : public Calendar {
 	public:
 		enum Market {Settlement};
 		Belgium(Market m = Settlement);
 };
 
-%shared_ptr(CME)
 class CME : public Calendar {
 	public:
 		CME();
 };
 
-%shared_ptr(Colombia)
 class Colombia : public Calendar {
 	public:
 		enum Market {CSE};
-		Colombia(:Market m = CSE);
+		Colombia(Market m = CSE);
 };
 
 
@@ -105,26 +92,17 @@ class Colombia : public Calendar {
     \test the correctness of the returned results is tested
           against a list of known holidays.
 */
-%shared_ptr(Cyprus)
+
 class Cyprus : public Calendar {
 	public:
 		Cyprus();
 };
 
-%shared_ptr(France)
-class France : public Calendar {
-	public:
-        enum Market {Settlement};
-		France(Market m = Settlement);
-};
-
-%shared_ptr(Greece)
 class Greece : public Calendar {
     public:
         Greece();
 };
 
-%shared_ptr(ICE)
 class ICE : public Calendar {
     public:
         enum Market {
@@ -171,7 +149,6 @@ class ICE : public Calendar {
           against a list of known holidays.
 */
 
-%shared_ptr(Ireland)
 class Ireland : public Calendar {
     enum Market {IrishStockExchange, BankHolidays};
 
@@ -179,88 +156,55 @@ class Ireland : public Calendar {
 
 };
 
-%shared_ptr(IslamicWeekendsOnly)
 class IslamicWeekendsOnly : public Calendar {
     IslamicWeekendsOnly();
 };
 
-
-//! Israel calendar
-/*! Extend Israel calendar to cover TELBOR publication dates as described at:
-    https://www.boi.org.il/en/Markets/TelborMarket/Documents/telbordef_eng.pdf
-    Telbor holidays 2019, 2020:
-    https://www.boi.org.il/en/Markets/TelborMarket/Documents/NoTelborRates2019.pdf
-    https://www.boi.org.il/en/Markets/TelborMarket/Documents/NoTelborRates2020.pdf
-
-    \ingroup calendars
-*/
-
-%shared_ptr(Israel)
-class Israel : public Calendar {
-    enum MarketExt { Settlement, TASE, Telbor };
-    Israel(MarketExt market = Telbor);
-};
-
-%shared_ptr(Luxembourg)
 class Luxembourg : public Calendar {
     enum Market {Settlement};
     Luxembourg(Market m = Settlement);
 };
 
-
-%shared_ptr(Malaysia)
 class Malaysia : public Calendar {
     enum Market {MYX};
     Malaysia(Market m = MYX);
 };
 
-%shared_ptr(Netherlands)
 class Netherlands : public Calendar {
     enum Market {Settlement};
     Netherlands(Market m = Settlement);
 };
 
-%shared_ptr(Peru)
 class Peru : public Calendar {
     enum Market {LSE};
     Peru(Market m = LSE);
 };
 
-%shared_ptr(Philippines)
 class Philippines : public Calendar {
     enum Market {PHE};
     Philippines(Market m = PHE);
 };
 
-%shared_ptr(RussiaModified) 
 class RussiaModified : public Calendar {
     RussiaModified(Russia::Market = Russia::Settlement);
 };
 
-%shared_ptr(Spain)
 class Spain : public Calendar {
     enum Market {Settlement};
-    Spain(Market m = Settlement)
+    Spain(Market m = Settlement);
 };
 
-%shared_ptr(Switzerland)
-class Switzerland : public Calendar {
-    enum Market(Settlement, SIX);
-    Switzerland(Market matker = Settlement);
-};
-
-%shared_ptr(Wmr)
-class Wr : public Calendar {
+class Wmr : public Calendar {
     enum Market(Settlement);
     Wmr(Market market = Settlement);
 };
 
-%shared_ptr(LargeJointCalendar)
-class LargeJointCalendar : public QuantLib::Calendar {
+class LargeJointCalendar : public Calendar {
     LargeJointCalendar(const std::vector<QuantLib::Calendar>&,
                                 QuantLib::JointCalendarRule = QuantLib::JoinHolidays);
 };
 
+#endif
 
 
 

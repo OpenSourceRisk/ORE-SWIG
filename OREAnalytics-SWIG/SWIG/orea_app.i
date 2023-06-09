@@ -112,7 +112,6 @@ public:
     void setCurvesGrid(const std::string& s);
     // Setters for sensi analytics
     void setXbsParConversion(bool b);
-    void setAnalyticFxSensis(bool b);
     void setParSensi(bool b);
     void setAlignPillars(bool b);
     void setOutputJacobi(bool b);
@@ -230,7 +229,7 @@ public:
 class OREApp {
   public:
 
-    OREApp(ext::shared_ptr<Parameters> params, bool console = false);
+    OREApp(const ext::shared_ptr<Parameters>& params, bool console = false);
 
     OREApp(const ext::shared_ptr<InputParameters>& inputs, const std::string& logFile, Size logLevel = 31,
            bool console = false);

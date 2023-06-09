@@ -35,7 +35,8 @@ using QuantExt::BEHICP;
 using QuantExt::BondIndex;
 using QuantExt::BondFuturesIndex;
 using QuantExt::ConstantMaturityBondIndex;
-using QuantExt::EquityIndex;
+// QuantLib has an equity index since v1.30
+using QuantExt::EquityIndex2;
 using QuantExt::FxIndex;
 using QuantExt::BMAIndexWrapper;
 using QuantLib::BMAIndex;
@@ -127,10 +128,13 @@ class ConstantMaturityBondIndex : public InterestRateIndex {
         const ext::shared_ptr<Bond>& bond() const;
 };
 
-%shared_ptr(EquityIndex)
-class EquityIndex : public Index {
+// QuantLib has an equity index since v1.30, so we have renamed the QuantExt version to EquityIndex2 for now.
+// EquityIndex to be consolidated with QuantLib and removed from QuantExt.
+
+%shared_ptr(EquityIndex2)
+class EquityIndex2 : public Index {
     public:
-        EquityIndex(const std::string& familyName, const Calendar& fixingCalendar, const Currency& currency,
+        EquityIndex2(const std::string& familyName, const Calendar& fixingCalendar, const Currency& currency,
                 const Handle<Quote> spotQuote = Handle<Quote>(),
                 const Handle<YieldTermStructure>& rate = Handle<YieldTermStructure>(),
                 const Handle<YieldTermStructure>& dividend = Handle<YieldTermStructure>());
@@ -149,9 +153,8 @@ class EquityIndex : public Index {
         Real forecastFixing(const Date& fixingDate, bool incDividend) const;
         Real forecastFixing(const Time& fixingTime, bool incDividend) const;
         Real pastFixing(const Date& fixingDate) const override;
-        ext::shared_ptr<EquityIndex> clone(const Handle<Quote> spotQuote, const Handle<YieldTermStructure>& rate,
-                                                 const Handle<YieldTermStructure>& dividend) const;
-
+        ext::shared_ptr<EquityIndex2> clone(const Handle<Quote> spotQuote, const Handle<YieldTermStructure>& rate,
+                                            const Handle<YieldTermStructure>& dividend) const;
 
 };
 

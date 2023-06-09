@@ -27,9 +27,7 @@ using QuantLib::Currency;
 
 namespace QuantExt {
 	//African currencies
-	class TNDCurrency: public Currency {};
 	class EGPCurrency: public Currency {};
-	class NGNCurrency: public Currency {};
 	class MADCurrency: public Currency {};
 	
 	//Asian currencies

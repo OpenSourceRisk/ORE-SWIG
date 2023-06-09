@@ -127,7 +127,7 @@ class MarketImpl {
     Handle<Quote> equitySpot(const std::string& eqName,
                              const std::string& configuration = Market::defaultConfiguration) const;
     %extend {
-      ext::shared_ptr<QuantExt::EquityIndex> equityCurve(const std::string& indexName,
+      ext::shared_ptr<QuantExt::EquityIndex2> equityCurve(const std::string& indexName,
                                                            const std::string& configuration =
 							   Market::defaultConfiguration) const {
           return self->equityCurve(indexName, configuration).currentLink();
