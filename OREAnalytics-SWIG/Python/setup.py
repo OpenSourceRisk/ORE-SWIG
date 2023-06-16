@@ -261,7 +261,7 @@ classifiers = [
 ]
 
 setup(name             = "open-source-risk-engine",
-      version          = "1.8.9.3",
+      version          = "1.8.10",
       description      = "Python bindings for the OREAnalytics library",
       long_description = """
 OREAnalytics (http://opensourcerisk.org/) is a C++ library for financial quantitative
