@@ -51,7 +51,7 @@
       <Parameter name="pricingEnginesFile">pricingengine.xml</Parameter>
       <Parameter name="baseCurrency">EUR</Parameter>
       <Parameter name="observationModel">Disable</Parameter>
-      <!--<Parameter name="cubeFile">cube.csv.gz</Parameter>-->
+      <Parameter name="cubeFile">cube.csv.gz</Parameter>
       <Parameter name="aggregationScenarioDataFileName">scenariodata.csv.gz</Parameter>
     </Analytic>
     <Analytic type="xva">
