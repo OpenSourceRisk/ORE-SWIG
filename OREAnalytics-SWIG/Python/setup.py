@@ -137,6 +137,7 @@ class my_build_ext(build_ext):
 
             # ADD INCLUDE DIRECTORIES
             self.include_dirs.append(self.validate_path(BOOST_DIR))
+            self.include_dirs.append(self.validate_path(os.path.join(ORE_DIR, 'build', 'QuantLib')))
             self.include_dirs.append(self.validate_path(os.path.join(ORE_DIR, 'QuantLib')))
             self.include_dirs.append(self.validate_path(os.path.join(ORE_DIR, 'QuantExt')))
             self.include_dirs.append(self.validate_path(os.path.join(ORE_DIR, 'OREData')))
