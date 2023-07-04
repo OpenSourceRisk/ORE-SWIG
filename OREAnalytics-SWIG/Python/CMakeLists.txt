@@ -46,6 +46,11 @@ if(ORE_USE_ZLIB)
     find_package(ZLIB REQUIRED)
 endif()
 
+if(NOT DEFINED ${ORE})
+    SET(ORE ${CMAKE_SOURCE_DIR}/ore)
+endif()
+
+
 # Load the UseSWIG module from the cmake installation
 include(${SWIG_USE_FILE})
 
