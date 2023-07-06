@@ -137,7 +137,13 @@ public:
     // const std::map<std::pair<RiskFactorKey, RiskFactorKey>, Real>& covarianceData();
     // TODO: API for setting a sensitivity stream
     // const boost::shared_ptr<SensitivityStream>& sensitivityStream();
-    // Setters for exposure simulation 
+    // Setters for exposure simulation
+    void setSimmVersion(const std::string& s) { simmVersion_ = s; }
+    void setCrifFromBuffer(const std::string& csvBuffer,
+                           char eol = '\n', char delim = ',', char quoteChar = '\0', char escapeChar = '\\');
+    void setSimmCalculationCurrency(const std::string& s) { simmCalculationCurrency_ = s; }
+    void setSimmResultCurrency(const std::string& s) { simmResultCurrency_ = s; }
+    void setSimmReportingCurrency(const std::string& s) { simmReportingCurrency_ = s; }
     void setAmc(bool b);
     void setAmcTradeTypes(const std::string& s); // todo: parse to set<string>
     void setExposureBaseCurrency(const std::string& s);
@@ -217,6 +223,12 @@ public:
     void setKvaTheirPdFloor(Real r);
     void setKvaOurCvaRiskWeight(Real r);
     void setKvaTheirCvaRiskWeight(Real r);
+    // Setters for Credit Simulation
+    void setCreditMigrationAnalytic(bool b) { creditMigrationAnalytic_ = b; }
+    void setCreditMigrationDistributionGrid(const std::vector<Real>& grid) { creditMigrationDistributionGrid_ = grid; }
+    void setCreditMigrationTimeSteps(const std::vector<Size>& ts) { creditMigrationTimeSteps_ = ts; }
+    void setCreditSimulationParametersFromFile(const std::string& fileName);
+    void setCreditMigrationOutputFiles(const std::string& s) { creditMigrationOutputFiles_ = s; }
     // Setters for cashflow npv and dynamic backtesting
     void setCashflowHorizon(const std::string& s); 
     void setPortfolioFilterDate(const std::string& s); 
