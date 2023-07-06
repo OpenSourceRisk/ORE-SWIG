@@ -2,7 +2,11 @@ cmake_minimum_required(VERSION 3.8)
 
 project(QuantExt-Python)
 
-include(${PROJECT_SOURCE_DIR}/../../cmake/commonSettings.cmake)
+if(NOT DEFINED ${ORE_BUILD})
+    SET(ORE_BUILD ${ORE}/build)
+endif()
+
+include(${ORE}/cmake/commonSettings.cmake)
 
 # Append /bigobj to compiler flags on Windows for this target
 if (MSVC)
@@ -20,8 +24,7 @@ endif()
 
 # The module depends on a number of libraries in the ORE project: determine their exact names
 get_library_name("QuantExt" QLE_LIB_NAME)
-get_library_name("QuantLib" QL_LIB_NAME)
-configure_msvc_runtime()
+set_ql_library_name()
 
 # To build the module, we moreover need Boost, Swig, Python
 find_package(Boost COMPONENTS serialization date_time regex filesystem system timer thread REQUIRED)
@@ -34,15 +37,16 @@ include(${SWIG_USE_FILE})
 # Add to the list of include directories
 include_directories(${PROJECT_SOURCE_DIR}/../SWIG)
 include_directories(${PROJECT_SOURCE_DIR}/../../QuantLib-SWIG/SWIG)
+include_directories(${ORE_BUILD}/QuantLib)
 include_directories(${ORE}/QuantLib)
 include_directories(${ORE}/QuantExt)
 include_directories(${Boost_INCLUDE_DIRS})
 include_directories(${PYTHON_INCLUDE_PATH})
 
 # Add to the list of link directories
-add_link_directory_if_exists(${ORE}/QuantLib/build/ql)
-add_link_directory_if_exists(${ORE}/build/QuantLib/ql)
-add_link_directory_if_exists(${ORE}/build/QuantExt/qle)
+link_directories(${Python_LIBRARY_DIRS})
+add_link_directory_if_exists(${ORE_BUILD}/QuantLib/ql)
+add_link_directory_if_exists(${ORE_BUILD}/QuantExt/qle)
 
 # Tell SWIG to compile in C++ mode
 set_source_files_properties(${PROJECT_SOURCE_DIR}/../SWIG/quantext.i PROPERTIES CPLUSPLUS ON)
@@ -54,7 +58,19 @@ set_source_files_properties(${PROJECT_SOURCE_DIR}/../SWIG/quantext.i PROPERTIES 
 swig_add_library(QuantExt TYPE MODULE LANGUAGE python SOURCES ${PROJECT_SOURCE_DIR}/../SWIG/quantext.i)
 
 # Add all libraries to link with
-swig_link_libraries(QuantExt ${PYTHON_LIBRARIES})
-swig_link_libraries(QuantExt ${Boost_LIBRARIES})
-swig_link_libraries(QuantExt ${QL_LIB_NAME})
-swig_link_libraries(QuantExt ${QLE_LIB_NAME})
+target_link_libraries(QuantExt ${Boost_LIBRARIES})
+target_link_libraries(QuantExt ${QL_LIB_NAME})
+target_link_libraries(QuantExt ${QLE_LIB_NAME})
+
+# On windows, do not tell the build which python libs to use.  It automatically
+# looks for python release libs, even in debug, and invoking the line below
+# breaks the debug build.
+if(NOT MSVC)
+    target_link_libraries(QuantExt ${Python_LIBRARIES})
+endif()
+
+if (MSVC)
+	get_target_property(target_options QuantExt COMPILE_OPTIONS)
+	list(REMOVE_ITEM target_options "/we4189")
+	set_property(TARGET QuantExt PROPERTY COMPILE_OPTIONS ${target_options})
+endif()

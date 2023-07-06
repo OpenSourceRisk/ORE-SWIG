@@ -8,9 +8,6 @@ project(OREAnalytics-Python)
 
 option(ORE_USE_ZLIB "Use compression for boost::iostreams" OFF)
 
-if(NOT DEFINED ${ORE})
-    SET(ORE ${CMAKE_SOURCE_DIR}/ore)
-endif()
 if(NOT DEFINED ${ORE_BUILD})
     SET(ORE_BUILD ${ORE}/build)
 endif()
