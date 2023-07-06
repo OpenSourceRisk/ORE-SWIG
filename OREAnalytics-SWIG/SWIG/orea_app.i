@@ -228,6 +228,7 @@ public:
     void setCreditMigrationDistributionGrid(const std::vector<Real>& grid) { creditMigrationDistributionGrid_ = grid; }
     void setCreditMigrationTimeSteps(const std::vector<Size>& ts) { creditMigrationTimeSteps_ = ts; }
     void setCreditSimulationParametersFromFile(const std::string& fileName);
+    void setCreditSimulationParametersFromBuffer(const std::string& xml);
     void setCreditMigrationOutputFiles(const std::string& s) { creditMigrationOutputFiles_ = s; }
     // Setters for cashflow npv and dynamic backtesting
     void setCashflowHorizon(const std::string& s); 
