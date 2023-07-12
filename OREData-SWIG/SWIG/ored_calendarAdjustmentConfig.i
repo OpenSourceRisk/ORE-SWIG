@@ -51,12 +51,7 @@ class CalendarAdjustmentConfig {
     const string& getBaseCalendar(const string& calname);
 
     void append(const CalendarAdjustmentConfig& c);
-  private:
-    map<string, string> baseCalendars_;
-    map<string, set<Date>> additionalHolidays_;
-    map<string, set<Date>> additionalBusinessDays_;
-
-    string normalisedName(const string&);
+  
 };
 
 
