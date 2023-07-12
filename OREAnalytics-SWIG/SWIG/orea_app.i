@@ -224,12 +224,12 @@ public:
     void setKvaOurCvaRiskWeight(Real r);
     void setKvaTheirCvaRiskWeight(Real r);
     // Setters for Credit Simulation
-    void setCreditMigrationAnalytic(bool b) { creditMigrationAnalytic_ = b; }
-    void setCreditMigrationDistributionGrid(const std::vector<Real>& grid) { creditMigrationDistributionGrid_ = grid; }
-    void setCreditMigrationTimeSteps(const std::vector<Size>& ts) { creditMigrationTimeSteps_ = ts; }
+    void setCreditMigrationAnalytic(bool b);
+    void setCreditMigrationDistributionGrid(const std::vector<Real>& grid);
+    void setCreditMigrationTimeSteps(const std::vector<Size>& ts);
     void setCreditSimulationParametersFromFile(const std::string& fileName);
     void setCreditSimulationParametersFromBuffer(const std::string& xml);
-    void setCreditMigrationOutputFiles(const std::string& s) { creditMigrationOutputFiles_ = s; }
+    void setCreditMigrationOutputFiles(const std::string& s);
     // Setters for cashflow npv and dynamic backtesting
     void setCashflowHorizon(const std::string& s); 
     void setPortfolioFilterDate(const std::string& s);
