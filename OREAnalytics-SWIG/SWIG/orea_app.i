@@ -138,12 +138,12 @@ public:
     // TODO: API for setting a sensitivity stream
     // const boost::shared_ptr<SensitivityStream>& sensitivityStream();
     // Setters for exposure simulation
-    void setSimmVersion(const std::string& s) { simmVersion_ = s; }
+    void setSimmVersion(const std::string& s);
     void setCrifFromBuffer(const std::string& csvBuffer,
                            char eol = '\n', char delim = ',', char quoteChar = '\0', char escapeChar = '\\');
-    void setSimmCalculationCurrency(const std::string& s) { simmCalculationCurrency_ = s; }
-    void setSimmResultCurrency(const std::string& s) { simmResultCurrency_ = s; }
-    void setSimmReportingCurrency(const std::string& s) { simmReportingCurrency_ = s; }
+    void setSimmCalculationCurrency(const std::string& s);
+    void setSimmResultCurrency(const std::string& s);
+    void setSimmReportingCurrency(const std::string& s);
     void setAmc(bool b);
     void setAmcTradeTypes(const std::string& s); // todo: parse to set<string>
     void setExposureBaseCurrency(const std::string& s);
@@ -232,9 +232,9 @@ public:
     void setCreditMigrationOutputFiles(const std::string& s) { creditMigrationOutputFiles_ = s; }
     // Setters for cashflow npv and dynamic backtesting
     void setCashflowHorizon(const std::string& s); 
-    void setPortfolioFilterDate(const std::string& s); 
+    void setPortfolioFilterDate(const std::string& s);
     // Set list of analytics that shall be run
-    void setAnalytics(const std::string& s); 
+    void setAnalytics(const std::string& s);
     void insertAnalytic(const std::string& s); 
 };
 

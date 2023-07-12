@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2018, 2020 Quaternion Risk Management Ltd
+ Copyright (C) 2023 Quaternion Risk Management Ltd
  All rights reserved.
 
  This file is part of ORE, a free-software/open-source library
@@ -20,7 +20,7 @@
 #define ored_CalendarAdjustmentConfig_i
 
 %{
-// put c++ declarations here
+
 using ore::data::CalendarAdjustmentConfig;
 using std::map;
 using std::set;
@@ -33,36 +33,30 @@ using QuantLib::Calendar;
 %shared_ptr(CalendarAdjustmentConfig)
 class CalendarAdjustmentConfig {
   public:
-    // default constructor
+
     CalendarAdjustmentConfig();
 
-    // This method adds d to the list of holidays for cal name.
     void addHolidays(const string& calname, const Date& d);
 
-    // This method adds d to the list of business days for cal name.
     void addBusinessDays(const string& calname, const Date& d);
 
-    // This method adds s as a base calendar for cal name.
     void addBaseCalendar(const string& calname, const string& d);
 
-    // Returns all the holidays for a given cal name
-    const set<Date>& getHolidays(const string& calname) const;
+    const set<Date>& getHolidays(const string& calname);
 
-    // Returns all the business days for a given calname
-    const set<Date>& getBusinessDays(const string& calname) const;
+    const set<Date>& getBusinessDays(const string& calname);
 
     set<string> getCalendars() const;
 
-    const string& getBaseCalendar(const string& calname) const;
+    const string& getBaseCalendar(const string& calname);
 
-    // add all holidays and business days from c to this instance
     void append(const CalendarAdjustmentConfig& c);
   private:
     map<string, string> baseCalendars_;
     map<string, set<Date>> additionalHolidays_;
     map<string, set<Date>> additionalBusinessDays_;
 
-    string normalisedName(const string&) const;
+    string normalisedName(const string&);
 };
 
 
