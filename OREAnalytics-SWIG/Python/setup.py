@@ -144,7 +144,7 @@ class my_build_ext(build_ext):
             self.include_dirs.append(self.validate_path(os.path.join(ORE_DIR, 'OREAnalytics')))
 
             # ADD LIBRARY DIRECTORIES
-            
+
             target = "Release"
 
             if self.debug:
@@ -268,7 +268,7 @@ classifiers = [
 ]
 
 setup(name             = "open-source-risk-engine",
-      version          = "1.8.10.1",
+      version          = "1.8.10",
       description      = "Python bindings for the OREAnalytics library",
       long_description = """
 OREAnalytics (http://opensourcerisk.org/) is a C++ library for financial quantitative

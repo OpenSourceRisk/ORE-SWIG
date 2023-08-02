@@ -8,7 +8,11 @@ project(OREAnalytics-Python)
 
 option(ORE_USE_ZLIB "Use compression for boost::iostreams" OFF)
 
-include(${PROJECT_SOURCE_DIR}/../../cmake/commonSettings.cmake)
+if(NOT DEFINED ${ORE_BUILD})
+    SET(ORE_BUILD ${ORE}/build)
+endif()
+
+include(${ORE}/cmake/commonSettings.cmake)
 
 # Append /bigobj to compiler flags on Windows for this target
 if (MSVC)
@@ -28,8 +32,7 @@ endif()
 get_library_name("OREAnalytics" OREA_LIB_NAME)
 get_library_name("OREData" ORED_LIB_NAME)
 get_library_name("QuantExt" QLE_LIB_NAME)
-get_library_name("QuantLib" QL_LIB_NAME)
-configure_msvc_runtime()
+set_ql_library_name()
 
 # To build the module, we moreover need Boost, Swig, Python
 set(BOOST_COMPONENT_LIST serialization date_time regex filesystem system timer thread)
@@ -54,37 +57,20 @@ include_directories(${PROJECT_SOURCE_DIR}/../SWIG)
 include_directories(${PROJECT_SOURCE_DIR}/../../QuantLib-SWIG/SWIG)
 include_directories(${PROJECT_SOURCE_DIR}/../../QuantExt-SWIG/SWIG)
 include_directories(${PROJECT_SOURCE_DIR}/../../OREData-SWIG/SWIG)
-include_directories(${ORE}/build/QuantLib)
-include_directories(${ORE}/../build/ore/QuantLib)
+include_directories(${ORE_BUILD}/QuantLib)
 include_directories(${ORE}/QuantLib)
 include_directories(${ORE}/QuantExt)
 include_directories(${ORE}/OREData)
 include_directories(${ORE}/OREAnalytics)
-include_directories(${ORE}/build/ore/QuantLib)
-include_directories(${ORE}/ore/QuantLib)
-include_directories(${ORE}/ore/QuantExt)
-include_directories(${ORE}/ore/OREData)
-include_directories(${ORE}/ore/OREAnalytics)
 include_directories(${Boost_INCLUDE_DIRS})
 include_directories(${Python_INCLUDE_DIRS})
 
 # Add to the list of link directories
 link_directories(${Python_LIBRARY_DIRS})
-add_link_directory_if_exists(${ORE}/QuantLib/build/ql)
-add_link_directory_if_exists(${ORE}/build/QuantLib/ql)
-add_link_directory_if_exists(${ORE}/build/QuantExt/qle)
-add_link_directory_if_exists(${ORE}/build/OREData/ored)
-add_link_directory_if_exists(${ORE}/build/OREAnalytics/orea)
-add_link_directory_if_exists(${ORE}/ore/QuantLib/build/ql)
-add_link_directory_if_exists(${ORE}/build/ore/QuantLib/ql)
-add_link_directory_if_exists(${ORE}/build/ore/QuantExt/qle)
-add_link_directory_if_exists(${ORE}/build/ore/OREData/ored)
-add_link_directory_if_exists(${ORE}/build/ore/OREAnalytics/orea)
-
-add_link_directory_if_exists(${ORE}/../build/ore/QuantLib/ql)
-add_link_directory_if_exists(${ORE}/../build/ore/QuantExt/qle)
-add_link_directory_if_exists(${ORE}/../build/ore/OREData/ored)
-add_link_directory_if_exists(${ORE}/../build/ore/OREAnalytics/orea)
+add_link_directory_if_exists(${ORE_BUILD}/QuantLib/ql)
+add_link_directory_if_exists(${ORE_BUILD}/QuantExt/qle)
+add_link_directory_if_exists(${ORE_BUILD}/OREData/ored)
+add_link_directory_if_exists(${ORE_BUILD}/OREAnalytics/orea)
 
 # Tell SWIG to compile in C++ mode
 set_source_files_properties(${PROJECT_SOURCE_DIR}/../SWIG/oreanalytics.i PROPERTIES CPLUSPLUS ON)
@@ -103,6 +89,7 @@ set_source_files_properties(${PROJECT_SOURCE_DIR}/../SWIG/oreanalytics.i PROPERT
 set(TEMP_CMAKE_DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX})
 unset(CMAKE_DEBUG_POSTFIX)
 swig_add_library(ORE TYPE MODULE LANGUAGE python SOURCES ${PROJECT_SOURCE_DIR}/../SWIG/oreanalytics.i)
+
 set(CMAKE_DEBUG_POSTFIX ${TEMP_CMAKE_DEBUG_POSTFIX})
 
 # Add all libraries to link with
@@ -119,4 +106,10 @@ endif()
 # breaks the debug build.
 if(NOT MSVC)
     target_link_libraries(ORE ${Python_LIBRARIES})
+endif()
+
+if (MSVC)
+	get_target_property(target_options ORE COMPILE_OPTIONS)
+	list(REMOVE_ITEM target_options "/we4189")
+	set_property(TARGET ORE PROPERTY COMPILE_OPTIONS ${target_options})
 endif()
