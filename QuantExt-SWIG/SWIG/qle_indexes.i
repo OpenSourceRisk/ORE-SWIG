@@ -272,9 +272,7 @@ class Name : public IborIndex {
   public:
     Name(const Period& tenor,
          const Handle<YieldTermStructure>& h =
-                                Handle<YieldTermStructure>()) {
-        return new Name(new Name(tenor,h));
-    }
+                                Handle<YieldTermStructure>());
 };
 %enddef
 
@@ -286,9 +284,7 @@ using QuantExt::Name;
 class Name : public OvernightIndex {
   public:
     Name(const Handle<YieldTermStructure>& h =
-                                Handle<YieldTermStructure>()) {
-        return new Name(new Name(h));
-    }
+                                Handle<YieldTermStructure>());
 };
 %enddef
 
