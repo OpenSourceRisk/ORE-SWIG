@@ -64,7 +64,7 @@ class BondIndex : public Index {
               const Handle<Quote>& recoveryRate = Handle<Quote>(),
               const Handle<Quote>& securitySpread = Handle<Quote>(),
               const Handle<YieldTermStructure>& incomeCurve = Handle<YieldTermStructure>(),
-              const bool conditionalOnSurvival = true,
+              const bool conditionalOnSurvival = true, const Date& issueDate = Date(),
 	      const QuantExt::BondIndex::PriceQuoteMethod priceQuoteMethod = QuantExt::BondIndex::PriceQuoteMethod::PercentageOfPar,
 	      const double priceQuoteBaseValue = 1.0,
 	      const bool isInflationLinked = false,
@@ -79,6 +79,7 @@ class BondIndex : public Index {
         Handle<Quote> securitySpread() const;
         Handle<YieldTermStructure> incomeCurve() const;
         bool conditionalOnSurvival() const;
+        Date issueDate() const;
         virtual Rate forecastFixing(const Date& fixingDate) const;
         Rate pastFixing(const Date& fixingDate) const;
 };
@@ -94,7 +95,7 @@ class BondFuturesIndex : public BondIndex {
             const Handle<DefaultProbabilityTermStructure>& defaultCurve = Handle<DefaultProbabilityTermStructure>(),
             const Handle<Quote>& recoveryRate = Handle<Quote>(), const Handle<Quote>& securitySpread = Handle<Quote>(),
             const Handle<YieldTermStructure>& incomeCurve = Handle<YieldTermStructure>(), 
-	    const bool conditionalOnSurvival = true,
+	        const bool conditionalOnSurvival = true, const Date& issueDate = Date(),
             const QuantExt::BondIndex::PriceQuoteMethod priceQuoteMethod = QuantExt::BondIndex::PriceQuoteMethod::PercentageOfPar,
             const double priceQuoteBaseValue = 1.0);
         std::string name() const;
