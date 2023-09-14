@@ -268,7 +268,9 @@ class OREApp {
     std::vector<std::string> getErrors();
 
     Real getRunTime();
- };
+
+    std::string version();
+};
 
 %shared_ptr(Analytic)
 class Analytic {
