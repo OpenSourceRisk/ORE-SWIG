@@ -287,7 +287,6 @@ class Name : public OvernightIndex {
 };
 %enddef
 
-//qle_export_xibor_instance(AUDbbsw); // moved to QuantLib
 qle_export_xibor_instance(CZKPribor);
 qle_export_xibor_instance(DEMLibor);
 qle_export_xibor_instance(DKKCibor);
@@ -301,8 +300,6 @@ qle_export_xibor_instance(MYRKlibor);
 qle_export_xibor_instance(NOKNibor);
 qle_export_xibor_instance(NZDBKBM);
 qle_export_xibor_instance(PHPPhiref);
-//qle_export_xibor_instance(PLNWibor); // moved to QuantLib
-//qle_export_xibor_instance(RUBMosprime); // moved to QuantLib
 qle_export_xibor_instance(SEKStibor);
 qle_export_xibor_instance(SGDSibor);
 qle_export_xibor_instance(SGDSor);
