@@ -41,14 +41,15 @@
 %}
 
 
-%include ored_conventions.i
-%include ored_parsers.i
-%include ored_market.i
-%include ored_portfolio.i
-%include ored_log.i
-%include ored_loader.i
-%include ored_marketdatum.i
-%include ored_reports.i
 %include ored_calendarAdjustmentConfig.i
+%include ored_conventions.i
+%include ored_loader.i
+%include ored_log.i
+%include ored_market.i
+%include ored_marketdatum.i
+%include ored_parsers.i
+%include ored_portfolio.i
+%include ored_reports.i
+%include ored_volcurves.i
 
 #endif
