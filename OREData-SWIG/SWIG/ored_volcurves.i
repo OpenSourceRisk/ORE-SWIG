@@ -19,12 +19,19 @@
 #ifndef ored_volcurves_i
 #define ored_volcurves_i
 
+%include std_set.i
+
 %{
-using ore::data::GenerticYieldVolCurve
-using ore::data::SwaptionVolCurve
+using ore::data::GenericYieldVolCurve;
+using ore::data::SwaptionVolCurve;
+using ore::data::BlackScholesModelBuilderBase;
+using ore::data::LocalVolModelBuilder;
 using namespace std;
 %}
 
+%template(DateSet) std::set<Date>;
+
+/*
 %shared_ptr(GenericYieldVolCurve)
 class GenericYieldVolCurve {
 	public:
@@ -50,5 +57,33 @@ class SwaptionVolCurve : public GenericYieldVolCurve {
         const SwaptionVolatilityCurveSpec& spec() const;  
 
 };
+*/
+
+%template(GeneralizedBlackScholesProcessVector) std::vector<ext::shared_ptr<GeneralizedBlackScholesProcess> >;
+
+%shared_ptr(LocalVolModelBuilder)
+class LocalVolModelBuilder : public BlackScholesModelBuilderBase {
+    public:
+         enum class Type { Dupire, DupireFloored, AndreasenHuge };
+         LocalVolModelBuilder(const std::vector<Handle<YieldTermStructure>>& curves,
+                              const std::vector<ext::shared_ptr<GeneralizedBlackScholesProcess>>& processes,
+                              const std::set<Date>& simulationDates = {},
+                              const std::set<Date>& addDates = {},
+                              const Size timeStepsPerYear = 1,
+                              const Type lvType = Type::Dupire,
+                              const std::vector<Real>& calibrationMoneyness = { -2.0, -1.0, 0.0, 1.0, 2.0 },
+                              const bool dontCalibrate = false);
+         LocalVolModelBuilder(const Handle<YieldTermStructure>& curve,
+                              const ext::shared_ptr<GeneralizedBlackScholesProcess>& process,
+                              const std::set<Date>& simulationDates = {},
+                              const std::set<Date>& addDates = {},
+                              const Size timeStepsPerYear = 1,
+                              const Type lvType = Type::Dupire,
+                              const std::vector<Real>& calibrationMoneyness = { -2.0, -1.0, 0.0, 1.0, 2.0 },
+                              const bool dontCalibrate = false);
+             
+         std::vector<ext::shared_ptr<GeneralizedBlackScholesProcess>> getCalibratedProcesses() const override;
+};
 
 
+#endif

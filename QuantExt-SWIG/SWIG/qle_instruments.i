@@ -43,6 +43,8 @@ using QuantExt::OvernightIndexedBasisSwap;
 using QuantExt::Deposit;
 using QuantExt::DepositEngine;
 using QuantExt::DiscountingSwapEngineMultiCurve;
+using QuantExt::VarianceSwap2;
+using QuantExt::GeneralisedReplicatingVarianceSwapEngine;
 %}
 
 
@@ -246,5 +248,41 @@ public:
                                     QuantLib::Date npvDate = QuantLib::Date());
     QuantLib::Handle<QuantLib::YieldTermStructure> discountCurve();
 };
+
+
+%shared_ptr(VarianceSwap2)
+class VarianceSwap2 : public Instrument {
+public:
+    VarianceSwap2(Position::Type position, Real strike, Real notional,
+                  const Date& startDate, const Date& maturityDate,
+                  const Calendar& calendar, bool addPastDividends);
+};
+
+%shared_ptr(GeneralisedReplicatingVarianceSwapEngine)
+class GeneralisedReplicatingVarianceSwapEngine : public PricingEngine {
+public:
+    class VarSwapSettings {
+    public:
+        enum class Scheme { GaussLobatto, Segment };
+        enum class Bounds { Fixed, PriceThreshold };
+        VarSwapSettings() {}
+        Scheme scheme = Scheme::GaussLobatto;
+        Bounds bounds = Bounds::PriceThreshold;
+        Real accuracy = 1E-5;
+        Size maxIterations = 1000;
+        Size steps = 100;
+        Real priceThreshold = 1E-10;
+        Size maxPriceThresholdSteps = 100;
+        Real priceThresholdStep = 0.1;
+        Real fixedMinStdDevs = -5.0;
+        Real fixedMaxStdDevs = 5.0;
+    };
+
+    GeneralisedReplicatingVarianceSwapEngine(const ext::shared_ptr<QuantLib::Index>& index,
+                                             const ext::shared_ptr<GeneralizedBlackScholesProcess>& process,
+                                             const Handle<YieldTermStructure>& discountingTS,
+                                             const VarSwapSettings settings = VarSwapSettings(),
+                                             const bool staticTodaysSpot = true);
+ };
 
 #endif
