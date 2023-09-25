@@ -29,28 +29,27 @@ RUN mkdir build.release
 WORKDIR /swig/OREAnalytics-SWIG/Python/build.release
 RUN cmake -DORE=/swig ..
 RUN make -j ${num_cores}
-
-
-  #&& cd ../../../QuantLib-SWIG/Python/test \
-  #&& python3 -c "import sys, OREPlus; sys.modules['QuantLib']=OREPlus;import QuantLibTestSuite;QuantLibTestSuite.test()" \
-  #&& cd ../../../QuantExt-SWIG/Python/test \
-  #&& python3 -c "import sys, OREPlus; sys.modules['QuantExt']=OREPlus;import QuantExtTestSuite;QuantExtTestSuite.test()" \
-  #&& cd ../../../OREData-SWIG/Python/test \
-  #&& python3 -c "import sys, OREPlus; sys.modules['OREData']=OREPlus;import OREDataTestSuite;OREDataTestSuite.test()" \
-  #&& cd ../../../OREAnalytics-SWIG/Python/test \
-  #&& python3 -c "import sys, OREPlus; sys.modules['OREAnalytics']=OREPlus;import OREAnalyticsTestSuite;OREAnalyticsTestSuite.test()" \
-  #&& cd ../../../OREPlus-SWIG/Python/test \
-  #&& python3 OREPlusTestSuite.py \
-  #&& cd / \
-  #&& mkdir build \
-  #&& mv /swig/OREPlus-SWIG/Python/build.release/OREPlus.py build \
-  #&& mv /swig/OREPlus-SWIG/Python/build.release/_OREPlus.so build \
-  #&& rm -rf /swig \
-  #&& cd /usr/local/include \
-  #&& rm -rf boost \
-  #&& rm -rf orea \
-  #&& rm -rf ored \
-  #&& rm -rf ql \
-  #&& rm -rf qle
+WORKDIR /
+RUN mkdir build
+RUN mv /swig/OREAnalytics-SWIG/Python/build.release/ORE.py build \
+  && mv /swig/OREAnalytics-SWIG/Python/build.release/_ORE.so build 
 
 ENV PYTHONPATH=/build
+
+RUN cd swig/QuantLib-SWIG/Python/test \
+  && python3 -c "import sys, ORE; sys.modules['QuantLib']=ORE;import QuantLibTestSuite;QuantLibTestSuite.test()" 
+RUN cd swig/QuantExt-SWIG/Python/test \
+  && python3 -c "import sys, ORE; sys.modules['QuantExt']=ORE;import QuantExtTestSuite;QuantExtTestSuite.test()" 
+RUN cd swig/OREData-SWIG/Python/test \
+  && python3 -c "import sys, ORE; sys.modules['OREData']=ORE;import OREDataTestSuite;OREDataTestSuite.test()"
+RUN cd swig/OREAnalytics-SWIG/Python/test \
+  && python3 -c "import sys, ORE; sys.modules['OREAnalytics']=ORE;import OREAnalyticsTestSuite;OREAnalyticsTestSuite.test()"
+RUN rm -rf /swig \
+  && cd /usr/local/include \
+  && rm -rf boost \
+  && rm -rf orea \
+  && rm -rf ored \
+  && rm -rf ql \
+  && rm -rf qle
+
+COPY oreswig/OREAnalytics-SWIG/Python/Examples ./Examples
