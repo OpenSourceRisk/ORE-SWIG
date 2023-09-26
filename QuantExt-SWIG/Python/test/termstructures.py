@@ -41,7 +41,7 @@ class BlackVolatilityWithATMTest(unittest.TestCase):
         self.flat_forward2=FlatForward(self.todays_date, 0.04, self.dc)
         self.yield1=RelinkableYieldTermStructureHandle(self.flat_forward)
         self.yield2=RelinkableYieldTermStructureHandle(self.flat_forward2)
-        self.surface=BlackConstantVol(self.todays_date, UnitedStates(), 0.05, Actual360())
+        self.surface=BlackConstantVol(self.todays_date, UnitedStates(UnitedStates.NYSE), 0.05, Actual360())
         self.blackvolatilitywithatm=BlackVolatilityWithATM(self.surface,self.spot,self.yield1,self.yield2)
 
         
@@ -53,7 +53,7 @@ class BlackVolatilityWithATMTest(unittest.TestCase):
 class BlackVarianceSurfaceMoneynessSpotTest(unittest.TestCase):
     def setUp(self):
         """ Test consistency of Black Variance Surface Moneyness Spot"""
-        self.cal=UnitedStates()
+        self.cal=UnitedStates(UnitedStates.NYSE)
         self.spot=QuoteHandle(SimpleQuote(1.0))
         self.times=(1,2,3)
         self.moneyness=(1.0,1.1,1.2)
@@ -77,7 +77,7 @@ class BlackVarianceSurfaceMoneynessForwardTest(unittest.TestCase):
         self.flat_forward2=FlatForward(self.todays_date, 0.04, self.dc)
         self.forTS=RelinkableYieldTermStructureHandle(self.flat_forward)
         self.domTS=RelinkableYieldTermStructureHandle(self.flat_forward2)
-        self.cal=UnitedStates()
+        self.cal=UnitedStates(UnitedStates.NYSE)
         self.spot=QuoteHandle(SimpleQuote(1.0))
         self.times=(1,2,3)
         self.moneyness=(1.0,1.1,1.2)
@@ -99,7 +99,7 @@ class SwaptionVolCubeWithATMTest(unittest.TestCase):
         self.termStructure = RelinkableYieldTermStructureHandle()
         self.dayCounter=Actual360()
         self.termStructure.linkTo(FlatForward(self.today,QuoteHandle(SimpleQuote(0.05)), self.dayCounter))
-        self.atmVolStructure=SwaptionVolatilityStructureHandle(ConstantSwaptionVolatility(self.today, UnitedStates(),Following,0.2, self.dayCounter))
+        self.atmVolStructure=SwaptionVolatilityStructureHandle(ConstantSwaptionVolatility(self.today, UnitedStates(UnitedStates.NYSE),Following,0.2, self.dayCounter))
         self.optionTenors=(Period(3,Months),Period(6,Months))
         self.swapTenors=(Period(9,Months),Period(12,Months))
         self.strikeSpreads=(0.0,0.05,0.10)
@@ -133,7 +133,7 @@ class QLESwaptionVolCube2Test(unittest.TestCase):
         self.termStructure = RelinkableYieldTermStructureHandle()
         self.dayCounter=Actual360()
         self.termStructure.linkTo(FlatForward(self.today,QuoteHandle(SimpleQuote(0.05)), self.dayCounter))
-        self.atmVolStructure=SwaptionVolatilityStructureHandle(ConstantSwaptionVolatility(self.today, UnitedStates(),Following,0.2, self.dayCounter))
+        self.atmVolStructure=SwaptionVolatilityStructureHandle(ConstantSwaptionVolatility(self.today, UnitedStates(UnitedStates.NYSE),Following,0.2, self.dayCounter))
         self.optionTenors=(Period(3,Months),Period(6,Months))
         self.swapTenors=(Period(9,Months),Period(12,Months))
         self.strikeSpreads=(0.00,0.10)
@@ -156,8 +156,8 @@ class SwaptionVolatilityConstantSpreadTest(unittest.TestCase):
         """ Test consistency of Swaption Volatility Constant Spread"""
         self.today=Date(1,October,2018)
         self.dayCounter=Actual360()
-        self.atmVolStructure=SwaptionVolatilityStructureHandle(ConstantSwaptionVolatility(self.today, UnitedStates(),Following,0.2, self.dayCounter))
-        self.atmVolStructure2=SwaptionVolatilityStructureHandle(ConstantSwaptionVolatility(self.today, UnitedStates(),Following,0.2, self.dayCounter))
+        self.atmVolStructure=SwaptionVolatilityStructureHandle(ConstantSwaptionVolatility(self.today, UnitedStates(UnitedStates.NYSE),Following,0.2, self.dayCounter))
+        self.atmVolStructure2=SwaptionVolatilityStructureHandle(ConstantSwaptionVolatility(self.today, UnitedStates(UnitedStates.NYSE),Following,0.2, self.dayCounter))
         self.swaptionVolatilityConstantSpread=SwaptionVolatilityConstantSpread(self.atmVolStructure,self.atmVolStructure2)
 
     def testSimpleInspectors(self):
@@ -174,7 +174,7 @@ class FxBlackVannaVolgaVolatilitySurfaceTest(unittest.TestCase):
         self.rr25d=(0.0,0.10,0.20)
         self.bf25d=(0.0,0.10,0.20)
         self.dc=Actual360()
-        self.cal=UnitedStates()
+        self.cal=UnitedStates(UnitedStates.NYSE)
         self.fx=QuoteHandle(SimpleQuote(1.00))
         self.dom = RelinkableYieldTermStructureHandle()
         self.dom.linkTo(FlatForward(self.refDate,QuoteHandle(SimpleQuote(0.05)),self.dc))

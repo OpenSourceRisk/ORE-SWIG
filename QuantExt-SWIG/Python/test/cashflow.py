@@ -17,7 +17,7 @@ class FXLinkedCashFlowTest(unittest.TestCase):
         self.fixingDays=0
         self.sourceCurrency=USDCurrency()
         self.targetCurrency=JPYCurrency()
-        self.fixingCalendar=UnitedStates()
+        self.fixingCalendar=UnitedStates(UnitedStates.NYSE)
         self.todayDate=Date(5, January, 2016)
         self.tsDayCounter=Actual360()
         self.flatForwardUSD=FlatForward(self.todayDate, 0.005, self.tsDayCounter)
@@ -57,7 +57,7 @@ class FloatingRateFXLinkedNotionalCouponTest(unittest.TestCase):
         self.fixingDays=2
         self.sourceCurrency=USDCurrency()
         self.targetCurrency=EURCurrency()
-        self.fixingCalendar=UnitedStates()
+        self.fixingCalendar=UnitedStates(UnitedStates.NYSE)
         self.todayDate=Date(11, November, 2018)
         self.tsDayCounter=Actual360()
         self.flatForwardUSD=FlatForward(self.todayDate, 0.005, self.tsDayCounter)
