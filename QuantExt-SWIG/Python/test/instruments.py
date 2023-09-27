@@ -249,7 +249,7 @@ class OvernightIndexedCrossCcyBasisSwapTest(unittest.TestCase):
         self.settlement_date = Date(6, October, 2018)
         self.swap_tenor = Period(10, Years)
         self.pay_tenor = Period(3, Months)
-        self.calendar = UnitedStates()
+        self.calendar = UnitedStates(UnitedStates.NYSE)
         self.pay_currency = USDCurrency()
         self.rec_currency = EURCurrency()
         self.maturity_date = self.calendar.advance(self.settlement_date, self.swap_tenor)
@@ -321,7 +321,7 @@ class OvernightIndexedBasisSwapTest(unittest.TestCase):
         self.settlement_date = Date(6, October, 2018)
         self.swap_tenor = Period(10, Years)
         self.pay_tenor = Period(3, Months)
-        self.calendar = UnitedStates()
+        self.calendar = UnitedStates(UnitedStates.NYSE)
         self.maturity_date = self.calendar.advance(self.settlement_date, self.swap_tenor)
         self.type = OvernightIndexedBasisSwap.Payer
         self.bdc = ModifiedFollowing
@@ -381,7 +381,7 @@ class AverageOISTest(unittest.TestCase):
         self.settlement_date = Date(6, October, 2018)
         self.swap_tenor = Period(10, Years)
         self.pay_tenor = Period(6, Months)
-        self.calendar = UnitedStates()
+        self.calendar = UnitedStates(UnitedStates.NYSE)
         self.maturity_date = self.calendar.advance(self.settlement_date, self.swap_tenor)
         self.type = AverageOIS.Payer
         self.bdc = ModifiedFollowing

@@ -26,6 +26,7 @@
 #include <qle/quantext.hpp>
 %}
 
+%include qle_common.i
 %include qle_calendars.i
 %include qle_cashflows.i
 %include qle_indexes.i

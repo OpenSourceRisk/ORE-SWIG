@@ -23,7 +23,7 @@ class AverageOISRateHelpersTest(unittest.TestCase):
         self.swapTenor = Period(10,Years)
         self.fixedTenor = Period(3,Months)
         self.fixedDayCounter=Actual360()
-        self.fixedCalendar=UnitedStates()
+        self.fixedCalendar=UnitedStates(UnitedStates.NYSE)
         self.fixedConvention=Following
         self.fixedPaymentAdjustment=Following
         self.overnightIndex=Eonia()
@@ -48,7 +48,7 @@ class CrossCcyBasisSwapHelperTest(unittest.TestCase):
         self.spreadQuote=QuoteHandle(SimpleQuote(0.05))
         self.spotFX=QuoteHandle(SimpleQuote(1.0))
         self.settlementDays=2
-        self.settlementCalendar=UnitedStates()
+        self.settlementCalendar=UnitedStates(UnitedStates.NYSE)
         self.swapTenor=Period(3,Months)
         self.rollConvention=Following 
         self.forecast_curve = RelinkableYieldTermStructureHandle()
@@ -104,7 +104,7 @@ class SubPeriodsSwapHelperTest(unittest.TestCase):
         self.spread=QuoteHandle(SimpleQuote(0.02))
         self.swapTenor=Period(6,Months)
         self.fixedTenor=Period(6,Months)
-        self.fixedCalendar=UnitedStates()
+        self.fixedCalendar=UnitedStates(UnitedStates.NYSE)
         self.fixedDayCount=Actual360()
         self.fixedConvention=Following
         self.floatPayTenor=Period(6,Months)
@@ -147,7 +147,7 @@ class BasisTwoSwapHelperTest(unittest.TestCase):
         Settings.instance().setEvaluationDate(self.todays_date)
         self.spread=QuoteHandle(SimpleQuote(0.02))
         self.swapTenor=Period(6,Months)
-        self.calendar=UnitedStates()
+        self.calendar=UnitedStates(UnitedStates.NYSE)
         self.longFixedFrequency=Annual
         self.longFixedConvention=Following
         self.longFixedDayCount=Actual360()
@@ -215,7 +215,7 @@ class CrossCcyFixFloatSwapHelperTest(unittest.TestCase):
         self.rate=QuoteHandle(SimpleQuote(0.02))
         self.spotFx=QuoteHandle(SimpleQuote(1.0))
         self.settlementDays=2
-        self.paymentCalendar=UnitedStates()
+        self.paymentCalendar=UnitedStates(UnitedStates.NYSE)
         self.paymentConvention=Following
         self.tenor=Period(6,Months)
         self.fixedCurrency=USDCurrency()
