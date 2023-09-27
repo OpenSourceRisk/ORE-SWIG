@@ -35,11 +35,11 @@ WORKDIR /swig/OREAnalytics-SWIG/Python/build.release
 RUN cmake -DORE=/swig ..
 RUN make -j ${num_cores}
 WORKDIR /
-RUN mkdir build
-RUN mv /swig/OREAnalytics-SWIG/Python/build.release/ORE.py build \
-  && mv /swig/OREAnalytics-SWIG/Python/build.release/_ORE.so build 
+RUN mkdir oreswig
+RUN mv /swig/OREAnalytics-SWIG/Python/build.release/ORE.py oreswig \
+  && mv /swig/OREAnalytics-SWIG/Python/build.release/_ORE.so oreswig 
 
-ENV PYTHONPATH=/build
+ENV PYTHONPATH=/oreswig
 
 RUN cd swig/QuantLib-SWIG/Python/test \
   && python3 -c "import sys, ORE; sys.modules['QuantLib']=ORE;import QuantLibTestSuite;QuantLibTestSuite.test()" 
