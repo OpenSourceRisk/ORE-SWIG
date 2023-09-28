@@ -40,3 +40,6 @@ RUN mv /swig/OREAnalytics-SWIG/Python/build.release/ORE.py oreswig \
   && mv /swig/OREAnalytics-SWIG/Python/build.release/_ORE.so oreswig 
 
 ENV PYTHONPATH=/oreswig
+
+WORKDIR /swig/OREAnalytics-SWIG/Python/Examples
+RUN ./runExamples.sh
