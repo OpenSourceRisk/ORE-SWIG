@@ -32,5 +32,8 @@ RUN mkdir /oreswig/tests
 COPY oreswig/QuantLib-SWIG/Python/test /oreswig/tests/QuantLibTestSuite
 COPY oreswig/OREAnalytics-SWIG/Python/test /oreswig/tests/ORETestSuite
 COPY oreswig/OREAnalytics-SWIG/Python/Examples /oreswig/examples
+COPY ore/Examples /oreswig/ORE-Examples
+
+ENV ORE_EXAMPLES_USE_PYTHON=1
 
 CMD bash
