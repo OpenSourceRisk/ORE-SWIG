@@ -29,9 +29,8 @@ ENV PYTHONPATH=/oreswig/pythonlib
 
 RUN mkdir /oreswig/tests
 
-COPY oreswig/QuantLib-SWIG/Python/test /oreswig/tests/QuantLib
-COPY oreswig/QuantExt-SWIG/Python/test /oreswig/tests/QuantExt
-COPY oreswig/OREData-SWIG/Python/test /oreswig/tests/OREData
-COPY oreswig/OREAnalytics-SWIG/Python/test /oreswig/tests/OREAnalytics
+COPY oreswig/QuantLib-SWIG/Python/test /oreswig/tests/QuantLibTestSuite
+COPY oreswig/OREAnalytics-SWIG/Python/test /oreswig/tests/ORETestSuite
+COPY oreswig/OREAnalytics-SWIG/Python/Examples /oreswig/examples
 
 CMD bash
