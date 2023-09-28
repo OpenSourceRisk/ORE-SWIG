@@ -4,11 +4,11 @@
  All rights reserved.
 """
 
-from OREData import *
+from ORE import *
 import unittest
 import os
 
-class LoaderTest(unittest.TestCase):
+class LoaderTest:
 
     def setUp(self):
         self.asofDate = Date(5, February, 2016)
@@ -83,7 +83,7 @@ class LoaderTest(unittest.TestCase):
 #            self.assertAlmostEqual(self.fixingdata_loader[i].fixing, self.fixingdata[i]['Value'])
 
 
-class CSVLoaderTest(LoaderTest):
+class CSVLoaderTest(LoaderTest, unittest.TestCase):
 
     def setUp(self):
         """ Set-up CSV Loader """
@@ -102,7 +102,7 @@ class CSVLoaderTest(LoaderTest):
         pass
 
 
-class InMemoryLoaderTest(LoaderTest):
+class InMemoryLoaderTest(LoaderTest, unittest.TestCase):
 
     def setUp(self):
         """ Set-up InMemory Loader """
@@ -127,8 +127,8 @@ class InMemoryLoaderTest(LoaderTest):
 
         
 if __name__ == '__main__':
-    import OREData
-    print('testing OREData ' + OREData.__version__)
+    import ORE
+    print('testing ORE ' + ORE.__version__)
     suite = unittest.TestSuite()
     suite.addTest(unittest.makeSuite(CSVLoaderTest,'test'))
     suite.addTest(unittest.makeSuite(InMemoryLoaderTest,'test'))

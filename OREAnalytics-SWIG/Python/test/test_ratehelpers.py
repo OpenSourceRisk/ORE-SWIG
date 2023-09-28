@@ -3,12 +3,12 @@
  All rights reserved.
 """
 
-from QuantExt import *
+from ORE import *
 import unittest
 
 
 if __name__ == '__main__':
-    print('testing QuantExt ' + QuantExt.__version__)
+    print('testing ORE ' + ORE.__version__)
     suite = unittest.TestSuite()
     suite.addTest(unittest.makeSuite(ImmFraRateHelperTest, 'test'))
     unittest.TextTestRunner(verbosity=2).run(suite)
