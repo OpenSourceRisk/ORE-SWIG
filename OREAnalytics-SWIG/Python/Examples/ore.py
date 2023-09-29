@@ -39,9 +39,6 @@ analyticTypes = ore.getAnalyticTypes()
 for name in analyticTypes:
     print("analytc:", name)
 
-print("\npress <enter> ...")
-sys.stdin.readline()
-
 #####################################
 # List all results, reports and cubes
 
@@ -54,9 +51,6 @@ print ("\nResult cubes:");
 cubeNames = ore.getCubeNames()
 for name in cubeNames:
     print("cube:", name)
-
-print("\npress <enter> ...")
-sys.stdin.readline()
 
 #######################
 # Access report details
@@ -78,18 +72,12 @@ print ("rows:", report.rows())
 for i in range(0, report.columns()):
     print("colum", i, "header", report.header(i), "type", report.columnType(i), columnTypes[report.columnType(i)])
 
-print("\npress <enter> ...")
-sys.stdin.readline()
-
 time = report.dataAsReal(2);
 epe = report.dataAsReal(3);
 ene = report.dataAsReal(4);
 print ("#Time", "EPE")
 for i in range(0, report.rows()):
     print("%5.2f  %12.2f  %12.2f" % (time[i], epe[i], ene[i]))
-
-print("\npress <enter> ...")
-sys.stdin.readline()
 
 #####################
 # Access cube details
@@ -101,9 +89,6 @@ print ("cube ids:", cube.numIds())
 print ("cube samples:", cube.samples())
 print ("cube dates:", cube.numDates())
 print ("cube depth:", cube.depth())
-
-print("\npress <enter> ...")
-sys.stdin.readline()
 
 cubeIds = cube.ids() 
 cubeDates = cube.dates()
@@ -117,9 +102,6 @@ for i in range (0, cube.numIds()):
 
 ###########################################################
 # Access one analytic e.g. to query the market or portfolio
-
-print("\npress <enter> ...")
-sys.stdin.readline()
 
 print("Inspect NPV analytic ...")
 analytic = ore.getAnalytic("NPV")
