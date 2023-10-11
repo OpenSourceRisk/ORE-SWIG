@@ -3,7 +3,7 @@
  All rights reserved.
 """
 
-from QuantExt import *
+from ORE import *
 import unittest
 
 class DiscountingSwapEngineMultiCurveTest(unittest.TestCase):
@@ -871,8 +871,8 @@ class PaymentTest(unittest.TestCase):
         self.assertFalse(abs(self.payment.NPV() - self.nominal) > tolerance)
         
 if __name__ == '__main__':
-    import QuantExt
-    print('testing QuantExt ' + QuantExt.__version__)
+    import ORE
+    print('testing ORE ' + ORE.__version__)
     suite = unittest.TestSuite()
     suite.addTest(unittest.makeSuite(CrossCurrencyFixFloatSwapTest, 'test'))
     suite.addTest(unittest.makeSuite(CommodityForwardTest, 'test'))

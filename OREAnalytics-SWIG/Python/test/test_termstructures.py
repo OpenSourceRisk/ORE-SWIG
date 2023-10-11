@@ -3,7 +3,7 @@
  All rights reserved.
 """
 
-from QuantExt import *
+from ORE import *
 import unittest
 
 class SwapConventionsTest(unittest.TestCase):

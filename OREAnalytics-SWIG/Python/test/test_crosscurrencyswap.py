@@ -18,7 +18,7 @@
 """
 
 
-import QuantExt as qle
+import ORE as qle
 import unittest
 
 
@@ -74,7 +74,7 @@ class CrossCurrencySwapTest(unittest.TestCase):
         # Fixed Schedule
         self.fixedLegTenor = qle.Period(1, qle.Years)
         self.fixedLegAdjustment = qle.Unadjusted
-        self.fixedLegDayCounter = qle.Thirty360()
+        self.fixedLegDayCounter = qle.Thirty360(qle.Thirty360.USA)
         self.fixedSchedule = qle.Schedule(self.forwardStart,
                                           self.forwardEnd,
                                           self.fixedLegTenor,
@@ -123,7 +123,7 @@ class CrossCurrencySwapTest(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    print('testing QuantExt ' + qle.__version__)
+    print('testing ORE ' + qle.__version__)
     suite = unittest.TestSuite()
     suite.addTest(unittest.makeSuite(CrossCurrencySwapTest, 'test'))
     unittest.TextTestRunner(verbosity=2).run(suite)

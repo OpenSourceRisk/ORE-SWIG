@@ -4,7 +4,7 @@
  All rights reserved.
 """
 
-from OREData import *
+from ORE import *
 import unittest
 
 class CorrelationRateQuoteTest(unittest.TestCase):
@@ -62,8 +62,8 @@ class CorrelationQuoteThrowTest(unittest.TestCase):
 
         
 if __name__ == '__main__':
-    import OREData
-    print('testing OREData ' + OREData.__version__)
+    import ORE
+    print('testing ORE ' + ORE.__version__)
     suite = unittest.TestSuite()
     suite.addTest(unittest.makeSuite(CorrelationRateQuoteTest,'test'))
     suite.addTest(unittest.makeSuite(CorrelationPriceQuoteTest,'test'))
