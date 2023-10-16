@@ -64,7 +64,7 @@ class BondIndex : public Index {
               const Handle<Quote>& recoveryRate = Handle<Quote>(),
               const Handle<Quote>& securitySpread = Handle<Quote>(),
               const Handle<YieldTermStructure>& incomeCurve = Handle<YieldTermStructure>(),
-              const bool conditionalOnSurvival = true,
+              const bool conditionalOnSurvival = true, const Date& issueDate = Date(),
 	      const QuantExt::BondIndex::PriceQuoteMethod priceQuoteMethod = QuantExt::BondIndex::PriceQuoteMethod::PercentageOfPar,
 	      const double priceQuoteBaseValue = 1.0,
 	      const bool isInflationLinked = false,
@@ -79,6 +79,7 @@ class BondIndex : public Index {
         Handle<Quote> securitySpread() const;
         Handle<YieldTermStructure> incomeCurve() const;
         bool conditionalOnSurvival() const;
+        Date issueDate() const;
         virtual Rate forecastFixing(const Date& fixingDate) const;
         Rate pastFixing(const Date& fixingDate) const;
 };
@@ -94,7 +95,7 @@ class BondFuturesIndex : public BondIndex {
             const Handle<DefaultProbabilityTermStructure>& defaultCurve = Handle<DefaultProbabilityTermStructure>(),
             const Handle<Quote>& recoveryRate = Handle<Quote>(), const Handle<Quote>& securitySpread = Handle<Quote>(),
             const Handle<YieldTermStructure>& incomeCurve = Handle<YieldTermStructure>(), 
-	    const bool conditionalOnSurvival = true,
+	        const bool conditionalOnSurvival = true, const Date& issueDate = Date(),
             const QuantExt::BondIndex::PriceQuoteMethod priceQuoteMethod = QuantExt::BondIndex::PriceQuoteMethod::PercentageOfPar,
             const double priceQuoteBaseValue = 1.0);
         std::string name() const;
@@ -271,9 +272,7 @@ class Name : public IborIndex {
   public:
     Name(const Period& tenor,
          const Handle<YieldTermStructure>& h =
-                                Handle<YieldTermStructure>()) {
-        return new Name(new Name(tenor,h));
-    }
+                                Handle<YieldTermStructure>());
 };
 %enddef
 
@@ -285,13 +284,10 @@ using QuantExt::Name;
 class Name : public OvernightIndex {
   public:
     Name(const Handle<YieldTermStructure>& h =
-                                Handle<YieldTermStructure>()) {
-        return new Name(new Name(h));
-    }
+                                Handle<YieldTermStructure>());
 };
 %enddef
 
-qle_export_xibor_instance(AUDbbsw);
 qle_export_xibor_instance(CZKPribor);
 qle_export_xibor_instance(DEMLibor);
 qle_export_xibor_instance(DKKCibor);
@@ -305,8 +301,6 @@ qle_export_xibor_instance(MYRKlibor);
 qle_export_xibor_instance(NOKNibor);
 qle_export_xibor_instance(NZDBKBM);
 qle_export_xibor_instance(PHPPhiref);
-qle_export_xibor_instance(PLNWibor);
-qle_export_xibor_instance(RUBMosprime);
 qle_export_xibor_instance(SEKStibor);
 qle_export_xibor_instance(SGDSibor);
 qle_export_xibor_instance(SGDSor);

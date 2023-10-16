@@ -133,12 +133,9 @@ public:
     void setVarMethod(const std::string& s);
     void setMcVarSamples(Size s);
     void setMcVarSeed(long l);
-    // TODO: API for setting covariance data
     void setCovarianceData(ore::data::CSVReader& reader);
     void setCovarianceDataFromBuffer(const std::string& xml);
-    // const std::map<std::pair<RiskFactorKey, RiskFactorKey>, Real>& covarianceData();
-    // TODO: API for setting a sensitivity stream
-    // const boost::shared_ptr<SensitivityStream>& sensitivityStream();
+    void setSensitivityStreamFromBuffer(const std::string& buffer);
     // Setters for exposure simulation
     void setSimmVersion(const std::string& s);
     void setCrifFromBuffer(const std::string& csvBuffer,
@@ -272,7 +269,9 @@ class OREApp {
     std::vector<std::string> getErrors();
 
     Real getRunTime();
- };
+
+    std::string version();
+};
 
 %shared_ptr(Analytic)
 class Analytic {
