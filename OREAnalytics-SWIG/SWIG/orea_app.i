@@ -133,7 +133,8 @@ public:
     void setVarMethod(const std::string& s);
     void setMcVarSamples(Size s);
     void setMcVarSeed(long l);
-    void setCovarianceDataFromBuffer(const std::string& s);
+    void setCovarianceData(ore::data::CSVReader& reader);
+    void setCovarianceDataFromBuffer(const std::string& xml);
     void setSensitivityStreamFromBuffer(const std::string& buffer);
     // Setters for exposure simulation
     void setSimmVersion(const std::string& s);
