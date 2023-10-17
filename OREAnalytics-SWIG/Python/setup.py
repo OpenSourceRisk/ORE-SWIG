@@ -144,7 +144,7 @@ class my_build_ext(build_ext):
             self.include_dirs.append(self.validate_path(os.path.join(ORE_DIR, 'OREAnalytics')))
 
             # ADD LIBRARY DIRECTORIES
-            
+
             target = "Release"
 
             if self.debug:

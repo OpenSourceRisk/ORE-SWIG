@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2018 Quaternion Risk Management Ltd
+ Copyright (C) 2023 Quaternion Risk Management Ltd
  All rights reserved.
 
  This file is part of ORE, a free-software/open-source library
@@ -15,23 +15,43 @@
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
  FITNESS FOR A PARTICULAR PURPOSE. See the license for more details.
 */
-
-#ifndef qle_currencies_i
-#define qle_currencies_i
-
-%include currencies.i
+#ifndef qle_common_i
+#define qle_common_i
 
 %{
-using QuantLib::Currency;
+#include<boost/optional.hpp>
 %}
 
-namespace QuantExt {
-	//Metals
-	class XAUCurrency : public Currency {};
-	class XAGCurrency : public Currency {};
-	class XPTCurrency : public Currency {};
-	class XPDCurrency : public Currency {};
 
+#if defined(SWIGPYTHON)
+%typemap(in) boost::optional<bool> %{
+    if($input == Py_None) {
+        $1 = boost::optional<bool>();
+    }
+    else if($input == Py_True){
+        $1 = boost::optional<bool>(true);
+    } else{
+        $1 = boost::optional<bool>(false);
+    }
+%}
+
+%typemap(out) boost::optional<bool> %{
+    if($1) {
+        $result = PyBool_FromBool(*$1);
+    }
+    else {
+        $result = Py_None;
+        Py_INCREF(Py_None);
+    }
+%}
+
+%typecheck (QL_TYPECHECK_BOOL) boost::optional<bool> {
+if (PyBool_Check($input) || Py_None == $input) 
+	$1 = 1;
+else
+	$1 = 0;
 }
+
+#endif
 
 #endif
