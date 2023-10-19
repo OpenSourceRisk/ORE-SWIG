@@ -56,12 +56,16 @@ To build on Windows using CMake and an existing Visual Studio installation you c
 this from the top-level oreswig directory
 
     mkdir builddir
-    cmake -G "Visual Studio 15 2017" \
+    cmake -G "Visual Studio 17 2022" \
           -A x64 \
           -D SWIG_DIR=C:\dev\swigwin\Lib \
           -D SWIG_EXECUTABLE=C:\dev\swigwin\swig.exe \
-          -D ORE:PATHNAME=C:\dev\ORE\master \
-          -D BOOST_ROOT=C:\dev\boost \
+          -D ORE=<ORE Root Directory> \
+          -D BOOST_INCLUDEDIR=<Top level boost include directory> \
+          -D BOOST_LIBRARYDIR=<Location of the compiled boost libraries>\
+          -D ORE_USE_ZLIB=[ON/OFF] (depending on your ORE build)
+          -D MSVC_LINK_DYNAMIC_RUNTIME=[ON/OFF] (depending on your ORE build)
+          -D Boost_NO_SYSTEM_PATHS=ON
           -S OREAnalytics-SWIG/Python \
           -B builddir
     cmake --build builddir -v
