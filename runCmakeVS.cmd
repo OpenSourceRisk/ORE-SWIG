@@ -1,12 +1,16 @@
-REM Adjust paths 
+REM This scripts build ORE and ORE_SWIG
+REM Adjust paths
 SET GENERATOR="Visual Studio 17 2022"
 SET DEMO_BOOST_ROOT=C:\local\boost_1_72_0
 SET DEMO_BOOST_LIB=C:\local\boost_1_72_0\lib64-msvc-14.2
-SET DEMO_SWIG_DIR=C:\swigwin-4.1.1
-SET DEMO_ORE_DIR=C:\dev\oreplus_2\ore
-SET DEMO_ORE_SWIG_DIR=C:\dev\oreplus_2\oreswig
+SET DEMO_SWIG_DIR=C:\dev\swigwin-4.1.1
+SET DEMO_ORE_DIR=C:\dev\ore
+SET DEMO_ORE_SWIG_DIR=C:\dev\oreswig
 REM the next path is optional, but if not set, one need to set -DORE_USE_ZLIB=OFF
 SET DEMO_ZLIB_ROOT=C:\dev\vcpkg\packages\zlib_x64-windows
+REM SET VCPKG_ROOT=C:\dev\vcpkg
+REM If you use VCPKG for zlib and eigen, add -DCMAKE_TOOLCHAIN_FILE=%VCPKG_ROOT%/scripts/buildsystems/vcpkg.cmake to the cmake command
+
 
 REM building ORE, one can skip this part, make sure to delete the build dir in the ORE_DIR if there is any
 REM it is recommended to install the eigen and zlib library on the system before building ORE
@@ -18,6 +22,7 @@ SET BOOST_INCLUDEDIR=%DEMO_BOOST_ROOT%
 SET BOOST_LIBRARYDIR=%DEMO_BOOST_LIB%
 SET ZLIB_ROOT=%DEMO_ZLIB_ROOT%
 cmake -G %GENERATOR% -A x64 .. -DMSVC_LINK_DYNAMIC_RUNTIME=OFF -DORE_BUILD_DOC=OFF -DORE_BUILD_EXAMPLES=OFF -DORE_BUILD_TESTS=OFF -DORE_BUILD_APP=OFF -DQL_BUILD_BENCHMARK=OFF -DQL_BUILD_EXAMPLES=OFF -DQL_BUILD_TEST_SUITE=OFF -DCMAKE_BUILD_TYPE=Release -DORE_USE_ZLIB=ON -DQL_ENABLE_SESSIONS=ON -DBoost_NO_SYSTEM_PATHS=ON
+
 cd %DEMO_ORE_DIR%\build
 cmake --build . --config Release
 
