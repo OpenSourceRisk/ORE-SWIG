@@ -14,7 +14,7 @@
 '''
 
 import sys, time
-from OREAnalytics import *
+from ORE import *
 
 xml = "Input/ore.xml"
 params = Parameters()

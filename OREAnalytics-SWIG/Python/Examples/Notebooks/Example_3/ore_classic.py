@@ -14,7 +14,7 @@
 '''
 
 import sys, time
-from OREAnalyticsPython import *
+from ORE import *
 
 print ("Loading parameters...")
 params = Parameters()
