@@ -1,4 +1,4 @@
-# Run Juyper Notebook examples using the ORE Python wheels
+# Run Jupyter Notebook examples using the ORE Python wheels
 
 This tutorial is aimed at the user who wants to install the pre-built ORE
 Python module and use it to execute example Jupyter notebooks provided in
@@ -40,9 +40,9 @@ Please note that these steps must be executed sequentially in a single command p
 
 After the first time run, you simply need to activate the virtual environment and run jupyter lab.
 
-    (Windows): ```.\venv\Scripts\activate.bat ```
+(Windows): ```.\venv\Scripts\activate.bat ```
     
-    (Linux, Mac): ```source "$(pwd)/venv/bin/activate" ```
+(Linux, Mac): ```source "$(pwd)/venv/bin/activate" ```
     
     python -m jupyterlab
 
@@ -50,7 +50,7 @@ After the first time run, you simply need to activate the virtual environment an
 
 To deactivate the virtual environment you can simply close the command prompt/terminal window. Othewise you can run the relevant deactivation script (assuming that the working directory is the Notebooks directory:
 
-    (Windows): ```.\venv\Scripts\deactivate.bat ```
+(Windows): ```.\venv\Scripts\deactivate.bat ```
     
-    (Linux, Mac): ```source "$(pwd)/venv/bin/deactivate" ```
+(Linux, Mac): ```source "$(pwd)/venv/bin/deactivate" ```
 
