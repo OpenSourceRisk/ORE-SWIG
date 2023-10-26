@@ -48,7 +48,7 @@ After the first time run, you simply need to activate the virtual environment an
 
 ## Exit the virtual environment
 
-    To deactivate the virtual environment you can simply close the command prompt/terminal window. Othewise you can run the relevant deactivation script (assuming that the working directory is the Notebooks directory:
+To deactivate the virtual environment you can simply close the command prompt/terminal window. Othewise you can run the relevant deactivation script (assuming that the working directory is the Notebooks directory:
 
     (Windows): ```.\venv\Scripts\deactivate.bat ```
     
