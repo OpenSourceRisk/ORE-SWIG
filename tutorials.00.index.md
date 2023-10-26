@@ -14,3 +14,5 @@ ORE python wrappers and wheels.
 
 [Managing Wheels](tutorials.05.wheels.md)
 
+[Run Jupyter Notebook Examples using the published ORE Python module](tutorials.06.notebooks.md)
+
