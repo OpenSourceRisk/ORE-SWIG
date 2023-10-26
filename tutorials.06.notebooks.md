@@ -30,11 +30,16 @@ We assume below that the python executable points to a permissible Python 3 vers
 
 ## Install required Python modules
 
+The Notebook examples require Jupyter, the ORE Python module and a few additional packages.
+
     python -m pip install open-source-risk-engine pytest matplotlib pandas plotly jupyter_server==2.8.0 jupyter
 
 ## Launch Jupyter with reference to the Notebooks directory 
 
     python -m jupyterlab --notebook-dir=/path/to/OREAnalytics-SWIG/Python/Examples/Notebooks
+
+This opens a browser window that shows the list of Example folders on the left hand side.
+Double click to change into any of the Example folders and then double click the Jupyter notebook to open. 
 
 ## Exit the virtual environment
 
