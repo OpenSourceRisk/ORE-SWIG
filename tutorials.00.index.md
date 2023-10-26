@@ -4,6 +4,8 @@
 This page serves as the index for a series of tutorials on using and building
 ORE python wrappers and wheels.
 
+[Run Jupyter Notebook Examples using the published ORE Python module](tutorials.06.notebooks.md)
+
 [Installing ORE Python Libraries and Example Scripts on Windows](tutorials.01.install_windows.md)
 
 [Installing ORE Python Libraries and Example Scripts on Posix Systems (e.g. MacOS and Linux)](tutorials.02.install_posix.md)
