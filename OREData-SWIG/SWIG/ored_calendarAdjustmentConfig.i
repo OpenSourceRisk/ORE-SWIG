@@ -51,7 +51,9 @@ class CalendarAdjustmentConfig {
     const string& getBaseCalendar(const string& calname);
 
     void append(const CalendarAdjustmentConfig& c);
-  
+
+    void fromFile(const std::string& name);
+
 };
 
 
