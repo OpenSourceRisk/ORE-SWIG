@@ -340,7 +340,7 @@ class OvernightIndexedBasisSwapTest(unittest.TestCase):
         self.LIBOR_spread = 0.0
         self.swap = OvernightIndexedBasisSwap(self.type, self.nominal, self.schedule, 
                                               self.OIS_index, self.schedule, self.LIBOR_index,
-                                              self.OIS_spread, self.LIBOR_spread)
+                                              True, self.OIS_spread, self.LIBOR_spread)
         self.engine = DiscountingSwapEngine(self.OIS_term_structure)
         self.swap.setPricingEngine(self.engine)
         
@@ -362,13 +362,13 @@ class OvernightIndexedBasisSwapTest(unittest.TestCase):
         fair_OIS_spread = self.swap.fairOvernightSpread()
         swap = OvernightIndexedBasisSwap(self.type, self.nominal, self.schedule, 
                                          self.OIS_index, self.schedule, self.LIBOR_index,
-                                         fair_OIS_spread, self.LIBOR_spread)
+                                         True, fair_OIS_spread, self.LIBOR_spread)
         swap.setPricingEngine(self.engine)
         self.assertFalse(abs(swap.NPV()) > tolerance)
         fair_LIBOR_spread = self.swap.fairIborSpread()
         swap = OvernightIndexedBasisSwap(self.type, self.nominal, self.schedule, 
                                          self.OIS_index, self.schedule, self.LIBOR_index,
-                                         self.OIS_spread, fair_LIBOR_spread)
+                                         True, self.OIS_spread, fair_LIBOR_spread)
         swap.setPricingEngine(self.engine)
         self.assertFalse(abs(swap.NPV()) > tolerance)
         
