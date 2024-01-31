@@ -338,9 +338,10 @@ class OvernightIndexedBasisSwapTest(unittest.TestCase):
         self.LIBOR_index = USDLibor(Period(3, Months), self.LIBOR_term_structure)
         self.OIS_spread = 0.005
         self.LIBOR_spread = 0.0
+        self.spreadOnShort = True
         self.swap = OvernightIndexedBasisSwap(self.type, self.nominal, self.schedule, 
                                               self.OIS_index, self.schedule, self.LIBOR_index,
-                                              True, self.OIS_spread, self.LIBOR_spread)
+                                              self.spreadOnShort, self.OIS_spread, self.LIBOR_spread)
         self.engine = DiscountingSwapEngine(self.OIS_term_structure)
         self.swap.setPricingEngine(self.engine)
         
@@ -362,13 +363,13 @@ class OvernightIndexedBasisSwapTest(unittest.TestCase):
         fair_OIS_spread = self.swap.fairOvernightSpread()
         swap = OvernightIndexedBasisSwap(self.type, self.nominal, self.schedule, 
                                          self.OIS_index, self.schedule, self.LIBOR_index,
-                                         True, fair_OIS_spread, self.LIBOR_spread)
+                                         self.spreadOnShort, fair_OIS_spread, self.LIBOR_spread)
         swap.setPricingEngine(self.engine)
         self.assertFalse(abs(swap.NPV()) > tolerance)
         fair_LIBOR_spread = self.swap.fairIborSpread()
         swap = OvernightIndexedBasisSwap(self.type, self.nominal, self.schedule, 
                                          self.OIS_index, self.schedule, self.LIBOR_index,
-                                         True, self.OIS_spread, fair_LIBOR_spread)
+                                         self.spreadOnShort, self.OIS_spread, fair_LIBOR_spread)
         swap.setPricingEngine(self.engine)
         self.assertFalse(abs(swap.NPV()) > tolerance)
         
@@ -650,6 +651,7 @@ class TenorBasisSwapTest(unittest.TestCase):
         self.date_generation = DateGeneration.Forward
         self.end_of_month = False
         self.include_spread = False
+        self.spreadOnShort = True
         self.sub_periods_type = SubPeriodsCoupon1.Compounding
         self.ois_term_structure = RelinkableYieldTermStructureHandle()
         self.short_index_term_structure = RelinkableYieldTermStructureHandle()
@@ -668,7 +670,7 @@ class TenorBasisSwapTest(unittest.TestCase):
                                                self.long_index, self.long_index_leg_spread,
                                                self.short_index_schedule, self.short_index, 
                                                self.short_index_leg_spread, self.include_spread, 
-                                               self.sub_periods_type)
+                                               self.spreadOnShort, self.sub_periods_type)
         self.short_index_flat_forward = FlatForward(self.todays_date, 0.02, self.short_index.dayCounter())
         self.long_index_flat_forward = FlatForward(self.todays_date, 0.03, self.long_index.dayCounter())
         self.ois_flat_forward = FlatForward(self.todays_date, 0.01, self.day_counter)
@@ -703,7 +705,7 @@ class TenorBasisSwapTest(unittest.TestCase):
                                           self.long_index, self.long_index_leg_spread,
                                           self.short_index_schedule, self.short_index, 
                                           fair_short_leg_spread, self.include_spread, 
-                                          self.sub_periods_type)
+                                          self.spreadOnShort, self.sub_periods_type)
         tenor_basis_swap.setPricingEngine(self.engine)
         self.assertFalse(abs(tenor_basis_swap.NPV()) > tolerance)
         
