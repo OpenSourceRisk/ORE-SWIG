@@ -149,53 +149,63 @@ class ICE : public Calendar {
 */
 
 class Ireland : public Calendar {
-    enum Market {IrishStockExchange, BankHolidays};
+    public:
+        enum Market {IrishStockExchange, BankHolidays};
 
-    Ireland(const Market market=IrishStockExchange);
+        Ireland(const Market market=IrishStockExchange);
 
 };
 
 class IslamicWeekendsOnly : public Calendar {
-    IslamicWeekendsOnly();
+    public:
+        IslamicWeekendsOnly();
 };
 
 class Luxembourg : public Calendar {
-    enum Market {Settlement};
-    Luxembourg(Market m = Settlement);
+    public:
+        enum Market {Settlement};
+        Luxembourg(Market m = Settlement);
 };
 
 class Malaysia : public Calendar {
-    enum Market {MYX};
-    Malaysia(Market m = MYX);
+    public:
+        enum Market {MYX};
+        Malaysia(Market m = MYX);
 };
 
 class Netherlands : public Calendar {
-    enum Market {Settlement};
-    Netherlands(Market m = Settlement);
+    public:
+        enum Market {Settlement};
+        Netherlands(Market m = Settlement);
 };
 
 class Peru : public Calendar {
-    enum Market {LSE};
-    Peru(Market m = LSE);
+    public:
+        enum Market {LSE};
+        Peru(Market m = LSE);
 };
 
 class Philippines : public Calendar {
-    enum Market {PHE};
-    Philippines(Market m = PHE);
+    public:
+        enum Market {PHE};
+        Philippines(Market m = PHE);
 };
 
 class RussiaModified : public Calendar {
-    RussiaModified(Russia::Market = Russia::Settlement);
+    public:
+        RussiaModified(Russia::Market = Russia::Settlement);
 };
 
 class Spain : public Calendar {
-    enum Market {Settlement};
-    Spain(Market m = Settlement);
+    public:
+        enum Market {Settlement};
+        Spain(Market m = Settlement);
 };
 
 class Wmr : public Calendar {
-    enum Market(Settlement);
-    Wmr(Market market = Settlement);
+    public:
+        enum Market(Settlement);
+        Wmr(Market market = Settlement);
 };
 
 #endif
