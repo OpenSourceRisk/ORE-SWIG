@@ -38,7 +38,6 @@ using QuantExt::Philippines;
 using QuantExt::RussiaModified;
 using QuantExt::Spain;
 using QuantExt::Wmr;
-using QuantExt::LargeJointCalendar;
 %}
 
 class Belgium : public Calendar {
@@ -199,23 +198,4 @@ class Wmr : public Calendar {
     Wmr(Market market = Settlement);
 };
 
-class LargeJointCalendar : public Calendar {
-    LargeJointCalendar(const std::vector<QuantLib::Calendar>&,
-                                QuantLib::JointCalendarRule = QuantLib::JoinHolidays);
-};
-
 #endif
-
-
-
-
-
-
-
-
-
-
-
-
-
-
