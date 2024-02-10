@@ -193,7 +193,7 @@ class Philippines : public Calendar {
 
 class RussiaModified : public Calendar {
     public:
-        RussiaModified(Russia::Market = Russia::Settlement);
+        RussiaModified(QuantLib::Russia::Market = QuantLib::Russia::Settlement);
 };
 
 class Spain : public Calendar {
@@ -204,7 +204,7 @@ class Spain : public Calendar {
 
 class Wmr : public Calendar {
     public:
-        enum Market(Settlement);
+        enum Market {Settlement};
         Wmr(Market market = Settlement);
 };
 
