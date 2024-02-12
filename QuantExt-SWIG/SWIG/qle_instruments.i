@@ -137,8 +137,10 @@ class OvernightIndexedBasisSwap : public Swap {
                                     const ext::shared_ptr<OvernightIndex>& overnightIndex,
                                     const QuantLib::Schedule& iborSchedule,
                                     const ext::shared_ptr<IborIndex>& iborIndex,
+                                    const bool spreadOnShort = true,
                                     QuantLib::Spread oisSpread = 0.0,
-                                    QuantLib::Spread iborSpread = 0.0);
+                                    QuantLib::Spread iborSpread = 0.0,
+                                    const bool telescopicValueDates = false);
     QuantLib::Real nominal() const ;
     const QuantLib::Schedule& oisSchedule();
     const QuantLib::Schedule& iborSchedule();

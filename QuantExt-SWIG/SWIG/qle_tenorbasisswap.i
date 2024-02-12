@@ -79,6 +79,7 @@ class TenorBasisSwap : public Swap {
                    const QuantLib::Period& shortPayTenor,
                    QuantLib::DateGeneration::Rule rule = QuantLib::DateGeneration::Backward,
                    bool includeSpread = false,
+                   bool spreadOnShort = true,
                    QuantExt::SubPeriodsCoupon1::Type type = QuantExt::SubPeriodsCoupon1::Compounding);
     TenorBasisSwap(QuantLib::Real nominal,
                    bool payLongIndex,
@@ -89,6 +90,7 @@ class TenorBasisSwap : public Swap {
                    const ext::shared_ptr<IborIndex>& shortIndex,
                    QuantLib::Spread shortSpread,
                    bool includeSpread = false,
+                   bool spreadOnShort = true,
                    QuantExt::SubPeriodsCoupon1::Type type = QuantExt::SubPeriodsCoupon1::Compounding);
     QuantLib::Real nominal() const;
     bool payLongIndex();
