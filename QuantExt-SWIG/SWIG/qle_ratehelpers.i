@@ -32,7 +32,6 @@ using QuantExt::TenorBasisSwapHelper;
 using QuantExt::SubPeriodsSwapHelper;
 using QuantExt::SubPeriodsCoupon1;
 using QuantExt::OICCBSHelper;
-using QuantExt::OIBSHelper;
 using QuantExt::BasisTwoSwapHelper;
 using QuantExt::ImmFraRateHelper;
 using QuantExt::CrossCcyFixFloatSwapHelper;
@@ -85,13 +84,15 @@ class TenorBasisSwapHelper : public RateHelper {
   public:
     TenorBasisSwapHelper(QuantLib::Handle<QuantLib::Quote> spread,
                             const QuantLib::Period& swapTenor,
-                            const ext::shared_ptr<IborIndex> longIndex,
-                            const ext::shared_ptr<IborIndex> shortIndex,
-                            const QuantLib::Period& shortPayTenor = QuantLib::Period(),
+                            const ext::shared_ptr<IborIndex> payIndex,
+                            const ext::shared_ptr<IborIndex> receiveIndex,
                             const QuantLib::Handle<QuantLib::YieldTermStructure>& discountingCurve
                                 = QuantLib::Handle<QuantLib::YieldTermStructure>(),
-                            bool spreadOnShort = true,
+                            bool spreadOnRec = true,
                             bool includeSpread = false,
+                            const QuantLib::Period& payFrequency = QuantLib::Period(),
+                            const QuantLib::Period& recFrequency = QuantLib::Period(),
+                            const bool telescopicValueDates = false,
                             QuantExt::SubPeriodsCoupon1::Type type = QuantExt::SubPeriodsCoupon1::Compounding);
     ext::shared_ptr<TenorBasisSwap> swap();
 };
@@ -112,19 +113,6 @@ class SubPeriodsSwapHelper : public RateHelper {
                              QuantLib::Handle<QuantLib::YieldTermStructure>(),
                          QuantExt::SubPeriodsCoupon1::Type type = QuantExt::SubPeriodsCoupon1::Compounding);
     ext::shared_ptr<SubPeriodsSwap> swap();
-};
-
-%shared_ptr(OIBSHelper)
-class OIBSHelper : public RateHelper {
-  public:
-    OIBSHelper(QuantLib::Natural settlementDays,
-               const QuantLib::Period& tenor,
-               const QuantLib::Handle<QuantLib::Quote>& oisSpread,
-               const ext::shared_ptr<OvernightIndex>& overnightIndex,
-               const ext::shared_ptr<IborIndex>& iborIndex,
-               const QuantLib::Handle<QuantLib::YieldTermStructure>& discount
-                     = QuantLib::Handle<QuantLib::YieldTermStructure>());
-    ext::shared_ptr<OvernightIndexedBasisSwap> swap();
 };
 
 %shared_ptr(BasisTwoSwapHelper)

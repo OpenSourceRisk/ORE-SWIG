@@ -39,7 +39,6 @@ using QuantExt::FxForward;
 using QuantExt::DiscountingFxForwardEngine;
 using QuantExt::Payment;
 using QuantExt::PaymentDiscountingEngine;
-using QuantExt::OvernightIndexedBasisSwap;
 using QuantExt::Deposit;
 using QuantExt::DepositEngine;
 using QuantExt::DiscountingSwapEngineMultiCurve;
@@ -126,36 +125,6 @@ class DepositEngine : public PricingEngine {
                   QuantLib::Date settlementDate = QuantLib::Date(),
                   QuantLib::Date npvDate = QuantLib::Date());
 };
-
-%shared_ptr(OvernightIndexedBasisSwap)
-class OvernightIndexedBasisSwap : public Swap {
-  public:
-    enum Type { Receiver = -1, Payer = 1 };
-    OvernightIndexedBasisSwap(OvernightIndexedBasisSwap::Type type,
-                                    QuantLib::Real nominal,
-                                    const QuantLib::Schedule& oisSchedule,
-                                    const ext::shared_ptr<OvernightIndex>& overnightIndex,
-                                    const QuantLib::Schedule& iborSchedule,
-                                    const ext::shared_ptr<IborIndex>& iborIndex,
-                                    const bool spreadOnShort = true,
-                                    QuantLib::Spread oisSpread = 0.0,
-                                    QuantLib::Spread iborSpread = 0.0,
-                                    const bool telescopicValueDates = false);
-    QuantLib::Real nominal() const ;
-    const QuantLib::Schedule& oisSchedule();
-    const QuantLib::Schedule& iborSchedule();
-    QuantLib::Spread oisSpread();
-    QuantLib::Spread iborSpread();
-    const QuantLib::Leg& iborLeg();
-    const QuantLib::Leg& overnightLeg();
-    QuantLib::Real iborLegBPS() const;
-    QuantLib::Real iborLegNPV() const;
-    QuantLib::Real fairIborSpread() const;
-    QuantLib::Real overnightLegBPS() const;
-    QuantLib::Real overnightLegNPV() const;
-    QuantLib::Real fairOvernightSpread() const;
-};
-
 
 %shared_ptr(Payment)
 class Payment : public Instrument {
