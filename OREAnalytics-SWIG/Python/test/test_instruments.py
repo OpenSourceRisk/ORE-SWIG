@@ -580,40 +580,40 @@ class TenorBasisSwapTest(unittest.TestCase):
         self.day_counter = Actual365Fixed()
         self.nominal = 1000000.0
         self.maturity_date = self.calendar.advance(self.settlement_date, 5, Years)
-        self.pay_long_index = False
-        self.short_index_pay_tenor = Period(6, Months)
-        self.long_index_pay_tenor = Period(6, Months)
-        self.short_index_leg_spread = 0.0
-        self.long_index_leg_spread = 0.01
+        self.receiveFrequency = Period(6, Months)
+        self.payFrequency = Period(6, Months)
+        self.receive_index_leg_spread = 0.00
+        self.pay_index_leg_spread = 0.00
         self.bdc = ModifiedFollowing
         self.date_generation = DateGeneration.Forward
         self.end_of_month = False
         self.include_spread = False
-        self.spreadOnShort = True
+        self.spreadOnRec = True
         self.sub_periods_type = SubPeriodsCoupon1.Compounding
         self.ois_term_structure = RelinkableYieldTermStructureHandle()
-        self.short_index_term_structure = RelinkableYieldTermStructureHandle()
-        self.long_index_term_structure = RelinkableYieldTermStructureHandle()
-        self.short_index = Euribor3M(self.short_index_term_structure)
-        self.long_index = Euribor6M(self.long_index_term_structure)
-        self.short_index_schedule = Schedule(self.settlement_date, self.maturity_date,
-                                            self.short_index_pay_tenor, self.calendar,
+        self.rec_index_term_structure = RelinkableYieldTermStructureHandle()
+        self.pay_index_term_structure = RelinkableYieldTermStructureHandle()
+        self.rec_index = Euribor3M(self.rec_index_term_structure)
+        self.pay_index = Euribor6M(self.pay_index_term_structure)
+        self.telescopicValueDates = False
+        self.rec_index_schedule = Schedule(self.settlement_date, self.maturity_date,
+                                            self.receiveFrequency, self.calendar,
                                             self.bdc, self.bdc, self.date_generation,
                                             self.end_of_month)
-        self.long_index_schedule = Schedule(self.settlement_date, self.maturity_date,
-                                            self.long_index_pay_tenor, self.calendar,
+        self.pay_index_schedule = Schedule(self.settlement_date, self.maturity_date,
+                                            self.payFrequency, self.calendar,
                                             self.bdc, self.bdc, self.date_generation,
                                             self.end_of_month)
-        self.tenor_basis_swap = TenorBasisSwap(self.nominal, self.pay_long_index, self.long_index_schedule,
-                                               self.long_index, self.long_index_leg_spread,
-                                               self.short_index_schedule, self.short_index, 
-                                               self.short_index_leg_spread, self.include_spread, 
-                                               self.spreadOnShort, self.sub_periods_type)
-        self.short_index_flat_forward = FlatForward(self.todays_date, 0.02, self.short_index.dayCounter())
-        self.long_index_flat_forward = FlatForward(self.todays_date, 0.03, self.long_index.dayCounter())
+        self.tenor_basis_swap = TenorBasisSwap(self.nominal, self.pay_index_schedule,
+                                               self.pay_index, self.pay_index_leg_spread,
+                                               self.rec_index_schedule, self.rec_index,
+                                               self.receive_index_leg_spread, self.include_spread,
+                                               self.spreadOnRec, self.sub_periods_type, self.telescopicValueDates)
+        self.rec_index_flat_forward = FlatForward(self.todays_date, 0.02, self.rec_index.dayCounter())
+        self.pay_index_flat_forward = FlatForward(self.todays_date, 0.03, self.pay_index.dayCounter())
         self.ois_flat_forward = FlatForward(self.todays_date, 0.01, self.day_counter)
-        self.short_index_term_structure.linkTo(self.short_index_flat_forward)
-        self.long_index_term_structure.linkTo(self.long_index_flat_forward)
+        self.rec_index_term_structure.linkTo(self.rec_index_flat_forward)
+        self.pay_index_term_structure.linkTo(self.pay_index_flat_forward)
         self.ois_term_structure.linkTo(self.ois_flat_forward)
         self.engine = DiscountingSwapEngine(self.ois_term_structure)
         self.tenor_basis_swap.setPricingEngine(self.engine)
@@ -621,32 +621,30 @@ class TenorBasisSwapTest(unittest.TestCase):
     def testSimpleInspectors(self):
         """ Test TenorBasisSwap simple inspectors. """
         self.assertEqual(self.tenor_basis_swap.nominal(), self.nominal)
-        self.assertEqual(self.tenor_basis_swap.payLongIndex(), self.pay_long_index)
-        self.assertEqual(self.tenor_basis_swap.longSpread(), self.long_index_leg_spread)
-        self.assertEqual(self.tenor_basis_swap.shortSpread(), self.short_index_leg_spread)
+        self.assertEqual(self.tenor_basis_swap.paySpread(), self.pay_index_leg_spread)
+        self.assertEqual(self.tenor_basis_swap.recSpread(), self.receive_index_leg_spread)
         self.assertEqual(self.tenor_basis_swap.type(), self.sub_periods_type)
-        self.assertEqual(self.tenor_basis_swap.shortPayTenor(), self.short_index_pay_tenor)
         self.assertEqual(self.tenor_basis_swap.includeSpread(), self.include_spread)
     
     def testSchedules(self):
         """ Test TenorBasisSwap schedules. """
-        for i, d in enumerate(self.long_index_schedule):
-            self.assertEqual(self.tenor_basis_swap.longSchedule()[i], d)
-        for i, d in enumerate(self.short_index_schedule):
-            self.assertEqual(self.tenor_basis_swap.shortSchedule()[i], d)
+        for i, d in enumerate(self.pay_index_schedule):
+            self.assertEqual(self.tenor_basis_swap.paySchedule()[i], d)
+        for i, d in enumerate(self.rec_index_schedule):
+            self.assertEqual(self.tenor_basis_swap.recSchedule()[i], d)
 
     def testConsistency(self):
         """ Test consistency of fair price and NPV() """
         tolerance = 1.0e-10
-        fair_short_leg_spread = self.tenor_basis_swap.fairShortLegSpread()
-        tenor_basis_swap = TenorBasisSwap(self.nominal, self.pay_long_index, self.long_index_schedule,
-                                          self.long_index, self.long_index_leg_spread,
-                                          self.short_index_schedule, self.short_index, 
-                                          fair_short_leg_spread, self.include_spread, 
-                                          self.spreadOnShort, self.sub_periods_type)
+        fair_rec_leg_spread = self.tenor_basis_swap.fairRecLegSpread()
+        tenor_basis_swap = TenorBasisSwap(self.nominal, self.pay_index_schedule,
+                                          self.pay_index, self.pay_index_leg_spread,
+                                          self.rec_index_schedule, self.rec_index, 
+                                          fair_rec_leg_spread, self.include_spread, 
+                                          self.spreadOnRec, self.sub_periods_type,
+                                          self.telescopicValueDates)
         tenor_basis_swap.setPricingEngine(self.engine)
         self.assertFalse(abs(tenor_basis_swap.NPV()) > tolerance)
-        
 
 class FxForwardTest(unittest.TestCase):
     def setUp(self):
