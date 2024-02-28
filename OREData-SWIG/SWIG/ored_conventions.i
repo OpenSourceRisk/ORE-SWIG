@@ -285,16 +285,16 @@ class AverageOisConvention : public Convention {
 class TenorBasisSwapConvention : public Convention {
   public:
     TenorBasisSwapConvention();
-    TenorBasisSwapConvention(const std::string& id,const std::string& longIndex,
-                             const std::string& shortIndex, const std::string& shortPayTenor = "",
-                             const std::string& spreadOnShort = "", const std::string& includeSpread = "",
-                             const std::string& subPeriodsCouponType = "");
-    const ext::shared_ptr<IborIndex> longIndex() const;
-    const ext::shared_ptr<IborIndex> shortIndex() const;
-    const std::string& longIndexName() const;
-    const std::string& shortIndexName() const;
-    const Period& shortPayTenor() const;
-    bool spreadOnShort() const;
+    TenorBasisSwapConvention(const string& id, const string& payIndex, const string& receiveIndex,
+                             const string& receiveFrequency = "", const string& payFrequency = "",
+                             const string& spreadOnRec = "", const string& includeSpread = "", 
+                             const string& subPeriodsCouponType = "");
+    const ext::shared_ptr<IborIndex> payIndex() const;
+    const ext::shared_ptr<IborIndex> receiveIndex() const;
+    const std::string& payIndexName() const;
+    const std::string& receiveFrequency() const;
+    const Period& payFrequency() const;
+    bool spreadOnRec() const;
     bool includeSpread() const;
     QuantExt::SubPeriodsCoupon1::Type subPeriodsCouponType() const;
     %extend {

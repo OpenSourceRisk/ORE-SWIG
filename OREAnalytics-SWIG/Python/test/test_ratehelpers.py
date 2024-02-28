@@ -119,27 +119,6 @@ class SubPeriodsSwapHelperTest(unittest.TestCase):
         """ Test SubPeriods Basis Swap Helper simple inspector. """
         self.assertEqual(self.subperiodsswaphelper.quote().value(),self.spread.value())
 
-
-class OIBSHelperTest(unittest.TestCase):
-    def setUp(self):
-        """ Test consistency of OIBS Helper"""
-        self.todays_date=Date(1,October,2018)
-        Settings.instance().setEvaluationDate(self.todays_date)
-        self.settlementDays=2
-        self.tenor=Period(6,Months)
-        self.oisSpread=QuoteHandle(SimpleQuote(0.02))
-        self.overnightFloat=FedFunds()
-        self.floatDayCount=Actual360()
-        self.flat_forward=FlatForward(self.todays_date, 0.03, self.floatDayCount)
-        self.discount=RelinkableYieldTermStructureHandle(self.flat_forward)
-        self.iborFloat=Eonia(self.discount)
-        self.oibsratehelper=OIBSHelper(self.settlementDays,self.tenor,self.oisSpread,self.overnightFloat,self.iborFloat,self.discount)
-        
-    def testSimpleInspectors(self):
-        """ Test OIBS Helper simple inspector. """
-        self.assertEqual(self.oibsratehelper.quote().value(),self.oisSpread.value())
-        
-
 class BasisTwoSwapHelperTest(unittest.TestCase):
     def setUp(self):
         """ Test consistency of basis to swap Helper"""
@@ -239,7 +218,6 @@ if __name__ == '__main__':
     suite.addTest(unittest.makeSuite(CrossCcyBasisSwapHelperTest,'test'))
     suite.addTest(unittest.makeSuite(TenorBasisSwapHelperTest,'test'))
     suite.addTest(unittest.makeSuite(SubPeriodsSwapHelperTest,'test'))
-    suite.addTest(unittest.makeSuite(OIBSHelperTest,'test'))
     suite.addTest(unittest.makeSuite(BasisTwoSwapHelperTest,'test'))
     suite.addTest(unittest.makeSuite(OICCBSHelperTest,'test'))
     suite.addTest(unittest.makeSuite(ImmFraRateHelperTest,'test'))
