@@ -140,7 +140,8 @@ public:
     void setSimmVersion(const std::string& s);
     void setCrifFromBuffer(const std::string& csvBuffer,
                            char eol = '\n', char delim = ',', char quoteChar = '\0', char escapeChar = '\\');
-    void setSimmCalculationCurrency(const std::string& s);
+    void setSimmCalculationCurrencyCall(const std::string& s);
+    void setSimmCalculationCurrencyPost(const std::string& s);
     void setSimmResultCurrency(const std::string& s);
     void setSimmReportingCurrency(const std::string& s);
     void setAmc(bool b);
