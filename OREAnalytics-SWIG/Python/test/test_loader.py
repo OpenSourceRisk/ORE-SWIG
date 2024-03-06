@@ -17,12 +17,21 @@ class LoaderTest:
         self.fixingfile = os.path.join(os.path.dirname(__file__), "Input/fixings_20160205.txt")
         marketdata = []
         fixingdata = []
+        dominance = ["XAU", "XAG", "XPT", "XPD", "EUR", "GBP", "AUD", "NZD", "USD", "CAD", "CHF", "ZAR",
+                    "MYR", "SGD", "DKK", "NOK", "SEK", "HKD", "THB", "TWD", "MXN", "CNY", "CNH",
+                    "JPY", "IDR", "KRW"]
         import csv
         with open(self.marketfile, 'r') as csvfile:
             csv_reader = csv.reader(csvfile, delimiter=' ', quotechar='|')
             for row in csv_reader:
                 if row is None or len(row) == 0 or row[0][0]== "#":
                     continue
+                marketdatum = row[1].split('/')
+                if marketdatum[1] == 'FX' and marketdatum[2] == 'RATE':
+                    tmp = marketdatum[1] + marketdatum[2] + marketdatum[4] + marketdatum[3]
+                    if any(d['Date'] == self.asofDate and d['Name'] == tmp for d in marketdata):
+                        if (dominance.index(marketdatum[4]) < dominance.index(marketdatum[3])):
+                            continue
                 marketdata.append({
                     'Date': self.asofDate,
                     'Name': row[1],
