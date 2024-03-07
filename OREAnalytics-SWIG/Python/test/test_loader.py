@@ -27,11 +27,13 @@ class LoaderTest:
                 if row is None or len(row) == 0 or row[0][0]== "#":
                     continue
                 marketdatum = row[1].split('/')
-                if marketdatum[1] == 'FX' and marketdatum[2] == 'RATE':
-                    tmp = marketdatum[1] + marketdatum[2] + marketdatum[4] + marketdatum[3]
+                if marketdatum[0] == 'FX' and marketdatum[1] == 'RATE':
+                    tmp = marketdatum[0] + '/' + marketdatum[1] + '/' + marketdatum[3] + '/' + marketdatum[2]
                     if any(d['Date'] == self.asofDate and d['Name'] == tmp for d in marketdata):
-                        if (dominance.index(marketdatum[4]) < dominance.index(marketdatum[3])):
+                        if (dominance.index(marketdatum[3]) < dominance.index(marketdatum[2])):
                             continue
+                        elif (dominance.index(marketdatum[3]) > dominance.index(marketdatum[2])):
+                            marketdata[:] = [x for x in marketdata if x.get('Name') != tmp]
                 marketdata.append({
                     'Date': self.asofDate,
                     'Name': row[1],
