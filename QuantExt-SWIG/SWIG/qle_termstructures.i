@@ -244,7 +244,8 @@ class CreditCurve : public Observer {
         const QuantLib::Handle<QuantLib::YieldTermStructure>& rateCurve() const;
         const QuantLib::Handle<QuantLib::Quote>& recovery() const;
 };
-
+%template(CreditCurveHandle) Handle<CreditCurve>; 
+%template(RelinkableCreditCurveHandle) RelinkableHandle<CreditCurve>;
 
 %shared_ptr(CreditVolCurve)
 class CreditVolCurve : public VolatilityTermStructure {
