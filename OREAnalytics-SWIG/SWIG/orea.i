@@ -50,7 +50,7 @@
 %}
 
 %init %{
-    ore::analytics::initBuilders();
+    ore::data::initBuilders();
 %}
 
 %include <windows.i>
