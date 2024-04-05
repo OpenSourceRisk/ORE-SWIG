@@ -236,6 +236,14 @@ public:
     // Set list of analytics that shall be run
     void setAnalytics(const std::string& s);
     void insertAnalytic(const std::string& s); 
+    void setCubeFromFile(const std::string& file);
+    void setNettingSetCubeFromFile(const std::string& file);
+    void setCptyCubeFromFile(const std::string& file);
+    void setMarketCubeFromFile(const std::string& file);
+    void setNettingSetManagerFromFile(const std::string& fileName);
+    void setCollateralBalancesFromFile(const std::string& fileName);
+    void setCube(const ext::shared_ptr<NPVCube>& file);
+    void setMarketCube(const ext::shared_ptr<AggregationScenarioData>& file);
 };
 
 %shared_ptr(OREApp)
