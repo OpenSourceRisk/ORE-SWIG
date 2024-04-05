@@ -19,10 +19,17 @@
 #ifndef orea_cube_i
 #define orea_cube_i
 
+%include stl.i
+%include types.i
+
 %{
 using ore::analytics::NPVCube;
+using ore::analytics::JointNPVCube;
+using ore::analytics::InMemoryCubeBase;
+using ore::analytics::InMemoryCubeN;
 using ore::analytics::AggregationScenarioData;
 using ore::analytics::AggregationScenarioDataType;
+using ore::analytics::DoublePrecisionInMemoryCubeN;
 %}
 
 %shared_ptr(NPVCube)
@@ -79,6 +86,89 @@ public:
             sIndex_++;
         }
     }
+};
+
+%shared_ptr(InMemoryCubeN<float>);
+%shared_ptr(InMemoryCubeN<double>);
+template <typename T> class InMemoryCubeN : public InMemoryCubeBase<std::vector<T>> {
+public:
+    InMemoryCubeN(const QuantLib::Date& asof, const std::set<std::string>& ids, const std::vector<QuantLib::Date>& dates, QuantLib::Size samples, QuantLib::Size depth,
+                  const T& t = T());
+    InMemoryCubeN();
+    QuantLib::Size depth() const override;
+    virtual QuantLib::Real getT0(QuantLib::Size i, QuantLib::Size d) const override;
+    virtual void setT0(QuantLib::Real value, QuantLib::Size i, QuantLib::Size d) override;
+    QuantLib::Real get(QuantLib::Size i, QuantLib::Size j, QuantLib::Size k, QuantLib::Size d) const override ;
+    void set(QuantLib::Real value, QuantLib::Size i, QuantLib::Size j, QuantLib::Size k, QuantLib::Size d) override;
+};
+
+//! InMemoryCube of depth N with single precision floating point numbers.
+%template(SinglePrecisionInMemoryCubeN) InMemoryCubeN<float>;
+
+//! InMemoryCube of depth N with double precision floating point numbers.
+%template(DoublePrecisionInMemoryCubeN) InMemoryCubeN<double>;
+
+%shared_ptr(SinglePrecisionInMemoryCubeN);
+%shared_ptr(DoublePrecisionInMemoryCubeN);
+
+%template(DoublePrecisionInMemoryCubeNVector) std::vector< ext::shared_ptr<InMemoryCubeN<double > > >;
+
+%shared_ptr(JointNPVCube)
+class JointNPVCube : public NPVCube {
+public:
+    %extend {
+    JointNPVCube(
+        const ext::shared_ptr<NPVCube>& cube1, const ext::shared_ptr<NPVCube>& cube2,
+        const std::set<std::string>& ids = {}, const bool requireUniqueIds = true) {
+            return new JointNPVCube(cube1, cube2, ids, requireUniqueIds); 
+        }
+
+    JointNPVCube(
+        const std::vector<ext::shared_ptr<NPVCube>>& cubes, const std::set<std::string>& ids = {},
+        const bool requireUniqueIds = true){
+            return new JointNPVCube(cubes, ids, requireUniqueIds);
+        }
+
+    JointNPVCube(
+            const ext::shared_ptr<InMemoryCubeN<double>>& cube1, const ext::shared_ptr<InMemoryCubeN<double>>& cube2,
+            const std::set<std::string>& ids = {}, const bool requireUniqueIds = true) {
+                return new JointNPVCube(cube1, cube2, ids, requireUniqueIds); 
+        }
+
+    JointNPVCube(
+        const std::vector<ext::shared_ptr<InMemoryCubeN<double>>>& cubes, const std::set<std::string>& ids = {},
+        const bool requireUniqueIds = true){
+            std::vector<ext::shared_ptr<NPVCube>> npvCubes(cubes.begin(), cubes.end());
+            return new JointNPVCube(npvCubes, ids, requireUniqueIds);
+        }
+   
+    JointNPVCube(
+            const ext::shared_ptr<InMemoryCubeN<float>>& cube1, const ext::shared_ptr<InMemoryCubeN<float>>& cube2,
+            const std::set<std::string>& ids = {}, const bool requireUniqueIds = true) {
+                return new JointNPVCube(cube1, cube2, ids, requireUniqueIds); 
+        }
+
+    JointNPVCube(
+        const std::vector<ext::shared_ptr<InMemoryCubeN<float>>>& cubes, const std::set<std::string>& ids = {},
+        const bool requireUniqueIds = true){
+            std::vector<ext::shared_ptr<NPVCube>> npvCubes(cubes.begin(), cubes.end());
+            return new JointNPVCube(npvCubes, ids, requireUniqueIds);
+        }
+    }
+    QuantLib::Size numIds() const override;
+    QuantLib::Size numDates() const override;
+    QuantLib::Size samples() const override;
+    QuantLib::Size depth() const override;
+
+    const std::map<std::string, QuantLib::Size>& idsAndIndexes() const override;
+    const std::vector<QuantLib::Date>& dates() const override;
+    QuantLib::Date asof() const override;
+
+    QuantLib::Real getT0(QuantLib::Size id, QuantLib::Size depth = 0) const override;
+    void setT0(QuantLib::Real value, QuantLib::Size id, QuantLib::Size depth = 0) override;
+
+    QuantLib::Real get(QuantLib::Size id, QuantLib::Size date, QuantLib::Size sample, QuantLib::Size depth = 0) const override;
+    void set(QuantLib::Real value, QuantLib::Size id, QuantLib::Size date, QuantLib::Size sample, QuantLib::Size depth = 0) override;
 };
 
 #endif
