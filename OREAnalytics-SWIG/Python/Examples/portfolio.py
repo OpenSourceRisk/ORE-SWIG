@@ -13,9 +13,11 @@ params.fromFile(orexml)
 
 print ("Build ORE App...")
 ore = OREApp(params)
+print ("Run ORE to build inputs...") 
+ore.run()
 inputs = ore.getInputs()
 
-print ("Get the  portfolio from xml...")
+print ("Get the portfolio from xml...")
 portfolioFile = os.path.join("Input","portfolio.xml")
 portfolioXml = ET.parse(portfolioFile).getroot()
 portfolioXmlStr = ET.tostring(portfolioXml,encoding="unicode")
