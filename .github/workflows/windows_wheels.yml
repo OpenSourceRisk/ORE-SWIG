@@ -1,5 +1,14 @@
 name: Windows Wheels - Win32 & x64
-on: workflow_dispatch
+
+on:
+  push:
+    branches: [master]
+    tags:
+       - 'v*'
+  release:
+   types: [published]
+  workflow_dispatch:
+
 jobs:
   wheels-windows:
     runs-on: windows-2022

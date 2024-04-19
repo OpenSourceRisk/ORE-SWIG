@@ -1,6 +1,12 @@
 name: MacOS x86 Wheels
 
 on:
+  push:
+    branches: [master]
+    tags:
+       - 'v*'
+  release:
+   types: [published]
   workflow_dispatch:
 
 jobs:

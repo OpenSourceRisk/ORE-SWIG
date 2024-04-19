@@ -1,6 +1,14 @@
 name: Linux x86_64 ManyLinux Wheels (pp*)
 
-on: workflow_dispatch
+on:
+  push:
+    branches: [master]
+    tags:
+       - 'v*'
+  release:
+   types: [published]
+  workflow_dispatch:
+
 jobs:
   wheels-linux:
     runs-on: ubuntu-latest
