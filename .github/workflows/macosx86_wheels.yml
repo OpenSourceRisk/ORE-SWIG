@@ -14,12 +14,12 @@ jobs:
     runs-on: macos-11
     steps:
     - name: Checkout ORE-SWIG
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
     - name: get QuantLib-SWIG
       run: |
         git submodule update --init
     - name: Checkout ORE
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
           repository: OpenSourceRisk/Engine
           path: './ORE'
@@ -67,7 +67,7 @@ jobs:
       with:
         package-dir: /Users/runner/work/ORE-SWIG/ORE-SWIG/OREAnalytics-SWIG/Python
     - name: Save wheels as artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: wheels-macos-x86_64
         path: ./wheelhouse/*.whl

@@ -1,14 +1,5 @@
-name: Windows Wheels - Win32 & x64
-
-on:
-  push:
-    branches: [master]
-    tags:
-       - 'v*'
-  release:
-   types: [published]
-  workflow_dispatch:
-
+name: Windows Source Distribution
+on: workflow_dispatch
 jobs:
   wheels-windows:
     runs-on: windows-2022
@@ -18,9 +9,6 @@ jobs:
           - arch: AMD64
             platform: x64
             boost-lib: 64
-          - arch: x86
-            platform: Win32
-            boost-lib: 32
     steps:
     - name: Checkout ORE-SWIG
       uses: actions/checkout@v4
@@ -90,29 +78,6 @@ jobs:
         SET BOOST_LIBRARYDIR=C:\local\boost\lib${{ matrix.boost-lib }}-msvc-14.2
         cd D:\a\ORE-SWIG\ORE-SWIG\OREAnalytics-SWIG\Python
         python setup.py wrap
-        #python setup.py build
-    - name: Build ORE Wheels
-      uses: pypa/cibuildwheel@v2.16.5
-      env:
-        BOOST_ROOT: C:\local\boost
-        BOOST_LIB: C:\local\boost\lib${{ matrix.boost-lib }}-msvc-14.2
-        ORE: D:\a\ORE-SWIG\ORE-SWIG\ORE
-        ORE_DIR: D:\a\ORE-SWIG\ORE-SWIG\ORE
-        ORE_STATIC_RUNTIME: 1
-        ORE_USE_ZLIB: 1
-        CIBW_SKIP: cp36-* cp37-*
-        #CIBW_BUILD: cp37-win_amd64
-        #CIBW_BUILD: cp38-win32
-        #CIBW_BUILD: cp37-*
-        CIBW_ARCHS_WINDOWS: ${{ matrix.arch }}
-        CIBW_BUILD_VERBOSITY: 2
-      with:
-        package-dir: D:\a\ORE-SWIG\ORE-SWIG\OREAnalytics-SWIG\Python
-    - name: Save wheels as artifacts
-      uses: actions/upload-artifact@v3
-      with:
-        name: wheels-windows-${{ matrix.arch }}
-        path: ./wheelhouse/*.whl
     - name: Build ORE sdist
       env:
         BOOST_ROOT: C:\local\boost
@@ -124,9 +89,13 @@ jobs:
       run: |
         pwd
         cd OREAnalytics-SWIG/Python
+        pwd
         pip install build
         python setup.py sdist
+        pwd
+        dir
         cd dist
+        dir
     - name: Upload sdist as artefacts
       uses: actions/upload-artifact@v4
       with:
