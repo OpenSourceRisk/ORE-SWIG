@@ -294,8 +294,7 @@ class AnalyticsManager {
 public:
     AnalyticsManager(const ext::shared_ptr<InputParameters>& inputs,
                      const ext::shared_ptr<MarketDataLoader>& marketDataLoader);
-    void runAnalytics(const std::set<std::string>& analyticTypes,
-                      const ext::shared_ptr<MarketCalibrationReport>& marketCalibrationReport = nullptr);
+    void runAnalytics(const ext::shared_ptr<MarketCalibrationReport>& marketCalibrationReport = nullptr);
 };
 
 %shared_ptr(MarketDataInMemoryLoader)
