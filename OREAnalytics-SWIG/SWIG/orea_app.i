@@ -140,7 +140,8 @@ public:
     void setSimmVersion(const std::string& s);
     void setCrifFromBuffer(const std::string& csvBuffer,
                            char eol = '\n', char delim = ',', char quoteChar = '\0', char escapeChar = '\\');
-    void setSimmCalculationCurrency(const std::string& s);
+    void setSimmCalculationCurrencyCall(const std::string& s);
+    void setSimmCalculationCurrencyPost(const std::string& s);
     void setSimmResultCurrency(const std::string& s);
     void setSimmReportingCurrency(const std::string& s);
     void setAmc(bool b);
@@ -235,6 +236,14 @@ public:
     // Set list of analytics that shall be run
     void setAnalytics(const std::string& s);
     void insertAnalytic(const std::string& s); 
+    void setCubeFromFile(const std::string& file);
+    void setNettingSetCubeFromFile(const std::string& file);
+    void setCptyCubeFromFile(const std::string& file);
+    void setMarketCubeFromFile(const std::string& file);
+    void setNettingSetManagerFromFile(const std::string& fileName);
+    void setCollateralBalancesFromFile(const std::string& fileName);
+    void setCube(const ext::shared_ptr<NPVCube>& file);
+    void setMarketCube(const ext::shared_ptr<AggregationScenarioData>& file);
 };
 
 %shared_ptr(OREApp)
@@ -285,8 +294,7 @@ class AnalyticsManager {
 public:
     AnalyticsManager(const ext::shared_ptr<InputParameters>& inputs,
                      const ext::shared_ptr<MarketDataLoader>& marketDataLoader);
-    void runAnalytics(const std::set<std::string>& analyticTypes,
-                      const ext::shared_ptr<MarketCalibrationReport>& marketCalibrationReport = nullptr);
+    void runAnalytics(const ext::shared_ptr<MarketCalibrationReport>& marketCalibrationReport = nullptr);
 };
 
 %shared_ptr(MarketDataInMemoryLoader)
