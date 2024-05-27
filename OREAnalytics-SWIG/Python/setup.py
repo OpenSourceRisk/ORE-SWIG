@@ -150,6 +150,8 @@ class my_build_ext(build_ext):
             if self.debug:
                 target = "Debug"
 
+            self.library_dirs.append(self.validate_path(BOOST_LIB))
+
             try:
                 self.library_dirs.append(self.validate_path(os.path.join(ORE_DIR, 'build', 'QuantLib', 'ql', target)))
                 self.library_dirs.append(self.validate_path(os.path.join(ORE_DIR, 'build', 'QuantExt', 'qle', target)))
