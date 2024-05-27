@@ -150,11 +150,16 @@ class my_build_ext(build_ext):
             if self.debug:
                 target = "Debug"
 
-            self.library_dirs.append(self.validate_path(BOOST_LIB))
-            self.library_dirs.append(self.validate_path(os.path.join(ORE_DIR, 'build', 'QuantLib', 'ql', target)))
-            self.library_dirs.append(self.validate_path(os.path.join(ORE_DIR, 'build', 'QuantExt', 'qle', target)))
-            self.library_dirs.append(self.validate_path(os.path.join(ORE_DIR, 'build', 'OREData', 'ored', target)))
-            self.library_dirs.append(self.validate_path(os.path.join(ORE_DIR, 'build', 'OREAnalytics', 'orea', target)))
+            try:
+                self.library_dirs.append(self.validate_path(os.path.join(ORE_DIR, 'build', 'QuantLib', 'ql', target)))
+                self.library_dirs.append(self.validate_path(os.path.join(ORE_DIR, 'build', 'QuantExt', 'qle', target)))
+                self.library_dirs.append(self.validate_path(os.path.join(ORE_DIR, 'build', 'OREData', 'ored', target)))
+                self.library_dirs.append(self.validate_path(os.path.join(ORE_DIR, 'build', 'OREAnalytics', 'orea', target)))
+            except:
+                self.library_dirs.append(self.validate_path(os.path.join(ORE_DIR, 'build', 'QuantLib', 'ql')))
+                self.library_dirs.append(self.validate_path(os.path.join(ORE_DIR, 'build', 'QuantExt', 'qle')))
+                self.library_dirs.append(self.validate_path(os.path.join(ORE_DIR, 'build', 'OREData', 'ored')))
+                self.library_dirs.append(self.validate_path(os.path.join(ORE_DIR, 'build', 'OREAnalytics', 'orea')))
 
             #if 'INCLUDE' in os.environ:
             #    dirs = [dir for dir in os.environ['INCLUDE'].split(';')]
