@@ -34,7 +34,7 @@ jobs:
         tar xfz boost_1_80_0.tar.gz
         cd boost_1_80_0
         ./bootstrap.sh
-        ./b2 architecture=arm address-model=64 -s NO_LZMA=1 -s NO_ZSTD=1 abi=aapcs install
+        ./b2 toolset=clang-darwin target-os=darwin architecture=x86 cxxflags="-arch x86_64" cflags="-arch x86_64" linkflags="-arch x86_64" abi=sysv binary-format=mach-o install
     - name: Build ORE CMake
       run: |
         cd ORE
@@ -55,11 +55,12 @@ jobs:
         pwd
         python setup.py wrap
     - name: Build Wheels
-      uses: pypa/cibuildwheel@v2.16.5
+      uses: pypa/cibuildwheel@v2.17
       env:
         CIBW_SKIP: cp36-*
         CIBW_ARCHS_MACOS: x86_64
-        CXXFLAGS: -std=c++17 -g0 -O3 -mmacosx-version-min=10.15
+        MACOSX_DEPLOYMENT_TARGET: "11.7"
+        CXXFLAGS: -std=c++17 -g0 -O3 -mmacosx-version-min=11
         CIBW_BUILD_VERBOSITY: 2
         CIBW_REPAIR_WHEEL_COMMAND_MACOS: >
           DYLD_LIBRARY_PATH=/usr/local/lib delocate-listdeps {wheel} &&
