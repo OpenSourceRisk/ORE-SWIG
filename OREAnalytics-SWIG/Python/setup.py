@@ -75,7 +75,7 @@ class my_wrap(Command):
                       '-I%s ' % qle_swig_dir +
                       '-I%s ' % oredata_swig_dir +
                       '-outdir ORE -o ORE/oreanalytics_wrap.cpp ' +
-                      'oreanalytics.i')
+                      os.path.join("..","SWIG","oreanalytics.i"))
         else:
             os.system('swig -python -c++ ' +
                       '-I%s ' % swig_dir +
@@ -83,7 +83,7 @@ class my_wrap(Command):
                       '-I%s ' % qle_swig_dir +
                       '-I%s ' % oredata_swig_dir +
                       '-outdir ORE -o ORE/oreanalytics_wrap.cpp ' +
-                      'oreanalytics.i')
+                      os.path.join("..","SWIG","oreanalytics.i"))
 
 class my_build(build):
     user_options = build.user_options + [
@@ -151,10 +151,17 @@ class my_build_ext(build_ext):
                 target = "Debug"
 
             self.library_dirs.append(self.validate_path(BOOST_LIB))
-            self.library_dirs.append(self.validate_path(os.path.join(ORE_DIR, 'build', 'QuantLib', 'ql', target)))
-            self.library_dirs.append(self.validate_path(os.path.join(ORE_DIR, 'build', 'QuantExt', 'qle', target)))
-            self.library_dirs.append(self.validate_path(os.path.join(ORE_DIR, 'build', 'OREData', 'ored', target)))
-            self.library_dirs.append(self.validate_path(os.path.join(ORE_DIR, 'build', 'OREAnalytics', 'orea', target)))
+
+            try:
+                self.library_dirs.append(self.validate_path(os.path.join(ORE_DIR, 'build', 'QuantLib', 'ql', target)))
+                self.library_dirs.append(self.validate_path(os.path.join(ORE_DIR, 'build', 'QuantExt', 'qle', target)))
+                self.library_dirs.append(self.validate_path(os.path.join(ORE_DIR, 'build', 'OREData', 'ored', target)))
+                self.library_dirs.append(self.validate_path(os.path.join(ORE_DIR, 'build', 'OREAnalytics', 'orea', target)))
+            except:
+                self.library_dirs.append(self.validate_path(os.path.join(ORE_DIR, 'build', 'QuantLib', 'ql')))
+                self.library_dirs.append(self.validate_path(os.path.join(ORE_DIR, 'build', 'QuantExt', 'qle')))
+                self.library_dirs.append(self.validate_path(os.path.join(ORE_DIR, 'build', 'OREData', 'ored')))
+                self.library_dirs.append(self.validate_path(os.path.join(ORE_DIR, 'build', 'OREAnalytics', 'orea')))
 
             #if 'INCLUDE' in os.environ:
             #    dirs = [dir for dir in os.environ['INCLUDE'].split(';')]
@@ -268,7 +275,7 @@ classifiers = [
 ]
 
 setup(name             = "open-source-risk-engine",
-      version          = "1.8.10",
+      version          = "1.8.12",
       description      = "Python bindings for the OREAnalytics library",
       long_description = """
 OREAnalytics (http://opensourcerisk.org/) is a C++ library for financial quantitative
