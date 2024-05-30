@@ -81,12 +81,19 @@ public:
     void setImplyTodaysFixings(bool b);
     void setMarketConfig(const std::string& config, const std::string& context);
     void setRefDataManager(const std::string& xml);
+    void setRefDataManagerFromFile(const std::string& fileName);
     void setConventions(const std::string& xml);
+    void setConventionsFromFile(const std::string& fileName);
     void setIborFallbackConfig(const std::string& xml);
+    void setIborFallbackConfigFromFile(const std::string& fileName);
     void setCurveConfigs(const std::string& xml);
+    void setCurveConfigsFromFile(const std::string& fileName);
     void setPricingEngine(const std::string& xml);
+    void setPricingEngineFromFile(const std::string& fileName);
     void setTodaysMarketParams(const std::string& xml);
+    void setTodaysMarketParamsFromFile(const std::string& fileName);
     void setPortfolio(const std::string& xml); 
+    void setPortfolioFromFile(const std::string& fileNameString, const std::filesystem::path& inputPath); 
     void setThreads(int i);
     void setEntireMarket(bool b);
     void setAllFixings(bool b);
@@ -98,9 +105,11 @@ public:
     void setCsvSeparator(const char& c);
     void setCsvCommentCharacter(const char& c);
     void setDryRun(bool b);
+    void setMporDate(const QuantLib::Date& d);
     void setMporDays(Size s);
     void setMporCalendar(const std::string& s); 
     void setMporForward(bool b);
+    void setMporOverlappingPeriods(bool b);
     // Setters for npv analytics
     void setOutputAdditionalResults(bool b);
     // Setters for cashflows
@@ -118,8 +127,16 @@ public:
     void setUseSensiSpreadedTermStructures(bool b);
     void setSensiThreshold(Real r);
     void setSensiSimMarketParams(const std::string& xml);
+    void setSensiSimMarketParamsFromFile(const std::string& fileName);
     void setSensiScenarioData(const std::string& xml);
-    void setSensiPricingEngine(const std::string& xml);
+    void setSensiScenarioDataFromFile(const std::string& fileName);
+    void setSensiPricingEngine(const std::string& xml);    
+    void setSensiPricingEngineFromFile(const std::string& fileName);
+    void setSensiPricingEngine(const QuantLib::ext::shared_ptr<EngineData>& engineData);
+    // Setters for scenario
+    void setScenarioSimMarketParams(const std::string& xml);
+    void setScenarioSimMarketParamsFromFile(const std::string& fileName);
+    void setScenarioOutputFile(const std::string& filename);
     // Setters for stress testing
     void setStressThreshold(Real r);
     void setStressSimMarketParams(const std::string& xml); 
@@ -136,6 +153,11 @@ public:
     void setCovarianceData(ore::data::CSVReader& reader);
     void setCovarianceDataFromBuffer(const std::string& xml);
     void setSensitivityStreamFromBuffer(const std::string& buffer);
+    void setBenchmarkVarPeriod(const std::string& period);
+    void setHistoricalScenarioReader(const std::string& fileName);
+    void setSensitivityStreamFromBuffer(const std::string& buffer);
+    void setHistVarSimMarketParamsFromFile(const std::string& fileName);
+    void setOutputHistoricalScenarios(const bool b);
     // Setters for exposure simulation
     void setSimmVersion(const std::string& s);
     void setCrifFromBuffer(const std::string& csvBuffer,
