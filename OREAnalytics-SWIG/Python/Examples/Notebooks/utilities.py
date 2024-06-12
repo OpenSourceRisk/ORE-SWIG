@@ -35,9 +35,11 @@ def checkReportStructure(name, report):
         sys.stdout.flush()
 
 # example: writeReport(report, [0, 1, 3, 5]);
-def writeReport(report, columnNumbers):
+def writeReport(report, columnNumbers=None):
+    colNums = range(report.columns()) if columnNumbers is None else columnNumbers
+
     column = [None] * report.columns()
-    for c in range(0, report.columns() - 1):
+    for c in range(0, report.columns()):
         typ = report.columnType(c)
         if typ == 0:
             column[c] = report.dataAsSize(c);
@@ -54,23 +56,23 @@ def writeReport(report, columnNumbers):
     
     for i in range(0, report.rows()):
         if i == 0:
-            for c in columnNumbers:
-                if c == columnNumbers[-1]:
+            for c in colNums:
+                if c == colNums[-1]:
                     eol = "\n"
                 else:
                     eol = ""
                 print ("%-17s  " % report.header(c), end=eol)
 
-        for c in columnNumbers:
+        for c in colNums:
             typ = report.columnType(c)
-            if c == columnNumbers[-1]:
+            if c == colNums[-1]:
                 eol = "\n"
             else:
                 eol = ""
             if typ == 0:
                 print ("%-17d  " % column[c][i], end=eol)
             elif typ == 1:
-                print ("%-17.2f  " % column[c][i], end=eol)
+                print ("%-17.4f  " % column[c][i], end=eol)
             elif typ == 2:
                 print ("%-17s  " % column[c][i], end=eol)
             elif typ == 3:
